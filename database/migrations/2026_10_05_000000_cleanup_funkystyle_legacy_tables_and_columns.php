@@ -14,6 +14,42 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
+        // Gỡ khóa ngoại và index trên bảng `users` / `contacts` trước khi xóa bảng/cột
+        if (Schema::hasTable('users')) {
+            if (Schema::hasColumn('users', 'school_id')) {
+                try {
+                    Schema::table('users', function (Blueprint $table) {
+                        $table->dropForeign(['school_id']);
+                    });
+                } catch (\Throwable $e) {
+                    // Bỏ qua nếu FK không tồn tại hoặc trên SQLite
+                }
+            }
+            if (Schema::hasColumn('users', 'lifetime_points')) {
+                try {
+                    Schema::table('users', function (Blueprint $table) {
+                        $table->dropIndex(['lifetime_points']);
+                    });
+                } catch (\Throwable $e) {
+                    // Bỏ qua nếu index không tồn tại
+                }
+            }
+        }
+
+        if (Schema::hasTable('contacts')) {
+            foreach (['class_id', 'class_allocation_status'] as $indexedCol) {
+                if (Schema::hasColumn('contacts', $indexedCol)) {
+                    try {
+                        Schema::table('contacts', function (Blueprint $table) use ($indexedCol) {
+                            $table->dropIndex([$indexedCol]);
+                        });
+                    } catch (\Throwable $e) {
+                        // Bỏ qua nếu index không tồn tại
+                    }
+                }
+            }
+        }
+
         // 1. Xóa các bảng dữ liệu FunkyStyle (theo thứ tự phụ thuộc khóa ngoại)
         $tablesToDrop = [
             'combo_course',
@@ -51,13 +87,16 @@ return new class extends Migration
                 'reward_locked_until',
             ];
 
-            Schema::table('users', function (Blueprint $table) use ($userColumns) {
-                foreach ($userColumns as $column) {
-                    if (Schema::hasColumn('users', $column)) {
-                        $table->dropColumn($column);
-                    }
-                }
-            });
+            $existingUserColumns = array_values(array_filter(
+                $userColumns,
+                fn (string $column) => Schema::hasColumn('users', $column)
+            ));
+
+            if (!empty($existingUserColumns)) {
+                Schema::table('users', function (Blueprint $table) use ($existingUserColumns) {
+                    $table->dropColumn($existingUserColumns);
+                });
+            }
         }
 
         // 3. Xóa các cột mồ côi trên bảng `contacts`
@@ -67,13 +106,16 @@ return new class extends Migration
                 'class_allocation_status',
             ];
 
-            Schema::table('contacts', function (Blueprint $table) use ($contactColumns) {
-                foreach ($contactColumns as $column) {
-                    if (Schema::hasColumn('contacts', $column)) {
-                        $table->dropColumn($column);
-                    }
-                }
-            });
+            $existingContactColumns = array_values(array_filter(
+                $contactColumns,
+                fn (string $column) => Schema::hasColumn('contacts', $column)
+            ));
+
+            if (!empty($existingContactColumns)) {
+                Schema::table('contacts', function (Blueprint $table) use ($existingContactColumns) {
+                    $table->dropColumn($existingContactColumns);
+                });
+            }
         }
 
         // 4. Xóa các cột mồ côi trên bảng `posts`
@@ -87,13 +129,16 @@ return new class extends Migration
                 'starts_at',
             ];
 
-            Schema::table('posts', function (Blueprint $table) use ($postColumns) {
-                foreach ($postColumns as $column) {
-                    if (Schema::hasColumn('posts', $column)) {
-                        $table->dropColumn($column);
-                    }
-                }
-            });
+            $existingPostColumns = array_values(array_filter(
+                $postColumns,
+                fn (string $column) => Schema::hasColumn('posts', $column)
+            ));
+
+            if (!empty($existingPostColumns)) {
+                Schema::table('posts', function (Blueprint $table) use ($existingPostColumns) {
+                    $table->dropColumn($existingPostColumns);
+                });
+            }
         }
 
         // 5. Xóa các cột mồ côi trên bảng `post_translations`
@@ -109,13 +154,16 @@ return new class extends Migration
                 'course_target',
             ];
 
-            Schema::table('post_translations', function (Blueprint $table) use ($translationColumns) {
-                foreach ($translationColumns as $column) {
-                    if (Schema::hasColumn('post_translations', $column)) {
-                        $table->dropColumn($column);
-                    }
-                }
-            });
+            $existingTranslationColumns = array_values(array_filter(
+                $translationColumns,
+                fn (string $column) => Schema::hasColumn('post_translations', $column)
+            ));
+
+            if (!empty($existingTranslationColumns)) {
+                Schema::table('post_translations', function (Blueprint $table) use ($existingTranslationColumns) {
+                    $table->dropColumn($existingTranslationColumns);
+                });
+            }
         }
 
         Schema::enableForeignKeyConstraints();
