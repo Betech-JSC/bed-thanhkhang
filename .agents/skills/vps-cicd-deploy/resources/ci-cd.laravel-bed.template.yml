@@ -44,15 +44,15 @@ jobs:
           php artisan migrate --force
           php artisan db:seed --class=RoleSeeder --force || true
 
-      - name: 5. Run Automated Tests (PHPUnit SQLite)
-        run: __TEST_COMMAND__
-
-      - name: 6. Install Node Dependencies & Build Assets
+      - name: 5. Install Node Dependencies & Build Assets
         run: |
           yarn install --frozen-lockfile
           yarn route
           yarn frontend:build
           yarn backend:build
+
+      - name: 6. Run Automated Tests (PHPUnit SQLite)
+        run: __TEST_COMMAND__
 
       - name: 7. Upload Built Assets Artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -110,12 +110,13 @@ jobs:
           ssh -p ${{ secrets.VPS_PORT || 22 }} ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
             set -e
             cd /var/www/__PROJECT_SLUG__
+            git config core.sshCommand "ssh -i ~/.ssh/id_ed25519 -i ~/.ssh/id_rsa -F /dev/null -o BatchMode=yes -o StrictHostKeyChecking=accept-new"
             git config core.fileMode false
-            git fetch origin main
+            git fetch origin main </dev/null
             git reset --hard origin/main
             PHP_BIN=$(command -v php8.3 || command -v php)
             COMPOSER_BIN=$(command -v composer)
-            COMPOSER_ALLOW_SUPERUSER=1 "$PHP_BIN" "$COMPOSER_BIN" install --no-dev --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-req=php
+            COMPOSER_ALLOW_SUPERUSER=1 "$PHP_BIN" "$COMPOSER_BIN" install --no-dev --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-req=php </dev/null
           EOF
 
       - name: 4. Rsync Compiled Assets (public/build & bootstrap/ssr) to VPS
