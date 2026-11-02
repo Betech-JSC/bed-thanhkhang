@@ -26,10 +26,12 @@ return new class extends Migration
         });
 
         // Tự động nạp sẵn 8 mốc danh hiệu mẫu và avatar icon khi triển khai lên môi trường mới
-        \Artisan::call('db:seed', [
-            '--class' => 'Database\\Seeders\\UserRankSeeder',
-            '--force' => true,
-        ]);
+        if (class_exists(\App\Models\UserRank::class)) {
+            \Artisan::call('db:seed', [
+                '--class' => 'Database\\Seeders\\UserRankSeeder',
+                '--force' => true,
+            ]);
+        }
     }
 
     /**

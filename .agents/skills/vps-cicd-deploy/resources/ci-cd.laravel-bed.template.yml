@@ -1,0 +1,141 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  ci-test-and-build:
+    name: Test & Build Assets
+    runs-on: ubuntu-latest
+    env:
+      DB_CONNECTION: sqlite
+
+    steps:
+      - name: 1. Checkout code
+        uses: actions/checkout@v4
+
+      - name: 2. Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, gd, zip
+          coverage: none
+          tools: composer:v2
+
+      - name: 3. Setup Node.js 18 & Yarn Cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
+
+      - name: 4. Prepare .env & Install Composer Dependencies
+        run: |
+          touch database/database.sqlite
+          cp .env.example .env
+          sed -i 's/DB_CONNECTION=mysql/DB_CONNECTION=sqlite/' .env
+          sed -i '/^DB_DATABASE=/d' .env
+          sed -i 's/^OPCACHE_SECRET=.*/OPCACHE_SECRET=ci-test-secret/' .env || true
+          composer install --no-interaction --prefer-dist
+          composer dump-autoload --optimize
+          php artisan key:generate
+          php artisan migrate --force
+          php artisan db:seed --class=RoleSeeder --force || true
+
+      - name: 5. Run Automated Tests (PHPUnit SQLite)
+        run: __TEST_COMMAND__
+
+      - name: 6. Install Node Dependencies & Build Assets
+        run: |
+          yarn install --frozen-lockfile
+          yarn route
+          yarn frontend:build
+          yarn backend:build
+
+      - name: 7. Upload Built Assets Artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-assets
+          path: |
+            public/build/
+            bootstrap/ssr/
+          retention-days: 1
+
+  cd-deploy:
+    name: Deploy to Production VPS
+    needs: ci-test-and-build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 1. Download Built Assets Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: compiled-assets
+
+      - name: 2. Setup SSH Key & Known Hosts
+        env:
+          RAW_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$RAW_SSH_KEY" | tr -d '\r' > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          if ! ssh-keygen -y -f ~/.ssh/id_deploy >/dev/null 2>&1; then
+            echo "Reconstructing OpenSSH Private Key header/footer..."
+            BODY=$(printf '%s' "$RAW_SSH_KEY" | sed '/-----BEGIN/d; /-----END/d' | tr -d ' \t\r\n' | fold -w 70)
+            printf -- "-----BEGIN OPENSSH PRIVATE KEY-----\n%s\n-----END OPENSSH PRIVATE KEY-----\n" "$BODY" > ~/.ssh/id_deploy
+            chmod 600 ~/.ssh/id_deploy
+          fi
+          if ! ssh-keygen -y -f ~/.ssh/id_deploy >/dev/null 2>&1; then
+            echo "Trying RSA Private Key header/footer..."
+            BODY=$(printf '%s' "$RAW_SSH_KEY" | sed '/-----BEGIN/d; /-----END/d' | tr -d ' \t\r\n' | fold -w 64)
+            printf -- "-----BEGIN RSA PRIVATE KEY-----\n%s\n-----END RSA PRIVATE KEY-----\n" "$BODY" > ~/.ssh/id_deploy
+            chmod 600 ~/.ssh/id_deploy
+          fi
+          ssh-keygen -y -f ~/.ssh/id_deploy >/dev/null
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_deploy
+          echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $GITHUB_ENV
+          echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> $GITHUB_ENV
+          printf "Host *\n  IdentityFile ~/.ssh/id_deploy\n  StrictHostKeyChecking accept-new\n" >> ~/.ssh/config
+          chmod 600 ~/.ssh/config
+          ssh-keyscan -p ${{ secrets.VPS_PORT || 22 }} -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+      - name: 3. Pull Latest Code & Install Composer on VPS
+        run: |
+          ssh -p ${{ secrets.VPS_PORT || 22 }} ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+            set -e
+            cd /var/www/__PROJECT_SLUG__
+            git config core.fileMode false
+            git fetch origin main
+            git reset --hard origin/main
+            PHP_BIN=$(command -v php8.3 || command -v php)
+            COMPOSER_BIN=$(command -v composer)
+            COMPOSER_ALLOW_SUPERUSER=1 "$PHP_BIN" "$COMPOSER_BIN" install --no-dev --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-req=php
+          EOF
+
+      - name: 4. Rsync Compiled Assets (public/build & bootstrap/ssr) to VPS
+        run: |
+          rsync -avz --delete -e "ssh -p ${{ secrets.VPS_PORT || 22 }}" \
+            public/build/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/__PROJECT_SLUG__/public/build/
+          rsync -avz --delete -e "ssh -p ${{ secrets.VPS_PORT || 22 }}" \
+            bootstrap/ssr/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/__PROJECT_SLUG__/bootstrap/ssr/
+
+      - name: 5. Run Migrations, Clear Cache & Reload PHP-FPM
+        run: |
+          ssh -p ${{ secrets.VPS_PORT || 22 }} ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+            set -e
+            cd /var/www/__PROJECT_SLUG__
+            PHP_BIN=$(command -v php8.3 || command -v php)
+            "$PHP_BIN" artisan migrate --force
+            "$PHP_BIN" artisan storage:link || true
+            "$PHP_BIN" artisan optimize:clear
+            chown -R www-data:www-data storage bootstrap/cache
+            chmod -R ug+rwx storage bootstrap/cache
+            systemctl reload php8.2-fpm || true
+            systemctl reload php8.3-fpm || true
+          EOF

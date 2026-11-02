@@ -31,7 +31,7 @@ class CreatePostsTable extends Migration
             $table->text('icon')->nullable();
             $table->string('status', 30)->nullable()->default(Post::STATUS_ACTIVE);
             $table->string('type', 30)->nullable()->default(Post::TYPE_POST);
-            $table->string('resource_type', 30)->nullable()->default(Post::TYPE_RESOURCE_FREE);
+            $table->string('resource_type', 30)->nullable()->default('FREE');
 
             $table->integer('view_count')->default(0);
             $table->addInjectCode();
