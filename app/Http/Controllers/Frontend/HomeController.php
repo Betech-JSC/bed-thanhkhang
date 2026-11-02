@@ -1,0 +1,159 @@
+<?php
+
+namespace App\Http\Controllers\Frontend;
+
+use App\Models\Keyword;
+use App\Models\KeywordRefDate;
+use Inertia\Inertia;
+use Illuminate\Routing\Controller;
+use App\Models\Post\Post;
+use App\Models\Post\PostCategory;
+use App\Models\Product\Product;
+use JamstackVietnam\Slider\Models\Slider;
+use Illuminate\Support\Facades\Cache;
+
+class HomeController extends Controller
+{
+    public function index()
+    {
+        try {
+            $data = Cache::remember('home_page_data_' . app()->getLocale(), 3600, function () {
+                // Get Home Slider
+                $sliders = Slider::getByPosition('HOME_SLIDER');
+
+                // Fetch Featured Products
+                $products = Product::query()
+                    ->where('status', Product::STATUS_ACTIVE)
+                    ->orderByDesc('id')
+                    ->take(20)
+                    ->get()
+                    ->map(fn($product) => $product->transform());
+
+                // Fetch Featured Posts
+                $featured_posts = Post::query()
+                    ->active()
+                    ->wherePosts()
+                    ->latest('id')
+                    ->take(3)
+                    ->get()
+                    ->map(fn($post) => $post->transform());
+
+                // Fetch Feedback Posts
+                $feedback = Post::query()
+                    ->active()
+                    ->whereFeedback()
+                    ->latest('id')
+                    ->get()
+                    ->map(fn($post) => $post->transformFeedback());
+
+                // Prepare Response Data
+                return [
+                    'sliders' => $sliders,
+                    'products' => $products,
+                    'featured_posts' => $featured_posts,
+                    'feedback' => $feedback,
+                ];
+            });
+
+            // Return JSON or Inertia View
+            if (request()->wantsJson()) {
+                return response()->json($data);
+            }
+
+            return Inertia::render('Home', $data);
+        } catch (\Throwable $e) {
+            report($e);
+            return response()->json(['error' => 'Something went wrong.'], 500);
+        }
+    }
+
+    public function search()
+    {
+        try {
+            if (request()->wantsJson()) {
+                return response()->json([]);
+            }
+
+            if (request()->has('keyword') && !request()->has('page')) {
+
+                $searchKeyword = Keyword::firstOrCreate(['keyword' => request()->input('keyword')]);
+                $searchKeyword->update(['updated_at' => now()]);
+
+                KeywordRefDate::create(['keyword_id' => $searchKeyword->id]);
+            }
+
+            return Inertia::render('Search', []);
+        } catch (\Throwable $th) {
+            dd($th);
+        }
+    }
+
+    public function searchV2()
+    {
+
+        try {
+            $filter = [
+                'keyword' => request()->input('keyword'),
+                'limit' => request()->input('limit') ?? 8
+            ];
+
+            $filterPost = $filter;
+
+            if (request()->has('page') && request()->has('type')) {
+                switch (request()->input('type')) {
+                    case 'PRODUCT':
+                        $filterPost['page'] = request()->input('page');
+                        $products = $this->searchPost($filterPost);
+
+                        return response()->json([
+                            'success' => true,
+                            'data' => $products,
+                            'message' => 'ok',
+                        ], 200);
+                }
+
+                return response()->json([
+                    'success' => true,
+                    'data' => [],
+                    'message' => 'ok',
+                ], 200);
+            }
+
+            $products = $this->searchPost($filterPost);
+
+            $data = [
+                'products' => $products
+            ];
+
+            if (request()->wantsJson()) {
+                return response()->json($data);
+            }
+            return response()->json([
+                'success' => true,
+                'data' => $data,
+                'message' => 'ok',
+            ], 200);
+        } catch (\Throwable $th) {
+            dd($th);
+        }
+    }
+
+    public function searchPost($filter)
+    {
+        try {
+            return Post::query()
+                ->active()
+                ->activeCategories()
+                ->wherePosts()
+                ->filter($filter)
+                ->paginate($filter['limit'] ?? 8)
+                ->onEachSide(0)
+                ->through(function ($item) {
+                    return $item->transform();
+                })
+                ->withQueryString();
+        } catch (\Throwable $th) {
+            dd($th);
+        }
+    }
+}

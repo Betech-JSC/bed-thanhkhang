@@ -1,0 +1,31 @@
+schema: spec-driven
+
+context: |
+  Project: HHMaker (bed-hhmaker) — Hệ thống Website & Clean Base CMS doanh nghiệp (khởi tạo từ nền chuẩn BED CMS).
+
+  Tech Stack (đối chiếu thực tế từ composer.json & package.json):
+    - Backend: PHP 8.1+ (composer constraint ^8.0.2), Laravel Framework (BED CMS architecture / jamstackvietnam/essentials, tương thích chuẩn Laravel 9/10), Laravel Sanctum, DomPDF, Đa ngôn ngữ (Localization & *translations).
+    - Frontend & Build: Inertia.js (@inertiajs/inertia-vue3 + SSR), Vue 3.2 (3.2.31), Vite 3 (tách vite.frontend.config.js & vite.backend.config.ts), Pinia 2, Ziggy (ziggy-js), vue-i18n 9.
+    - Styling & UI Libraries: Tailwind CSS 3.2.7 (resources/Frontend/tailwind.config.js kèm typography, line-clamp, aspect-ratio), PrimeVue 3.17 + PrimeIcons, Sass 1.55, Swiper 11, GSAP 3.
+    - Cấu trúc thư mục giao diện:
+      * Frontend khách hàng: resources/Frontend/js/{Components,Layouts,Pages,composables,stores,lib} và resources/Frontend/scss/
+      * Quản trị CMS: resources/Backend/
+      * Định tuyến: routes/frontend.php, routes/backend.php, routes/api.php (tạo route JS bằng lệnh 'yarn route', build giao diện bằng 'yarn frontend:build').
+
+  Governance & Engineering Workflows bắt buộc:
+    - Ngôn ngữ tài liệu OpenSpec (proposal, specs, design, tasks): Tiếng Việt rõ ràng, thuật ngữ kỹ thuật giữ chuẩn tiếng Anh.
+    - Strict Safe Guard: Tuyệt đối cấm tự ý xóa file (rm) khi chưa có Implementation Plan được người dùng phê duyệt; cấm chạy lệnh phá hủy database (migrate:fresh, drop, truncate, seed đè data thật); cấm tự ý đổi cấu trúc kiến trúc thư mục.
+    - Evidence-Based 100% & Zero-Assumption: Mọi báo cáo PASS bắt buộc đính kèm raw terminal build/test output và ảnh chụp trình duyệt thật qua Playwright MCP; thiếu API contract hoặc chưa rõ nghiệp vụ bắt buộc dừng lại hỏi người dùng.
+    - Mandatory Subagent Reflex: Main Agent điều phối qua invoke_subagent (Backend Worker, Frontend Worker, Independent Tester, QA Verifier).
+    - Figma MCP Phased Workflow & UI Audit: Dựng UI theo phase (.agents/skills/opsx-figma-workflow), kiểm toán chỉ đọc trước khi dọn tàn dư UI/Typography (.agents/skills/opsx-ui-audit), giữ chuẩn Quiet & High-Trust UI (.agents/skills/anti-ui-slop — cấm spam icon trang trí hoặc emoji vô nghĩa) và .agents/skills/web-design-guidelines.
+    - Graphify AST First: Đọc graphify-out/graph.json trước khi tạo mới component/service/class; chạy 'graphify . --code-only' cập nhật bản đồ AST sau mỗi phase thay đổi cấu trúc.
+
+rules:
+  proposal:
+    - Nêu rõ lý do thực tế (Why), phạm vi thay đổi cụ thể (What Changes), Capabilities và vùng an toàn không tác động (Impact).
+  specs:
+    - Mỗi Requirement phải có các Scenario kiểm chứng được với cấu trúc WHEN / THEN rõ ràng.
+  design:
+    - Tham chiếu thực tế cấu trúc file/component từ graphify-out/graph.json để ưu tiên tái sử dụng và mở rộng an toàn.
+  tasks:
+    - Chia task rõ ràng theo tầng (Backend / Frontend / Build & Graphify / Playwright Visual QA) kèm tiêu chí kiểm chứng cụ thể cho từng mục.
