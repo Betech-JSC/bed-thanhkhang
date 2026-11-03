@@ -14,6 +14,7 @@ auth.json
 npm-debug.log
 yarn-error.log
 /.idea
+/.vscode
 .DS_Store
 config.bat
 build.log
@@ -24,3 +25,4 @@ cookies.txt
 
 # Graphify local AST output
 /graphify-out
+.env
