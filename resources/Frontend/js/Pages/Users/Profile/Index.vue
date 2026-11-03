@@ -19,7 +19,7 @@
                 <h1 class="headline-1 font-display font-black text-gray-warm-900 leading-tight">
                     Hồ sơ <span class="text-red-fks">cá nhân</span>
                 </h1>
-                <p class="body-1 text-gray-warm-500 mt-2 font-beau max-w-xl">Nơi quản lý dữ liệu, bảo mật và quyền lợi
+                <p class="body-1 text-gray-warm-500 mt-2 font-sans max-w-xl">Nơi quản lý dữ liệu, bảo mật và quyền lợi
                     tích lũy của bạn tại Funky.</p>
             </div>
 
@@ -61,7 +61,7 @@
                             </div>
 
                             <h3 class="title-1 font-display font-black text-gray-warm-900 mb-1">{{ form.name }}</h3>
-                            <p class="body-2 text-gray-warm-400 font-beau mb-6">{{ form.email }}</p>
+                            <p class="body-2 text-gray-warm-400 font-sans mb-6">{{ form.email }}</p>
 
                             <div class="w-full h-px bg-gradient-to-r from-transparent via-gray-100 to-transparent mb-6">
                             </div>
@@ -69,7 +69,7 @@
                             <div class="grid grid-cols-2 gap-3 sm:gap-4 w-full text-left items-stretch">
                                 <!-- Card Xếp hạng -->
                                 <div class="bg-gray-50/60 backdrop-blur-sm p-3.5 rounded-2xl border border-gray-100/90 flex flex-col justify-between hover:border-orange-200/70 transition-colors shadow-2xs">
-                                    <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider mb-1.5 font-beau">Xếp hạng</p>
+                                    <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider mb-1.5 font-sans">Xếp hạng</p>
                                     <div class="flex items-center gap-2.5 min-h-[40px]">
                                         <img
                                             v-if="currentRankIcon"
@@ -93,7 +93,7 @@
                                     :class="$page.props.auth?.user?.is_reward_locked ? 'bg-red-50/70 border-red-200/80' : 'bg-gray-50/60 backdrop-blur-sm border-gray-100/90'"
                                 >
                                     <p
-                                        class="text-[10px] uppercase font-bold tracking-wider mb-1.5 font-beau"
+                                        class="text-[10px] uppercase font-bold tracking-wider mb-1.5 font-sans"
                                         :class="$page.props.auth?.user?.is_reward_locked ? 'text-red-500 font-extrabold' : 'text-gray-400'"
                                     >
                                         {{ $page.props.auth?.user?.is_reward_locked ? 'Bị khóa thưởng' : 'Ưu đãi' }}
@@ -162,7 +162,7 @@
                                         QUẢ 
                                         <img src="/assets/images/qua_nap.png" class="w-5 h-5 object-contain inline-block" alt="Quả" />
                                     </span>
-                                    <span class="text-[10px] text-gray-warm-400 font-beau font-medium mt-1 italic">
+                                    <span class="text-[10px] text-gray-warm-400 font-sans font-medium mt-1 italic">
                                         Tổng Quả = Quả thưởng + Quả nạp
                                     </span>
                                 </div>
@@ -212,13 +212,13 @@
 
                             <div class="border-t border-gray-100 pt-6 space-y-4">
                                 <p
-                                    class="body-2 text-gray-warm-500 leading-relaxed font-beau group-hover:text-gray-warm-700 transition-colors">
+                                    class="body-2 text-gray-warm-500 leading-relaxed font-sans group-hover:text-gray-warm-700 transition-colors">
                                     Mỗi ngày đăng nhập: <span class="text-success-600 font-bold">+{{ dailyLoginPoints }} Quả thưởng</span> (tối đa {{ maxRewardPoints }} Quả).
                                     Khi tải tài nguyên, hệ thống ưu tiên <span class="text-red-fks font-bold">trừ Quả thưởng trước</span>, sau đó mới trừ Quả nạp.
                                 </p>
                                 <div class="p-4 bg-red-fks/5 border border-red-fks/10 rounded-2xl flex items-start gap-2.5">
                                     <i class="pi pi-gift text-red-fks mt-0.5 text-sm shrink-0"></i>
-                                    <p class="text-xs font-semibold text-gray-warm-700 leading-relaxed font-beau">
+                                    <p class="text-xs font-semibold text-gray-warm-700 leading-relaxed font-sans">
                                         Cập nhật đầy đủ thông tin cá nhân và thông tin học vấn <span class="text-red-fks font-bold">+{{ profileCompletionPoints }} Quả thưởng</span>
                                     </p>
                                 </div>
@@ -226,7 +226,7 @@
                                     <span class="text-sm mt-0.5 shrink-0">📌</span>
                                     <div class="space-y-0.5">
                                         <p class="text-[11px] font-bold uppercase tracking-wider text-amber-800">Ghi chú từ Ban Quản trị</p>
-                                        <p class="text-xs font-medium text-amber-900 leading-relaxed font-beau whitespace-pre-line">
+                                        <p class="text-xs font-medium text-amber-900 leading-relaxed font-sans whitespace-pre-line">
                                             {{ adminNote }}
                                         </p>
                                     </div>
@@ -244,7 +244,7 @@
                                 class="w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-left hover:bg-red-fks/5 transition-all group relative overflow-hidden outline-none">
                                 <i class="pi pi-user text-gray-400 group-hover:text-red-fks transition-colors"></i>
                                 <span
-                                    class="label-2 font-bold text-gray-warm-600 group-hover:text-gray-warm-900 transition-colors font-beau">Thông
+                                    class="label-2 font-bold text-gray-warm-600 group-hover:text-gray-warm-900 transition-colors font-sans">Thông
                                     tin cá nhân</span>
                                 <div
                                     class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 bg-red-fks group-hover:h-8 transition-all rounded-r-full">
@@ -254,7 +254,7 @@
                                 class="w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-left hover:bg-blue-fks/5 transition-all group relative overflow-hidden outline-none">
                                 <i class="pi pi-lock text-gray-400 group-hover:text-blue-fks transition-colors"></i>
                                 <span
-                                    class="label-2 font-bold text-gray-warm-600 group-hover:text-gray-warm-900 transition-colors font-beau">Bảo
+                                    class="label-2 font-bold text-gray-warm-600 group-hover:text-gray-warm-900 transition-colors font-sans">Bảo
                                     mật tài khoản</span>
                                 <div
                                     class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 bg-blue-fks group-hover:h-8 transition-all rounded-r-full">
@@ -265,7 +265,7 @@
                                 <i
                                     class="pi pi-map-marker text-gray-400 group-hover:text-purple-600 transition-colors"></i>
                                 <span
-                                    class="label-2 font-bold text-gray-warm-600 group-hover:text-gray-warm-900 transition-colors font-beau">Liên
+                                    class="label-2 font-bold text-gray-warm-600 group-hover:text-gray-warm-900 transition-colors font-sans">Liên
                                     hệ & Địa chỉ</span>
                                 <div
                                     class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 bg-purple-600 group-hover:h-8 transition-all rounded-r-full">
@@ -282,12 +282,6 @@
                 </div>
 
                 <div class="col-span-full lg:col-span-8 space-y-8" data-aos="fade-left">
-                    <!-- Banner Hành trình tích lũy Quả (Phương án B) -->
-                    <FruitJourneyBanner
-                        :rank-milestones="rankMilestones"
-                        :user-rank="userRank"
-                    />
-
                     <!-- Notification tùy chỉnh khi lưu thành công -->
                     <transition enter-active-class="transition-all duration-500 ease-out"
                         enter-from-class="opacity-0 -translate-y-4" enter-to-class="opacity-100 translate-y-0"
@@ -343,7 +337,7 @@
                         </div>
                         <div class="flex-1 space-y-1">
                             <p class="font-bold text-xs uppercase tracking-wider text-amber-800">Thông báo từ Ban Quản trị</p>
-                            <p class="text-sm font-medium text-amber-950 whitespace-pre-line leading-relaxed font-beau">{{ adminNote }}</p>
+                            <p class="text-sm font-medium text-amber-950 whitespace-pre-line leading-relaxed font-sans">{{ adminNote }}</p>
                         </div>
                     </div>
 
@@ -360,7 +354,7 @@
                                 </div>
                                 <div>
                                     <h2 class="title-1 font-bold text-gray-warm-900 font-display">Thông tin cá nhân</h2>
-                                    <p class="body-2 text-gray-warm-400 font-beau">Tên hiển thị và cách FUNKY liên hệ
+                                    <p class="body-2 text-gray-warm-400 font-sans">Tên hiển thị và cách FUNKY liên hệ
                                         với bạn</p>
                                 </div>
                             </div>
@@ -368,13 +362,13 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
                                 <div class="space-y-3">
                                     <label
-                                        class="label-2 font-black uppercase tracking-widest text-gray-warm-400 flex items-center gap-2 font-beau">
+                                        class="label-2 font-black uppercase tracking-widest text-gray-warm-400 flex items-center gap-2 font-sans">
                                         <span class="w-1.5 h-1.5 rounded-full bg-red-fks"></span>
                                         Họ và tên
                                     </label>
                                     <div class="relative group">
                                         <input v-model="form.name" type="text" placeholder="Họ và tên của bạn..."
-                                            class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-50 focus:bg-white focus:ring-4 focus:ring-red-fks/5 focus:border-red-fks transition-all outline-none font-bold text-gray-warm-800 font-beau"
+                                            class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-50 focus:bg-white focus:ring-4 focus:ring-red-fks/5 focus:border-red-fks transition-all outline-none font-bold text-gray-warm-800 font-sans"
                                             :class="errors.name ? 'border-red-600 ring-red-600/10' : ''" />
                                     </div>
                                     <p v-if="errors.name" class="text-xs text-red-600 font-bold ml-2">{{ errors.name }}
@@ -383,26 +377,26 @@
 
                                 <div class="space-y-3 opacity-80">
                                     <label
-                                        class="label-2 font-black uppercase tracking-widest text-gray-warm-400 flex items-center gap-2 font-beau">
+                                        class="label-2 font-black uppercase tracking-widest text-gray-warm-400 flex items-center gap-2 font-sans">
                                         <span class="w-1.5 h-1.5 rounded-full bg-gray-300"></span>
                                         Email tài khoản
                                     </label>
                                     <div class="relative">
                                         <input v-model="form.email" type="email"
-                                            class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-100 text-gray-400 transition-all outline-none cursor-not-allowed font-beau italic"
+                                            class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-100 text-gray-400 transition-all outline-none cursor-not-allowed font-sans italic"
                                             readonly disabled />
                                     </div>
                                 </div>
 
                                 <div class="space-y-3">
                                     <label
-                                        class="label-2 font-black uppercase tracking-widest text-gray-warm-400 flex items-center gap-2 font-beau">
+                                        class="label-2 font-black uppercase tracking-widest text-gray-warm-400 flex items-center gap-2 font-sans">
                                         <span class="w-1.5 h-1.5 rounded-full bg-red-fks"></span>
                                         Số điện thoại (Zalo) <span class="text-red-600 text-xs font-bold font-sans">*</span>
                                     </label>
                                     <div class="relative group">
                                         <input v-model="form.phone" type="text" placeholder="Ví dụ: 0938039170..."
-                                            class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-50 focus:bg-white focus:ring-4 focus:ring-red-fks/5 focus:border-red-fks transition-all outline-none font-bold text-gray-warm-800 font-beau"
+                                            class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-50 focus:bg-white focus:ring-4 focus:ring-red-fks/5 focus:border-red-fks transition-all outline-none font-bold text-gray-warm-800 font-sans"
                                             :class="errors.phone ? 'border-red-600 ring-red-600/10' : ''" />
                                     </div>
                                     <p v-if="errors.phone" class="text-xs text-red-600 font-bold ml-2">{{ errors.phone
@@ -411,13 +405,13 @@
 
                                 <div class="space-y-3">
                                     <label
-                                        class="label-2 font-black uppercase tracking-widest text-gray-warm-400 flex items-center gap-2 font-beau">
+                                        class="label-2 font-black uppercase tracking-widest text-gray-warm-400 flex items-center gap-2 font-sans">
                                         <span class="w-1.5 h-1.5 rounded-full bg-red-fks"></span>
                                         Link Facebook <span class="text-red-600 text-xs font-bold font-sans">*</span>
                                     </label>
                                     <div class="relative group">
                                         <input v-model="form.zalo" type="text" placeholder="https://www.facebook.com/your.profile"
-                                            class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-50 focus:bg-white focus:ring-4 focus:ring-red-fks/5 focus:border-red-fks transition-all outline-none font-bold text-gray-warm-800 font-beau"
+                                            class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-50 focus:bg-white focus:ring-4 focus:ring-red-fks/5 focus:border-red-fks transition-all outline-none font-bold text-gray-warm-800 font-sans"
                                             :class="errors.zalo ? 'border-red-600 ring-red-600/10' : ''" />
                                     </div>
                                     <p v-if="errors.zalo" class="text-xs text-red-600 font-bold ml-2">{{ errors.zalo
@@ -438,7 +432,7 @@
                                 </div>
                                 <div>
                                     <h2 class="title-1 font-bold text-gray-warm-900 font-display">Bảo mật</h2>
-                                    <p class="body-2 text-gray-warm-400 font-beau">Chỉ điền nếu bạn muốn thay đổi mật
+                                    <p class="body-2 text-gray-warm-400 font-sans">Chỉ điền nếu bạn muốn thay đổi mật
                                         khẩu mới</p>
                                 </div>
                             </div>
@@ -446,18 +440,18 @@
                             <div
                                 class="grid grid-cols-1 md:grid-cols-2 gap-8 p-8 rounded-3xl bg-blue-fks/[0.02] border border-blue-fks/10">
                                 <div class="space-y-3">
-                                    <label class="label-2 font-bold text-blue-fks font-beau">Mật khẩu mới</label>
+                                    <label class="label-2 font-bold text-blue-fks font-sans">Mật khẩu mới</label>
                                     <input v-model="form.password" type="password" placeholder="Tối thiểu 6 ký tự..."
-                                        class="w-full px-6 py-4 rounded-2xl border-gray-200/50 border bg-white focus:ring-4 focus:ring-blue-fks/5 focus:border-blue-fks transition-all outline-none font-bold font-beau" />
-                                    <p v-if="errors.password" class="text-xs text-red-600 font-bold font-beau">{{
+                                        class="w-full px-6 py-4 rounded-2xl border-gray-200/50 border bg-white focus:ring-4 focus:ring-blue-fks/5 focus:border-blue-fks transition-all outline-none font-bold font-sans" />
+                                    <p v-if="errors.password" class="text-xs text-red-600 font-bold font-sans">{{
                                         errors.password }}</p>
                                 </div>
 
                                 <div class="space-y-3">
-                                    <label class="label-2 font-bold text-blue-fks font-beau">Xác nhận lại</label>
+                                    <label class="label-2 font-bold text-blue-fks font-sans">Xác nhận lại</label>
                                     <input v-model="form.password_confirmation" type="password"
                                         placeholder="Nhập lại mật khẩu..."
-                                        class="w-full px-6 py-4 rounded-2xl border-gray-200/50 border bg-white focus:ring-4 focus:ring-blue-fks/5 focus:border-blue-fks transition-all outline-none font-bold font-beau" />
+                                        class="w-full px-6 py-4 rounded-2xl border-gray-200/50 border bg-white focus:ring-4 focus:ring-blue-fks/5 focus:border-blue-fks transition-all outline-none font-bold font-sans" />
                                 </div>
                             </div>
                         </div>
@@ -476,7 +470,7 @@
                                 <div>
                                     <h2 class="title-1 font-bold text-gray-warm-900 font-display">Thông tin học vấn
                                     </h2>
-                                    <p class="body-2 text-gray-warm-400 font-beau">Giúp Funky gợi ý tài liệu phù hợp
+                                    <p class="body-2 text-gray-warm-400 font-sans">Giúp Funky gợi ý tài liệu phù hợp
                                         cho bạn</p>
                                 </div>
                             </div>
@@ -485,12 +479,12 @@
                                 <!-- Trường học -->
                                 <div class="md:col-span-2 space-y-3">
                                     <label
-                                        class="label-2 font-black uppercase tracking-widest text-gray-warm-400 flex items-center gap-2 font-beau">
+                                        class="label-2 font-black uppercase tracking-widest text-gray-warm-400 flex items-center gap-2 font-sans">
                                         <span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>
                                         Trường đang / đã học <span class="text-red-600 text-xs font-bold font-sans">*</span>
                                     </label>
                                     <select v-model="form.school_id"
-                                        class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-50 focus:bg-white focus:ring-4 focus:ring-yellow-400/10 focus:border-yellow-400 transition-all outline-none font-bold text-gray-warm-800 font-beau appearance-none"
+                                        class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-50 focus:bg-white focus:ring-4 focus:ring-yellow-400/10 focus:border-yellow-400 transition-all outline-none font-bold text-gray-warm-800 font-sans appearance-none"
                                         :class="(errors.school_id || errors.school) ? 'border-red-600 ring-red-600/10' : ''">
                                         <option :value="null">-- Chọn trường --</option>
                                         <option v-for="school in schools" :key="school.id" :value="school.id">
@@ -501,7 +495,7 @@
                                     <div v-if="form.school_id === null" class="mt-3">
                                         <input v-model="form.school" type="text"
                                             placeholder="Hoặc nhập tên trường thủ công..."
-                                            class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-50 focus:bg-white focus:ring-4 focus:ring-yellow-400/10 focus:border-yellow-400 transition-all outline-none font-bold text-gray-warm-800 font-beau"
+                                            class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-50 focus:bg-white focus:ring-4 focus:ring-yellow-400/10 focus:border-yellow-400 transition-all outline-none font-bold text-gray-warm-800 font-sans"
                                             :class="errors.school ? 'border-red-600 ring-red-600/10' : ''" />
                                     </div>
                                     <p v-if="errors.school_id" class="text-xs text-red-600 font-bold ml-2">{{ errors.school_id }}</p>
@@ -511,12 +505,12 @@
                                 <!-- Chuyên ngành -->
                                 <div class="space-y-3">
                                     <label
-                                        class="label-2 font-black uppercase tracking-widest text-gray-warm-400 flex items-center gap-2 font-beau">
+                                        class="label-2 font-black uppercase tracking-widest text-gray-warm-400 flex items-center gap-2 font-sans">
                                         <span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>
                                         Chuyên ngành <span class="text-red-600 text-xs font-bold font-sans">*</span>
                                     </label>
                                     <select v-model="form.major"
-                                        class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-50 focus:bg-white focus:ring-4 focus:ring-yellow-400/10 focus:border-yellow-400 transition-all outline-none font-bold text-gray-warm-800 font-beau appearance-none"
+                                        class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-50 focus:bg-white focus:ring-4 focus:ring-yellow-400/10 focus:border-yellow-400 transition-all outline-none font-bold text-gray-warm-800 font-sans appearance-none"
                                         :class="errors.major ? 'border-red-600 ring-red-600/10' : ''">
                                         <option :value="null">-- Chọn chuyên ngành --</option>
                                         <option v-for="m in majors" :key="m.value" :value="m.value">
@@ -529,12 +523,12 @@
                                 <!-- Trạng thái hiện tại -->
                                 <div class="space-y-3">
                                     <label
-                                        class="label-2 font-black uppercase tracking-widest text-gray-warm-400 flex items-center gap-2 font-beau">
+                                        class="label-2 font-black uppercase tracking-widest text-gray-warm-400 flex items-center gap-2 font-sans">
                                         <span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>
                                         Trạng thái hiện tại <span class="text-red-600 text-xs font-bold font-sans">*</span>
                                     </label>
                                     <select v-model="form.current_status"
-                                        class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-50 focus:bg-white focus:ring-4 focus:ring-yellow-400/10 focus:border-yellow-400 transition-all outline-none font-bold text-gray-warm-800 font-beau appearance-none"
+                                        class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-50 focus:bg-white focus:ring-4 focus:ring-yellow-400/10 focus:border-yellow-400 transition-all outline-none font-bold text-gray-warm-800 font-sans appearance-none"
                                         :class="errors.current_status ? 'border-red-600 ring-red-600/10' : ''">
                                         <option :value="null">-- Chọn trạng thái --</option>
                                         <option v-for="s in currentStatusOptions" :key="s.value" :value="s.value">
@@ -547,12 +541,12 @@
                                 <!-- Năm học -->
                                 <div class="space-y-3">
                                     <label
-                                        class="label-2 font-black uppercase tracking-widest text-gray-warm-400 flex items-center gap-2 font-beau">
+                                        class="label-2 font-black uppercase tracking-widest text-gray-warm-400 flex items-center gap-2 font-sans">
                                         <span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>
                                         Năm học / Khóa học <span class="text-red-600 text-xs font-bold font-sans">*</span>
                                     </label>
                                     <select v-model="form.school_year"
-                                        class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-50 focus:bg-white focus:ring-4 focus:ring-yellow-400/10 focus:border-yellow-400 transition-all outline-none font-bold text-gray-warm-800 font-beau appearance-none"
+                                        class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-50 focus:bg-white focus:ring-4 focus:ring-yellow-400/10 focus:border-yellow-400 transition-all outline-none font-bold text-gray-warm-800 font-sans appearance-none"
                                         :class="errors.school_year ? 'border-red-600 ring-red-600/10' : ''">
                                         <option :value="''">-- Chọn năm học / khóa --</option>
                                         <option v-for="sy in schoolYears" :key="sy.value" :value="sy.value">
@@ -565,18 +559,18 @@
                                 <!-- Ghi chú cho Funky -->
                                 <div class="md:col-span-2 space-y-3">
                                     <label
-                                        class="label-2 font-black uppercase tracking-widest text-gray-warm-400 font-beau">Ghi
+                                        class="label-2 font-black uppercase tracking-widest text-gray-warm-400 font-sans">Ghi
                                         chú cho Funky</label>
                                     <textarea v-model="form.funky_note" rows="3"
                                         placeholder="Ghi chú thêm về chuyên ngành, mục tiêu học tập..."
-                                        class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-50 focus:bg-white focus:ring-4 focus:ring-yellow-400/10 focus:border-yellow-400 transition-all outline-none resize-none font-bold text-gray-warm-800 font-beau"></textarea>
+                                        class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-50 focus:bg-white focus:ring-4 focus:ring-yellow-400/10 focus:border-yellow-400 transition-all outline-none resize-none font-bold text-gray-warm-800 font-sans"></textarea>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Footer Actions -->
                         <div class="flex flex-col sm:flex-row justify-end items-center gap-6 pt-6 pb-20 lg:pb-0">
-                            <p class="body-2 text-gray-warm-400 font-beau text-center sm:text-right italic">
+                            <p class="body-2 text-gray-warm-400 font-sans text-center sm:text-right italic">
                                 Hãy kiểm tra kỹ thông tin trước khi lưu
                             </p>
                             <button type="submit"
@@ -599,12 +593,10 @@
 <script>
 import { Link } from '@inertiajs/inertia-vue3'
 import axios from 'axios'
-import FruitJourneyBanner from './Components/FruitJourneyBanner.vue'
 
 export default {
     components: {
         Link,
-        FruitJourneyBanner,
     },
     props: {
         // Dữ liệu trường học từ controller qua Inertia props
@@ -892,7 +884,7 @@ html {
 }
 
 .nap-qua-text {
-    font-family: 'BT-BeauSans', 'Phudu', sans-serif;
+    font-family: 'Be Vietnam Pro', 'Inter', sans-serif;
     font-size: 22px;
     font-weight: 900;
     line-height: 1;

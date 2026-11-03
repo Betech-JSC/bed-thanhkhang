@@ -5,7 +5,7 @@
         <button
             :disabled="currentPage === 1"
             @click="changePage(currentPage - 1)"
-            class="label-2 font-beau text-gray-warm-700 px-[14px] py-2 border border-gray-warm-300 rounded-lg"
+            class="label-2 font-sans text-gray-warm-700 px-[14px] py-2 border border-gray-warm-300 rounded-lg"
         >
             Previous
         </button>
@@ -28,7 +28,7 @@
         <button
             :disabled="currentPage === totalPages"
             @click="changePage(currentPage + 1)"
-            class="label-2 font-beau text-gray-warm-700 px-[14px] py-2 border border-gray-warm-300 rounded-lg"
+            class="label-2 font-sans text-gray-warm-700 px-[14px] py-2 border border-gray-warm-300 rounded-lg"
         >
             Next
         </button>

@@ -98,7 +98,7 @@ export default {
 
 <style lang="scss">
 .active-tab-policy {
-    @apply text-[#18191E] font-medium font-beau border-l-2 border-l-[#2F49D9] pl-2;
+    @apply text-[#18191E] font-medium font-sans border-l-2 border-l-[#2F49D9] pl-2;
 }
 
 .policy-item {
@@ -107,7 +107,7 @@ export default {
     }
 }
 .tab-policy {
-    @apply text-[#79716B] font-medium font-beau pl-2;
+    @apply text-[#79716B] font-medium font-sans pl-2;
 }
 .icon-policy {
     svg {

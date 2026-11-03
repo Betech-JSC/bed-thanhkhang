@@ -1,313 +1,170 @@
 <template>
-    <footer id="footer-section" class="py-5 bg-gray-warm-100 dark:bg-dark-bg pb-8">
-        <!-- Contact Section -->
-        <section class="container space-y-10 p-6 bg-[#D34000] rounded-3xl">
-            <div class="grid grid-cols-3 gap-6">
-                <!-- Contact Form -->
-                <div
-                    class="lg:col-span-1 col-span-full max-lg:space-y-6 lg:h-full p-4 md:p-6 xl:p-8 bg-[#2F49D9] rounded-3xl flex flex-col justify-between">
-                    <div class="space-y-6">
-                        <p class="headline-3 font-bold font-display text-white uppercase">Để lại thông tin liên hệ</p>
-                        <div class="space-y-6">
-                            <JamFieldSet class="text-white" v-model="form.contact.data['name']" :field="{
-                                rules: rules,
-                                errors: errors,
-                                type: 'text',
-                                placeholder: tt('Họ và tên'),
-                                name: 'name',
-                                fieldName: 'name',
-                                errorText: tt('Họ và tên không hợp lệ'),
-                            }" :isSubmit="isSubmit" @setIsSubmit="setIsSubmit" />
-                            <JamFieldSet v-model="form.contact.data['phone']" :field="{
-                                rules: rules,
-                                errors: errors,
-                                type: 'number',
-                                placeholder: tt('Số điện thoại'),
-                                name: 'phone',
-                                fieldName: 'phone',
-                                errorText: tt('Số điện thoại không hợp lệ'),
-                            }" :isSubmit="isSubmit" @setIsSubmit="setIsSubmit" />
-                            <JamFieldSet v-model="form.contact.data['email']" :field="{
-                                rules: rules,
-                                errors: errors,
-                                type: 'email',
-                                placeholder: tt('Email'),
-                                name: 'email',
-                                fieldName: 'email',
-                                errorText: tt('Email không hợp lệ'),
-                            }" :isSubmit="isSubmit" @setIsSubmit="setIsSubmit" />
-                            <JamFieldSet v-model="form.contact.data['note']" :field="{
-                                rules: rules,
-                                errors: errors,
-                                type: 'text',
-                                placeholder: tt('Nội dung cần tư vấn'),
-                                name: 'note',
-                                fieldName: 'note',
-                                errorText: tt('Nội dung không hợp lệ'),
-                            }" :isSubmit="isSubmit" @setIsSubmit="setIsSubmit" />
-                        </div>
-                        <ButtonFooter @click="contact" title="Nhận tư vấn" :isLoading="isLoading" />
+    <footer id="footer-section" class="bg-[#111322] border-t border-[#F5F8FF]/10 text-secondary pt-14 pb-8">
+        <div class="w-full max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-0 space-y-12">
+            <!-- 4 Column Grid (Figma 2261:5820 / 2226:3250) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                <!-- Column 1: Brand Info (5 cols / 361px) (Figma 2226:3251) -->
+                <div class="lg:col-span-5 space-y-5">
+                    <Link href="/" class="inline-flex items-center">
+                        <img
+                            src="/assets/images/header/figma-header-logo.svg"
+                            alt="HH Maker Logo"
+                            class="h-[48px] w-auto object-contain"
+                        />
+                    </Link>
+                    <div class="space-y-2 pt-1 max-w-[361px]">
+                        <h3 class="text-xl lg:text-[24px] font-medium text-[#F5F8FF] tracking-normal leading-[34px]">
+                            CÔNG TY IN ẤN 3D HH MAKER
+                        </h3>
+                        <p class="text-sm sm:text-base text-[#D1E0FF] leading-[22px] font-normal">
+                            {{ displayAddress }}
+                        </p>
                     </div>
                 </div>
 
-                <!-- Social Media Section -->
-                <div
-                    class="lg:col-span-1 col-span-full max-lg:space-y-6 lg:h-full p-4 md:p-6 xl:p-8 bg-[#CBFF00] rounded-3xl flex flex-col justify-between">
-                    <div class="display-3 text-[#18191E] font-bold font-display uppercase flex-1">
-                        Theo dõi thêm về hoạt động của Funky
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <a v-for="(item, index) in socialList" :href="item.link" target="_blank"
-                            rel="noopener noreferrer nofollow" :key="index"
-                            class="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-warm-25 border-2 border-gray-warm-25 lg:hover:border-black-fks lg:hover:bg-green-fks duration-300 ease-in-out">
-                            <JPicture :src="item.icon" :alt="item.alt" class="picture-cover" />
+                <!-- Column 2: Trang chủ / Điều hướng (2 cols) (Figma 2226:3263) -->
+                <div class="lg:col-span-2 space-y-4">
+                    <h4 class="text-base font-bold text-[#D1E0FF] tracking-normal font-sans leading-[22px]">
+                        Trang chủ
+                    </h4>
+                    <ul class="space-y-3 text-sm">
+                        <li>
+                            <Link href="/san-pham" class="text-[#F5F8FF] hover:text-[#2970FF] transition-colors leading-[20px] font-medium">
+                                Sản phẩm
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/gioi-thieu" class="text-[#F5F8FF] hover:text-[#2970FF] transition-colors leading-[20px] font-medium">
+                                Giới thiệu
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/quy-trinh" class="text-[#F5F8FF] hover:text-[#2970FF] transition-colors leading-[20px] font-medium">
+                                Quy trình
+                            </Link>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Dịch vụ (2 cols) (Figma 2226:3270) -->
+                <div class="lg:col-span-2 space-y-4">
+                    <h4 class="text-base font-bold text-[#D1E0FF] tracking-normal font-sans leading-[22px]">
+                        Dịch vụ
+                    </h4>
+                    <ul class="space-y-3 text-sm">
+                        <li>
+                            <Link href="/dich-vu" class="text-[#F5F8FF] hover:text-[#2970FF] transition-colors leading-[20px] font-medium">
+                                Thiết kế 3D
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/dich-vu" class="text-[#F5F8FF] hover:text-[#2970FF] transition-colors leading-[20px] font-medium">
+                                Gia công 3D
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/dich-vu" class="text-[#F5F8FF] hover:text-[#2970FF] transition-colors leading-[20px] font-medium">
+                                Custom 3D
+                            </Link>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Column 4: Liên hệ tư vấn (3 cols) (Figma 2226:3276) -->
+                <div class="lg:col-span-3 space-y-4">
+                    <h4 class="text-base font-bold text-[#D1E0FF] tracking-normal font-sans leading-[22px]">
+                        Liên hệ tư vấn
+                    </h4>
+                    <div class="space-y-3 text-sm font-medium">
+                        <a
+                            :href="'tel:' + displayHotline.replace(/\s+/g, '')"
+                            class="flex items-center gap-2.5 text-[#F5F8FF] hover:text-[#2970FF] transition-colors"
+                        >
+                            <svg class="w-5 h-5 text-[#2970FF] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                            <span>{{ displayHotline }}</span>
                         </a>
-                    </div>
-                </div>
-
-                <!-- Community Section -->
-                <div
-                    class="lg:col-span-1 col-span-full max-lg:space-y-6 lg:h-full p-4 md:p-6 xl:p-8 bg-[#F4EFE2] rounded-3xl flex flex-col justify-between">
-                    <div class="display-3 text-[#18191E] font-bold font-display uppercase flex-1">
-                        Khám phá cộng đồng Funky!
-                    </div>
-                    <div class="space-y-2">
-                        <a v-for="(item, index) in buttonList" :href="item.link" target="_blank"
-                            rel="noopener noreferrer nofollow" :key="index" class="block">
-                            <ButtonFooter :title="item.title" />
+                        <a
+                            :href="'mailto:' + displayEmail"
+                            class="flex items-center gap-2.5 text-[#F5F8FF] hover:text-[#2970FF] transition-colors"
+                        >
+                            <svg class="w-5 h-5 text-[#2970FF] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            <span>{{ displayEmail }}</span>
+                        </a>
+                        <a
+                            href="mailto:lamhonghai123@gmail.com"
+                            class="flex items-center gap-2.5 text-[#F5F8FF] hover:text-[#2970FF] transition-colors"
+                        >
+                            <svg class="w-5 h-5 text-[#2970FF] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            <span>lamhonghai123@gmail.com</span>
                         </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Footer Information -->
-            <div class="grid grid-cols-12 lg:space-x-[120px] space-y-6">
-                <section class="col-span-full md:col-span-4 space-y-[28px]">
-                    <JPicture src="/assets/svg/logo-footer.svg" alt="Funky Logo" class="picture-cover" />
-                    <div class="space-y-[12px]">
-                        <div class="title-3 text-white font-display font-bold">Thông tin liên hệ</div>
-                        <div class="space-y-2">
-                            <p class="text-base text-white font-beau font-normal">
-                                <span class="font-bold">Địa chỉ: </span>
-                                <span>
-                                    <a href="https://maps.app.goo.gl/iRpCBTSBdBFmsAtV7" target="_blank"
-                                        rel="noopener noreferrer nofollow"
-                                        class="lg:hover:text-green-fks duration-300 ease-in-out">
-                                        {{ $page.props.global?.general_address }}
-                                    </a>
-                                </span>
-                            </p>
-                            <p class="text-base text-white font-beau font-normal">
-                                <span class="font-bold">Email: </span>
-                                <span>
-                                    <a :href="`mailto:${$page.props.global?.general_email || ''}`"
-                                        class="lg:hover:text-green-fks duration-300 ease-in-out">
-                                        {{ $page.props.global?.general_email }}
-                                    </a>
-                                </span>
-                            </p>
-                            <p class="text-base text-white font-beau font-normal">
-                                <span class="font-bold">Điện thoại: </span>
-                                <span>
-                                    <a :href="`tel:${$page.props.global?.general_phone || ''}`"
-                                        class="lg:hover:text-green-fks duration-300 ease-in-out">
-                                        {{ $page.props.global?.general_phone }}
-                                    </a>
-                                </span>
-                            </p>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Links and Policies -->
-                <section class="col-span-full md:col-span-8 grid grid-cols-2 gap-x-8">
-                    <div class="space-y-6 text-white md:col-span-1 col-span-full">
-                        <div class="title-3 font-display font-bold">Tổng quan</div>
-                        <div class="label-1 font-medium font-beau space-y-[12px]">
-                            <Link class="block" :href="route('histories.index')">Về chúng tôi</Link>
-                            <Link class="block" :href="route('galleries.index')">Gallery</Link>
-                            <Link class="block" :href="route('posts')">Blog</Link>
-                        </div>
-                    </div>
-                </section>
+            <!-- Bottom Copyright Bar (Figma 2261:5820 / 2226:3288) -->
+            <div
+                class="pt-6 border-t border-[#F5F8FF]/20 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#D1E0FF]"
+            >
+                <p>© Copyright 2026 HH MAKER</p>
+                <div class="flex items-center gap-6 sm:gap-10">
+                    <Link href="/chinh-sach" class="text-[#D1E0FF] hover:text-white transition-colors">
+                        Chính sách bảo mật
+                    </Link>
+                    <Link href="/chinh-sach" class="text-[#D1E0FF] hover:text-white transition-colors">
+                        Điều khoản sử dụng
+                    </Link>
+                    <Link href="/chinh-sach" class="text-[#D1E0FF] hover:text-white transition-colors">
+                        Chính sách Cookie
+                    </Link>
+                </div>
             </div>
-        </section>
-    </footer>
-    <!-- Footer Bottom -->
-    <section class="bg-gray-warm-100 dark:bg-dark-bg">
-        <div
-            class="border-t border-[#C1C7CD] pt-[12px] container flex items-center justify-between label-1 dark:text-white/50 text-[#79716B] font-normal pb-[24px]">
-            <div>Funkystyle @ {{ currentYear }} - Design by <span><a
-                        href="https://betech-digital.com">Betech</a></span>. <br class="md:hidden block" /> All rights
-                reserved.</div>
-            <Link :href="route('policies.show', policy[0]?.slug || '')" class="text-gray-500 body-1">Chính sách</Link>
         </div>
-    </section>
-    <ModalSuccess @close="closePopup" :isSuccess="isSuccess" :title="tt('Đăng ký thành công')" :description="tt(
-        'Hệ thống đã nhận thông tin yêu cầu của khách hàng. Funky sẽ liên hệ và tư vấn Quý khách trong thời gian sớm nhất.'
-    )
-        " />
+    </footer>
 </template>
 
 <script>
-import { validateForm } from '@/validator'
+import { Link } from '@inertiajs/inertia-vue3'
 
-const emptyForm = {
-    name: '',
-    phone: '',
-    email: '',
-    note: '',
-}
 export default {
+    name: 'Footer',
+    components: {
+        Link,
+    },
+    props: {
+        address: {
+            type: String,
+            default: '',
+        },
+        hotline: {
+            type: String,
+            default: '',
+        },
+        email: {
+            type: String,
+            default: '',
+        },
+    },
     data() {
         return {
-            form: {
-                contact: {
-                    data: {
-                        ...emptyForm,
-                    },
-                    type: 'CONTACT_FORM',
-                },
-            },
-            rules: {
-                name: 'required',
-                phone: 'phone|required|min:10|max:11',
-                email: 'email|required',
-            },
-            errors: {},
-            isSuccess: false,
-            isLoading: false,
-            isSubmit: false,
-            menus: [
-                {
-                    title: this.tt('Footer about'),
-                    slug: this.route('histories.index'),
-                },
-                {
-                    title: this.tt('Footer contact'),
-                    slug: this.route('contact'),
-                },
-            ],
-            services: this.$page.props.data?.services || [],
-            socialList: [
-                {
-                    link: 'https://www.facebook.com/FUNKYstyleAcademy',
-                    icon: '/assets/svg/facebook.svg',
-                    alt: 'social facebook',
-                },
-                {
-                    link: 'https://www.instagram.com/funky_satellite?igsh=MTQ1Ymw2emJndDBvZg==',
-                    icon: '/assets/svg/instagram.svg',
-                    alt: 'social instagram',
-                },
-                {
-                    link: 'https://www.threads.net/@funky_satellite',
-                    icon: '/assets/svg/thread.svg',
-                    alt: 'social thread',
-                },
-                {
-                    link: 'https://www.tiktok.com/@hockientruccungfunky?_t=ZS-8t3CJAwFMji&_r=1',
-                    icon: '/assets/svg/tiktok.svg',
-                    alt: 'social tiktok',
-                },
-                {
-                    link: 'https://www.youtube.com/@funkystyle3633',
-                    icon: '/assets/svg/youtube.svg',
-                    alt: 'social youtube',
-                },
-            ],
-            infor: [
-                {
-                    title: this.tt('28 Đường số 10, KDC Bình Phú, Phường 11, Quận 6, Thành phố Hồ Chí Minh, Việt Nam'),
-                    icon: '/assets/svg/icon-map.svg',
-                    alt: '',
-                },
-                {
-                    title: this.tt('anna.qiu@utrend-vn.com'),
-                    icon: '/assets/svg/mail.svg',
-                    alt: '',
-                },
-                {
-                    title: this.tt('0318148569'),
-                    icon: '/assets/svg/phone.svg',
-                    alt: '',
-                },
-            ],
-            currentYear: '',
-            buttonList: [
-                {
-                    title: 'Cộng đồng D5 Render',
-                    icon: '/assets/svg/icon-map.svg',
-                    link: 'https://www.facebook.com/groups/1213550849655765',
-                },
-                {
-                    title: 'FUNKY Store',
-                    icon: '/assets/svg/icon-map.svg',
-                    link: 'https://www.facebook.com/FUNKYstyleStore',
-                },
-                {
-                    title: 'VẼ tay KIẾN TRÚC',
-                    icon: '/assets/svg/mail.svg',
-                    link: 'https://www.facebook.com/FUNKYstyleSatellite',
-                },
-                {
-                    title: 'cộng đồng cùng học kiến trúc',
-                    icon: '/assets/svg/phone.svg',
-                    link: 'https://www.facebook.com/groups/1184886178600822',
-                },
-            ],
+            currentYear: new Date().getFullYear(),
         }
     },
-    created: function () {
-        this.currentYear = new Date().getFullYear()
-    },
     computed: {
-        policy() {
-            return this.$page.props.data?.policies || []
+        displayAddress() {
+            return this.address || this.$page.props.global?.general_address || 'Số 65 đường số 9, khu dân cư Hương Lộ 5, Phường An Lạc, Thành phố Hồ Chí Minh'
         },
-    },
-    methods: {
-        contact() {
-            this.isLoading = true
-            this.errors = validateForm(this.form.contact.data, this.rules)
-            if (Object.keys(this.errors).length > 0) {
-                this.isLoading = false
-                return false
-            }
-            this.$inertia.post(this.route('contact.store'), this.form, {
-                preserveScroll: true,
-                onSuccess: () => {
-                    this.form.contact.data = { ...emptyForm }
-                    this.isSuccess = true
-                    this.isSubmit = true
-                    this.isLoading = false
-                    document.body.classList.add('overflow-hidden')
-                },
-                onFinish: () => {
-                    this.isLoading = false
-                },
-            })
+        displayHotline() {
+            return this.hotline || this.$page.props.global?.general_phone || '0906636425'
         },
-        closePopup() {
-            this.isSuccess = false
-            document.body.classList.remove('overflow-hidden')
-        },
-        setIsSubmit(val) {
-            this.isSubmit = val
+        displayEmail() {
+            return this.email || this.$page.props.global?.general_email || 'info@hhmaker.vn'
         },
     },
 }
 </script>
-<style lang="scss" scoped>
-.bg-footer {
-    background: url('/assets/images/footer/background-mobile.webp');
-    @apply bg-cover bg-no-repeat;
-}
-
-@media screen and (min-width: 768px) {
-    .bg-footer {
-        background: url('/assets/images/footer/background.webp');
-        @apply bg-cover bg-no-repeat;
-    }
-}
-</style>

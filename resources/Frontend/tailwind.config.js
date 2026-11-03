@@ -667,6 +667,7 @@ const colors = {
     },
 
     error: {
+        DEFAULT: '#F04438',
 
         25: '#FFFBFA',
 
@@ -693,6 +694,7 @@ const colors = {
     },
 
     warning: {
+        DEFAULT: '#F79009',
 
         25: '#FFFCF5',
 
@@ -719,6 +721,7 @@ const colors = {
     },
 
     success: {
+        DEFAULT: '#12B76A',
 
         25: '#F6FEF9',
 
@@ -742,6 +745,21 @@ const colors = {
 
         900: '#054F31',
 
+    },
+
+    info: {
+        DEFAULT: '#2E90FA',
+        25: '#F5FAFF',
+        50: '#EFF8FF',
+        100: '#D1E9FF',
+        200: '#B2DDFF',
+        300: '#84CAFF',
+        400: '#53B1FD',
+        500: '#2E90FA',
+        600: '#1570EF',
+        700: '#175CD3',
+        800: '#1849A9',
+        900: '#194185',
     },
 
 
@@ -826,62 +844,94 @@ module.exports = {
 
         extend: {
 
+            spacing: {
+                section: '5rem',       // 80px
+                'section-lg': '7.5rem',  // 120px
+                gutter: '1.5rem',      // 24px
+            },
+
             colors: {
 
                 ...colors,
 
                 primary: {
-
-                    DEFAULT: "#8F7153",
-
-                    50: "#FCF9F1",
-
-                    50: "#F4F0E4",
-
-                    100: "#E9DFC6",
-
-                    200: "#E2D8C1",
-
-                    300: "#C3B99F",
-
-                    400: "#D8C89F",
-
-                    500: "#D4BB92",
-
-                    600: "#8F7153",
-
-                    700: "#6C533B",
-
-                    800: "#5D4535",
-
-                    900: "#39221C"
-
+                    DEFAULT: "#2970FF",
+                    hover: "#155EEF",
+                    active: "#0040C1",
+                    50: "#EFF4FF",
+                    100: "#D1E0FF",
+                    200: "#B2CCFF",
+                    300: "#84ADFF",
+                    400: "#528BFF",
+                    500: "#2970FF",
+                    600: "#155EEF",
+                    700: "#0040C1",
+                    800: "#003194",
+                    900: "#002266"
                 },
+                'brand-blue': '#2970FF',
 
+                // Figma Dark Tech Standard Colors (Nodes 2352:10717, 2261:5474, 2367:2088)
+                'dark-bg': '#111322',
+                'dark-bg-alt': '#0B0F19',
+                'dark-surface': '#171B30',
+                'dark-surface-light': '#1E2B45',
+                'dark-card': '#171B30',
+                'dark-hero': '#0B0D19',
+                'dark-border': '#404968',
+                'dark-border-light': '#5D6B98',
+
+                // Direct Figma color aliases
+                'figma-bg': '#111322',
+                'figma-card': '#171B30',
+                'figma-hero': '#0B0D19',
+                'figma-border': '#404968',
+                'figma-border-light': '#5D6B98',
+                'figma-blue': '#2970FF',
+                'figma-white': '#FAFAFA',
+                'figma-subtext': '#B9C0D4',
+                'figma-blue-text': '#D1E0FF',
+
+                // Dark Tech Text Color Tokens
+                'text-white': '#FAFAFA',
+                'text-secondary': '#B9C0D4',
+                'text-muted': '#64748B',
+                'text-dim': '#475467',
+                'text-blue': '#D1E0FF',
+
+                // Direct color aliases for text-* and bg-* syntax flexibility
+                secondary: '#B9C0D4',
+                muted: '#64748B',
+                dim: '#475467',
+
+                /**
+                 * @deprecated LEGACY FUNKYSTYLE COLORS (FKS)
+                 * Do NOT use in new HH-Maker components. Kept strictly for backward compatibility with unmigrated pages.
+                 * Scheduled for removal after full design audit.
+                 */
+                'red-fks': '#D34000',
+                'black-fks': '#18191E',
+                'green-fks': '#CBFF00',
+                'blue-fks': '#2F49D9',
                 red: {
-
                     'fks': '#D34000'
-
                 },
-
                 black: {
-
                     'fks': '#18191E'
-
                 },
 
                 dark: {
-
-                    'bg': '#0f172a',
-
-                    'surface': '#1e293b',
-
-                    'surface-light': '#334155',
-
-                    'text': '#f1f5f9',
-
-                    'text-secondary': '#cbd5e1',
-
+                    'bg': '#111322',
+                    'bg-alt': '#0B0F19',
+                    'surface': '#171B30',
+                    'surface-light': '#1E2B45',
+                    'card': '#171B30',
+                    'border': '#404968',
+                    'border-light': '#5D6B98',
+                    'text': '#FAFAFA',
+                    'text-secondary': '#B9C0D4',
+                    'text-muted': '#64748B',
+                    'text-dim': '#475467'
                 }
 
             },
@@ -905,8 +955,50 @@ module.exports = {
                 'xs-error-100': '0px 1px 2px rgba(16, 24, 40, 0.05), 0px 0px 0px 4px #fee4e2',
 
                 'xs-primary-300': '0px 1px 2px rgba(16, 24, 40, 0.05), 0px 0px 0px 4px #EFF8FF',
-
+                'glow-primary': '0px 4px 14px rgba(0, 82, 255, 0.4)',
+                'glow-primary-lg': '0px 8px 24px rgba(0, 82, 255, 0.5)',
+                'card-dark': '0 4px 20px rgba(0, 0, 0, 0.5)',
+                'panel-dark': '0 8px 32px rgba(0, 0, 0, 0.6)',
+                'glow-cyan': '0 0 20px rgba(0, 240, 255, 0.35)',
+                'glow-primary-subtle': '0 0 16px rgba(0, 82, 255, 0.25)',
             },
+
+            fontSize: {
+                // Semantic Heading & Text Tokens (Figma Nodes 2352:10717, 2261:5474, 2367:2088)
+                h1: ['38px', { lineHeight: '46px', letterSpacing: '-0.01em', fontWeight: '700' }],
+                h2: ['28px', { lineHeight: '36px', letterSpacing: '0', fontWeight: '700' }],
+                h3: ['20px', { lineHeight: '28px', letterSpacing: '0', fontWeight: '600' }],
+                body: ['16px', { lineHeight: '26px', letterSpacing: '0' }],
+                caption: ['14px', { lineHeight: '20px', letterSpacing: '0' }],
+                'caption-sm': ['13px', { lineHeight: '16px', letterSpacing: '0', fontWeight: '600' }],
+                'caption-xs': ['12px', { lineHeight: '16px', letterSpacing: '0', fontWeight: '600' }],
+
+                'display-hero': ['38px', { lineHeight: '46px', letterSpacing: '-0.01em' }],
+                'display-banner': ['32px', { lineHeight: '38px', letterSpacing: '-0.01em' }],
+                'display-section': ['28px', { lineHeight: '34px', letterSpacing: '0' }],
+                'display-card': ['24px', { lineHeight: '30px', letterSpacing: '0' }],
+                'display-step': ['42px', { lineHeight: '51px', letterSpacing: '0' }],
+                'display-2xl': ['4.5rem', { lineHeight: '5.625rem', letterSpacing: '-0.02em' }], // 72px / 90px
+                'display-xl': ['3.75rem', { lineHeight: '4.5rem', letterSpacing: '-0.02em' }],   // 60px / 72px
+                'display-lg': ['3rem', { lineHeight: '3.75rem', letterSpacing: '-0.02em' }],      // 48px / 60px
+                'display-md': ['2.25rem', { lineHeight: '2.75rem', letterSpacing: '-0.02em' }],   // 36px / 44px
+                'display-sm': ['1.875rem', { lineHeight: '2.375rem', letterSpacing: '0' }],       // 30px / 38px
+                'display-xs': ['1.5rem', { lineHeight: '2rem', letterSpacing: '0' }],              // 24px / 32px
+                'text-xl': ['1.25rem', { lineHeight: '1.875rem', letterSpacing: '0' }],           // 20px / 30px
+                'text-lg': ['1.125rem', { lineHeight: '1.75rem', letterSpacing: '0' }],           // 18px / 28px
+                'text-md': ['1rem', { lineHeight: '1.5rem', letterSpacing: '0' }],                 // 16px / 24px
+                'text-sm': ['0.875rem', { lineHeight: '1.25rem', letterSpacing: '0' }],           // 14px / 20px
+                'text-xs': ['0.75rem', { lineHeight: '1.125rem', letterSpacing: '0' }],           // 12px / 18px
+            },
+
+            borderRadius: {
+                btn: '8px',
+                card: '16px',
+                input: '10px',
+                panel: '20px',
+                pill: '9999px',
+            },
+
 
 
 
@@ -934,44 +1026,8 @@ module.exports = {
 
             fontFamily: {
 
-                display: ['Phudu', 'sans-serif'],
-
-                beau: ['BT- BeauSans', 'sans-serif'],
-
-                sans: [
-
-                    'Quicksand',
-
-                    'ui-sans-serif',
-
-                    'system-ui',
-
-                    '-apple-system',
-
-                    'BlinkMacSystemFont',
-
-                    '"Segoe UI"',
-
-                    'Roboto',
-
-                    '"Helvetica Neue"',
-
-                    'Arial',
-
-                    '"Noto Sans"',
-
-                    'sans-serif',
-
-                    '"Apple Color Emoji"',
-
-                    '"Segoe UI Emoji"',
-
-                    '"Segoe UI Symbol"',
-
-                    '"Noto Color Emoji"',
-
-                ],
-
+                display: ['Inter', 'Be Vietnam Pro', 'sans-serif'],
+                sans: ['Inter', 'Be Vietnam Pro', 'sans-serif'],
                 mono: ['VCR_OSD_MONO', 'monospace'],
 
             },
@@ -979,31 +1035,33 @@ module.exports = {
 
 
             maxWidth: {
-
+                canvas: '1440px',
+                content: '1152px',
+                hero: '1279px',
                 '60vw': '60vw',
-
                 '70vw': '70vw',
-
                 '80vw': '80vw',
-
                 '90vw': '90vw',
-
             },
 
 
 
             container: {
-
                 center: true,
-
                 padding: {
-
                     DEFAULT: '1rem',
-
-                    md: '2rem',
-
+                    md: '1.5rem',
+                    lg: '2rem',
+                    xl: '2rem',
+                    '2xl': '2rem',
                 },
-
+                screens: {
+                    sm: '640px',
+                    md: '768px',
+                    lg: '1024px',
+                    xl: '1280px',
+                    '2xl': '1440px',
+                },
             },
 
         },

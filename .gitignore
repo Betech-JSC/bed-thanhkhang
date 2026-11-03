@@ -20,9 +20,22 @@ config.bat
 build.log
 frontend_build.log
 cookies.txt
-
+.env
 # Local IDE settings
 
 # Graphify local AST output
 /graphify-out
-.env
+
+# Local Backups
+/.backups/
+
+# Playwright & QA Reports
+/playwright-report/
+/test-results/
+/tests/e2e/screenshots/
+
+# Temp inspection & QA snapshots
+/*.png
+/public/*.png
+/public/figma_rendered/
+/public/assets/images/about/figma_inspect/

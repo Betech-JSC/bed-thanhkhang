@@ -13,7 +13,7 @@
                         <div class="col-span-full md:col-span-9">
                             <div>
                                 <h1 class="display-2 text-[#18191E] font-bold font-display">Funky Blog</h1>
-                                <p class="body-1 font-beau font-normal text-[#18191E]">
+                                <p class="body-1 font-sans font-normal text-[#18191E]">
                                     Nơi chia sẻ các tin tức, thông tin mới nhất từ Funky
                                 </p>
                             </div>

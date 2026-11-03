@@ -4,7 +4,7 @@
             <a
                 v-for="(item, index) in toc"
                 :key="index"
-                class="block px-2 py-[2px] label-1 font-medium font-beau cursor-pointer"
+                class="block px-2 py-[2px] label-1 font-medium font-sans cursor-pointer"
                 :class="item.text === activeText ? 'text-black-fks border-l-2 border-blue-fks' : 'text-[#A8A29D]'"
                 :style="{ marginLeft: item.margin }"
                 @click="scrollToSection(item.text)"

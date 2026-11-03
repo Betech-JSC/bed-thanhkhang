@@ -1,0 +1,253 @@
+<template>
+    <div class="w-full flex flex-col-reverse md:flex-row gap-5 items-start">
+        <!-- Thumbnail Column (Figma 2390:5337, Desktop: vertical 140px, Mobile: horizontal) -->
+        <div
+            class="flex md:flex-col gap-3 md:gap-5 overflow-x-auto md:overflow-y-auto w-full md:w-[120px] lg:w-[140px] shrink-0 pb-2 md:pb-0 scrollbar-none"
+        >
+            <button
+                v-for="(item, index) in galleryList"
+                :key="index"
+                type="button"
+                @click="selectImage(index)"
+                :class="[
+                    'relative w-20 h-24 md:w-full md:h-[135px] lg:h-[187px] rounded-lg overflow-hidden border-2 transition-all duration-200 shrink-0 group focus:outline-none',
+                    currentIndex === index
+                        ? 'border-[#2970FF] ring-2 ring-[#2970FF]/30 shadow-lg shadow-blue-500/20'
+                        : 'border-[#30374F] hover:border-slate-500 opacity-70 hover:opacity-100',
+                ]"
+                :aria-label="'Xem góc ảnh ' + (index + 1)"
+            >
+                <img
+                    :src="item.thumb || item.url"
+                    :alt="item.alt || ('Góc nhìn ' + (index + 1))"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                />
+                <span
+                    v-if="currentIndex === index"
+                    class="absolute inset-0 bg-blue-500/10 pointer-events-none"
+                ></span>
+            </button>
+        </div>
+
+        <!-- Main Product Image Frame (Figma 2390:5344: 464x600 px, bg-[#F1F5F9]) -->
+        <div class="relative flex-1 w-full rounded-xl overflow-hidden border border-[#30374F] bg-[#F1F5F9] shadow-xl group">
+            <!-- 3D Badge / Real Photo Indicator -->
+            <div class="absolute top-4 left-4 z-10 flex items-center gap-2">
+                <span
+                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#111322]/85 text-white backdrop-blur-md border border-white/10 shadow-sm"
+                >
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    Mô hình in 3D thực tế
+                </span>
+                <span
+                    v-if="currentImage.tag"
+                    class="hidden sm:inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-900/70 text-slate-200 backdrop-blur-sm"
+                >
+                    {{ currentImage.tag }}
+                </span>
+            </div>
+
+            <!-- Zoom trigger hint -->
+            <div class="absolute top-4 right-4 z-10">
+                <button
+                    type="button"
+                    @click="toggleFullscreen"
+                    class="w-9 h-9 rounded-lg bg-black/60 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md transition-colors border border-white/10"
+                    title="Phóng to hình ảnh"
+                    aria-label="Phóng to hình ảnh"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Image Container with Zoom effect on hover -->
+            <div
+                class="relative w-full h-[360px] sm:h-[460px] md:h-[520px] lg:h-[600px] flex items-center justify-center p-4 sm:p-6 overflow-hidden cursor-zoom-in"
+                @mousemove="handleMouseMove"
+                @mouseleave="handleMouseLeave"
+                @click="toggleFullscreen"
+            >
+                <img
+                    :src="currentImage.url"
+                    :alt="currentImage.alt || 'Ảnh sản phẩm chi tiết'"
+                    :style="zoomStyle"
+                    class="w-full h-full object-contain transition-transform duration-200 select-none will-change-transform"
+                />
+            </div>
+
+            <!-- Navigation Chevrons on Mobile -->
+            <button
+                v-if="galleryList.length > 1"
+                type="button"
+                @click.stop="prevImage"
+                class="md:hidden absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 text-white flex items-center justify-center backdrop-blur-md"
+                aria-label="Ảnh trước"
+            >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <button
+                v-if="galleryList.length > 1"
+                type="button"
+                @click.stop="nextImage"
+                class="md:hidden absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 text-white flex items-center justify-center backdrop-blur-md"
+                aria-label="Ảnh tiếp theo"
+            >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Lightbox Fullscreen Modal -->
+        <Teleport to="body">
+            <div
+                v-if="isFullscreen"
+                class="fixed inset-0 z-50 bg-black/95 backdrop-blur-lg flex items-center justify-center p-4"
+                @click="toggleFullscreen"
+            >
+                <button
+                    type="button"
+                    class="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
+                    @click.stop="toggleFullscreen"
+                    aria-label="Đóng phóng to"
+                >
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                <div class="max-w-4xl max-h-[85vh] flex items-center justify-center" @click.stop>
+                    <img
+                        :src="currentImage.url"
+                        :alt="currentImage.alt || 'Ảnh lớn'"
+                        class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
+                    />
+                </div>
+            </div>
+        </Teleport>
+    </div>
+</template>
+
+<script>
+export default {
+    name: 'ProductGallery',
+    props: {
+        images: {
+            type: Array,
+            default: () => [],
+        },
+        productTitle: {
+            type: String,
+            default: 'Mô hình Cáo trang trí',
+        },
+    },
+    data() {
+        return {
+            currentIndex: 0,
+            isZoomed: false,
+            zoomOriginX: 50,
+            zoomOriginY: 50,
+            isFullscreen: false,
+        }
+    },
+    computed: {
+        galleryList() {
+            if (this.images && this.images.length > 1) {
+                return this.images.map((item, idx) => {
+                    if (typeof item === 'string') {
+                        return {
+                            url: item,
+                            thumb: item,
+                            alt: `${this.productTitle} - Góc nhìn ${idx + 1}`,
+                        }
+                    }
+                    return {
+                        url: item.url || item.path || '/images/pdp/product_main.png',
+                        thumb: item.thumb || item.url || '/images/pdp/thumb_1.png',
+                        alt: item.alt || item.title || `${this.productTitle} - Góc nhìn ${idx + 1}`,
+                        tag: item.tag || null,
+                    }
+                })
+            }
+
+            // Default fallback using 3 high-res Figma angles
+            return [
+                {
+                    url: '/images/pdp/product_main.png',
+                    thumb: '/images/pdp/thumb_1.png',
+                    alt: 'Mô hình Cáo trang trí - Góc chính diện',
+                    tag: 'Góc chính diện',
+                },
+                {
+                    url: '/images/pdp/thumb_2.png',
+                    thumb: '/images/pdp/thumb_2.png',
+                    alt: 'Mô hình Cáo trang trí - Chi tiết bề mặt in FDM',
+                    tag: 'Chi tiết lớp in',
+                },
+                {
+                    url: '/images/pdp/thumb_3.png',
+                    thumb: '/images/pdp/thumb_3.png',
+                    alt: 'Mô hình Cáo trang trí - Tỉ lệ kích thước thực tế',
+                    tag: 'Tỉ lệ thực tế',
+                },
+            ]
+        },
+        currentImage() {
+            return this.galleryList[this.currentIndex] || this.galleryList[0] || {}
+        },
+        zoomStyle() {
+            if (!this.isZoomed) {
+                return {
+                    transform: 'scale(1)',
+                    transformOrigin: 'center center',
+                }
+            }
+            return {
+                transform: 'scale(1.45)',
+                transformOrigin: `${this.zoomOriginX}% ${this.zoomOriginY}%`,
+            }
+        },
+    },
+    methods: {
+        selectImage(index) {
+            this.currentIndex = index
+        },
+        prevImage() {
+            this.currentIndex =
+                this.currentIndex === 0 ? this.galleryList.length - 1 : this.currentIndex - 1
+        },
+        nextImage() {
+            this.currentIndex =
+                this.currentIndex === this.galleryList.length - 1 ? 0 : this.currentIndex + 1
+        },
+        handleMouseMove(e) {
+            const rect = e.currentTarget.getBoundingClientRect()
+            const x = ((e.clientX - rect.left) / rect.width) * 100
+            const y = ((e.clientY - rect.top) / rect.height) * 100
+            this.zoomOriginX = Math.max(0, Math.min(100, x))
+            this.zoomOriginY = Math.max(0, Math.min(100, y))
+            this.isZoomed = true
+        },
+        handleMouseLeave() {
+            this.isZoomed = false
+        },
+        toggleFullscreen() {
+            this.isFullscreen = !this.isFullscreen
+        },
+    },
+}
+</script>
+
+<style scoped>
+.scrollbar-none::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+</style>
