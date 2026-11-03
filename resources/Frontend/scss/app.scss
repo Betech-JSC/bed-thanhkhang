@@ -13,62 +13,6 @@
         src: url('/public/assets/fonts/VCR_OSD_MONO.ttf');
     }
 
-    @font-face {
-        font-family: 'Phudu';
-        font-weight: 400;
-        font-style: normal;
-        font-display: swap;
-        src: url('/public/assets/fonts/Phudu-Regular.ttf');
-    }
-
-    @font-face {
-        font-family: 'Phudu';
-        font-weight: 500;
-        font-style: normal;
-        font-display: swap;
-        src: url('/public/assets/fonts/Phudu-Medium.ttf');
-    }
-
-    @font-face {
-        font-family: 'Phudu';
-        font-weight: 600;
-        font-style: normal;
-        font-display: swap;
-        src: url('/public/assets/fonts/Phudu-SemiBold.ttf');
-    }
-
-    @font-face {
-        font-family: 'Phudu';
-        font-weight: 700;
-        font-style: normal;
-        font-display: swap;
-        src: url('/public/assets/fonts/Phudu-Bold.ttf');
-    }
-
-    // FONT-BeauSans
-    @font-face {
-        font-family: 'BT-BeauSans';
-        font-weight: 400;
-        font-style: normal;
-        font-display: swap;
-        src: url('/public/assets/fonts/BT-BeauSans-Regular.ttf');
-    }
-
-    @font-face {
-        font-family: 'BT-BeauSans';
-        font-weight: 500;
-        font-style: normal;
-        font-display: swap;
-        src: url('/public/assets/fonts/BT-BeauSans-Medium.ttf');
-    }
-
-    @font-face {
-        font-family: 'BT-BeauSans';
-        font-weight: 700;
-        font-style: normal;
-        font-display: swap;
-        src: url('/public/assets/fonts/BT-BeauSans-Bold.ttf');
-    }
 }
 
 // @import '@core/scss/base';
@@ -77,7 +21,6 @@
 @import 'customize/card-blog.scss';
 @import 'customize/content.scss';
 @import 'customize/type.scss';
-@import 'customize/cursor.scss';
 
 /* width */
 ::-webkit-scrollbar {
@@ -87,18 +30,18 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: #f1f5f9;
+    background: #080C14;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #D34000;
+    background: #0052FF;
     border-radius: 4px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: #b23600;
+    background: #155EEF;
 }
 
 .check-control {

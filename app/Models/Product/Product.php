@@ -450,6 +450,7 @@ class Product extends BaseModel
             'content' => transform_richtext($this->content),
             'slug' => $this->seo_slug ?? $this->slug,
             'images' => $images,
+            'category' => $this->category,
         ];
     }
 

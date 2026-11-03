@@ -1,4 +1,4 @@
-import LayoutGuest from '@/Layouts/Guest.vue'
+import MainLayout from '@/Layouts/MainLayout.vue'
 import { createInertiaApp, Head, Link } from '@inertiajs/inertia-vue3'
 import createServer from '@inertiajs/server'
 import messages from '@intlify/unplugin-vue-i18n/messages'
@@ -28,7 +28,7 @@ createServer(
                 page = typeof page === 'function' ? page() : page
 
                 page.then((module) => {
-                    module.default.layout = module.default.layout || LayoutGuest
+                    module.default.layout = module.default.layout || MainLayout
                 })
 
                 return page

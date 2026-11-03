@@ -22,6 +22,7 @@
     "@inertiajs/progress": "^0.2.7",
     "@inertiajs/server": "^0.1.0",
     "@intlify/unplugin-vue-i18n": "^0.7.1",
+    "@playwright/test": "^1.64.1",
     "@toannguyen112/bed-library-essentials": "^1.0.231125182742",
     "@vitejs/plugin-vue": "^3.0.0",
     "@vue/server-renderer": "^3.2.31",
@@ -50,12 +51,12 @@
     "@tailwindcss/typography": "^0.5.7",
     "@tinymce/tinymce-vue": "^5.0.1-rc.20221019005726591.sha6dc048a",
     "aos": "^2.3.4",
-    "ckeditor5": "file:./resources/Backend/js/ckeditor5",
     "chart.js": "^4.4.0",
+    "ckeditor5": "file:./resources/Backend/js/ckeditor5",
     "dayjs": "^1.11.6",
     "gsap": "^3.12.5",
-    "swiper": "^11.1.15",
     "pinia": "^2.0.23",
+    "swiper": "^11.1.15",
     "tiny-emitter": "^2.1.0",
     "vue-i18n": "^9.2.2",
     "vue-plyr": "^7.0.0",
@@ -64,7 +65,7 @@
     "vuedraggable": "^4.1.0"
   },
   "engines": {
-    "node": "18.x",
+    "node": ">=18.x",
     "yarn": "1.x"
   },
   "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"

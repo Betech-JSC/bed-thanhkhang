@@ -2,25 +2,24 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Frontend\PrizeController;
 use App\Http\Controllers\Frontend\PostController;
 use App\Http\Controllers\Frontend\AgencyController;
 use App\Http\Controllers\Frontend\Auth\UserAuthController;
 use App\Http\Controllers\Frontend\HistoryController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\ContactController;
-use App\Http\Controllers\Frontend\FeedbackController;
 use App\Http\Controllers\Frontend\ProductController;
 use App\Http\Controllers\Frontend\ServiceController;
 use App\Http\Controllers\Frontend\SitemapController;
 use App\Http\Controllers\Frontend\PolicyController;
-use App\Http\Controllers\Frontend\ProjectController;
 use Inertia\Inertia;
 
 Route::get('sitemap.xml', [SitemapController::class, 'index']);
 
 // Hỗ trợ truy cập /ho-so-ca-nhan theo yêu cầu người dùng
 Route::redirect('/ho-so-ca-nhan', '/dashboard/update-profile');
+Route::redirect('/about', '/gioi-thieu');
+Route::redirect('/about-us', '/gioi-thieu');
 
 if (app()->environment('local')) {
     Route::get('/dev-login-user/{id}', function ($id) {
@@ -79,6 +78,7 @@ Route::middleware(['meta_seo', 'opening'])->group(function () {
 
         Route::controller(HistoryController::class)->group(function () {
             Route::get(Lang::uri('about-us'), 'index')->name('histories.index');
+            Route::get('about', 'index')->name('about');
             Route::get(Lang::uri('histories') . '/{slug}', 'show')->name('histories.show');
         });
 
@@ -95,28 +95,13 @@ Route::middleware(['meta_seo', 'opening'])->group(function () {
         Route::controller(ProductController::class)->group(function () {
             Route::get(Lang::uri('products'), 'index')->name('products.index');
             Route::get(Lang::uri('products') . '/{slug}', 'show')->name('products.show');
-
-            Route::get(Lang::uri('gallery'), 'galleries')->name('galleries.index');
         });
 
-        Route::controller(FeedbackController::class)->group(function () {
-            Route::get(Lang::uri('feedbacks'), 'index')->name('feedbacks.index');
-        });
-
-        // giải thưởng
-        Route::controller(PrizeController::class)->group(function () {
-            Route::get(Lang::uri('prizes'), 'index')->name('prizes.index');
-            Route::get(Lang::uri('prizes') . '/{slug}', 'show')->name('prizes.show');
-        });
-
-        // đồ án/ dự án
-        Route::controller(ProjectController::class)->group(function () {
-            Route::get(Lang::uri('projects'), 'index')->name('projects.index');
-            Route::get(Lang::uri('projects') . '/{slug}', 'show')->name('projects.show');
-        });
+        // quy trình gia công 3D
+        Route::get(Lang::uri('quy-trinh'), fn() => Inertia::render('Process/Index'))->name('process.index');
 
         Route::get('ve-chung-toi', function () {
-            return Inertia::render('About');
+            return Inertia::render('About/Index');
         });
 
         Route::post(Lang::uri('contacts'), [ContactController::class, 'store'])->name('contact.store');

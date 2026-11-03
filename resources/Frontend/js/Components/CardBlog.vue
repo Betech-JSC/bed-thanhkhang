@@ -21,7 +21,7 @@
                 <p class="title-1 font-display font-bold text-black-fks line-clamp-2">
                     {{ item.title }}
                 </p>
-                <p class="body-1 text-gray-700 font-normal font-beau line-clamp-3">
+                <p class="body-1 text-gray-700 font-normal font-sans line-clamp-3">
                     {{ item.description }}
                 </p>
             </div>

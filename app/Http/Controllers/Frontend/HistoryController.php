@@ -31,7 +31,7 @@ class HistoryController extends Controller
                 return response()->json($data);
             }
 
-            return Inertia::render('About', $data);
+            return Inertia::render('About/Index', $data);
         } catch (\Throwable $th) {
             report($th);
             return abort(500);

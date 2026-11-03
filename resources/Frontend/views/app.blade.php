@@ -5,6 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
+    <!-- Favicon & Brand Icons -->
+    <link rel="icon" type="image/svg+xml" href="/assets/images/header/hh-maker-icon.svg?v=1">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=1">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=1">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=1">
+    <link rel="shortcut icon" href="/favicon.ico?v=1">
+
     @php
         $global = cache_response(
             'global_settings',
@@ -110,19 +117,17 @@
 
     <script src="/build/frontend/registerSW.js"></script>
 
+        <!-- Fonts (Be Vietnam Pro & Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="/assets/js/flickity/flickity.min.css" />
     <script src="/assets/js/flickity/flickity.pkgd.min.js"></script>
 
     <!-- CSS -->
 
     <style>
-        body {
-            :root {
-            --cursor-url: "{{ env('APP_ENV') === 'production' ? url('/assets/svg/GS-pen.svg') : 'none' }}";
-            --cursor-hover-url: "{{ env('APP_ENV') === 'production' ? url('/assets/svg/GS-pen-hover.svg') : 'none' }}";
-        }
-        }
-
         /* flickity-fade */
         .flickity-enabled.is-fade .flickity-slider > * {
             pointer-events: none;
@@ -144,7 +149,7 @@
     <!-- @routes('frontend') -->
 </head>
 
-<body>
+<body class="antialiased">
     <!-- Custom Header Body Tag -->
     @if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome-Lighthouse') === false)
         @php

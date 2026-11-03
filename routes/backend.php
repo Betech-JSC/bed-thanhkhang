@@ -17,14 +17,10 @@ use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\ServiceController;
 use App\Http\Controllers\Backend\PolicyController;
 use App\Http\Controllers\Backend\MemberController;
-use App\Http\Controllers\Backend\FeedbackController;
 use App\Http\Controllers\Backend\EmailTemplateController;
 use App\Http\Controllers\Backend\SystemLogController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\LearningEnvironmentController;
-use App\Http\Controllers\Backend\PrizeController;
-use App\Http\Controllers\Backend\ProjectController;
-use App\Http\Controllers\Backend\ProjectCategoryController;
 use App\Http\Controllers\Backend\SupportInfoController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\ConfigController;
@@ -42,9 +38,6 @@ Route::localized(function () {
         Route::module(SliderController::class);
         Route::module(HistoryController::class);
         Route::module(MemberController::class);
-        Route::module(FeedbackController::class);
-        Route::module(ProjectController::class);
-        Route::module(ProjectCategoryController::class);
         Route::module(GalleryController::class);
         Route::module(ServiceController::class);
         Route::module(ApplyController::class);
@@ -53,7 +46,6 @@ Route::localized(function () {
 
         Route::module(FaqController::class);
         Route::module(LearningEnvironmentController::class);
-        Route::module(PrizeController::class);
         Route::module(EmailTemplateController::class);
         Route::get('users/search', [UserController::class, 'searchUsers'])->name('users.search');
         Route::module(UserController::class);

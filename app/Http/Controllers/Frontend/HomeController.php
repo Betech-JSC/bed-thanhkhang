@@ -60,7 +60,7 @@ class HomeController extends Controller
                 return response()->json($data);
             }
 
-            return Inertia::render('Home', $data);
+            return Inertia::render('Home/Index', $data);
         } catch (\Throwable $e) {
             report($e);
             return response()->json(['error' => 'Something went wrong.'], 500);

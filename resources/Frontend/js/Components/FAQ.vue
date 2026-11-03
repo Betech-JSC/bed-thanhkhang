@@ -55,7 +55,7 @@
                     }"
                     :class="['transition-all duration-300 ease-out']"
                 >
-                    <p class="body-1 font-beau text-gray-warm-700 font-normal" v-html="item.answer ?? item.content"></p>
+                    <p class="body-1 font-sans text-gray-warm-700 font-normal" v-html="item.answer ?? item.content"></p>
                 </div>
             </div>
         </div>
@@ -69,7 +69,7 @@
             }"
             :class="['transition-all duration-300 ease-out']"
         >
-            <p class="body-1 font-beau text-gray-warm-700 font-normal" v-html="item.answer ?? item.content"></p>
+            <p class="body-1 font-sans text-gray-warm-700 font-normal" v-html="item.answer ?? item.content"></p>
         </div>
     </div>
 </template>
