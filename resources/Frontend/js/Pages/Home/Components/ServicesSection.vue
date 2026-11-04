@@ -7,7 +7,7 @@
                     <h2
                         class="text-2xl sm:text-3xl lg:text-[38px] font-bold text-[#FAFAFA] uppercase tracking-tight leading-[1.2] lg:leading-[46px] font-sans"
                     >
-                        TỔNG QUAN VỀ<br class="hidden lg:inline" /> DỊCH VỤ
+                        {{ tt('TỔNG QUAN VỀ DỊCH VỤ') }}
                     </h2>
                 </div>
 
@@ -37,10 +37,10 @@
                         <!-- Card Content: Title & Short Description (Figma Node 2261:5544: 193x138px) -->
                         <div class="w-full max-w-[193px] flex flex-col justify-between items-center text-center gap-2.5">
                             <h3 class="text-[24px] font-extrabold text-[#FAFAFA] group-hover:text-white transition-colors tracking-tight font-sans leading-[32px] text-center">
-                                {{ service.title }}
+                                {{ tt(service.title) }}
                             </h3>
                             <p class="text-[16px] text-[#D1E0FF] leading-[24px] font-normal text-center">
-                                {{ service.description }}
+                                {{ tt(service.description) }}
                             </p>
                         </div>
                     </Link>
@@ -175,12 +175,13 @@ export default {
             const slug = service.slug || slugMap[service.title] || 'thiet-ke-3d';
             try {
                 if (typeof route === 'function') {
-                    return route('services.show', { slug });
+                    return this.route ? this.route('services.show', { slug }) : route('services.show', { slug });
                 }
             } catch (e) {
                 // Fallback if Ziggy helper is unavailable
             }
-            return `/dich-vu/${slug}`;
+            const locale = this.$page?.props?.locale?.current || 'vi';
+            return locale === 'en' ? `/en/services/${slug}` : `/dich-vu/${slug}`;
         },
     },
 }

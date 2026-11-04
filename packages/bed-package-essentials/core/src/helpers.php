@@ -144,7 +144,7 @@ if (!function_exists('current_locale')) {
     {
         $default = config('localized-routes.omit_url_prefix_for_locale');
 
-        if (request()->route() === null) return $default;
+        if (request()->route() === null) return app()->getLocale() ?: $default;
 
         $routeNames = explode('.', request()->route()->getName());
 

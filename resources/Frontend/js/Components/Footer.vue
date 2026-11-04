@@ -17,7 +17,7 @@
                             {{ tt('CÔNG TY IN ẤN 3D HH MAKER') }}
                         </h3>
                         <p class="text-sm sm:text-base text-[#D1E0FF] leading-[22px] font-normal">
-                            {{ displayAddress }}
+                            {{ tt(displayAddress) }}
                         </p>
                     </div>
                 </div>
@@ -157,7 +157,8 @@ export default {
     },
     computed: {
         displayAddress() {
-            return this.address || this.$page.props.global?.general_address || 'Số 65 đường số 9, khu dân cư Hương Lộ 5, Phường An Lạc, Thành phố Hồ Chí Minh'
+            const raw = this.address || this.$page.props.global?.general_address || 'Số 65 đường số 9, khu dân cư Hương Lộ 5, Phường An Lạc, Thành phố Hồ Chí Minh'
+            return this.tt(raw)
         },
         displayHotline() {
             return this.hotline || this.$page.props.global?.general_phone || '0906636425'

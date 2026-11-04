@@ -138,6 +138,29 @@ createInertiaApp({
                             if (currentMsgs?.[text]) {
                                 return currentMsgs[text]
                             }
+
+                            // Robust newline handling: literal \n, normal space, or trimmed
+                            if (typeof text === 'string') {
+                                if (text.includes('\n')) {
+                                    const literalSlashN = text.replace(/\r?\n/g, '\\n')
+                                    if (currentMsgs?.ui?.[literalSlashN]) {
+                                        return currentMsgs.ui[literalSlashN]
+                                    }
+                                    const singleSpaced = text.replace(/\r?\n/g, ' ')
+                                    if (currentMsgs?.ui?.[singleSpaced]) {
+                                        return currentMsgs.ui[singleSpaced]
+                                    }
+                                }
+                                const trimmed = text.trim()
+                                if (trimmed !== text) {
+                                    if (currentMsgs?.ui?.[trimmed]) {
+                                        return currentMsgs.ui[trimmed]
+                                    }
+                                    if (currentMsgs?.[trimmed]) {
+                                        return currentMsgs[trimmed]
+                                    }
+                                }
+                            }
                         } catch (e) {}
 
                         // 2. Vue-i18n $te / $t checks
@@ -192,7 +215,7 @@ createInertiaApp({
     },
 })
 InertiaProgress.init({
-    color: '#D34000',
+    color: '#2970FF',
     showSpinner: true, // Hide the spinner
     delay: 200, // Show the progress bar after 200ms
 })

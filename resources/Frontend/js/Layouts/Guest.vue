@@ -1,6 +1,5 @@
 <template>
     <div>
-        <LoadingPage v-if="isProduction && isLoading" />
         <Header />
         <slot />
         <Footer v-if="!isMigrated" />
@@ -12,19 +11,11 @@
 </template>
 
 <script>
-import LoadingPage from '@/Components/LoadingPage.vue'
 import DailyRewardPopup from '@/Components/DailyRewardPopup.vue'
 
 export default {
     components: {
-        LoadingPage,
         DailyRewardPopup,
-    },
-    data() {
-        return {
-            isLoading: false,
-            isProduction: import.meta.env.PROD,
-        }
     },
     computed: {
         isMigrated() {
@@ -51,25 +42,7 @@ export default {
             return this.isMigrated
         },
     },
-    created() {
-        if (this.isProduction && this.$attrs.route?.path === '/') {
-            this.isLoading = true
-            document.body.classList.add('overflow-hidden')
-            setTimeout(() => {
-                this.isLoading = false
-                document.body.classList.remove('overflow-hidden')
-            }, 3000)
-        }
-    },
     watch: {
-        isLoading(newValue) {
-            if (newValue) {
-                document.body.classList.add('overflow-hidden')
-            } else {
-                document.body.classList.remove('overflow-hidden')
-            }
-        },
-
         '$page.url': function (newUrl, oldUrl) {
             const seo = this.$page.props?.seo
             const global = this.$page.props?.global

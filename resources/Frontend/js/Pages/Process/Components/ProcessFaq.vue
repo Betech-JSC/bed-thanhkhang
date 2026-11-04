@@ -6,10 +6,10 @@
             <!-- Section Header (Figma Node 2334:8456, gap: 16px) -->
             <div class="space-y-4">
                 <span class="text-sm font-semibold tracking-wider text-[#84ADFF] uppercase select-none leading-[20px] block">
-                    CÂU HỎI THƯỜNG GẶP
+                    {{ tt('CÂU HỎI THƯỜNG GẶP') }}
                 </span>
                 <h2 class="text-2xl sm:text-3xl lg:text-[32px] font-bold text-[#FAFAFA] leading-[37px]">
-                    Giải đáp trước khi liên hệ
+                    {{ tt('Giải đáp trước khi liên hệ') }}
                 </h2>
             </div>
 
@@ -28,7 +28,7 @@
                         :aria-expanded="activeFaq === index"
                     >
                         <span class="text-base sm:text-lg font-medium text-[#FAFAFA] leading-[22px]">
-                            {{ faq.question }}
+                            {{ tt(faq.question) }}
                         </span>
 
                         <!-- Indicator Plus / Minus (Figma Node 2399:1430 / 2399:1436: 24x24px) -->
@@ -68,7 +68,7 @@
                         v-show="activeFaq === index"
                         class="px-5 sm:px-6 pb-6 -mt-1 text-sm sm:text-base text-[#FCFCFC] leading-relaxed lg:leading-[26px]"
                     >
-                        <p>{{ faq.answer }}</p>
+                        <p>{{ tt(faq.answer) }}</p>
                     </div>
                 </div>
             </div>
@@ -97,6 +97,18 @@ const faqs = [
     {
         question: 'Tôi muốn đặt sản phẩm theo ý tưởng riêng hoặc điều chỉnh khác đi so với các mẫu có sẵn thì có được không?',
         answer: 'Hoàn toàn được! Dịch vụ làm đồ Custom và chế tác theo yêu cầu là thế mạnh hàng đầu tại HH Maker. Chúng tôi sẵn sàng tinh chỉnh kích thước, tỷ lệ, phối màu hoặc thiết kế riêng biệt hoàn toàn theo concept của bạn.',
+    },
+    {
+        question: 'Thời gian in và giao hàng thường mất bao lâu?',
+        answer: 'Thời gian hoàn thiện phụ thuộc vào kích thước, công nghệ và số lượng sản phẩm. Với các mẫu in thử đơn chiếc, thời gian gia công thường từ 24 - 48 giờ. Đơn hàng số lượng lớn sẽ được lên lịch sản xuất chi tiết.',
+    },
+    {
+        question: 'HH Maker hỗ trợ những định dạng file 3D nào?',
+        answer: 'Chúng tôi tiếp nhận hầu hết các định dạng 3D tiêu chuẩn bao gồm STL, OBJ, STEP, 3MF, IGES, SLDPRT. Nếu bạn chỉ có bản vẽ 2D hoặc hình phác thảo, HH Maker sẽ hỗ trợ dựng lại thành file 3D.',
+    },
+    {
+        question: 'Sản phẩm in 3D có độ bền và khả năng chịu lực như thế nào?',
+        answer: 'Độ bền phụ thuộc vào loại vật liệu được lựa chọn: từ PLA+ thân thiện, PETG chịu va đập, ABS/Nylon chịu nhiệt và cơ tính cao, đến Carbon Fiber siêu cứng hoặc Resin 8K độ mịn tuyệt đối. Kỹ sư sẽ tư vấn loại nhựa tối ưu theo mục đích sử dụng của bạn.',
     },
 ]
 </script>

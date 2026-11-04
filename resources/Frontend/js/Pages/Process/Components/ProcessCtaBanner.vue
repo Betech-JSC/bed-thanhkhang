@@ -17,10 +17,10 @@
                 <!-- Left Content: Title & Invitation Text (Figma Node 2352:11796) -->
                 <div class="relative z-10 max-w-[817px] space-y-3">
                     <h2 class="text-2xl sm:text-3xl lg:text-display-banner font-bold text-[#FAFAFA] leading-tight">
-                        {{ title }}
+                        {{ tt(title) }}
                     </h2>
                     <p class="text-sm sm:text-base text-white/90 leading-relaxed lg:leading-[26px] font-normal">
-                        {{ description }}
+                        {{ tt(description) }}
                     </p>
                 </div>
 
@@ -30,7 +30,7 @@
                         :href="contactHref"
                         class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[#F5F8FF] hover:bg-white text-[#111322] font-semibold text-sm sm:text-base transition-all duration-200 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] select-none text-center"
                     >
-                        <span>{{ ctaText }}</span>
+                        <span>{{ tt(ctaText) }}</span>
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                         </svg>

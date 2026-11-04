@@ -31,7 +31,7 @@
                     <h2
                         class="text-2xl sm:text-3xl lg:text-[36px] font-bold text-[#FAFAFA] leading-tight lg:leading-[50px] font-sans uppercase mt-4 sm:mt-6 lg:mt-8 tracking-normal drop-shadow-sm"
                     >
-                        {{ title }}
+                        {{ tt(title) }}
                     </h2>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                 <p
                     class="text-sm sm:text-base text-[#FAFAFA] leading-relaxed lg:leading-[24px] font-normal max-w-[560px]"
                 >
-                    {{ description }}
+                    {{ tt(description) }}
                 </p>
 
                 <!-- 5 Steps Minimalist Rows (Figma Node 2261:5732) -->
@@ -77,14 +77,14 @@
                             <span
                                 class="text-lg sm:text-xl lg:text-[22px] font-bold text-[#FAFAFA] group-hover:text-white transition-colors leading-[32px] flex-1"
                             >
-                                {{ step.title }}
+                                {{ tt(step.title) }}
                             </span>
                         </button>
                         <div
                             v-if="step.detail && activeStep === idx"
                             class="pb-4 pl-14 sm:pl-16 pr-4 text-xs sm:text-sm text-[#D1E0FF] leading-relaxed"
                         >
-                            {{ step.detail }}
+                            {{ tt(step.detail) }}
                         </div>
                     </div>
                 </div>

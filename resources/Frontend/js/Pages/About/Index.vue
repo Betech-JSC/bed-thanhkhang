@@ -1,10 +1,9 @@
 <template>
     <Head>
-        <title>Giới thiệu - HH Maker | Đưa sáng tạo vượt ra khỏi màn hình</title>
-        <meta
-            name="description"
-            content="HH Maker kết nối nghệ thuật 3D với công nghệ chế tác hiện đại, để một ý tưởng sơ khai có thể trở thành sản phẩm vật lý bạn cầm trên tay."
-        />
+        <title>{{ pageTitle }}</title>
+        <meta name="description" :content="pageDescription" />
+        <meta property="og:title" :content="pageTitle" />
+        <meta property="og:description" :content="pageDescription" />
     </Head>
 
     <div class="bg-dark-bg text-white overflow-x-hidden">
@@ -30,15 +29,15 @@
                         <!-- Left: Main Headline & Intro (Figma 2283:7579) -->
                         <div class="lg:col-span-8 space-y-4 md:space-y-6 max-w-2xl">
                             <p class="text-[#D1E0FF] text-base font-medium leading-[22px]">
-                                {{ bannerSubtitle }}
+                                {{ tt(bannerSubtitle) }}
                             </p>
 
                             <h1 class="text-3xl sm:text-4xl lg:text-display-hero font-bold font-display uppercase tracking-tight text-[#FAFAFA] leading-[1.18]">
-                                {{ bannerTitle }}
+                                {{ tt(bannerTitle) }}
                             </h1>
 
                             <p class="text-[#D1E0FF] text-base md:text-lg leading-relaxed font-normal max-w-xl">
-                                {{ bannerDescription }}
+                                {{ tt(bannerDescription) }}
                             </p>
                         </div>
 
@@ -89,20 +88,20 @@
                     <!-- Left Column: Chuyên mục & Tiêu đề (Figma 2283:7110) -->
                     <div class="lg:col-span-5 space-y-3">
                         <p class="text-[#84ADFF] font-medium text-base leading-[19px]">
-                            Vì sao HH Maker ra đời?
+                            {{ tt('Vì sao HH Maker ra đời?') }}
                         </p>
                         <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold font-display uppercase text-[#FAFAFA] leading-tight tracking-tight">
-                            TỪ ĐAM MÊ ĐẾN MỘT SỨ MỆNH
+                            {{ tt('TỪ ĐAM MÊ ĐẾN MỘT SỨ MỆNH') }}
                         </h2>
                     </div>
 
                     <!-- Right Column: Câu chuyện sứ mệnh (Figma 2283:7113) -->
                     <div class="lg:col-span-7 space-y-6 text-[#B9C0D4] text-base md:text-lg leading-relaxed">
                         <p>
-                            HH Maker được thành lập từ niềm đam mê với nghệ thuật 3D và công nghệ chế tác hiện đại của Lâm Hồng Hải. Điểm khởi đầu là một mong muốn giản dị: rút ngắn khoảng cách giữa ý tưởng và sản phẩm vật lý.
+                            {{ tt('HH Maker được thành lập từ niềm đam mê với nghệ thuật 3D và công nghệ chế tác hiện đại của Lâm Hồng Hải. Điểm khởi đầu là một mong muốn giản dị: rút ngắn khoảng cách giữa ý tưởng và sản phẩm vật lý.') }}
                         </p>
                         <p>
-                            Một bản phác thảo, một hình ảnh hay một nhu cầu rất riêng đều có thể mở ra một cuộc trao đổi. Tại HH Maker, thiết kế và chế tác không tách rời nhau: hình dáng cần đẹp, đồng thời phải phù hợp để tạo thành sản phẩm thực tế.
+                            {{ tt('Một bản phác thảo, một hình ảnh hay một nhu cầu rất riêng đều có thể mở ra một cuộc trao đổi. Tại HH Maker, thiết kế và chế tác không tách rời nhau: hình dáng cần đẹp, đồng thời phải phù hợp để tạo thành sản phẩm thực tế.') }}
                         </p>
                     </div>
                 </div>
@@ -119,7 +118,7 @@
                             <!-- Khung hình công nghệ chuẩn Figma 2283:7602 với góc vát (chamfered) trên phải & dưới trái, đầu nhô vượt khung nền -->
                             <img
                                 src="/assets/images/about/founder-composite.png"
-                                alt="Lâm Hồng Hải - Founder HH Maker"
+                                :alt="tt('Lâm Hồng Hải - Founder HH Maker')"
                                 class="w-full h-auto object-contain drop-shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]"
                                 loading="lazy"
                             />
@@ -130,22 +129,22 @@
                     <div class="lg:col-span-6 space-y-6">
                         <div class="space-y-2">
                             <p class="text-[#84ADFF] font-medium text-base leading-[26px]">
-                                Chia sẻ từ Nhà sáng lập HH Maker
+                                {{ tt('Chia sẻ từ Nhà sáng lập HH Maker') }}
                             </p>
                             <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold font-display text-[#FAFAFA] leading-tight tracking-tight">
-                                Mỗi ý tưởng đều xứng đáng có một hình hài
+                                {{ tt('Mỗi ý tưởng đều xứng đáng có một hình hài') }}
                             </h2>
                         </div>
 
                         <div class="space-y-4 text-[#B9C0D4] text-base leading-relaxed">
                             <p>
-                                Xuất phát từ niềm đam mê với nghệ thuật 3D và công nghệ chế tác hiện đại, tôi thành lập HH Maker với sứ mệnh rút ngắn khoảng cách giữa ý tưởng sơ khai và sản phẩm vật lý.
+                                {{ tt('Xuất phát từ niềm đam mê với nghệ thuật 3D và công nghệ chế tác hiện đại, tôi thành lập HH Maker với sứ mệnh rút ngắn khoảng cách giữa ý tưởng sơ khai và sản phẩm vật lý.') }}
                             </p>
                             <p>
-                                Với mỗi dự án, tôi cùng đội ngũ luôn tỉ mỉ trong từng đường nét thiết kế, lựa chọn vật liệu và kiểm soát quy trình in để mang lại những sản phẩm sắc nét, chuẩn xác và mang đậm dấu ấn cá nhân nhất.
+                                {{ tt('Với mỗi dự án, tôi cùng đội ngũ luôn tỉ mỉ trong từng đường nét thiết kế, lựa chọn vật liệu và kiểm soát quy trình in để mang lại những sản phẩm sắc nét, chuẩn xác và mang đậm dấu ấn cá nhân nhất.') }}
                             </p>
                             <p>
-                                Tôi mong HH Maker sẽ là nơi bạn có thể thoải mái chia sẻ cả những ý tưởng chưa trọn vẹn. Qua từng cuộc trao đổi và mỗi lần thử nghiệm, chúng tôi cùng bạn khám phá những cách thể hiện phù hợp, để mỗi sản phẩm khi hoàn thành đều có ý nghĩa riêng. Với tôi, niềm vui lớn nhất là nhìn thấy sự hào hứng của bạn khi lần đầu cầm trên tay điều mình từng hình dung.
+                                {{ tt('Tôi mong HH Maker sẽ là nơi bạn có thể thoải mái chia sẻ cả những ý tưởng chưa trọn vẹn. Qua từng cuộc trao đổi và mỗi lần thử nghiệm, chúng tôi cùng bạn khám phá những cách thể hiện phù hợp, để mỗi sản phẩm khi hoàn thành đều có ý nghĩa riêng. Với tôi, niềm vui lớn nhất là nhìn thấy sự hào hứng của bạn khi lần đầu cầm trên tay điều mình từng hình dung.') }}
                             </p>
                         </div>
 
@@ -153,7 +152,7 @@
                         <div class="pt-4 border-t border-dark-border/60">
                             <p class="text-[#FAFAFA] font-semibold text-base md:text-lg italic font-display flex items-center gap-2">
                                 <span class="text-primary text-xl">“</span>
-                                Trân trọng từng ý tưởng - Tận tâm với từng thành phẩm.
+                                {{ tt('Trân trọng từng ý tưởng - Tận tâm với từng thành phẩm.') }}
                                 <span class="text-primary text-xl">”</span>
                             </p>
                         </div>
@@ -168,10 +167,10 @@
                 <!-- Section Header (Figma 2283:7647) -->
                 <div class="space-y-3 mb-10 md:mb-12">
                     <p class="text-[#84ADFF] font-medium text-base leading-[19px]">
-                        Cách HH Maker thực hiện trong từng dự án
+                        {{ tt('Cách HH Maker thực hiện trong từng dự án') }}
                     </p>
                     <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold font-display uppercase text-[#FAFAFA] tracking-tight">
-                        CÔNG NGHỆ TẠO HÌNH - SỰ TỈ MỈ TẠO DẤU ẤN
+                        {{ tt('CÔNG NGHỆ TẠO HÌNH - SỰ TỈ MỈ TẠO DẤU ẤN') }}
                     </h2>
                 </div>
 
@@ -182,16 +181,16 @@
                         <div class="w-12 h-12 flex items-center justify-center shrink-0 mb-6">
                             <img
                                 src="/assets/images/about/lightbulb.svg"
-                                alt="Thấu hiểu từng ý tưởng"
+                                :alt="tt('Thấu hiểu từng ý tưởng')"
                                 class="w-12 h-12 object-contain"
                             />
                         </div>
                         <div class="space-y-3">
                             <h3 class="text-xl md:text-2xl font-bold font-display text-[#FAFAFA]">
-                                Thấu hiểu từng ý tưởng
+                                {{ tt('Thấu hiểu từng ý tưởng') }}
                             </h3>
                             <p class="text-[#B9C0D4] text-base leading-relaxed">
-                                Chúng tôi lắng nghe câu chuyện, nhu cầu sử dụng và mong muốn của bạn để tìm ra hướng thiết kế phù hợp, trước khi bắt đầu những nét phác thảo đầu tiên.
+                                {{ tt('Chúng tôi lắng nghe câu chuyện, nhu cầu sử dụng và mong muốn của bạn để tìm ra hướng thiết kế phù hợp, trước khi bắt đầu những nét phác thảo đầu tiên.') }}
                             </p>
                         </div>
                     </div>
@@ -201,16 +200,16 @@
                         <div class="w-12 h-12 flex items-center justify-center shrink-0 mb-6">
                             <img
                                 src="/assets/images/about/scan-line.svg"
-                                alt="Chăm chút từng chi tiết"
+                                :alt="tt('Chăm chút từng chi tiết')"
                                 class="w-12 h-12 object-contain"
                             />
                         </div>
                         <div class="space-y-3">
                             <h3 class="text-xl md:text-2xl font-bold font-display text-[#FAFAFA]">
-                                Chăm chút từng chi tiết
+                                {{ tt('Chăm chút từng chi tiết') }}
                             </h3>
                             <p class="text-[#B9C0D4] text-base leading-relaxed">
-                                Từ hình khối, tỉ lệ, vật liệu đến quá trình in và hoàn thiện, sản phẩm đều được chăm chút để hài hòa về hình thức và phù hợp với cách sử dụng thực tế.
+                                {{ tt('Từ hình khối, tỉ lệ, vật liệu đến quá trình in và hoàn thiện, sản phẩm đều được chăm chút để hài hòa về hình thức và phù hợp với cách sử dụng thực tế.') }}
                             </p>
                         </div>
                     </div>
@@ -220,16 +219,16 @@
                         <div class="w-12 h-12 flex items-center justify-center shrink-0 mb-6">
                             <img
                                 src="/assets/images/about/fingerprint.svg"
-                                alt="Giữ trọn dấu ấn riêng"
+                                :alt="tt('Giữ trọn dấu ấn riêng')"
                                 class="w-12 h-12 object-contain"
                             />
                         </div>
                         <div class="space-y-3">
                             <h3 class="text-xl md:text-2xl font-bold font-display text-[#FAFAFA]">
-                                Giữ trọn dấu ấn riêng
+                                {{ tt('Giữ trọn dấu ấn riêng') }}
                             </h3>
                             <p class="text-[#B9C0D4] text-base leading-relaxed">
-                                Phong cách của bạn được thể hiện qua màu sắc, đường nét và những chi tiết cá nhân hóa. HH Maker kết nối những yếu tố ấy để truyền tải đúng tinh thần bạn muốn gửi gắm.
+                                {{ tt('Phong cách của bạn được thể hiện qua màu sắc, đường nét và những chi tiết cá nhân hóa. HH Maker kết nối những yếu tố ấy để truyền tải đúng tinh thần bạn muốn gửi gắm.') }}
                             </p>
                         </div>
                     </div>
@@ -247,10 +246,10 @@
                 >
                     <div class="space-y-3 max-w-3xl">
                         <h2 class="text-2xl sm:text-3xl lg:text-[32px] font-bold font-display text-[#FAFAFA] leading-tight lg:leading-[37px]">
-                            {{ ctaTitle }}
+                            {{ tt(ctaTitle) }}
                         </h2>
                         <p class="text-[#FAFAFA] text-base leading-relaxed lg:leading-[26px]">
-                            {{ ctaDescription }}
+                            {{ tt(ctaDescription) }}
                         </p>
                     </div>
 
@@ -259,7 +258,7 @@
                             :href="ctaButtonLink"
                             class="inline-flex items-center justify-center px-6 py-2.5 bg-[#F5F8FF] hover:bg-white text-[#111322] font-medium text-base rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-[1.02]"
                         >
-                            {{ ctaButtonText }}
+                            {{ tt(ctaButtonText) }}
                         </Link>
                     </div>
                 </div>
@@ -286,8 +285,26 @@ export default {
             type: Array,
             default: () => [],
         },
+        seo: {
+            type: Object,
+            default: () => null,
+        },
     },
     computed: {
+        pageTitle() {
+            return (
+                this.seo?.title ||
+                this.tt('Giới thiệu - HH Maker | Đưa sáng tạo vượt ra khỏi màn hình')
+            )
+        },
+        pageDescription() {
+            return (
+                this.seo?.description ||
+                this.tt(
+                    'HH Maker kết nối nghệ thuật 3D với công nghệ chế tác hiện đại, để một ý tưởng sơ khai có thể trở thành sản phẩm vật lý bạn cầm trên tay.'
+                )
+            )
+        },
         bannerSubtitle() {
             return this.heroBanner?.subtitle || 'Giới thiệu về HH Maker'
         },
@@ -304,7 +321,7 @@ export default {
             return this.heroBanner?.image?.url || '/assets/images/about/hero-about.png'
         },
         bannerImageAlt() {
-            return this.heroBanner?.image?.alt || 'Xưởng chế tác 3D HH Maker'
+            return this.heroBanner?.image?.alt || this.tt('Xưởng chế tác 3D HH Maker')
         },
         globalCta() {
             return (
@@ -314,16 +331,18 @@ export default {
             )
         },
         ctaTitle() {
-            return this.globalCta?.title || 'Ý tưởng của bạn, bước tiếp theo của chúng ta.'
+            return this.globalCta?.title || this.tt('Ý tưởng của bạn, bước tiếp theo của chúng ta.')
         },
         ctaDescription() {
             return (
                 this.globalCta?.description ||
-                'Chia sẻ mong muốn của bạn. HH Maker sẽ cùng bạn tìm hướng thiết kế và gia công phù hợp.'
+                this.tt(
+                    'Chia sẻ mong muốn của bạn. HH Maker sẽ cùng bạn tìm hướng thiết kế và gia công phù hợp.'
+                )
             )
         },
         ctaButtonText() {
-            return this.globalCta?.primary_cta_text || 'Nhận tư vấn ngay'
+            return this.globalCta?.primary_cta_text || this.tt('Nhận tư vấn ngay')
         },
         ctaButtonLink() {
             return (

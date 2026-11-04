@@ -19,29 +19,29 @@
                     <!-- Text Header -->
                     <div class="space-y-3">
                         <span class="text-sm sm:text-base font-normal text-[#D1E0FF] tracking-wider uppercase">
-                            {{ subtitle }}
+                            {{ tt(subtitle) }}
                         </span>
                         <h2
                             class="text-2xl sm:text-3xl lg:text-[38px] lg:leading-[46px] font-bold text-[#FAFAFA] uppercase tracking-tight font-sans"
                         >
-                            {{ title }}
+                            {{ tt(title) }}
                         </h2>
                     </div>
 
                     <!-- Story Paragraphs -->
                     <div class="space-y-4 text-sm sm:text-base text-[#D1E0FF] leading-[24px] font-normal">
                         <p>
-                            Xuất phát từ niềm đam mê với nghệ thuật 3D và công nghệ chế tác hiện đại, tôi thành lập HH Maker với sứ mệnh rút ngắn khoảng cách giữa ý tưởng sơ khai và sản phẩm vật lý.
+                            {{ tt('Xuất phát từ niềm đam mê với nghệ thuật 3D và công nghệ chế tác hiện đại, tôi thành lập HH Maker với sứ mệnh rút ngắn khoảng cách giữa ý tưởng sơ khai và sản phẩm vật lý.') }}
                         </p>
                         <p>
-                            Với mỗi dự án, tôi cùng đội ngũ luôn tỉ mỉ trong từng đường nét thiết kế, lựa chọn vật liệu và kiểm soát quy trình in để mang lại những sản phẩm sắc nét, chuẩn xác và mang đậm dấu ấn cá nhân nhất.
+                            {{ tt('Với mỗi dự án, tôi cùng đội ngũ luôn tỉ mỉ trong từng đường nét thiết kế, lựa chọn vật liệu và kiểm soát quy trình in để mang lại những sản phẩm sắc nét, chuẩn xác và mang đậm dấu ấn cá nhân nhất.') }}
                         </p>
                     </div>
 
                     <!-- 3 Metrics Strip (Figma Node 2261:5717: 10+, 500+, 95% with 1px white divider) -->
                     <div class="grid grid-cols-3 gap-3 sm:gap-6 pt-4">
                         <div
-                            v-for="(stat, sIdx) in storyStats"
+                            v-for="(stat, sIdx) in displayStats"
                             :key="sIdx"
                             class="space-y-1.5"
                             :class="sIdx < storyStats.length - 1 ? 'border-r border-white/60 pr-3 sm:pr-6' : ''"
@@ -63,6 +63,28 @@
 <script>
 export default {
     name: 'BrandStorySection',
+    computed: {
+        displayStats() {
+            const isEn = (this.$page?.props?.locale?.current === 'en') || (this.$i18n?.locale === 'en');
+            if (isEn) {
+                return [
+                    {
+                        number: '10+',
+                        label: 'Years of Experience<br />in the Industry',
+                    },
+                    {
+                        number: '500+',
+                        label: 'Models & Finished<br />Products',
+                    },
+                    {
+                        number: '95%',
+                        label: 'Satisfied Clients<br />& Partners',
+                    },
+                ];
+            }
+            return this.storyStats;
+        },
+    },
     props: {
         founderImage: {
             type: String,

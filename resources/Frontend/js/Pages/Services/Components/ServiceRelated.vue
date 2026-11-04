@@ -4,7 +4,7 @@
             <!-- Section Title (Figma Node 2367:2271) -->
             <div class="flex items-center justify-between">
                 <h2 class="text-2xl sm:text-[28px] font-bold text-[#FAFAFA] font-sans leading-[36px]">
-                    Dịch vụ liên quan
+                    {{ tt('Dịch vụ liên quan') }}
                 </h2>
             </div>
 
@@ -33,16 +33,16 @@
                     <div class="p-6 flex flex-col justify-between flex-grow min-h-[180px] sm:min-h-[220px]">
                         <div class="space-y-3">
                             <h3 class="text-xl sm:text-[24px] font-bold text-[#FAFAFA] group-hover:text-[#84ADFF] transition-colors font-sans leading-[29px]">
-                                {{ card.title }}
+                                {{ tt(card.title) }}
                             </h3>
                             <p class="text-sm sm:text-[14px] text-[#B9C0D4] leading-[22px] font-sans line-clamp-3">
-                                {{ card.description }}
+                                {{ tt(card.description) }}
                             </p>
                         </div>
 
                         <!-- CTA Link (Node 2367:2283) -->
                         <div class="pt-4 flex items-center text-[14px] font-medium text-[#84ADFF] group-hover:text-white transition-colors">
-                            <span>Tìm hiểu dịch vụ</span>
+                            <span>{{ tt('Tìm hiểu dịch vụ') }}</span>
                             <svg
                                 class="w-4 h-4 ml-1.5 transition-transform duration-200 group-hover:translate-x-1"
                                 fill="none"
@@ -61,7 +61,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { Link } from '@inertiajs/inertia-vue3'
+import { Link, usePage } from '@inertiajs/inertia-vue3'
 
 const props = defineProps({
     currentSlug: {
@@ -74,33 +74,51 @@ const props = defineProps({
     },
 })
 
-const defaultCards = [
-    {
-        slug: 'gia-cong-3d',
-        title: 'Gia công 3D',
-        description: 'Đưa bản thiết kế ra ngoài màn hình. Cùng xem xét vật liệu, cách in và yêu cầu hoàn thiện',
-        image: '/assets/images/services/service-gia-cong-3d.png',
-        href: '/dich-vu/gia-cong-3d',
-    },
-    {
-        slug: 'lam-do-custom',
-        title: 'Làm đồ Custom',
-        description: 'Phụ kiện, quà tặng và đồ trang trí mang dấu ấn riêng, từ ý tưởng đến phương án chế tác',
-        image: '/assets/images/services/service-lam-do-custom.png',
-        href: '/dich-vu/lam-do-custom',
-    },
-]
+const page = usePage()
+const isEn = computed(() => page.props.value?.locale?.current === 'en')
 
 const getServiceHref = (slug) => {
     try {
         if (typeof route === 'function') {
-            return route('services.show', { slug })
+            const routeName = isEn.value ? 'en.services.show' : 'vi.services.show'
+            return route(routeName, { slug })
         }
-    } catch {
-        // Fallback
-    }
-    return `/dich-vu/${slug}`
+    } catch {}
+    return isEn.value ? `/en/services/${slug}` : `/dich-vu/${slug}`
 }
+
+const defaultCards = computed(() => {
+    if (isEn.value) {
+        return [
+            {
+                slug: 'gia-cong-3d',
+                title: '3D Machining & Printing',
+                description: 'Bringing digital designs into the physical world. Reviewing materials, print methods, and finishing requirements.',
+                image: '/assets/images/services/service-gia-cong-3d.png',
+            },
+            {
+                slug: 'lam-do-custom',
+                title: 'Custom Bespoke Creations',
+                description: 'Custom accessories, gifts, and decor with distinctive signature touch, from concept to fabrication.',
+                image: '/assets/images/services/service-lam-do-custom.png',
+            },
+        ]
+    }
+    return [
+        {
+            slug: 'gia-cong-3d',
+            title: 'Gia công 3D',
+            description: 'Đưa bản thiết kế ra ngoài màn hình. Cùng xem xét vật liệu, cách in và yêu cầu hoàn thiện',
+            image: '/assets/images/services/service-gia-cong-3d.png',
+        },
+        {
+            slug: 'lam-do-custom',
+            title: 'Làm đồ Custom',
+            description: 'Phụ kiện, quà tặng và đồ trang trí mang dấu ấn riêng, từ ý tưởng đến phương án chế tác',
+            image: '/assets/images/services/service-lam-do-custom.png',
+        },
+    ]
+})
 
 const displayCards = computed(() => {
     if (props.services && props.services.length > 0) {
@@ -110,8 +128,12 @@ const displayCards = computed(() => {
                 slug: item.slug,
                 title: item.title,
                 description: item.description,
-                image: item.image?.url || (item.slug?.includes('gia-cong') ? '/assets/images/services/service-gia-cong-3d.png' : '/assets/images/services/service-lam-do-custom.png'),
-                href: item.slug ? getServiceHref(item.slug) : '/dich-vu',
+                image:
+                    item.image?.url ||
+                    (item.slug?.includes('gia-cong')
+                        ? '/assets/images/services/service-gia-cong-3d.png'
+                        : '/assets/images/services/service-lam-do-custom.png'),
+                href: item.slug ? getServiceHref(item.slug) : (isEn.value ? '/en/services' : '/dich-vu'),
             }))
 
         if (filtered.length >= 2) {
@@ -119,7 +141,7 @@ const displayCards = computed(() => {
         }
     }
 
-    return defaultCards.map((card) => ({
+    return defaultCards.value.map((card) => ({
         ...card,
         href: getServiceHref(card.slug),
     }))

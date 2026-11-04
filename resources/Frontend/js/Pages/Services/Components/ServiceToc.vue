@@ -3,7 +3,7 @@
         <!-- Desktop Sticky Sidebar (Figma Node 2367:2178 - 248px) -->
         <aside class="hidden lg:block w-[248px] shrink-0 sticky top-28 self-start select-none">
             <h3 class="text-[13px] font-semibold text-[#B9C0D4] uppercase tracking-wider mb-4 font-sans leading-4">
-                TRONG BÀI VIẾT NÀY
+                {{ tt('TRONG BÀI VIẾT NÀY') }}
             </h3>
             <nav class="flex flex-col font-sans" aria-label="Table of contents">
                 <button
@@ -27,7 +27,7 @@
                         {{ item.number }}
                     </span>
                     <span class="text-[14px] leading-[21px] truncate">
-                        {{ item.title }}
+                        {{ tt(item.title) }}
                     </span>
                 </button>
             </nav>
@@ -49,7 +49,7 @@
                     ]"
                 >
                     <span class="opacity-75 text-[12px] font-mono">{{ item.number }}</span>
-                    <span>{{ item.shortTitle || item.title }}</span>
+                    <span>{{ tt(item.shortTitle || item.title) }}</span>
                 </button>
             </div>
         </div>

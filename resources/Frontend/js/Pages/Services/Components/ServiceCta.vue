@@ -10,10 +10,10 @@
                     <!-- Message Content (Figma Node 2352:11796 - 817px) -->
                     <div class="space-y-3 max-w-[817px]">
                         <h2 class="text-2xl sm:text-3xl lg:text-[32px] font-bold text-[#FAFAFA] leading-tight lg:leading-[37px] font-sans">
-                            {{ title }}
+                            {{ tt(title) }}
                         </h2>
                         <p class="text-base text-[#FAFAFA] leading-[26px] font-sans">
-                            {{ description }}
+                            {{ tt(description) }}
                         </p>
                     </div>
 
@@ -23,7 +23,7 @@
                             :href="contactHref"
                             class="inline-flex items-center justify-center w-[175px] h-10 rounded-[8px] bg-[#F5F8FF] hover:bg-white text-[#111322] font-medium text-[16px] leading-6 transition-all duration-200 shadow-md hover:shadow-[0_0_16px_rgba(255,255,255,0.4)] active:scale-[0.98] select-none focus:outline-none focus:ring-2 focus:ring-white font-sans"
                         >
-                            {{ ctaText }}
+                            {{ tt(ctaText) }}
                         </Link>
                     </div>
                 </div>
@@ -48,6 +48,7 @@ const props = defineProps({
 })
 
 const page = usePage()
+const isEn = computed(() => page.props.value?.locale?.current === 'en')
 
 const ctaData = computed(() => {
     return (
@@ -72,11 +73,12 @@ const contactHref = computed(() => {
     if (ctaData.value?.link) return ctaData.value.link
     try {
         if (typeof route === 'function') {
-            return route('contact')
+            const routeName = isEn.value ? 'en.contact' : 'vi.contact'
+            return route(routeName)
         }
     } catch {
         // Fallback
     }
-    return '/lien-he'
+    return isEn.value ? '/en/contact' : '/lien-he'
 })
 </script>
