@@ -150,30 +150,79 @@ class Post extends BaseModel
         });
 
         static::saved(function (self $model) {
-            if (request()->route() === null) return;
-            $model->saveRelatedPosts($model);
-            $model->saveCategories($model);
-            $model->saveP($model);
-            $model->saveProducts($model);
+            if (request()->route() !== null) {
+                $model->saveRelatedPosts($model);
+                $model->saveCategories($model);
+                $model->saveP($model);
+                $model->saveProducts($model);
+            }
 
-            // Auto-clear frontend caches
-            $locales = config('app.locales', ['vi', 'en']);
-            foreach ($locales as $locale) {
-                Cache::forget('prizes_index_' . $locale);
-                Cache::forget('projects_index_' . $locale);
-                Cache::forget('project_show_' . ($model->seo_slug ?? $model->slug) . '_' . $locale);
-                Cache::forget('prize_show_' . ($model->seo_slug ?? $model->slug) . '_' . $locale);
-                Cache::forget('galleries_index_' . $locale);
-                Cache::forget('home_page_data_' . $locale);
-                Cache::forget('inertia_layout_shared_data_' . $locale);
+            static::clearPostCaches($model);
+        });
 
-                // Paginated projects/prizes usually use page suffixes
-                for ($i = 1; $i <= 5; $i++) {
-                    Cache::forget('projects_index_' . $locale . '_page_' . $i);
-                    Cache::forget('prizes_index_' . $locale . '_page_' . $i);
+        static::deleted(function (self $model) {
+            static::clearPostCaches($model);
+        });
+    }
+
+    public static function clearPostCaches(?self $model = null): void
+    {
+        $locales = config('app.locales', ['vi', 'en']);
+        $slugs = [];
+        $postId = $model?->id;
+
+        if ($model) {
+            if (!empty($model->slug)) {
+                $slugs[] = $model->slug;
+            }
+            if (!empty($model->seo_slug)) {
+                $slugs[] = $model->seo_slug;
+            }
+            if ($model->relationLoaded('translations') || method_exists($model, 'translations')) {
+                try {
+                    foreach ($model->translations()->get() as $translation) {
+                        if (!empty($translation->slug)) {
+                            $slugs[] = $translation->slug;
+                        }
+                        if (!empty($translation->seo_slug)) {
+                            $slugs[] = $translation->seo_slug;
+                        }
+                    }
+                } catch (\Throwable $e) {
+                    // Ignore if table not ready
                 }
             }
-        });
+        }
+        $slugs = array_values(array_unique(array_filter($slugs)));
+
+        foreach ($locales as $locale) {
+            Cache::forget('prizes_index_' . $locale);
+            Cache::forget('projects_index_' . $locale);
+            Cache::forget('posts_index_' . $locale);
+            Cache::forget('process_index_' . $locale);
+            Cache::forget('agencies_index_' . $locale);
+            Cache::forget('contact_index_' . $locale);
+            Cache::forget('feedback_index_' . $locale);
+            Cache::forget('galleries_index_' . $locale);
+            Cache::forget('home_page_data_' . $locale);
+            Cache::forget('inertia_layout_shared_data_' . $locale);
+            Cache::forget('search_page_data_' . $locale . '_');
+
+            if ($postId) {
+                Cache::forget('related_posts_' . $postId . '_' . $locale);
+            }
+
+            foreach ($slugs as $slug) {
+                Cache::forget('project_show_' . $slug . '_' . $locale);
+                Cache::forget('prize_show_' . $slug . '_' . $locale);
+                Cache::forget('post_show_' . $slug . '_' . $locale);
+            }
+
+            for ($i = 1; $i <= 5; $i++) {
+                Cache::forget('projects_index_' . $locale . '_page_' . $i);
+                Cache::forget('prizes_index_' . $locale . '_page_' . $i);
+            }
+        }
     }
     public function saveP($model)
     {
@@ -504,13 +553,67 @@ class Post extends BaseModel
 
     public function transformFaqs()
     {
+        $rawAnswer = $this->content ?: $this->description ?: '';
+        $cleanAnswer = trim(strip_tags((string) $rawAnswer));
+
         $data = [
             'id' => $this->id,
             'title' => $this->title,
-            'content' => $this->content,
+            'question' => $this->title,
+            'content' => $this->content ?: $this->description,
+            'answer' => $cleanAnswer !== '' ? $cleanAnswer : (string) $rawAnswer,
         ];
 
         return $data;
+    }
+
+    public static function getFrontendFaqs(): array
+    {
+        $defaultFaqs = [
+            [
+                'id' => 1,
+                'title' => 'Tôi chưa có sẵn file thiết kế 3D, bên mình có hỗ trợ dựng file không?',
+                'question' => 'Tôi chưa có sẵn file thiết kế 3D, bên mình có hỗ trợ dựng file không?',
+                'content' => 'Có. HH MAKER hỗ trợ dựng file 3D từ ý tưởng, bản phác thảo hoặc hình ảnh tham khảo của bạn. Bạn chỉ cần cung cấp kích thước, công năng và yêu cầu mong muốn; đội ngũ sẽ tư vấn phương án thiết kế, báo chi phí dựng file và gửi bản 3D để bạn duyệt trước khi sản xuất.',
+                'answer' => 'Có. HH MAKER hỗ trợ dựng file 3D từ ý tưởng, bản phác thảo hoặc hình ảnh tham khảo của bạn. Bạn chỉ cần cung cấp kích thước, công năng và yêu cầu mong muốn; đội ngũ sẽ tư vấn phương án thiết kế, báo chi phí dựng file và gửi bản 3D để bạn duyệt trước khi sản xuất.',
+            ],
+            [
+                'id' => 2,
+                'title' => 'Để nhận được bảng báo giá chính xác và nhanh chóng nhất cho dự án của mình, tôi cần cung cấp những gì?',
+                'question' => 'Để nhận được bảng báo giá chính xác và nhanh chóng nhất cho dự án của mình, tôi cần cung cấp những gì?',
+                'content' => 'Bạn chỉ cần gửi file thiết kế 3D (nếu có định dạng .STL, .OBJ, .STEP...), kích thước mong muốn, yêu cầu về độ mịn, vật liệu hoặc ảnh mô tả ý tưởng. Đội ngũ kỹ thuật HH Maker sẽ phản hồi và gửi báo giá chi tiết trong vòng 2-4 giờ làm việc.',
+                'answer' => 'Bạn chỉ cần gửi file thiết kế 3D (nếu có định dạng .STL, .OBJ, .STEP...), kích thước mong muốn, yêu cầu về độ mịn, vật liệu hoặc ảnh mô tả ý tưởng. Đội ngũ kỹ thuật HH Maker sẽ phản hồi và gửi báo giá chi tiết trong vòng 2-4 giờ làm việc.',
+            ],
+            [
+                'id' => 3,
+                'title' => 'Tôi muốn đặt sản phẩm theo ý tưởng riêng hoặc điều chỉnh khác đi so với các mẫu có sẵn thì có được không?',
+                'question' => 'Tôi muốn đặt sản phẩm theo ý tưởng riêng hoặc điều chỉnh khác đi so với các mẫu có sẵn thì có được không?',
+                'content' => 'Hoàn toàn được! Dịch vụ làm đồ Custom và chế tác theo yêu cầu là thế mạnh hàng đầu tại HH Maker. Chúng tôi sẵn sàng tinh chỉnh kích thước, tỷ lệ, phối màu hoặc thiết kế riêng biệt hoàn toàn theo concept của bạn.',
+                'answer' => 'Hoàn toàn được! Dịch vụ làm đồ Custom và chế tác theo yêu cầu là thế mạnh hàng đầu tại HH Maker. Chúng tôi sẵn sàng tinh chỉnh kích thước, tỷ lệ, phối màu hoặc thiết kế riêng biệt hoàn toàn theo concept của bạn.',
+            ],
+        ];
+
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('posts')) {
+                $items = static::query()
+                    ->active()
+                    ->where('type', self::TYPE_FAQ)
+                    ->orderByPosition()
+                    ->orderBy('id', 'desc')
+                    ->get()
+                    ->map(fn($item) => $item->transformFaqs())
+                    ->values()
+                    ->toArray();
+
+                if (!empty($items)) {
+                    return $items;
+                }
+            }
+        } catch (\Throwable $e) {
+            report($e);
+        }
+
+        return $defaultFaqs;
     }
 
     public function transformDetails()

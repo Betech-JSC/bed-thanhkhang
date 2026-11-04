@@ -95,7 +95,7 @@
                             <span>{{ displayEmail }}</span>
                         </a>
                         <a
-                            href="mailto:lamhonghai123@gmail.com"
+                            :href="'mailto:' + ($page.props.global?.general_email || 'lamhonghai123@gmail.com')"
                             class="group flex items-center gap-2.5 text-[#F5F8FF] hover:text-[#2970FF] transition-colors"
                         >
                             <svg class="w-5 h-5 text-[#F5F8FF] group-hover:text-[#2970FF] transition-colors shrink-0" viewBox="0 0 48 48" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">

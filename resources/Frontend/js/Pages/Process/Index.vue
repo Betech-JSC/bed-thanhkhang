@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-[#111322] min-h-screen text-white selection:bg-primary selection:text-white">
+    <div class="process-page-root bg-[#111322] min-h-screen text-white selection:bg-primary selection:text-white">
         <!-- SEO Head Metadata -->
         <Head>
             <title>{{ pageTitle }}</title>
@@ -13,7 +13,7 @@
         <ProcessHero :banner="heroBanner" />
 
         <!-- SECTION 2: Stepper Bar 5 Điểm Quy Trình (Figma Node 2283:6851, 1440x176px) -->
-        <ProcessStepper />
+        <ProcessStepper :steps="processSteps" />
 
         <!-- SECTION 3: Chi Tiết 5 Bước Gia Công (Figma Node 2283:6882, 1440x1273px) -->
         <section class="relative w-full py-6 lg:py-10">
@@ -27,7 +27,7 @@
         </section>
 
         <!-- SECTION 4: FAQ Accordion (Figma Node 2334:8455, 1440x621px) -->
-        <ProcessFaq />
+        <ProcessFaq :faqs="faqs" />
     </div>
 </template>
 
@@ -43,6 +43,18 @@ const props = defineProps({
     heroBanner: {
         type: Object,
         default: () => null,
+    },
+    steps: {
+        type: Array,
+        default: () => [],
+    },
+    processSteps: {
+        type: Array,
+        default: () => [],
+    },
+    faqs: {
+        type: Array,
+        default: () => [],
     },
     seo: {
         type: Object,
@@ -71,7 +83,7 @@ const pageDescription = computed(() => {
     )
 })
 
-const processSteps = [
+const fallbackProcessSteps = [
     {
         number: '01',
         title: 'Liên hệ',
@@ -108,4 +120,31 @@ const processSteps = [
         makerAction: 'Bàn giao kiện hàng để vận chuyển, cung cấp thông tin gửi hàng và tiếp nhận phản hồi sau khi khách hàng nhận sản phẩm.',
     },
 ]
+
+const processSteps = computed(() =>
+    Array.isArray(props.processSteps) && props.processSteps.length
+        ? props.processSteps
+        : Array.isArray(props.steps) && props.steps.length
+          ? props.steps
+          : fallbackProcessSteps
+)
 </script>
+
+<style>
+html:has(.process-page-root)::-webkit-scrollbar,
+body:has(.process-page-root)::-webkit-scrollbar {
+    display: none;
+}
+html:has(.process-page-root),
+body:has(.process-page-root) {
+    scrollbar-width: none;
+}
+@media (min-width: 1024px) {
+    body:has(.process-page-root) #footer-section .max-w-\[361px\] {
+        padding-top: 0;
+    }
+    body:has(.process-page-root) #footer-section .max-w-\[361px\] p {
+        line-height: 22px;
+    }
+}
+</style>

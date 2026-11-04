@@ -1,0 +1,39 @@
+schema: spec-driven
+
+context: |
+  Project: <PROJECT_NAME> (<DOMAIN_DESCRIPTION>)
+  Tech Stack:
+    # Ví dụ A — Laravel + Inertia + Vue 3 (BED CMS hoặc Standard Laravel):
+    # - Backend: PHP 8.1+, Laravel 9/10, MySQL, Ziggy, Multi-locale
+    # - Frontend: Vue 3 (Composition API / <script setup>), Inertia.js, Vite, Tailwind CSS 3, PrimeVue 3, Sass, Pinia, vue-i18n
+    # - UI Paths: resources/Frontend/js/{Components,Layouts,Pages} (hoặc resources/js/{Components,Layouts,Pages})
+    #
+    # Ví dụ B — Next.js + React:
+    # - Framework: Next.js 14/15 (App Router), React 18/19, TypeScript, Tailwind CSS
+    # - UI Paths: src/app, src/components, src/lib
+    - Điền stack thực tế của dự án tại đây (đối chiếu từ composer.json / package.json).
+
+  Engineering & Governance Rules:
+    - Ngôn ngữ tài liệu OpenSpec (proposal, specs, design, tasks): Tiếng Việt rõ ràng, thuật ngữ kỹ thuật giữ chuẩn tiếng Anh.
+    - Strict Safe Guard: Tuyệt đối cấm tự ý xóa file (rm), cấm chạy lệnh phá hủy database (migrate:fresh, drop, truncate), cấm tự ý đổi kiến trúc thư mục khi chưa được phê duyệt.
+    - Evidence-Based 100% & Zero-Assumption: Mọi báo cáo PASS phải kèm raw output build/test thật và ảnh chụp Playwright MCP; thiếu API contract hoặc chưa rõ nghiệp vụ bắt buộc dừng lại hỏi người dùng.
+    - Mandatory Subagent Reflex: Main Agent điều phối qua invoke_subagent (Backend Worker, Frontend Worker, Independent Tester, QA Verifier).
+    - Hệ Sinh Thái 4 Bộ Skill Hub-and-Spoke (Mỗi câu lệnh làm 1 nhiệm vụ chuyên biệt chống tràn bộ nhớ):
+      1. /opsx-bootstrap (.agents/skills/opsx-bootstrap): Pure Lightweight Installer — cài đặt & đồng bộ file trong 1–2 giây.
+      2. /opsx-cms-sync (.agents/skills/opsx-cms-sync): Hub điều phối Hệ thống CMS Dynamic A–Z đối chiếu Figma (Kiểm toán 8 trụ cột CMS -> Bảng Confirm [+] Thêm / [-] Bỏ / [=] Giữ -> Xuất Handoff Prompts -> Nghiệm thu E2E).
+      3. /opsx-pixel-perfect (.agents/skills/opsx-pixel-perfect-ui): Hub điều phối Giao diện 100% Pixel-Perfect đối chiếu Figma MCP (-> Bảng Confirm [+] Thêm / [-] Bỏ / [=] Giữ -> Xuất Handoff Prompts -> Nghiệm thu đa khung nhìn).
+      4. /opsx-animation & /ui-skill (.agents/skills/opsx-animation & .agents/skills/ui-skill): Hub điều phối Animation với 4 Quy tắc vàng (1 phần tử tối đa 1 animation, cấm opacity trắng màn hình, nút qua lại < / > trượt ngang translate-x, giữ nguyên 100% ProductGallery.vue).
+    - Graphify AST First: Đọc graphify-out/graph.json trước khi tạo component/class mới; chạy 'graphify . --code-only' sau mỗi phase thay đổi cấu trúc.
+    - Figma MCP & Anti-UI-Slop: Dựng UI theo phase (.agents/skills/opsx-figma-workflow), kiểm toán chỉ đọc trước khi dọn UI (.agents/skills/opsx-ui-audit), giữ giao diện Quiet & High-Trust UI (cấm spam icon/emoji vô nghĩa).
+    - VPS & CI/CD Standard: Build assets nặng trên GitHub Actions Runner (Node 18, --max-old-space-size=4096) và đồng bộ về VPS qua rsync (.agents/skills/vps-cicd-deploy).
+
+rules:
+  proposal:
+    - Trình bày ngắn gọn, đi thẳng vào lý do thực tế (Why), phạm vi thay đổi cụ thể (What Changes), Capabilities và Impact.
+    - Ghi rõ phạm vi an toàn (những vùng code/DB không được phép chạm tới).
+  specs:
+    - Mỗi Requirement phải có ít nhất một Scenario kiểm chứng được theo cấu trúc WHEN / THEN rõ ràng.
+  design:
+    - Đối chiếu cấu trúc thực tế từ graphify-out/graph.json trước khi đề xuất thêm file hoặc component mới.
+  tasks:
+    - Chia task theo từng nhóm độc lập, mỗi checkbox phải nêu rõ lệnh hoặc tiêu chí kiểm chứng hoàn thành (build, test, hoặc Playwright Visual QA).

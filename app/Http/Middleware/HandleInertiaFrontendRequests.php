@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Config;
 use App\Models\Post\Post;
 use Inertia\Middleware;
 use Illuminate\Http\Request;
@@ -30,74 +31,117 @@ class HandleInertiaFrontendRequests extends Middleware
     public function share(Request $request)
     {
         $relativeUrl = str_replace(env('APP_URL'), '',  url()->current());
-        $metaPage = MetaPage::where('url', $relativeUrl ?: '/')->first();
+        try {
+            $metaPage = \Illuminate\Support\Facades\Schema::hasTable('meta_pages')
+                ? MetaPage::where('url', $relativeUrl ?: '/')->first()
+                : null;
+        } catch (\Throwable $e) {
+            $metaPage = null;
+        }
 
         $locale = current_locale();
-        $layoutData = \Illuminate\Support\Facades\Cache::remember('inertia_layout_shared_data_' . $locale, 3600, function () {
-            $footerCourses = Post::query()
-                ->active()
-                ->whereMenuFooter()
-                ->get()
-                ->map(fn($item) => $item->transform());
+        $defaultLayoutData = [
+            'prizes' => [],
+            'learning_env' => [],
+            'footer_courses' => [],
+            'members' => [],
+            'policies' => [],
+            'faqs' => [],
+            'globalCtaBanner' => null,
+            'banner' => [
+                'banner_home' => null,
+                'BANNER_GLOBAL_CTA' => null,
+                'global_cta' => null,
+            ],
+        ];
+        try {
+            $layoutData = \Illuminate\Support\Facades\Cache::remember('inertia_layout_shared_data_' . $locale, 3600, function () use ($defaultLayoutData) {
+                try {
+                    $footerCourses = Post::query()
+                        ->active()
+                        ->whereMenuFooter()
+                        ->get()
+                        ->map(fn($item) => $item->transform());
 
-            $prizes = Post::query()
-                ->active()
-                ->wherePrizes()
-                ->get()
-                ->map(fn($item) => $item->transform());
+                    $prizes = Post::query()
+                        ->active()
+                        ->wherePrizes()
+                        ->get()
+                        ->map(fn($item) => $item->transform());
 
-            $learning_env = Post::query()
-                ->active()
-                ->whereLearningEnv()
-                ->get()
-                ->map(fn($item) => $item->transform());
+                    $learning_env = Post::query()
+                        ->active()
+                        ->whereLearningEnv()
+                        ->get()
+                        ->map(fn($item) => $item->transform());
 
-            $policies = Policy::query()
-                ->active()
-                ->sortByPosition()
-                ->get()
-                ->map(fn($item) => $item->transform());
+                    $policies = Policy::query()
+                        ->active()
+                        ->sortByPosition()
+                        ->get()
+                        ->map(fn($item) => $item->transform());
 
-            $members = Post::query()
-                ->active()
-                ->where('type', Post::TYPE_MEMBER)
-                ->get()
-                ->map(fn($item) => $item->transformMember());
+                    $members = Post::query()
+                        ->active()
+                        ->where('type', Post::TYPE_MEMBER)
+                        ->get()
+                        ->map(fn($item) => $item->transformMember());
 
-            $faqs = Post::query()
-                ->active()
-                ->where('type', Post::TYPE_FAQ)
-                ->get()
-                ->map(fn($item) => $item->transformFaqs());
+                    $faqs = Post::query()
+                        ->active()
+                        ->where('type', Post::TYPE_FAQ)
+                        ->get()
+                        ->map(fn($item) => $item->transformFaqs());
 
-            $banner_home = Slider::getByPosition('HOME_SLIDER');
-            $globalCtaBanner = Slider::getByPosition('BANNER_GLOBAL_CTA');
+                    $banner_home = Slider::getByPosition('HOME_SLIDER');
+                    $globalCtaBanner = Slider::getByPosition('BANNER_GLOBAL_CTA');
 
-            return [
-                'prizes' => $prizes,
-                'learning_env' => $learning_env,
-                'footer_courses' => $footerCourses,
-                'members' => $members,
-                'policies' => $policies,
-                'faqs' => $faqs,
-                'globalCtaBanner' => $globalCtaBanner,
-                'banner' => [
-                    'banner_home' => $banner_home,
-                    'BANNER_GLOBAL_CTA' => $globalCtaBanner,
-                    'global_cta' => $globalCtaBanner,
-                ]
-            ];
-        });
+                    return [
+                        'prizes' => $prizes,
+                        'learning_env' => $learning_env,
+                        'footer_courses' => $footerCourses,
+                        'members' => $members,
+                        'policies' => $policies,
+                        'faqs' => $faqs,
+                        'globalCtaBanner' => $globalCtaBanner,
+                        'banner' => [
+                            'banner_home' => $banner_home,
+                            'BANNER_GLOBAL_CTA' => $globalCtaBanner,
+                            'global_cta' => $globalCtaBanner,
+                        ]
+                    ];
+                } catch (\Throwable $e) {
+                    return $defaultLayoutData;
+                }
+            });
+        } catch (\Throwable $e) {
+            $layoutData = $defaultLayoutData;
+        }
 
-        $global = cache_response(
-            'global_settings',
-            function () {
-                return settings()
-                    ->group('general')
-                    ->all();
-            },
-            'settings',
-        );
+        try {
+            $global = cache_response(
+                'global_settings',
+                function () {
+                    if (method_exists(Config::class, 'getGeneralSettings')) {
+                        return Config::getGeneralSettings();
+                    }
+
+                    return \Illuminate\Support\Facades\Schema::hasTable('settings')
+                        ? settings()
+                            ->group('general')
+                            ->all()
+                        : [];
+                },
+                'settings',
+            );
+            if (method_exists(Config::class, 'normalizeGeneralSettings')) {
+                $global = Config::normalizeGeneralSettings(is_array($global) ? $global : []);
+            } else {
+                $global = is_array($global) ? $global : [];
+            }
+        } catch (\Throwable $e) {
+            $global = [];
+        }
 
         $user = null;
 

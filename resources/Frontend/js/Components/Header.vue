@@ -297,7 +297,7 @@
                                 <div class="p-3.5 rounded-xl bg-dark-surface/80 border border-dark-border space-y-3">
                                     <div class="flex items-center justify-between">
                                         <Link
-                                            :href="route('users.profile.index')"
+                                            :href="route('user.login')"
                                             @click="closeDrawer"
                                             class="text-sm font-semibold text-white hover:text-primary transition-colors truncate"
                                         >
@@ -683,7 +683,7 @@ export default {
         },
         logout() {
             this.$inertia.post(
-                this.route('users.logout'),
+                this.route('user.login'),
                 {},
                 {
                     onSuccess: () => {

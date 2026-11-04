@@ -129,9 +129,20 @@ class ConfigController extends Controller
 
         $rules = $this->model::rules($id);
 
-        $validated = $request->validate($rules);
+        $validated = !empty($rules) ? $request->validate($rules) : $request->all();
+
+        foreach (['map_iframe', 'general_map_iframe'] as $mapKey) {
+            if (!empty($validated[$mapKey]) && is_string($validated[$mapKey])) {
+                if (str_contains(mb_strtolower($validated[$mapKey]), '<iframe') && preg_match('/src=["\']([^"\']+)["\']/i', $validated[$mapKey], $matches)) {
+                    $validated[$mapKey] = trim($matches[1]);
+                } else {
+                    $validated[$mapKey] = Config::extractMapIframeSrc($validated[$mapKey]);
+                }
+            }
+        }
 
         settings()->group($id)->set($validated);
+        Config::clearBrandCaches();
 
         return $this->redirectBack('Lưu đối tượng thành công.');
     }

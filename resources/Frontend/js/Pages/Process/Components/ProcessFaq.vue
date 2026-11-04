@@ -1,14 +1,14 @@
 <template>
     <!-- SECTION 4: FAQ Section (Figma Node 2334:8455, 1440x621px, padding: 80px 144px 120px) -->
-    <section class="relative w-full pt-12 pb-20 lg:pt-20 lg:pb-[120px] overflow-hidden">
+    <section v-scroll-reveal class="relative w-full pt-12 pb-20 lg:pt-20 lg:pb-[120px] overflow-hidden">
         <!-- Container max-width 1152px -->
         <div class="max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-0 space-y-8">
             <!-- Section Header (Figma Node 2334:8456, gap: 16px) -->
             <div class="space-y-4">
-                <span class="text-sm font-semibold tracking-wider text-[#84ADFF] uppercase select-none leading-[20px] block">
+                <span class="font-normal text-[14px] leading-[20px] text-[#84ADFF] uppercase select-none block">
                     {{ tt('CÂU HỎI THƯỜNG GẶP') }}
                 </span>
-                <h2 class="text-2xl sm:text-3xl lg:text-[32px] font-bold text-[#FAFAFA] leading-[37px]">
+                <h2 class="text-2xl sm:text-3xl lg:text-[32px] font-bold text-[#FAFAFA] leading-[37px] sm:leading-[37px] lg:leading-[37px]">
                     {{ tt('Giải đáp trước khi liên hệ') }}
                 </h2>
             </div>
@@ -20,14 +20,17 @@
                     :key="index"
                     class="rounded-xl border border-[#5D6B98] bg-white/20 backdrop-blur-[10px] transition-all duration-200 overflow-hidden"
                 >
-                    <!-- Question Button (Figma padding: 24px) -->
+                    <!-- Question Button (Figma padding: 24px, Collapsed height: 72px, Expanded gap: 16px) -->
                     <button
                         type="button"
                         @click="toggleFaq(index)"
-                        class="w-full text-left p-5 sm:p-6 flex items-center justify-between gap-4 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#84ADFF]"
+                        :class="[
+                            'w-full text-left px-5 pt-5 sm:px-6 sm:pt-[23px] flex items-center justify-between gap-4 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#84ADFF]',
+                            activeFaq === index ? 'pb-4' : 'pb-5 sm:pb-[23px]',
+                        ]"
                         :aria-expanded="activeFaq === index"
                     >
-                        <span class="text-base sm:text-lg font-medium text-[#FAFAFA] leading-[22px]">
+                        <span class="text-base sm:text-lg font-medium text-[#FAFAFA] leading-[22px] sm:leading-[22px]">
                             {{ tt(faq.question) }}
                         </span>
 
@@ -63,13 +66,22 @@
                         </div>
                     </button>
 
-                    <!-- Expandable Answer (Figma Node 2399:1432, 16px / 26px / #FCFCFC) -->
-                    <div
-                        v-show="activeFaq === index"
-                        class="px-5 sm:px-6 pb-6 -mt-1 text-sm sm:text-base text-[#FCFCFC] leading-relaxed lg:leading-[26px]"
+                    <!-- Expandable Answer (Figma Node 2399:1432, 16px / 26px / #FCFCFC, Expanded card height: 140px) -->
+                    <Transition
+                        enter-active-class="transition-transform duration-200 ease-out"
+                        enter-from-class="translate-y-1"
+                        enter-to-class="translate-y-0"
+                        leave-active-class="transition-transform duration-150 ease-in"
+                        leave-from-class="translate-y-0"
+                        leave-to-class="translate-y-1"
                     >
-                        <p>{{ tt(faq.answer) }}</p>
-                    </div>
+                        <div
+                            v-if="activeFaq === index"
+                            class="px-5 pb-5 sm:px-6 sm:pb-[23px] text-sm sm:text-base text-[#FCFCFC] leading-relaxed lg:leading-[26px]"
+                        >
+                            <p>{{ tt(faq.answer) }}</p>
+                        </div>
+                    </Transition>
                 </div>
             </div>
         </div>
@@ -77,7 +89,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+
+const props = defineProps({
+    faqs: {
+        type: Array,
+        default: () => [],
+    },
+})
 
 const activeFaq = ref(0) // Câu 1 mặc định mở theo Figma
 
@@ -85,7 +104,7 @@ const toggleFaq = (index) => {
     activeFaq.value = activeFaq.value === index ? null : index
 }
 
-const faqs = [
+const fallbackFaqs = [
     {
         question: 'Tôi chưa có sẵn file thiết kế 3D, bên mình có hỗ trợ dựng file không?',
         answer: 'Có. HH MAKER hỗ trợ dựng file 3D từ ý tưởng, bản phác thảo hoặc hình ảnh tham khảo của bạn. Bạn chỉ cần cung cấp kích thước, công năng và yêu cầu mong muốn; đội ngũ sẽ tư vấn phương án thiết kế, báo chi phí dựng file và gửi bản 3D để bạn duyệt trước khi sản xuất.',
@@ -111,4 +130,13 @@ const faqs = [
         answer: 'Độ bền phụ thuộc vào loại vật liệu được lựa chọn: từ PLA+ thân thiện, PETG chịu va đập, ABS/Nylon chịu nhiệt và cơ tính cao, đến Carbon Fiber siêu cứng hoặc Resin 8K độ mịn tuyệt đối. Kỹ sư sẽ tư vấn loại nhựa tối ưu theo mục đích sử dụng của bạn.',
     },
 ]
+
+const faqs = computed(() =>
+    Array.isArray(props.faqs) && props.faqs.length
+        ? props.faqs.map((item) => ({
+              question: item.question || item.title || '',
+              answer: item.answer || item.content || item.description || '',
+          }))
+        : fallbackFaqs
+)
 </script>

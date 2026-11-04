@@ -1,10 +1,10 @@
 <template>
     <!-- SECTION 2: Lộ trình năm bước (Figma Node 2283:6851, 1440x176px, padding: 16px 144px 64px) -->
-    <section id="process-steps" class="relative w-full py-4 sm:py-6 lg:pt-4 lg:pb-16 scroll-mt-24">
+    <section id="process-steps" v-scroll-reveal class="relative w-full py-4 sm:py-6 lg:pt-4 lg:pb-16 scroll-mt-24">
         <!-- Container max-width 1152px (1440px - 288px padding) -->
         <div class="max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-0">
-            <!-- Stepper Grid (5 steps, 230px each in Figma) -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-[10.5px]">
+            <!-- Stepper Grid (5 steps, 230x96px each in Figma Node 2283:6851) -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 lg:flex lg:justify-between lg:items-start lg:gap-0">
                 <div
                     v-for="step in steps"
                     :key="step.number"
@@ -13,12 +13,12 @@
                     tabindex="0"
                     @keydown.enter="scrollToStep(step.number)"
                     @keydown.space.prevent="scrollToStep(step.number)"
-                    class="group relative border-t-2 border-[#84ADFF] pt-5 pb-5 pl-4 pr-2 transition-colors duration-200 cursor-pointer flex flex-col justify-between min-h-[96px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#84ADFF]/50"
+                    class="group relative lg:w-[230px] lg:h-[96px] border-t-2 border-[#84ADFF] pt-5 pb-5 pl-4 pr-2 transition-colors duration-200 cursor-pointer flex flex-col justify-between min-h-[96px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#84ADFF]/50"
                     :title="tt('Xem chi tiết bước') + ' ' + step.number + ': ' + tt(step.title)"
                 >
                     <!-- Top Row: Step Number & Trailing Icon (Figma 206x18px) -->
-                    <div class="flex items-center justify-between w-full">
-                        <span class="text-sm font-semibold tracking-wider text-[#84ADFF] leading-[17px] select-none font-mono">
+                    <div class="flex items-center justify-between w-full h-[18px]">
+                        <span class="font-sans font-normal text-[14px] leading-[17px] text-[#84ADFF] select-none">
                             {{ step.number }}
                         </span>
 
@@ -59,7 +59,7 @@
                     </div>
 
                     <!-- Bottom Row: Step Title (Figma 16px / 26px / Semibold / #FAFAFA) -->
-                    <div class="mt-3">
+                    <div class="mt-3 lg:mt-0">
                         <span class="text-base font-semibold text-[#FAFAFA] group-hover:text-white transition-colors block leading-[26px]">
                             {{ tt(step.title) }}
                         </span>
@@ -76,13 +76,26 @@
 </template>
 
 <script setup>
-const steps = [
+import { computed } from 'vue'
+
+const props = defineProps({
+    steps: {
+        type: Array,
+        default: () => [],
+    },
+})
+
+const fallbackSteps = [
     { number: '01', title: 'Liên hệ', isLast: false },
     { number: '02', title: 'Báo giá', isLast: false },
     { number: '03', title: 'Gia công 3D', isLast: false },
     { number: '04', title: 'Đóng gói', isLast: false },
     { number: '05', title: 'Gửi hàng', isLast: true },
 ]
+
+const steps = computed(() =>
+    Array.isArray(props.steps) && props.steps.length ? props.steps : fallbackSteps
+)
 
 const scrollToStep = (stepNumber) => {
     if (typeof document === 'undefined') return

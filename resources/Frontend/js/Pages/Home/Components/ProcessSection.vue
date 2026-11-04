@@ -1,5 +1,6 @@
 <template>
     <section
+        v-scroll-reveal
         id="process-section"
         class="relative w-full overflow-hidden text-white bg-dark-bg"
     >
@@ -60,7 +61,8 @@
                         >
                             <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center">
                                 <svg
-                                    class="w-7 h-7 sm:w-8 sm:h-8 text-[#FCFCFC] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                                    class="w-7 h-7 sm:w-8 sm:h-8 text-[#FCFCFC] transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-1"
+                                    :class="{ 'rotate-90': activeStep === idx }"
                                     viewBox="0 0 80 80"
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
@@ -80,12 +82,21 @@
                                 {{ tt(step.title) }}
                             </span>
                         </button>
-                        <div
-                            v-if="step.detail && activeStep === idx"
-                            class="pb-4 pl-14 sm:pl-16 pr-4 text-xs sm:text-sm text-[#D1E0FF] leading-relaxed"
+                        <Transition
+                            enter-active-class="transition-transform duration-200 ease-out"
+                            enter-from-class="translate-y-1"
+                            enter-to-class="translate-y-0"
+                            leave-active-class="transition-transform duration-150 ease-in"
+                            leave-from-class="translate-y-0"
+                            leave-to-class="translate-y-1"
                         >
-                            {{ tt(step.detail) }}
-                        </div>
+                            <div
+                                v-if="step.detail && activeStep === idx"
+                                class="pb-4 pl-14 sm:pl-16 pr-4 text-xs sm:text-sm text-[#D1E0FF] leading-relaxed"
+                            >
+                                {{ tt(step.detail) }}
+                            </div>
+                        </Transition>
                     </div>
                 </div>
             </div>

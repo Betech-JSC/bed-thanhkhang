@@ -1,5 +1,5 @@
 <template>
-    <section id="services-section" class="py-12 md:py-20 bg-dark-bg">
+    <section v-scroll-reveal id="services-section" class="py-12 md:py-20 bg-dark-bg">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1152px]">
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 lg:gap-12">
                 <!-- Left Title (Figma Node 2261:5529: 320px width, 38px font-bold, line-height 46px) -->

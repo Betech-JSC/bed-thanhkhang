@@ -1,11 +1,11 @@
 <template>
-    <article class="w-full max-w-[840px] space-y-12 lg:space-y-14 font-sans text-left">
+    <article class="w-full max-w-[840px] space-y-10 font-sans text-left">
         <!-- Mục 01: Khi nào bạn cần thiết kế 3D? (Figma Node 2367:2197) -->
         <section id="section-01" class="scroll-mt-32 space-y-4">
             <h2 class="text-2xl sm:text-[28px] font-bold text-[#FAFAFA] leading-tight sm:leading-[36px]">
                 {{ tt('Khi nào bạn cần thiết kế 3D?') }}
             </h2>
-            <div class="space-y-3.5 text-base text-[#B9C0D4] leading-[26px]">
+            <div class="space-y-4 text-base text-[#B9C0D4] leading-[26px]">
                 <p>
                     {{ tt('Bạn đã hình dung một món đồ nhưng chưa có mô hình để triển khai? Một bức ảnh thường chỉ cho thấy một góc nhìn; bản phác thảo có thể chưa thể hiện rõ chiều sâu, tỉ lệ hay cách các phần kết nối với nhau.') }}
                 </p>
@@ -27,7 +27,7 @@
             </div>
 
             <!-- 4 Bước thiết kế (Figma Node 2367:2204) -->
-            <div class="space-y-0 pt-2">
+            <div class="space-y-0">
                 <div
                     v-for="step in steps"
                     :key="step.number"
@@ -41,7 +41,7 @@
                     </div>
 
                     <!-- Nội dung bước -->
-                    <div class="space-y-1.5 flex-grow">
+                    <div class="space-y-2 flex-grow">
                         <h3 class="text-lg sm:text-[19px] font-semibold text-[#FAFAFA] leading-[27px]">
                             {{ tt(step.title) }}
                         </h3>
@@ -77,7 +77,7 @@
                     </span>
 
                     <!-- Detail -->
-                    <div class="space-y-1 flex-grow">
+                    <div class="space-y-1.5 flex-grow">
                         <h4 class="text-[16px] font-semibold text-[#FAFAFA] leading-[24px]">
                             {{ tt(item.title) }}
                         </h4>
@@ -90,7 +90,7 @@
         </section>
 
         <!-- Mục 04: Cùng hoàn thiện trước khi gia công (Figma Node 2367:2253) -->
-        <section id="section-04" class="scroll-mt-32 space-y-5">
+        <section id="section-04" class="scroll-mt-32 space-y-4">
             <h2 class="text-2xl sm:text-[28px] font-bold text-[#FAFAFA] leading-tight sm:leading-[36px]">
                 {{ tt('Cùng hoàn thiện trước khi gia công') }}
             </h2>
@@ -123,6 +123,18 @@
 import { computed } from 'vue'
 
 const props = defineProps({
+    service: {
+        type: Object,
+        default: () => ({}),
+    },
+    steps: {
+        type: Array,
+        default: () => [],
+    },
+    checklistItems: {
+        type: Array,
+        default: () => [],
+    },
     dynamicHtml: {
         type: String,
         default: '',
@@ -133,7 +145,7 @@ const hasDynamicContent = computed(() => {
     return !!props.dynamicHtml && props.dynamicHtml.trim().length > 0
 })
 
-const steps = [
+const fallbackSteps = [
     {
         number: '01',
         title: 'Trao đổi ý tưởng và mục đích sử dụng',
@@ -160,7 +172,7 @@ const steps = [
     },
 ]
 
-const checklistItems = [
+const fallbackChecklistItems = [
     {
         title: 'Ý tưởng & mục đích sử dụng',
         description:
@@ -182,6 +194,19 @@ const checklistItems = [
             'Ghi rõ phần chữ, hình dáng, bề mặt hoặc giới hạn không thể thay đổi để cùng cân nhắc ngay từ đầu.',
     },
 ]
+
+const steps = computed(() => {
+    if (Array.isArray(props.steps) && props.steps.length) return props.steps
+    if (Array.isArray(props.service?.steps) && props.service.steps.length) return props.service.steps
+    return fallbackSteps
+})
+
+const checklistItems = computed(() => {
+    if (Array.isArray(props.checklistItems) && props.checklistItems.length) return props.checklistItems
+    if (Array.isArray(props.service?.checklist_items) && props.service.checklist_items.length) return props.service.checklist_items
+    if (Array.isArray(props.service?.checklistItems) && props.service.checklistItems.length) return props.service.checklistItems
+    return fallbackChecklistItems
+})
 </script>
 
 <style scoped>

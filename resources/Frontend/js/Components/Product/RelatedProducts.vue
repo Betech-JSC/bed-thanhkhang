@@ -1,88 +1,129 @@
 <template>
-    <section class="w-full py-10 lg:py-14 border-t border-[#404968]">
-        <!-- TIÊU ĐỀ BỘ SƯU TẬP (FIGMA 2358:3095: 1152x29 px) -->
-        <div class="flex items-center justify-between mb-6 lg:mb-8">
-            <div>
-                <h2 class="text-2xl lg:text-3xl font-bold text-[#FAFAFA] font-sans tracking-tight">
-                    {{ tt('Sản phẩm khác') }}
-                </h2>
-                <p class="text-xs sm:text-sm text-[#94A3B8] mt-1 font-sans">
-                    {{ tt('Khám phá thêm các mô hình thiết kế in 3D độc bản và decor độc đáo') }}
-                </p>
+    <section v-scroll-reveal class="w-full pt-4 pb-8 flex flex-col gap-6">
+        <!-- TIÊU ĐỀ BỘ SƯU TẬP + ĐIỀU HƯỚNG (FIGMA 2358:3095: 1152x29 px) -->
+        <div class="flex items-center justify-between gap-4">
+            <h2 class="text-[24px] font-bold leading-[29px] text-[#FAFAFA] font-sans">
+                {{ tt('Sản phẩm khác') }}
+            </h2>
+
+            <!-- Navigation Arrows -->
+            <div class="flex items-center gap-3">
+                <button
+                    type="button"
+                    @click="scrollPrev"
+                    class="w-8 h-8 rounded-full border border-white/20 text-white/80 hover:text-white hover:border-[#2970FF] hover:bg-[#2970FF]/20 flex items-center justify-center transition-colors duration-200 cursor-pointer shadow-sm active:scale-95"
+                    aria-label="Previous Slide"
+                >
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <button
+                    type="button"
+                    @click="scrollNext"
+                    class="w-8 h-8 rounded-full border border-white/20 text-white/80 hover:text-white hover:border-[#2970FF] hover:bg-[#2970FF]/20 flex items-center justify-center transition-colors duration-200 cursor-pointer shadow-sm active:scale-95"
+                    aria-label="Next Slide"
+                >
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
             </div>
-            <Link
-                :href="route('products.index')"
-                class="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-[#84ADFF] hover:text-white transition-colors"
-            >
-                {{ tt('Xem tất cả') }}
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-            </Link>
         </div>
 
         <!-- DANH SÁCH GỢI Ý (FIGMA 2358:3100: 1152x419 px, 4 cards 273x419 px, gap 20px) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            <div
-                v-for="(item, idx) in productList"
-                :key="item.id || idx"
-                class="group bg-[#141C2E] border border-[#30374F] hover:border-[#2970FF] rounded-xl overflow-hidden flex flex-col transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-1"
+        <div class="relative group w-full max-w-[1152px] mx-auto">
+            <!-- Synchronized Left Prev Button -->
+            <button
+                type="button"
+                @click="scrollPrev"
+                class="absolute -left-3 sm:-left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#111322]/90 border border-white/20 text-white hover:bg-[#2970FF] hover:border-[#2970FF] flex items-center justify-center transition-colors duration-200 active:scale-95 shadow-xl backdrop-blur-sm cursor-pointer"
+                aria-label="Previous Slide"
             >
-                <!-- Hình ảnh sản phẩm (Figma image 15: 273x419) -->
-                <Link
-                    :href="item.slug ? route('products.show', { slug: item.slug }) : route('products.index')"
-                    class="relative block w-full h-[280px] sm:h-[320px] bg-[#1E2538] overflow-hidden"
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+
+            <div
+                ref="viewportRef"
+                class="overflow-hidden w-full py-1"
+                @touchstart.passive="onTouchStart"
+                @touchend.passive="onTouchEnd"
+            >
+                <div
+                    ref="trackRef"
+                    class="flex items-center gap-5 w-full"
                 >
-                    <img
-                        :src="item.image"
-                        :alt="item.title"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        loading="lazy"
-                    />
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#141C2E] via-transparent to-transparent opacity-60"></div>
-                    <span
-                        v-if="item.category"
-                        class="absolute top-3 left-3 px-2.5 py-1 rounded text-[11px] font-semibold bg-[#111322]/80 text-[#84ADFF] border border-[#5D6B98]/40 backdrop-blur-sm"
+                    <Link
+                        v-for="(slotItem, slotIndex) in visibleProducts"
+                        :key="slotIndex"
+                        :href="slotItem.slug ? route('products.show', { slug: slotItem.slug }) : route('products.index')"
+                        class="group/card w-[273px] min-w-[273px] max-w-[273px] h-[419px] flex-shrink-0 rounded-[12px] overflow-hidden bg-[#D1D2D2] flex flex-col select-none"
                     >
-                        {{ tt(item.category) }}
-                    </span>
-                </Link>
+                        <!-- Hình ảnh sản phẩm cố định khung 273x352 (Figma image 15) + Inner Horizontal Slide Transition -->
+                        <div class="w-full h-[352px] bg-[#D1D2D2] relative overflow-hidden shrink-0">
+                            <Transition
+                                enter-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform"
+                                :enter-from-class="slideDirection === 'next' ? 'translate-x-full' : '-translate-x-full'"
+                                enter-to-class="translate-x-0"
+                                leave-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform absolute inset-0 pointer-events-none"
+                                leave-from-class="translate-x-0"
+                                :leave-to-class="slideDirection === 'next' ? '-translate-x-full' : 'translate-x-full'"
+                            >
+                                <div
+                                    :key="`${currentIndex}-${slotIndex}`"
+                                    class="w-full h-full relative overflow-hidden"
+                                >
+                                    <img
+                                        :src="slotItem.image"
+                                        :alt="slotItem.title"
+                                        class="w-full h-full object-cover select-none"
+                                        loading="eager"
+                                        decoding="sync"
+                                    />
+                                </div>
+                            </Transition>
+                        </div>
 
-                <!-- Frame 263: Thông tin sản phẩm (Figma I2358:3101;2283:6515: 273x67 px) -->
-                <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between bg-[#141C2E]">
-                    <div>
-                        <h3 class="text-base font-semibold text-[#FAFAFA] line-clamp-1 group-hover:text-[#84ADFF] transition-colors">
-                            <Link :href="item.slug ? route('products.show', { slug: item.slug }) : route('products.index')">
-                                {{ item.title }}
-                            </Link>
-                        </h3>
-                        <p class="text-xs text-[#94A3B8] mt-1 line-clamp-2">
-                            {{ item.description || tt('Chất liệu PLA cao cấp, công nghệ in FDM tỉ mỉ từng chi tiết.') }}
-                        </p>
-                    </div>
-
-                    <div class="flex items-center justify-end pt-3 mt-3 border-t border-[#30374F]/70">
-                        <Link
-                            :href="item.slug ? route('products.show', { slug: item.slug }) : route('products.index')"
-                            class="inline-flex items-center gap-1.5 text-xs font-semibold text-[#84ADFF] hover:text-[#528BFF] group-hover:translate-x-1 transition-all"
-                        >
-                            {{ tt('Xem chi tiết') }}
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                            </svg>
-                        </Link>
-                    </div>
+                        <!-- Frame 263: Thông tin sản phẩm cố định 273x67 px (Figma I2358:3101;2283:6515) -->
+                        <div class="w-full h-[67px] bg-[#30374F] relative overflow-hidden shrink-0">
+                            <Transition
+                                enter-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform"
+                                :enter-from-class="slideDirection === 'next' ? 'translate-x-full' : '-translate-x-full'"
+                                enter-to-class="translate-x-0"
+                                leave-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform absolute inset-0 pointer-events-none"
+                                leave-from-class="translate-x-0"
+                                :leave-to-class="slideDirection === 'next' ? '-translate-x-full' : 'translate-x-full'"
+                            >
+                                <div
+                                    :key="`${currentIndex}-${slotIndex}`"
+                                    class="w-full h-full px-6 py-3 flex flex-col justify-center gap-1"
+                                >
+                                    <h3 class="text-base font-bold leading-[22px] text-[#F5F8FF] truncate">
+                                        {{ tt(slotItem.title) }}
+                                    </h3>
+                                    <p class="text-xs font-normal leading-[17px] text-[#B9C0D4] truncate">
+                                        {{ tt(slotItem.description) }}
+                                    </p>
+                                </div>
+                            </Transition>
+                        </div>
+                    </Link>
                 </div>
             </div>
-        </div>
 
-        <div class="sm:hidden text-center mt-6">
-            <Link
-                :href="route('products.index')"
-                class="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-lg bg-[#141C2E] border border-[#404968] text-sm font-medium text-[#84ADFF]"
+            <!-- Synchronized Right Next Button -->
+            <button
+                type="button"
+                @click="scrollNext"
+                class="absolute -right-3 sm:-right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#111322]/90 border border-white/20 text-white hover:bg-[#2970FF] hover:border-[#2970FF] flex items-center justify-center transition-colors duration-200 active:scale-95 shadow-xl backdrop-blur-sm cursor-pointer"
+                aria-label="Next Slide"
             >
-                {{ tt('Xem tất cả sản phẩm') }}
-            </Link>
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
         </div>
     </section>
 </template>
@@ -96,19 +137,32 @@ export default {
             default: () => [],
         },
     },
+    data() {
+        return {
+            currentIndex: 0,
+            currentOffset: 0,
+            slideDirection: 'next',
+            touchStartX: 0,
+        }
+    },
     computed: {
         isEn() {
             return (this.$page?.props?.locale?.current || 'vi') === 'en'
         },
-        productList() {
+        baseItems() {
+            const defaultSubtitles = [
+                'Mô hình trưng bày · In theo yêu cầu',
+                'Trang trí góc làm việc · Tuỳ chọn màu',
+                'Mô hình sưu tầm · In theo yêu cầu',
+                'Mô hình trang trí · Tuỳ chọn màu',
+            ]
             if (this.products && this.products.length > 0) {
-                return this.products.slice(0, 4).map((p, idx) => ({
+                return this.products.map((p, idx) => ({
                     id: p.id || idx,
                     title: p.title || p.name || (this.isEn ? '3D Printed Product' : 'Sản phẩm in 3D'),
                     slug: p.slug || '',
-                    category: p.category?.title || p.category_name || (this.isEn ? '3D Printed Model' : 'Mô hình in 3D'),
                     image: p.image?.url || p.thumbnail || p.cover || `/images/pdp/related_${(idx % 4) + 1}.png`,
-                    description: p.description || p.excerpt || '',
+                    description: p.subtitle || p.short_description || p.description || p.excerpt || defaultSubtitles[idx % 4],
                 }))
             }
 
@@ -116,74 +170,177 @@ export default {
                 return [
                     {
                         id: 1,
-                        title: 'Space Astronaut Model',
+                        title: 'Astronaut',
                         slug: 'mo-hinh-phi-hanh-gia',
-                        category: 'Space Decor',
                         image: '/images/pdp/related_1.png',
-                        description: 'Crisp contours, matte PLA fingerprint-resistant finish, high color retention.',
+                        description: 'Display Model · Custom 3D Print',
                     },
                     {
                         id: 2,
-                        title: 'Mini Geometric Plant Pot',
+                        title: 'Geometric Fox',
                         slug: 'chau-cay-da-giac-mini',
-                        category: 'Space Decor',
                         image: '/images/pdp/related_2.png',
-                        description: 'Smart drainage design ideal for desk succulents and workspace greenery.',
+                        description: 'Desk Decor · Custom Colors',
                     },
                     {
                         id: 3,
-                        title: 'Mecha Cyberpunk Phone Stand',
+                        title: 'Mini Robot',
                         slug: 'de-do-dien-thoai-mecha',
-                        category: 'Daily Essentials',
                         image: '/images/pdp/related_3.png',
-                        description: 'Ergonomic 60-degree viewing angle, compatible with all smartphone models.',
+                        description: 'Collectible Model · Custom 3D Print',
                     },
                     {
                         id: 4,
-                        title: 'Articulated Robot Assembly Kit',
+                        title: 'Geometric Elephant',
                         slug: 'robot-khop-cu-dong',
-                        category: 'Custom Manufacturing',
                         image: '/images/pdp/related_4.png',
-                        description: '14 flexible articulated joints, seamless print-in-place without metal screws.',
+                        description: 'Decor Model · Custom Colors',
                     },
                 ]
             }
 
-            // Fallback to Figma related cards in Vietnamese
+            // Fallback to Figma related cards (2358:3100)
             return [
                 {
                     id: 1,
-                    title: 'Mô hình Phi hành gia Không gian',
+                    title: 'Phi hành gia',
                     slug: 'mo-hinh-phi-hanh-gia',
-                    category: 'Trang trí bàn làm việc',
                     image: '/images/pdp/related_1.png',
-                    description: 'Tạo hình sắc nét, vật liệu PLA matte chống bám vân tay, độ bền màu cao.',
+                    description: 'Mô hình trưng bày · In theo yêu cầu',
                 },
                 {
                     id: 2,
-                    title: 'Chậu cây đa giác Mini Geometric',
+                    title: 'Cáo hình học',
                     slug: 'chau-cay-da-giac-mini',
-                    category: 'Decor không gian',
                     image: '/images/pdp/related_2.png',
-                    description: 'Thiết kế thoát nước thông minh cho sen đá và cây để bàn văn phòng.',
+                    description: 'Trang trí góc làm việc · Tuỳ chọn màu',
                 },
                 {
                     id: 3,
-                    title: 'Đế đỡ điện thoại Mecha Cyberpunk',
+                    title: 'Rô-bốt mini',
                     slug: 'de-do-dien-thoai-mecha',
-                    category: 'Phụ kiện công nghệ',
                     image: '/images/pdp/related_3.png',
-                    description: 'Góc nghiêng công thái học 60 độ, tương thích tất cả các dòng smartphone.',
+                    description: 'Mô hình sưu tầm · In theo yêu cầu',
                 },
                 {
                     id: 4,
-                    title: 'Bộ lắp ghép Robot Khớp cử động',
+                    title: 'Voi hình học',
                     slug: 'robot-khop-cu-dong',
-                    category: 'Mô hình khớp động',
                     image: '/images/pdp/related_4.png',
-                    description: '14 khớp linh hoạt, in liền mạch không cần lắp ráp vít kim loại.',
+                    description: 'Mô hình trang trí · Tuỳ chọn màu',
                 },
             ]
+        },
+        productList() {
+            const list = this.baseItems
+            if (list.length > 0 && list.length < 6) {
+                return [...list, ...list.slice(0, 6 - list.length)]
+            }
+            return list
+        },
+        visibleProducts() {
+            const list = this.productList
+            if (!list || list.length === 0) return []
+            const total = list.length
+            const cards = []
+            for (let i = 0; i < 4; i++) {
+                const itemIndex = (this.currentIndex + i) % total
+                cards.push({
+                    ...list[itemIndex],
+                    slotIndex: i,
+                    itemIndex,
+                })
+            }
+            return cards
+        },
+    },
+    mounted() {
+        this.preloadImages()
+        if (typeof window !== 'undefined') {
+            window.addEventListener('resize', this.handleResize, { passive: true })
+        }
+    },
+    beforeUnmount() {
+        if (typeof window !== 'undefined') {
+            window.removeEventListener('resize', this.handleResize)
+        }
+    },
+    methods: {
+        preloadImages() {
+            if (typeof window === 'undefined') return
+            this.productList.forEach(item => {
+                if (item && item.image) {
+                    const img = new window.Image()
+                    img.src = item.image
+                }
+            })
+        },
+        getMaxOffset() {
+            const viewport = this.$refs.viewportRef
+            const totalItems = this.productList.length
+            const trackWidth = totalItems > 0 ? totalItems * 273 + (totalItems - 1) * 20 : 0
+            const viewportWidth = viewport ? viewport.clientWidth : 1152
+            return Math.max(0, trackWidth - viewportWidth)
+        },
+        handleResize() {
+            const maxOffset = this.getMaxOffset()
+            if (this.currentOffset > maxOffset) {
+                this.currentOffset = maxOffset
+            }
+        },
+        scrollNext() {
+            this.slideDirection = 'next'
+            const total = this.productList.length || 1
+            this.currentIndex = (this.currentIndex + 1) % total
+            const step = 293 // 273px card + 20px gap
+            const maxOffset = this.getMaxOffset()
+            if (maxOffset <= 0) {
+                const track = this.$refs.trackRef
+                if (track && track.scrollBy) {
+                    track.scrollBy({ left: step, behavior: 'smooth' })
+                }
+                return
+            }
+            if (this.currentOffset >= maxOffset - 5) {
+                this.currentOffset = 0
+            } else {
+                this.currentOffset = Math.min(maxOffset, this.currentOffset + step)
+            }
+        },
+        scrollPrev() {
+            this.slideDirection = 'prev'
+            const total = this.productList.length || 1
+            this.currentIndex = (this.currentIndex - 1 + total) % total
+            const step = 293
+            const maxOffset = this.getMaxOffset()
+            if (maxOffset <= 0) {
+                const track = this.$refs.trackRef
+                if (track && track.scrollBy) {
+                    track.scrollBy({ left: -step, behavior: 'smooth' })
+                }
+                return
+            }
+            if (this.currentOffset <= 5) {
+                this.currentOffset = maxOffset
+            } else {
+                this.currentOffset = Math.max(0, this.currentOffset - step)
+            }
+        },
+        onTouchStart(e) {
+            if (e.touches && e.touches.length > 0) {
+                this.touchStartX = e.touches[0].clientX
+            }
+        },
+        onTouchEnd(e) {
+            if (!e.changedTouches || e.changedTouches.length === 0) return
+            const deltaX = e.changedTouches[0].clientX - this.touchStartX
+            if (Math.abs(deltaX) > 40) {
+                if (deltaX < 0) {
+                    this.scrollNext()
+                } else {
+                    this.scrollPrev()
+                }
+            }
         },
     },
 }

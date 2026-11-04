@@ -1,44 +1,73 @@
 <template>
     <Link
         :href="productUrl"
-        class="group relative block w-full h-[419px] rounded-[12px] overflow-hidden bg-[#30374F] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl shadow-lg border border-transparent hover:border-[#5D6B98]/40"
+        class="group relative flex flex-col w-full lg:w-[273px] h-[419px] rounded-[12px] overflow-hidden bg-[#30374F] hover:shadow-2xl shadow-lg select-none"
     >
-        <!-- Showcase Image Container (Height ~335px) -->
-        <div class="relative w-full h-[335px] bg-[#D1D2D2] overflow-hidden flex items-center justify-center">
+        <!-- Showcase Image Container (Locked 273x335px Frame with Inner Horizontal Slide Transition) -->
+        <div class="relative w-full h-[335px] bg-[#D1D2D2] overflow-hidden shrink-0">
             <!-- Best Choice Badge (Figma 2283:6509) -->
             <div
                 v-if="product.isBestChoice"
-                class="absolute top-3 left-3 z-10 bg-[#00359E] text-[#F5F8FF] text-xs font-medium px-2.5 py-1 rounded shadow-sm pointer-events-none"
+                class="absolute top-[12px] left-[13px] z-20 w-[97px] h-[25px] rounded-[4px] px-2 py-1 bg-[#00359E] text-[#F5F8FF] text-xs font-medium leading-[17px] flex items-center justify-center shadow-sm pointer-events-none"
             >
                 {{ tt('Best choice') }}
             </div>
 
-            <!-- Product Showcase Image -->
-            <img
-                :src="productImageSrc"
-                :alt="productImageAlt"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                loading="lazy"
-                @error="onImageError"
-            />
+            <Transition
+                enter-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform"
+                :enter-from-class="slideDirection === 'next' ? 'translate-x-full' : '-translate-x-full'"
+                enter-to-class="translate-x-0"
+                leave-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform absolute inset-0 pointer-events-none"
+                leave-from-class="translate-x-0"
+                :leave-to-class="slideDirection === 'next' ? '-translate-x-full' : 'translate-x-full'"
+            >
+                <div
+                    :key="slideKey || product.id"
+                    class="w-full h-full relative overflow-hidden"
+                >
+                    <!-- Product Showcase Image -->
+                    <img
+                        :src="productImageSrc"
+                        :alt="productImageAlt"
+                        class="w-full h-full object-cover select-none group-hover:scale-105 transition-transform duration-500 ease-out"
+                        loading="eager"
+                        decoding="sync"
+                        @error="onImageError"
+                    />
+                </div>
+            </Transition>
 
             <!-- Subtle hover tint -->
             <div
-                class="absolute inset-0 bg-[#00359E]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                class="absolute inset-0 bg-[#00359E]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10"
             ></div>
         </div>
 
-        <!-- Bottom Info Bar (Height 84px, Figma 2283:6515) -->
-        <div class="h-[84px] w-full bg-[#30374F] px-6 py-3 flex flex-col justify-center gap-1">
-            <h3
-                class="text-base font-bold text-[#F5F8FF] line-clamp-1 leading-[22px] font-sans group-hover:text-[#84ADFF] transition-colors"
-                :title="product.name || product.title"
+        <!-- Bottom Info Bar (Locked Height 84px, Figma 2283:6515) -->
+        <div class="relative h-[84px] w-full bg-[#30374F] overflow-hidden shrink-0">
+            <Transition
+                enter-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform"
+                :enter-from-class="slideDirection === 'next' ? 'translate-x-full' : '-translate-x-full'"
+                enter-to-class="translate-x-0"
+                leave-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform absolute inset-0 pointer-events-none"
+                leave-from-class="translate-x-0"
+                :leave-to-class="slideDirection === 'next' ? '-translate-x-full' : 'translate-x-full'"
             >
-                {{ product.name || product.title }}
-            </h3>
-            <p class="text-xs text-[#B9C0D4] line-clamp-1 leading-[17px]">
-                {{ product.description || tt('Mẫu thiết kế in 3D hoàn thiện tinh xảo, độ chính xác cơ khí cao.') }}
-            </p>
+                <div
+                    :key="slideKey || product.id"
+                    class="w-full h-full px-6 py-3 flex flex-col justify-between gap-1"
+                >
+                    <h3
+                        class="text-base font-bold text-[#F5F8FF] line-clamp-1 h-[22px] leading-[22px] font-sans group-hover:text-[#84ADFF] transition-colors"
+                        :title="tt(product.name || product.title)"
+                    >
+                        {{ tt(product.name || product.title) }}
+                    </h3>
+                    <p class="text-xs text-[#B9C0D4] line-clamp-2 h-[34px] leading-[17px] font-normal">
+                        {{ tt(product.description || 'Mô hình trưng bày · In theo yêu cầu') }}
+                    </p>
+                </div>
+            </Transition>
         </div>
     </Link>
 </template>
@@ -51,6 +80,20 @@ export default {
             type: Object,
             required: true,
         },
+        slideDirection: {
+            type: String,
+            default: 'next',
+        },
+        slideKey: {
+            type: [String, Number],
+            default: '',
+        },
+    },
+    mounted() {
+        if (typeof window !== 'undefined' && this.productImageSrc) {
+            const img = new window.Image();
+            img.src = this.productImageSrc;
+        }
     },
     computed: {
         productUrl() {

@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-[#111322] text-[#FAFAFA] min-h-screen overflow-x-hidden selection:bg-[#2970FF] selection:text-white">
+    <div class="bg-[#111322] text-[#FAFAFA] min-h-screen selection:bg-[#2970FF] selection:text-white">
         <!-- SEO Head -->
         <Head>
             <title>{{ pageTitle }}</title>
@@ -14,7 +14,7 @@
             <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-[144px]">
                 <div class="flex flex-col gap-6">
                     <!-- Eyebrow (Figma 2346:703) -->
-                    <span class="text-sm font-normal text-[#84ADFF] tracking-wider uppercase leading-5">
+                    <span class="text-sm font-normal text-[#84ADFF] uppercase leading-5">
                         {{ tt('BỘ SƯU TẬP HH MAKER') }}
                     </span>
 
@@ -27,11 +27,11 @@
         </section>
 
         <!-- 2. Main Catalog Content Area (Figma 2346:994 - Sidebar Layout) -->
-        <section class="pb-12 bg-[#111322]">
+        <section class="pb-[12px] bg-[#111322]">
             <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-[144px]">
-                <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
+                <div class="flex flex-col lg:flex-row lg:justify-between gap-8 lg:gap-[45px] items-start">
                     <!-- Left Sidebar (Desktop: Cố định 240px, Mobile: Offcanvas Drawer) -->
-                    <aside class="hidden lg:block w-[240px] shrink-0 sticky top-24">
+                    <aside class="hidden lg:block lg:w-[240px] shrink-0 sticky top-24">
                         <ProductFilter
                             :filters="filters"
                             :categories="displayCategories"
@@ -41,32 +41,41 @@
                     </aside>
 
                     <!-- Mobile Drawer for Filter -->
-                    <div
-                        v-if="isMobileFilterOpen"
-                        class="fixed inset-0 z-50 lg:hidden flex"
+                    <Transition
+                        enter-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                        enter-from-class="-translate-x-full"
+                        enter-to-class="translate-x-0"
+                        leave-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                        leave-from-class="translate-x-0"
+                        leave-to-class="-translate-x-full"
                     >
-                        <!-- Backdrop -->
                         <div
-                            class="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity"
-                            @click="isMobileFilterOpen = false"
-                        ></div>
+                            v-if="isMobileFilterOpen"
+                            class="fixed inset-0 z-50 lg:hidden flex"
+                        >
+                            <!-- Backdrop -->
+                            <div
+                                class="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity duration-300"
+                                @click="isMobileFilterOpen = false"
+                            ></div>
 
-                        <!-- Offcanvas Slide-in -->
-                        <div class="relative w-full max-w-xs bg-[#111322] h-full overflow-y-auto p-4 z-10 border-r border-[#30374F]">
-                            <ProductFilter
-                                :filters="filters"
-                                :categories="displayCategories"
-                                @update:filters="handleFilterUpdate"
-                                @reset="resetFilters"
-                                @close="isMobileFilterOpen = false"
-                            />
+                            <!-- Offcanvas Slide-in -->
+                            <div class="relative w-full max-w-xs bg-[#111322] h-full overflow-y-auto p-4 z-10 border-r border-[#30374F] transition-transform duration-300 ease-out">
+                                <ProductFilter
+                                    :filters="filters"
+                                    :categories="displayCategories"
+                                    @update:filters="handleFilterUpdate"
+                                    @reset="resetFilters"
+                                    @close="isMobileFilterOpen = false"
+                                />
+                            </div>
                         </div>
-                    </div>
+                    </Transition>
 
                     <!-- Right Column: Products Results (Figma 2346:1015) -->
-                    <div class="flex-1 w-full min-w-0 space-y-6">
+                    <div class="w-full lg:w-[867px] shrink-0 min-w-0 space-y-6">
                         <!-- Top Toolbar (Figma 2352:9087) -->
-                        <div class="h-6 flex items-center justify-between gap-4 w-full">
+                        <div class="h-5 flex items-center justify-between gap-4 w-full">
                             <!-- Left: Breadcrumb (Figma 2352:9934) -->
                             <div class="flex items-center gap-2.5 text-sm">
                                 <!-- Mobile Filter Trigger -->
@@ -97,7 +106,7 @@
                                 <button
                                     type="button"
                                     @click="isSortOpen = !isSortOpen"
-                                    class="bg-[#1A1F36] hover:bg-[#222842] border border-[#404968] hover:border-[#2970FF] rounded-[8px] px-3.5 py-1.5 text-sm text-[#FAFAFA] flex items-center gap-2 shadow-sm transition-all cursor-pointer select-none"
+                                    class="bg-[#1A1F36] hover:bg-[#222842] border border-[#404968] hover:border-[#2970FF] rounded-[8px] px-3.5 py-1.5 text-sm text-[#FAFAFA] flex items-center gap-2 shadow-sm transition-colors duration-200 cursor-pointer select-none"
                                     :class="{ 'border-[#2970FF] ring-1 ring-[#2970FF]/40': isSortOpen }"
                                     aria-haspopup="listbox"
                                     :aria-expanded="isSortOpen"
@@ -150,39 +159,43 @@
                             </div>
                         </div>
 
-                        <!-- Products Grid (Figma 2346:717 - 3 cột chuẩn) -->
-                        <div
-                            v-if="paginatedProducts.length > 0"
-                            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-300"
-                        >
-                            <ProductCard
-                                v-for="product in paginatedProducts"
-                                :key="product.id"
-                                :product="product"
-                            />
-                        </div>
-
-                        <!-- Empty State -->
-                        <div
-                            v-else
-                            class="py-16 px-4 text-center rounded-2xl bg-[#30374F] space-y-4"
-                        >
-                            <div class="w-16 h-16 mx-auto rounded-full bg-[#111322] flex items-center justify-center text-[#84ADFF]">
-                                <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </div>
-                            <h3 class="text-lg font-bold text-[#FAFAFA]">{{ tt('Không tìm thấy sản phẩm phù hợp') }}</h3>
-                            <p class="text-sm text-[#B9C0D4] max-w-md mx-auto">
-                                {{ tt('Rất tiếc, không có sản phẩm nào đáp ứng các tiêu chí lọc hiện tại. Bạn vui lòng thử thay đổi từ khoá tìm kiếm hoặc đặt lại bộ lọc.') }}
-                            </p>
-                            <button
-                                type="button"
-                                @click="resetFilters"
-                                class="px-5 py-2.5 rounded-lg bg-[#2970FF] hover:bg-[#155EEF] text-white text-xs font-semibold shadow-md transition-all duration-200"
+                        <!-- Products Grid (Figma 2346:717 - 3 cột chuẩn, Fixed Outer Card Frames + Inner Card Slide Transition) -->
+                        <div class="w-full">
+                            <div
+                                v-if="paginatedProducts.length > 0"
+                                class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
                             >
-                                {{ tt('Đặt lại bộ lọc') }}
-                            </button>
+                                <ProductCard
+                                    v-for="(product, idx) in paginatedProducts"
+                                    :key="idx"
+                                    :product="product"
+                                    :slide-direction="slideDirection"
+                                    :slide-key="`${currentPage}-${slideTick}-${product.id}-${filters.category}-${filters.purposes.join(',')}-${filters.search}-${filters.sortBy}`"
+                                />
+                            </div>
+
+                            <!-- Empty State -->
+                            <div
+                                v-else
+                                class="w-full py-16 px-4 text-center rounded-2xl bg-[#30374F] space-y-4"
+                            >
+                                <div class="w-16 h-16 mx-auto rounded-full bg-[#111322] flex items-center justify-center text-[#84ADFF]">
+                                    <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-bold text-[#FAFAFA]">{{ tt('Không tìm thấy sản phẩm phù hợp') }}</h3>
+                                <p class="text-sm text-[#B9C0D4] max-w-md mx-auto">
+                                    {{ tt('Rất tiếc, không có sản phẩm nào đáp ứng các tiêu chí lọc hiện tại. Bạn vui lòng thử thay đổi từ khoá tìm kiếm hoặc đặt lại bộ lọc.') }}
+                                </p>
+                                <button
+                                    type="button"
+                                    @click="resetFilters"
+                                    class="px-5 py-2.5 rounded-lg bg-[#2970FF] hover:bg-[#155EEF] text-white text-xs font-semibold shadow-md transition-colors duration-200 active:scale-95"
+                                >
+                                    {{ tt('Đặt lại bộ lọc') }}
+                                </button>
+                            </div>
                         </div>
 
                         <!-- Pagination (Figma 2352:9091) -->
@@ -193,11 +206,11 @@
                         />
                     </div>
                 </div>
-
-                <!-- 3. Bottom CTA Banner (Figma 2346:741 - Lời mời sáng tạo) -->
-                <ProductCtaBanner />
             </div>
         </section>
+
+        <!-- 3. Bottom CTA Banner (Figma 2346:740 & 2346:741 - Kết nối dự án / Lời mời sáng tạo) -->
+        <ProductCtaBanner />
     </div>
 </template>
 
@@ -229,6 +242,8 @@ export default {
         return {
             isMobileFilterOpen: false,
             currentPage: 1,
+            slideTick: 0,
+            slideDirection: 'next',
             pageSize: 16,
             isSortOpen: false,
             filters: {
@@ -575,7 +590,7 @@ export default {
             if (this.filters.sortBy === 'newest') {
                 result.sort((a, b) => b.id - a.id);
             } else if (this.filters.sortBy === 'popular') {
-                result.sort((a, b) => (b.isBestChoice ? 1 : 0) - (a.isBestChoice ? 1 : 0));
+                result.sort((a, b) => a.id - b.id);
             } else if (this.filters.sortBy === 'name_asc') {
                 result.sort((a, b) => (a.name || a.title || '').localeCompare(b.name || b.title || ''));
             }
@@ -594,6 +609,7 @@ export default {
         filters: {
             deep: true,
             handler() {
+                this.slideDirection = 'next';
                 this.currentPage = 1;
             },
         },
@@ -607,6 +623,7 @@ export default {
         this.initSearchFromUrl();
     },
     mounted() {
+        this.preloadProductImages();
         this.initSearchFromUrl();
         if (typeof document !== 'undefined') {
             document.addEventListener('click', this.handleDocumentClick);
@@ -618,6 +635,16 @@ export default {
         }
     },
     methods: {
+        preloadProductImages() {
+            if (typeof window === 'undefined') return;
+            this.allProducts.forEach(p => {
+                const src = typeof p.image === 'string' ? p.image : p.image?.url;
+                if (src) {
+                    const img = new window.Image();
+                    img.src = src;
+                }
+            });
+        },
         initSearchFromUrl() {
             if (typeof window !== 'undefined') {
                 const params = new URLSearchParams(window.location.search);
@@ -643,12 +670,16 @@ export default {
             this.isSortOpen = false;
         },
         handleFilterUpdate(newFilters) {
+            this.slideDirection = 'next';
             this.filters = newFilters;
         },
-        handlePageChange(page) {
+        handlePageChange(page, direction) {
+            this.slideDirection = direction || (page >= this.currentPage ? 'next' : 'prev');
             this.currentPage = page;
+            this.slideTick += 1;
         },
         resetFilters() {
+            this.slideDirection = 'next';
             this.filters = {
                 search: '',
                 category: 'all',

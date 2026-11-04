@@ -10,39 +10,39 @@
             <meta property="og:type" content="product" />
         </Head>
 
-        <!-- 1. BREADCRUMBS & SECTION TỔNG QUAN SẢN PHẨM (FIGMA 2358:2979) -->
-        <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-[144px] pt-6 sm:pt-8 pb-10">
+        <!-- 1. BREADCRUMBS & SECTION TỔNG QUAN SẢN PHẨM (FIGMA 2358:2979: 1440x713 px, padding 24px 144px 40px) -->
+        <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-[144px] pt-6 pb-10">
             <!-- ĐƯỜNG DẪN BREADCRUMB (FIGMA 2358:2980) -->
-            <nav class="flex items-center gap-2.5 text-sm text-[#B9C0D4] mb-6 sm:mb-8 overflow-x-auto scrollbar-none whitespace-nowrap" aria-label="Breadcrumb">
-                <Link :href="route('home')" class="hover:text-white transition-colors">
+            <nav class="flex items-center gap-2.5 text-sm leading-[17px] text-[#B9C0D4] mb-6 overflow-x-auto scrollbar-none whitespace-nowrap" aria-label="Breadcrumb">
+                <Link :href="route('home')" class="hover:text-white transition-colors leading-[17px]">
                     {{ tt('Trang chủ') }}
                 </Link>
                 <img src="/images/pdp/chevron_right.svg" alt=">" class="w-3.5 h-3.5 opacity-60" />
-                <Link :href="route('products.index')" class="hover:text-white transition-colors">
+                <Link :href="route('products.index')" class="hover:text-white transition-colors leading-[17px]">
                     {{ tt('Sản phẩm') }}
                 </Link>
                 <img src="/images/pdp/chevron_right.svg" alt=">" class="w-3.5 h-3.5 opacity-60" />
-                <span class="hover:text-white transition-colors cursor-pointer">
+                <span class="hover:text-white transition-colors cursor-pointer leading-[17px]">
                     {{ currentCategory }}
                 </span>
                 <img src="/images/pdp/chevron_right.svg" alt=">" class="w-3.5 h-3.5 opacity-60" />
-                <span class="text-[#FAFAFA] font-medium truncate max-w-[200px] sm:max-w-none">
+                <span class="text-[#FAFAFA] font-normal leading-[17px] truncate max-w-[200px] sm:max-w-none">
                     {{ currentTitle }}
                 </span>
             </nav>
 
             <!-- HÌNH ẢNH VÀ THÔNG TIN (FIGMA 2358:2986: 1152x600 px, gap 48px) -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            <div class="flex flex-col lg:flex-row gap-8 lg:gap-[48px] items-start justify-between">
                 <!-- KHỐI GALLERY HÌNH ẢNH BÊN TRÁI (FIGMA 2390:5336: 624x600 px) -->
-                <div class="lg:col-span-7 w-full">
+                <div class="w-full lg:w-[624px] shrink-0">
                     <ProductGallery
                         :images="productImages"
                         :product-title="currentTitle"
                     />
                 </div>
 
-                <!-- KHỐI THÔNG TIN SẢN PHẨM BÊN PHẢI (FIGMA 2358:3003: 480x473 px) -->
-                <div class="lg:col-span-5 flex flex-col justify-between gap-6 w-full lg:max-w-[480px]">
+                <!-- KHỐI THÔNG TIN SẢN PHẨM BÊN PHẢI (FIGMA 2358:3003: 480x473 px, NẰM TRỰC TIẾP TRÊN NỀN, KHÔNG ĐÓNG KHUNG CARD) -->
+                <div class="w-full lg:w-[480px] shrink-0 flex flex-col justify-between gap-6">
                     <!-- TÊN VÀ GIỚI THIỆU (FIGMA 2358:3004: gap 12px) -->
                     <div class="flex flex-col gap-3">
                         <!-- TÊN SẢN PHẨM (FIGMA 2358:3006: 38px Bold, color #FAFAFA, leading-[46px]) -->
@@ -52,16 +52,16 @@
 
                         <!-- PHÂN LOẠI BADGES (FIGMA 2358:3007: gap 8px) -->
                         <div class="flex items-center gap-2">
-                            <span class="inline-flex items-center justify-center px-3 py-1.5 rounded-[4px] text-xs font-normal leading-[17px] border border-[#5D6B98] text-[#84ADFF]">
+                            <span class="inline-flex items-center justify-center h-[33px] px-3 py-2 rounded-[4px] text-xs font-normal leading-[17px] border border-[#5D6B98] text-[#84ADFF]">
                                 {{ tt('Mô hình in 3D') }}
                             </span>
-                            <span class="inline-flex items-center justify-center px-3 py-1.5 rounded-[4px] text-xs font-normal leading-[17px] border border-[#5D6B98] text-[#84ADFF]">
+                            <span class="inline-flex items-center justify-center h-[33px] px-3 py-2 rounded-[4px] text-xs font-normal leading-[17px] border border-[#5D6B98] text-[#84ADFF]">
                                 {{ tt('In theo yêu cầu') }}
                             </span>
                         </div>
 
                         <!-- GIỚI THIỆU NGẮN (FIGMA 2358:3012: 16px, color #B9C0D4, leading-[22px]) -->
-                        <p class="text-base text-[#B9C0D4] leading-[22px] pt-1">
+                        <p class="text-base text-[#B9C0D4] leading-[22px]">
                             {{ currentDescription }}
                         </p>
                     </div>
@@ -79,7 +79,7 @@
                         <button
                             type="button"
                             @click="handleRequestQuote"
-                            class="w-full h-12 rounded-lg text-[#FAFAFA] font-medium text-base active:scale-[0.99] transition-all duration-150 flex items-center justify-center cursor-pointer shadow-lg shadow-blue-900/30 hover:opacity-95"
+                            class="w-full h-12 rounded-lg text-[#FAFAFA] font-medium text-base transition-colors duration-200 active:scale-[0.98] flex items-center justify-center cursor-pointer shadow-lg shadow-blue-900/30 hover:opacity-95"
                             style="background: linear-gradient(90deg, #2970FF 0%, #00359E 89%);"
                         >
                             {{ tt('Nhận tư vấn sản phẩm') }}
@@ -94,20 +94,20 @@
             </div>
         </div>
 
-        <!-- 2. CHI TIẾT VÀ THÔNG SỐ (FIGMA 2358:3035: 1440x604 px, border-t border-[#404968]) -->
-        <section class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-[144px] pt-10 pb-16 border-t border-[#404968]">
+        <!-- 2. CHI TIẾT VÀ THÔNG SỐ (FIGMA 2358:3035: 1440x604 px, padding 0px 144px 64px) -->
+        <section class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-[144px] pt-0 pb-16">
             <!-- ĐIỀU HƯỚNG NỘI DUNG TABS (FIGMA 2358:3036: height 55px, border-b 1px solid #404968, gap 40px) -->
             <div class="flex items-center gap-10 border-b border-[#404968] overflow-x-auto scrollbar-none pb-0 mb-10 h-[55px]">
                 <button
                     v-for="tab in tabs"
                     :key="tab.id"
                     type="button"
-                    @click="activeTab = tab.id"
+                    @click="selectTab(tab.key || tab.id)"
                     :class="[
-                        'h-[55px] text-base font-semibold transition-all relative whitespace-nowrap focus:outline-none flex items-center',
+                        'h-[55px] text-base leading-[19px] transition-colors duration-200 active:scale-[0.98] relative whitespace-nowrap focus:outline-none flex items-center',
                         activeTab === tab.id
-                            ? 'text-[#FAFAFA]'
-                            : 'text-[#B9C0D4] hover:text-white',
+                            ? 'font-semibold text-[#FAFAFA]'
+                            : 'font-normal text-[#B9C0D4] hover:text-white',
                     ]"
                 >
                     {{ tab.name }}
@@ -118,119 +118,146 @@
                 </button>
             </div>
 
-            <!-- NỘI DUNG CHI TIẾT TABS (FIGMA 2358:3043) -->
-            <div>
-                <!-- TAB 1: TỔNG QUAN (CÂU CHUYỆN SẢN PHẨM + BẢNG THÔNG SỐ KỸ THUẬT) -->
-                <div v-show="activeTab === 'overview'" class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-                    <!-- CÂU CHUYỆN SẢN PHẨM (FIGMA 2358:3044) -->
-                    <div class="lg:col-span-7 flex flex-col gap-6">
-                        <!-- GIỚI THIỆU (FIGMA 2358:3045) -->
-                        <div class="flex flex-col gap-4">
-                            <h2 class="text-2xl font-bold text-[#FAFAFA] leading-[29px]">
-                                {{ storyTitle }}
-                            </h2>
-                            <p class="text-base text-[#B9C0D4] leading-[22px]">
-                                {{ storyIntro }}
+            <!-- NỘI DUNG CHI TIẾT TABS (FIGMA 2358:3043: 1152x445 px, gap 48px, Locked Height + Simultaneous 1x1 Track Slide) -->
+            <div class="relative min-h-[445px] lg:h-[445px] overflow-hidden">
+                <Transition
+                    enter-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform"
+                    :enter-from-class="tabSlideDirection === 'next' ? 'translate-x-full' : '-translate-x-full'"
+                    enter-to-class="translate-x-0"
+                    leave-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform absolute inset-0 pointer-events-none"
+                    leave-from-class="translate-x-0"
+                    :leave-to-class="tabSlideDirection === 'next' ? '-translate-x-full' : 'translate-x-full'"
+                >
+                    <!-- TAB 1: TỔNG QUAN (CÂU CHUYỆN SẢN PHẨM + BẢNG THÔNG SỐ KỸ THUẬT) -->
+                    <div
+                        v-if="activeTab === 'overview'"
+                        key="overview"
+                        class="w-full min-h-[445px] flex flex-col lg:flex-row gap-8 lg:gap-[48px] items-start justify-between"
+                    >
+                        <!-- CÂU CHUYỆN SẢN PHẨM (FIGMA 2358:3044: 624x299 px, gap 24px) -->
+                        <div class="w-full lg:w-[624px] shrink-0 flex flex-col gap-6">
+                            <!-- GIỚI THIỆU (FIGMA 2358:3045) -->
+                            <div class="flex flex-col gap-4">
+                                <h2 class="text-2xl font-bold text-[#FAFAFA] leading-[29px]">
+                                    {{ storyTitle }}
+                                </h2>
+                                <p class="text-base text-[#B9C0D4] leading-[22px]">
+                                    {{ storyIntro }}
+                                </p>
+                            </div>
+
+                            <!-- CÁC ĐẶC ĐIỂM SẢN PHẨM (FIGMA 2358:3048, 2358:3054: BỐ CỤC TỰ NHIÊN, KHÔNG ĐÓNG KHUNG CARD THÔ) -->
+                            <div class="flex flex-col gap-6">
+                                <!-- ĐẶC ĐIỂM 1 (FIGMA 2358:3048) -->
+                                <div class="flex flex-col gap-1">
+                                    <h3 class="text-base font-semibold text-[#FAFAFA] leading-[22px]">
+                                        {{ feature1Title }}
+                                    </h3>
+                                    <p class="text-sm text-[#B9C0D4] leading-5">
+                                        {{ feature1Desc }}
+                                    </p>
+                                </div>
+
+                                <!-- ĐẶC ĐIỂM 2 (FIGMA 2358:3054) -->
+                                <div class="flex flex-col gap-1">
+                                    <h3 class="text-base font-semibold text-[#FAFAFA] leading-[22px]">
+                                        {{ feature2Title }}
+                                    </h3>
+                                    <p class="text-sm text-[#B9C0D4] leading-5">
+                                        {{ feature2Desc }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- NỘI DUNG CONTENT TỪ BACKEND NẾU CÓ -->
+                            <div
+                                v-if="product.content"
+                                class="prose prose-invert max-w-none pt-2 text-sm text-[#B9C0D4]"
+                                v-html="product.content"
+                            ></div>
+                        </div>
+
+                        <!-- BẢNG THÔNG SỐ KỸ THUẬT EMBEDDED BÊN PHẢI (FIGMA 2358:3066: 480x445 px) -->
+                        <div class="w-full lg:w-[480px] shrink-0">
+                            <SpecTable />
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: THÔNG SỐ IN 3D MỞ RỘNG -->
+                    <div
+                        v-else-if="activeTab === 'specs'"
+                        key="specs"
+                        class="w-full min-h-[445px] space-y-6"
+                    >
+                        <div class="max-w-3xl space-y-3">
+                            <h2 class="text-2xl font-bold text-[#FAFAFA]">{{ tt('Tiêu chuẩn kỹ thuật công nghệ in 3D FDM & Resin') }}</h2>
+                            <p class="text-base text-[#B9C0D4] leading-relaxed">
+                                {{ tt('Mỗi mô hình xuất xưởng tại xưởng in HH Maker đều trải qua quy trình kiểm soát chất lượng (QC) nghiêm ngặt từ khâu tối ưu lát cắt (slicing) đến khâu hoàn thiện bề mặt.') }}
                             </p>
                         </div>
 
-                        <!-- CÁC ĐẶC ĐIỂM SẢN PHẨM -->
-                        <div class="flex flex-col gap-5 pt-1">
-                            <!-- ĐẶC ĐIỂM 1 -->
-                            <div class="flex flex-col gap-1">
-                                <h3 class="text-base font-semibold text-[#FAFAFA] leading-[22px]">
-                                    {{ feature1Title }}
-                                </h3>
-                                <p class="text-sm text-[#B9C0D4] leading-5">
-                                    {{ feature1Desc }}
-                                </p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+                            <div class="p-6 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2">
+                                <span class="text-xs font-semibold text-[#84ADFF] uppercase">{{ tt('Độ chính xác') }}</span>
+                                <h4 class="text-xl font-bold text-white">±0.15 mm</h4>
+                                <p class="text-sm text-[#B9C0D4]">{{ tt('Dung sai kích thước cơ học chuẩn xác, các khớp nối và bề mặt liền mạch.') }}</p>
                             </div>
-
-                            <!-- ĐẶC ĐIỂM 2 -->
-                            <div class="flex flex-col gap-1">
-                                <h3 class="text-base font-semibold text-[#FAFAFA] leading-[22px]">
-                                    {{ feature2Title }}
-                                </h3>
-                                <p class="text-sm text-[#B9C0D4] leading-5">
-                                    {{ feature2Desc }}
-                                </p>
+                            <div class="p-6 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2">
+                                <span class="text-xs font-semibold text-[#84ADFF] uppercase">{{ tt('Độ phân giải lớp') }}</span>
+                                <h4 class="text-xl font-bold text-white">0.10 - 0.28 mm</h4>
+                                <p class="text-sm text-[#B9C0D4]">{{ tt('Lựa chọn độ mịn cao phù hợp tượng nghệ thuật decor hoặc tối ưu thời gian.') }}</p>
+                            </div>
+                            <div class="p-6 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2">
+                                <span class="text-xs font-semibold text-[#84ADFF] uppercase">{{ tt('Năng lực sản xuất') }}</span>
+                                <h4 class="text-xl font-bold text-white">{{ tt('Hơn 50+ máy in') }}</h4>
+                                <p class="text-sm text-[#B9C0D4]">{{ tt('Đáp ứng từ mẫu đơn chiếc cá nhân đến đơn hàng số lượng lớn cho sự kiện.') }}</p>
                             </div>
                         </div>
-
                     </div>
 
-                    <!-- BẢNG THÔNG SỐ KỸ THUẬT EMBEDDED BÊN PHẢI -->
-                    <div class="lg:col-span-5 w-full">
-                        <SpecTable />
-                    </div>
-                </div>
+                    <!-- TAB 3: TUỲ CHỈNH SẢN PHẨM THEO YÊU CẦU -->
+                    <div
+                        v-else-if="activeTab === 'custom'"
+                        key="custom"
+                        class="w-full min-h-[445px] space-y-6"
+                    >
+                        <div class="max-w-3xl space-y-3">
+                            <h2 class="text-2xl font-bold text-[#FAFAFA]">{{ tt('Quy trình đặt in tùy chỉnh theo yêu cầu') }}</h2>
+                            <p class="text-base text-[#B9C0D4] leading-relaxed">
+                                {{ tt('HH Maker cung cấp dịch vụ in 3D cá nhân hóa toàn diện. Bạn có thể điều chỉnh tỉ lệ scale, phối màu sợi in đặc biệt hoặc khắc logo thương hiệu riêng.') }}
+                            </p>
+                        </div>
 
-                <!-- TAB 2: THÔNG SỐ IN 3D MỞ RỘNG -->
-                <div v-show="activeTab === 'specs'" class="space-y-6">
-                    <div class="max-w-3xl space-y-3">
-                        <h2 class="text-2xl font-bold text-[#FAFAFA]">{{ tt('Tiêu chuẩn kỹ thuật công nghệ in 3D FDM & Resin') }}</h2>
-                        <p class="text-base text-[#B9C0D4] leading-relaxed">
-                            {{ tt('Mỗi mô hình xuất xưởng tại xưởng in HH Maker đều trải qua quy trình kiểm soát chất lượng (QC) nghiêm ngặt từ khâu tối ưu lát cắt (slicing) đến khâu hoàn thiện bề mặt.') }}
-                        </p>
-                    </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+                            <div class="p-6 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2">
+                                <span class="text-xs font-semibold text-[#84ADFF]">{{ tt('Bước 01') }}</span>
+                                <h4 class="text-lg font-bold text-white">{{ tt('Gửi yêu cầu & file mẫu') }}</h4>
+                                <p class="text-sm text-[#B9C0D4]">{{ tt('Chia sẻ ý tưởng, link mô hình 3D hoặc kích thước mong muốn cho HH Maker.') }}</p>
+                            </div>
+                            <div class="p-6 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2">
+                                <span class="text-xs font-semibold text-[#84ADFF]">{{ tt('Bước 02') }}</span>
+                                <h4 class="text-lg font-bold text-white">{{ tt('Tư vấn kỹ thuật & Báo giá') }}</h4>
+                                <p class="text-sm text-[#B9C0D4]">{{ tt('Đội ngũ kỹ sư thẩm định độ dày thành vách, tư vấn vật liệu và gửi báo giá chi tiết.') }}</p>
+                            </div>
+                            <div class="p-6 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2">
+                                <span class="text-xs font-semibold text-[#84ADFF]">{{ tt('Bước 03') }}</span>
+                                <h4 class="text-lg font-bold text-white">{{ tt('Gia công in & Giao hàng') }}</h4>
+                                <p class="text-sm text-[#B9C0D4]">{{ tt('Tiến hành in, xử lý hậu kỳ tỉ mỉ, đóng gói chống sốc an toàn và vận chuyển tận nơi.') }}</p>
+                            </div>
+                        </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-                        <div class="p-6 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2">
-                            <span class="text-xs font-semibold text-[#84ADFF] uppercase">{{ tt('Độ chính xác') }}</span>
-                            <h4 class="text-xl font-bold text-white">±0.15 mm</h4>
-                            <p class="text-sm text-[#B9C0D4]">{{ tt('Dung sai kích thước cơ học chuẩn xác, các khớp nối và bề mặt liền mạch.') }}</p>
-                        </div>
-                        <div class="p-6 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2">
-                            <span class="text-xs font-semibold text-[#84ADFF] uppercase">{{ tt('Độ phân giải lớp') }}</span>
-                            <h4 class="text-xl font-bold text-white">0.10 - 0.28 mm</h4>
-                            <p class="text-sm text-[#B9C0D4]">{{ tt('Lựa chọn độ mịn cao phù hợp tượng nghệ thuật decor hoặc tối ưu thời gian.') }}</p>
-                        </div>
-                        <div class="p-6 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2">
-                            <span class="text-xs font-semibold text-[#84ADFF] uppercase">{{ tt('Năng lực sản xuất') }}</span>
-                            <h4 class="text-xl font-bold text-white">{{ tt('Hơn 50+ máy in') }}</h4>
-                            <p class="text-sm text-[#B9C0D4]">{{ tt('Đáp ứng từ mẫu đơn chiếc cá nhân đến đơn hàng số lượng lớn cho sự kiện.') }}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TAB 3: TUỲ CHỈNH SẢN PHẨM THEO YÊU CẦU -->
-                <div v-show="activeTab === 'custom'" class="space-y-6">
-                    <div class="max-w-3xl space-y-3">
-                        <h2 class="text-2xl font-bold text-[#FAFAFA]">{{ tt('Quy trình đặt in tùy chỉnh theo yêu cầu') }}</h2>
-                        <p class="text-base text-[#B9C0D4] leading-relaxed">
-                            {{ tt('HH Maker cung cấp dịch vụ in 3D cá nhân hóa toàn diện. Bạn có thể điều chỉnh tỉ lệ scale, phối màu sợi in đặc biệt hoặc khắc logo thương hiệu riêng.') }}
-                        </p>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-                        <div class="p-6 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2">
-                            <span class="text-xs font-semibold text-[#84ADFF]">{{ tt('Bước 01') }}</span>
-                            <h4 class="text-lg font-bold text-white">{{ tt('Gửi yêu cầu & file mẫu') }}</h4>
-                            <p class="text-sm text-[#B9C0D4]">{{ tt('Chia sẻ ý tưởng, link mô hình 3D hoặc kích thước mong muốn cho HH Maker.') }}</p>
-                        </div>
-                        <div class="p-6 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2">
-                            <span class="text-xs font-semibold text-[#84ADFF]">{{ tt('Bước 02') }}</span>
-                            <h4 class="text-lg font-bold text-white">{{ tt('Tư vấn kỹ thuật & Báo giá') }}</h4>
-                            <p class="text-sm text-[#B9C0D4]">{{ tt('Đội ngũ kỹ sư thẩm định độ dày thành vách, tư vấn vật liệu và gửi báo giá chi tiết.') }}</p>
-                        </div>
-                        <div class="p-6 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2">
-                            <span class="text-xs font-semibold text-[#84ADFF]">{{ tt('Bước 03') }}</span>
-                            <h4 class="text-lg font-bold text-white">{{ tt('Gia công in & Giao hàng') }}</h4>
-                            <p class="text-sm text-[#B9C0D4]">{{ tt('Tiến hành in, xử lý hậu kỳ tỉ mỉ, đóng gói chống sốc an toàn và vận chuyển tận nơi.') }}</p>
+                        <div class="pt-2">
+                            <button
+                                type="button"
+                                @click="handleRequestQuote"
+                                class="px-6 py-3 rounded-lg text-white font-medium text-sm flex items-center gap-2 transition-transform duration-150 hover:opacity-95 active:scale-[0.98]"
+                                style="background: linear-gradient(90deg, #2970FF 0%, #00359E 89%);"
+                            >
+                                {{ tt('Trao đổi yêu cầu tùy chỉnh với kỹ sư') }}
+                            </button>
                         </div>
                     </div>
-
-                    <div class="pt-2">
-                        <button
-                            type="button"
-                            @click="handleRequestQuote"
-                            class="px-6 py-3 rounded-lg text-white font-medium text-sm flex items-center gap-2"
-                            style="background: linear-gradient(90deg, #2970FF 0%, #00359E 89%);"
-                        >
-                            {{ tt('Trao đổi yêu cầu tùy chỉnh với kỹ sư') }}
-                        </button>
-                    </div>
-                </div>
+                </Transition>
             </div>
         </section>
 
@@ -301,6 +328,7 @@ export default {
     data() {
         return {
             activeTab: 'overview',
+            tabSlideDirection: 'next',
             toastMessage: '',
         }
     },
@@ -313,9 +341,9 @@ export default {
         },
         tabs() {
             return [
-                { id: 'overview', name: this.tt('Tổng quan') },
-                { id: 'specs', name: this.tt('Thông số in 3D') },
-                { id: 'custom', name: this.tt('Tuỳ chỉnh sản phẩm') },
+                { id: 'overview', key: 'overview', name: this.tt('Tổng quan') },
+                { id: 'specs', key: 'specs', name: this.tt('Thông số in 3D') },
+                { id: 'custom', key: 'custom', name: this.tt('Tuỳ chỉnh sản phẩm') },
             ]
         },
         currentTitle() {
@@ -408,6 +436,13 @@ export default {
         },
     },
     methods: {
+        selectTab(tabKey) {
+            const tabOrder = ['overview', 'specs', 'custom']
+            const oldIndex = tabOrder.indexOf(this.activeTab)
+            const newIndex = tabOrder.indexOf(tabKey)
+            this.tabSlideDirection = newIndex >= oldIndex ? 'next' : 'prev'
+            this.activeTab = tabKey
+        },
         handleRequestQuote() {
             const redirectToast = this.isEn
                 ? `Redirecting to consultation page for "${this.currentTitle}"...`

@@ -12,8 +12,10 @@
                 </div>
                 <div class="body-3">
                     <span class="text-white">{{ tt('Email') }}: </span>
-                    <a href="mailto:info@kvi.konoike.net" class="text-white lg:hover:text-green-default lg:duration-150"
-                        >info@kvi.konoike.net</a
+                    <a
+                        :href="'mailto:' + ($page.props.global?.general_email || 'info@hhmaker.vn')"
+                        class="text-white lg:hover:text-green-default lg:duration-150"
+                        >{{ $page.props.global?.general_email || 'info@hhmaker.vn' }}</a
                     >
                 </div>
             </div>

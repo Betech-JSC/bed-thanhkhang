@@ -6,7 +6,7 @@
             @click.self="close"
             role="dialog"
             aria-modal="true"
-            aria-label="Tìm kiếm sản phẩm"
+            :aria-label="tt('Tìm kiếm sản phẩm')"
         >
             <!-- Modal Dialog Container -->
             <div
@@ -41,8 +41,8 @@
                             type="button"
                             @click="clearKeyword"
                             class="w-7 h-7 rounded-full flex items-center justify-center text-[#B9C0D4] hover:text-white hover:bg-[#23273F] transition-colors"
-                            title="Xóa từ khóa"
-                            aria-label="Xóa từ khóa"
+                            :title="tt('Xóa từ khóa')"
+                            :aria-label="tt('Xóa từ khóa')"
                         >
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -54,7 +54,7 @@
                             type="button"
                             @click="close"
                             class="hidden sm:inline-flex items-center px-2 py-0.5 rounded text-[11px] font-mono font-medium text-[#84ADFF] bg-[#1A1F36] border border-[#30374F] hover:bg-[#23273F] transition-colors"
-                            title="Đóng cửa sổ (ESC)"
+                            :title="tt('Đóng cửa sổ (ESC)')"
                         >
                             ESC
                         </button>

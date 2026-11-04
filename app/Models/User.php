@@ -91,6 +91,23 @@ class User extends Authenticatable
 
     public $appends = ['formatted_status', 'formatted_role'];
 
+    protected static function booted()
+    {
+        static::saved(function (self $model) {
+            $phone = $model->phone;
+            if (!empty($phone)) {
+                \Illuminate\Support\Facades\Cache::forget('otp_' . $phone);
+            }
+        });
+
+        static::deleted(function (self $model) {
+            $phone = $model->phone;
+            if (!empty($phone)) {
+                \Illuminate\Support\Facades\Cache::forget('otp_' . $phone);
+            }
+        });
+    }
+
     public function wishlistedProducts()
     {
         return $this->belongsToMany(Product::class, 'product_user_wishlist')

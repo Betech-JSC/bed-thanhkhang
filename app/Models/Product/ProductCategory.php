@@ -91,13 +91,20 @@ class ProductCategory extends BaseModel
     protected static function booted()
     {
         static::saving(function (self $model) {
-            if (strpos(request()->getRequestUri(), '/product-categories') == false) return;
-            $model->view_count = request()->input('view_count') ?? 0;
+            if (strpos(request()->getRequestUri(), '/product-categories') !== false) {
+                $model->view_count = request()->input('view_count') ?? 0;
+            }
         });
 
         static::saved(function (self $model) {
-            if (strpos(request()->getRequestUri(), '/product-categories') == false) return;
-            $model->saveProducts($model);
+            if (strpos(request()->getRequestUri(), '/product-categories') !== false) {
+                $model->saveProducts($model);
+            }
+            Product::clearProductCaches();
+        });
+
+        static::deleted(function (self $model) {
+            Product::clearProductCaches();
         });
     }
 

@@ -1,119 +1,96 @@
 <template>
-    <div :data-service-slug="service.slug" class="border-t border-[#404968] py-12 lg:py-16">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
-            <!-- Illustration Card (Clickable to Detail Page) -->
-            <div
-                :class="[
-                    'w-full max-w-[460px] mx-auto lg:mx-0 lg:max-w-none',
-                    reverse
-                        ? 'lg:col-span-5 order-1 lg:order-2'
-                        : 'lg:col-span-5 order-1 lg:order-1'
-                ]"
-            >
+    <div v-scroll-reveal :data-service-slug="service.slug" class="border-t border-[#404968] py-10 lg:pt-[63px] lg:pb-[64px]">
+        <div
+            :class="[
+                'flex flex-col lg:flex-row items-center gap-8 lg:gap-[64px]',
+                reverse ? 'lg:flex-row-reverse' : ''
+            ]"
+        >
+            <!-- Illustration Card (Clickable to Detail Page - Figma 460x448) -->
+            <div class="w-full max-w-[460px] lg:w-[460px] lg:h-[448px] shrink-0 mx-auto lg:mx-0">
                 <Link
                     :href="detailUrl"
-                    class="group relative w-full h-[400px] sm:h-[448px] rounded-[16px] p-6 sm:p-8 lg:p-10 flex flex-col justify-between items-center overflow-hidden transition-all duration-300 hover:shadow-[0_8px_32px_rgba(45,75,226,0.35)] block cursor-pointer"
+                    class="group relative w-full h-[400px] sm:h-[448px] lg:w-[460px] lg:h-[448px] rounded-[16px] p-6 sm:p-8 lg:py-[40px] lg:px-[52px] flex flex-col justify-between items-center overflow-hidden transition-all duration-300 hover:shadow-[0_8px_32px_rgba(45,75,226,0.35)] block cursor-pointer"
                     style="background: linear-gradient(180deg, #101121 0%, #2D4BE2 100%)"
                 >
                     <!-- Top Category Code -->
-                    <span class="text-sm font-medium text-[#84ADFF] tracking-wider uppercase text-center select-none font-sans">
+                    <span class="text-[14px] leading-[17px] font-normal text-[#84ADFF] uppercase text-center select-none font-sans">
                         {{ tt(service.category) }}
                     </span>
 
                     <!-- Center 3D Illustration -->
-                    <div class="relative w-[200px] h-[200px] sm:w-[240px] sm:h-[240px] flex items-center justify-center">
+                    <div class="relative w-[200px] h-[200px] sm:w-[240px] sm:h-[240px] shrink-0 flex items-center justify-center">
                         <img
                             :src="service.image"
-                            :alt="service.title"
+                            :alt="tt(service.title)"
                             class="w-full h-full object-contain drop-shadow-[0_12px_24px_rgba(0,0,0,0.5)] transition-transform duration-500 group-hover:scale-105"
                             loading="lazy"
                         />
                     </div>
 
                     <!-- Bottom Tags with Dots -->
-                    <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 text-xs sm:text-[14px] text-[#FAFAFA] font-sans">
+                    <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-[10px] text-xs sm:text-[14px] sm:leading-[20px] font-normal text-[#FAFAFA] font-sans">
                         <template v-for="(tag, tIdx) in service.tags" :key="tIdx">
                             <span class="whitespace-nowrap">{{ tt(tag) }}</span>
                             <span
                                 v-if="tIdx < service.tags.length - 1"
-                                class="w-1 h-1 rounded-full bg-[#FAFAFA]/70 shrink-0"
+                                class="w-1 h-1 rounded-full bg-[#FAFAFA] shrink-0"
                             ></span>
                         </template>
                     </div>
                 </Link>
             </div>
 
-            <!-- Service Details -->
-            <div
-                :class="[
-                    'w-full',
-                    reverse
-                        ? 'lg:col-span-7 order-2 lg:order-1'
-                        : 'lg:col-span-7 order-2 lg:order-2'
-                ]"
-            >
-                <div class="flex flex-col space-y-5 lg:space-y-6">
-                    <!-- Title & Subtitle (Title linked to Detail) -->
-                    <div>
-                        <Link :href="detailUrl" class="inline-block group/title">
-                            <h2 class="text-2xl sm:text-3xl lg:text-display-hero font-bold text-[#FAFAFA] group-hover/title:text-[#84ADFF] transition-colors font-sans">
-                                {{ tt(service.title) }}
-                            </h2>
-                        </Link>
-                        <p class="text-lg sm:text-xl lg:text-[22px] font-normal text-[#FAFAFA] leading-normal lg:leading-[31px] mt-2 font-sans">
-                            {{ tt(service.subtitle) }}
-                        </p>
-                    </div>
+            <!-- Service Details (Figma 628x373, gap 20px) -->
+            <div class="w-full lg:w-[628px] shrink-0">
+                <div class="flex flex-col gap-5">
+                    <!-- 1. Title (Linked to Detail) -->
+                    <Link :href="detailUrl" class="inline-block group/title self-start">
+                        <h2 class="text-2xl sm:text-3xl lg:text-[38px] lg:leading-[44px] font-bold text-[#FAFAFA] tracking-normal group-hover/title:text-[#84ADFF] transition-colors font-sans">
+                            {{ tt(service.title) }}
+                        </h2>
+                    </Link>
 
-                    <!-- Description -->
-                    <p class="text-sm sm:text-base text-[#B9C0D4] leading-relaxed lg:leading-[26px] font-sans">
+                    <!-- 2. Subtitle -->
+                    <p class="text-lg sm:text-xl lg:text-[22px] lg:leading-[31px] font-normal text-[#FAFAFA] font-sans">
+                        {{ tt(service.subtitle) }}
+                    </p>
+
+                    <!-- 3. Description -->
+                    <p class="text-sm sm:text-[16px] sm:leading-[26px] font-normal text-[#B9C0D4] font-sans">
                         {{ tt(service.description) }}
                     </p>
 
-                    <!-- 2-Column Comparison Table (Preparation vs Completion) -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8 pt-2 pb-2">
+                    <!-- 4. 2-Column Comparison Table (Preparation vs Completion - Figma 628x100, py 12px, gap 48px) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-[48px] py-[12px]">
                         <!-- Col 1: Bạn chuẩn bị -->
-                        <div class="space-y-2">
-                            <h3 class="text-[13px] font-semibold text-[#84ADFF] tracking-wider uppercase font-sans">
+                        <div class="w-full lg:w-[290px] flex flex-col gap-2">
+                            <h3 class="text-[13px] leading-[16px] font-semibold text-[#84ADFF] uppercase font-sans">
                                 {{ tt(service.prepTitle || 'BẠN CHUẨN BỊ') }}
                             </h3>
-                            <p class="text-sm sm:text-[16px] text-[#B9C0D4] leading-relaxed lg:leading-[26px] font-sans">
+                            <p class="text-sm sm:text-[16px] sm:leading-[26px] font-normal text-[#B9C0D4] font-sans">
                                 {{ tt(service.preparation) }}
                             </p>
                         </div>
 
                         <!-- Col 2: Cùng hoàn thiện -->
-                        <div class="space-y-2">
-                            <h3 class="text-[13px] font-semibold text-[#84ADFF] tracking-wider uppercase font-sans">
+                        <div class="w-full lg:w-[290px] flex flex-col gap-2">
+                            <h3 class="text-[13px] leading-[16px] font-semibold text-[#84ADFF] uppercase font-sans">
                                 {{ tt(service.compTitle || 'CÙNG HOÀN THIỆN') }}
                             </h3>
-                            <p class="text-sm sm:text-[16px] text-[#B9C0D4] leading-relaxed lg:leading-[26px] font-sans">
+                            <p class="text-sm sm:text-[16px] sm:leading-[26px] font-normal text-[#B9C0D4] font-sans">
                                 {{ tt(service.completion) }}
                             </p>
                         </div>
                     </div>
 
-                    <!-- CTA Actions (Primary Contact + Secondary Detail Link) -->
-                    <div class="pt-2 flex flex-wrap items-center gap-4">
+                    <!-- 5. Primary CTA Button (Figma h-40px, px-20px, py-8px, rounded-8px) -->
+                    <div class="flex items-center">
                         <Link
                             :href="contactHref"
-                            class="inline-flex items-center justify-center h-10 px-5 sm:px-6 rounded-[8px] bg-[#F5F8FF] hover:bg-white text-[#111322] font-medium text-sm sm:text-[16px] leading-6 transition-all duration-200 shadow-sm hover:shadow-[0_0_16px_rgba(255,255,255,0.3)] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-primary/50 font-sans"
+                            class="inline-flex items-center justify-center h-[40px] px-[20px] py-[8px] rounded-[8px] bg-[#F5F8FF] hover:bg-white text-[#111322] font-medium text-sm sm:text-[16px] sm:leading-[24px] transition-all duration-200 shadow-sm hover:shadow-[0_0_16px_rgba(255,255,255,0.3)] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-primary/50 font-sans"
                         >
                             {{ tt(service.ctaText) }}
-                        </Link>
-                        <Link
-                            :href="detailUrl"
-                            class="inline-flex items-center justify-center h-10 px-4 sm:px-5 rounded-[8px] border border-[#404968] hover:border-[#2970FF] text-[#84ADFF] hover:text-white font-medium text-sm sm:text-[16px] leading-6 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#2970FF]/50 font-sans group/detail"
-                        >
-                            <span>{{ tt('Tìm hiểu chi tiết') }}</span>
-                            <svg
-                                class="w-4 h-4 ml-1.5 transition-transform duration-200 group-hover/detail:translate-x-1"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                            </svg>
                         </Link>
                     </div>
                 </div>
@@ -135,11 +112,18 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    href: {
+        type: String,
+        default: '',
+    },
 })
 
 const page = usePage()
 
 const detailUrl = computed(() => {
+    if (props.href) {
+        return props.href
+    }
     const slugMap = {
         'Gia công 3D': 'gia-cong-3d',
         'Thiết kế 3D': 'thiet-ke-3d',

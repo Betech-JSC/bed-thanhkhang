@@ -1,5 +1,5 @@
 <template>
-    <section class="py-12 lg:py-16 border-t border-[#404968]/50">
+    <section v-scroll-reveal class="pb-12 lg:pb-16">
         <div class="max-w-[1152px] space-y-6">
             <!-- Section Title (Figma Node 2367:2271) -->
             <div class="flex items-center justify-between">
@@ -14,11 +14,11 @@
                     v-for="(card, index) in displayCards"
                     :key="card.slug || index"
                     :href="card.href"
-                    class="group bg-[#111322] border border-[#404968] hover:border-[#2970FF] rounded-[12px] overflow-hidden flex flex-col sm:flex-row transition-all duration-300 hover:shadow-[0_8px_24px_rgba(41,112,255,0.15)] focus:outline-none focus:ring-1 focus:ring-[#2970FF]"
+                    class="group bg-[#111322] border border-[#404968] hover:border-[#2970FF] rounded-[12px] overflow-hidden flex flex-col sm:flex-row sm:h-[220px] transition-all duration-300 hover:shadow-[0_8px_24px_rgba(41,112,255,0.15)] focus:outline-none focus:ring-1 focus:ring-[#2970FF]"
                 >
                     <!-- Left Thumbnail (Figma Node 2367:2278 - 180x220px) -->
                     <div
-                        class="w-full sm:w-[180px] h-[180px] sm:h-[220px] shrink-0 overflow-hidden relative flex items-center justify-center p-3"
+                        class="w-full sm:w-[180px] h-[180px] sm:h-full shrink-0 overflow-hidden relative flex items-center justify-center p-3"
                         style="background: linear-gradient(180deg, #101121 0%, #2D4BE2 100%)"
                     >
                         <img
@@ -30,7 +30,7 @@
                     </div>
 
                     <!-- Right Info (Figma Node 2367:2280 - 384x220px, padding 24px) -->
-                    <div class="p-6 flex flex-col justify-between flex-grow min-h-[180px] sm:min-h-[220px]">
+                    <div class="p-6 flex flex-col justify-between flex-grow min-h-[180px] sm:min-h-0 sm:h-full">
                         <div class="space-y-3">
                             <h3 class="text-xl sm:text-[24px] font-bold text-[#FAFAFA] group-hover:text-[#84ADFF] transition-colors font-sans leading-[29px]">
                                 {{ tt(card.title) }}
@@ -41,16 +41,8 @@
                         </div>
 
                         <!-- CTA Link (Node 2367:2283) -->
-                        <div class="pt-4 flex items-center text-[14px] font-medium text-[#84ADFF] group-hover:text-white transition-colors">
+                        <div class="pt-4 flex items-center text-[14px] leading-[17px] font-medium text-[#84ADFF] group-hover:text-white transition-colors">
                             <span>{{ tt('Tìm hiểu dịch vụ') }}</span>
-                            <svg
-                                class="w-4 h-4 ml-1.5 transition-transform duration-200 group-hover:translate-x-1"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                            </svg>
                         </div>
                     </div>
                 </Link>

@@ -43,14 +43,14 @@
                     <div class="pt-2 flex flex-wrap items-center gap-3 sm:gap-4">
                         <a
                             :href="primaryCtaLink || '#featured-carousel'"
-                            class="inline-flex items-center justify-center h-10 px-5 text-sm sm:text-base font-medium rounded-[8px] bg-[#F5F8FF] text-[#111322] hover:bg-white hover:shadow-lg transition-all duration-200"
+                            class="inline-flex items-center justify-center h-10 px-5 text-sm sm:text-base font-medium rounded-[8px] bg-[#F5F8FF] text-[#111322] hover:bg-white hover:shadow-lg transition-colors duration-200 active:scale-[0.98]"
                         >
                             {{ tt(primaryCtaText) }}
                         </a>
 
                         <a
                             :href="secondaryCtaLink || '#contact-section'"
-                            class="inline-flex items-center justify-center h-10 px-5 rounded-[8px] border border-[#F5F8FF] text-[#F5F8FF] hover:bg-white/10 hover:border-white text-sm sm:text-base font-medium transition-all duration-200"
+                            class="inline-flex items-center justify-center h-10 px-5 rounded-[8px] border border-[#F5F8FF] text-[#F5F8FF] hover:bg-white/10 hover:border-white text-sm sm:text-base font-medium transition-colors duration-200 active:scale-[0.98]"
                         >
                             {{ tt(secondaryCtaText) }}
                         </a>
@@ -69,7 +69,7 @@
                         <!-- Rotating Text SVG -->
                         <svg
                             viewBox="0 0 100 100"
-                            class="w-full h-full animate-[spin_12s_linear_infinite] group-hover:animate-[spin_4s_linear_infinite] transition-all select-none"
+                            class="w-full h-full animate-[spin_12s_linear_infinite] group-hover:animate-[spin_4s_linear_infinite] select-none"
                         >
                             <defs>
                                 <path

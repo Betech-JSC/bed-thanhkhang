@@ -468,6 +468,7 @@ export default {
         },
         getFiles(params = {}, loadTree = false) {
             if (this.fetchData) {
+                const requestPage = Number(params.page ?? this.page ?? 1)
                 this.$axios
                     .get(
                         this.route('admin.files.index', {
@@ -492,18 +493,27 @@ export default {
                             files = Object.values(files)
                         }
 
-                        if (Array.isArray(new_files) && new_files.length == 0) {
-                            this.fetchData = false
-                        } else {
-                            if (this.page == 1) {
-                                files = new_files
-                            } else {
-                                // Merge arrays
-                                files = [...(files || []), ...(new_files || [])]
-                            }
+                        const normalizedNewFiles = Array.isArray(new_files) ? new_files : []
+
+                        if (requestPage <= 1) {
                             this.data = {
                                 tree: res.data.tree,
-                                directories: res.data.directories,
+                                directories: res.data.directories || [],
+                                files: normalizedNewFiles,
+                            }
+                            if (!this.tree || loadTree) {
+                                this.tree = res.data.tree
+                            }
+                            if (normalizedNewFiles.length === 0) {
+                                this.fetchData = false
+                            }
+                        } else if (normalizedNewFiles.length === 0) {
+                            this.fetchData = false
+                        } else {
+                            files = [...(files || []), ...normalizedNewFiles]
+                            this.data = {
+                                tree: res.data.tree,
+                                directories: res.data.directories || [],
                                 files: files,
                             }
 
@@ -694,7 +704,15 @@ export default {
                 })
                 .then((response) => {
                     if (response.status === 200) {
-                        this.getFiles()
+                        this.selectedFiles = (this.selectedFiles || []).filter(
+                            (selected) =>
+                                (selected.path && selected.path !== file.path) ||
+                                (selected.static_url && selected.static_url !== file.static_url)
+                        )
+                        this.data.files = []
+                        this.page = 1
+                        this.fetchData = true
+                        this.getFiles({ page: 1 }, true)
                     }
                 })
         },

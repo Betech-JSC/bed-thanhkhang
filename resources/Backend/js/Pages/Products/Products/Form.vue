@@ -44,37 +44,15 @@
                 </div>
             </div>
 
-            <!-- 2. Giá & Thông số kỹ thuật xưởng in 3D -->
+            <!-- 2. Thông số kỹ thuật xưởng in 3D -->
             <div class="card">
                 <div class="card-header font-bold text-slate-800 flex items-center justify-between">
-                    <span>Giá &amp; Thông số kỹ thuật in 3D</span>
+                    <span>Thông số kỹ thuật in 3D</span>
                     <span class="text-xs text-blue-600 font-semibold">Chuẩn xưởng chế tác HH Maker</span>
                 </div>
                 <div class="card-body">
-                    <!-- Giá bán & Giá niêm yết -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <Field
-                            v-model="form.price"
-                            :field="{
-                                type: 'number',
-                                name: 'price',
-                                label: 'Giá bán / Giá tham khảo (VNĐ)',
-                                placeholder: 'VD: 250000',
-                            }"
-                        />
-                        <Field
-                            v-model="form.compare_at_price"
-                            :field="{
-                                type: 'number',
-                                name: 'compare_at_price',
-                                label: 'Giá niêm yết / Giá gốc chưa giảm (VNĐ)',
-                                placeholder: 'VD: 320000',
-                            }"
-                        />
-                    </div>
-
                     <!-- 3 Thông số kỹ thuật cốt lõi in 3D -->
-                    <div class="pt-3 border-t border-slate-100 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <Field
                             v-model="form.print_technology"
                             :field="{

@@ -32,7 +32,7 @@
                         Messenger
                     </a>
                     <a
-                        href="https://zalo.me/0938039170"
+                        :href="$page.props.global?.general_zalo || $page.props.global?.zalo || 'https://zalo.me/0938039170'"
                         target="_blank"
                         rel="noopener noreferrer nofollow"
                         class="text-sm text-blue-600 hover:underline"
@@ -40,7 +40,7 @@
                         Zalo
                     </a>
                     <a
-                        href="tel:0938039170"
+                        :href="'tel:' + ($page.props.global?.general_phone || $page.props.global?.hotline || '0938039170')"
                         rel="noopener noreferrer nofollow"
                         class="text-sm text-blue-600 hover:underline"
                     >
@@ -60,7 +60,7 @@
             <JPicture src="/assets/images/icon-messenger.webp" alt="icon messenger" class="picture-cover" />
         </a>
         <a
-            href="https://zalo.me/0938039170"
+            :href="$page.props.global?.general_zalo || $page.props.global?.zalo || 'https://zalo.me/0938039170'"
             target="_blank"
             rel="noopener noreferrer nofollow"
             class="w-12 h-12 rounded-full flex items-center justify-center"
@@ -68,7 +68,7 @@
             <JPicture src="/assets/images/icon-zalo.webp" alt="icon zalo" class="picture-cover" />
         </a>
         <a
-            href="tel:0938039170"
+            :href="'tel:' + ($page.props.global?.general_phone || $page.props.global?.hotline || '0938039170')"
             rel="noopener noreferrer nofollow"
             class="w-12 h-12 rounded-full flex items-center justify-center bg-red-fks lg:hover:bg-green-fks duration-300 ease-in-out text-green-fks lg:hover:text-black-fks"
         >

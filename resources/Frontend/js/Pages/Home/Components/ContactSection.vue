@@ -1,5 +1,5 @@
 <template>
-    <section id="contact-section" class="py-14 sm:py-20 lg:py-24 bg-[#111322] relative">
+    <section v-scroll-reveal id="contact-section" class="py-14 sm:py-20 lg:py-24 bg-[#111322] relative">
         <div class="w-full max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-0">
             <!-- Modern Card matching Figma Node 2261:5750 / 2261:5751 (1152x492px) -->
             <div class="relative text-white p-6 sm:p-10 lg:p-12">
@@ -49,7 +49,7 @@
                                 :href="soc.url"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="w-10 h-10 rounded-[8px] bg-[#111322] hover:bg-[#1A1F36] flex items-center justify-center text-white hover:scale-105 transition-all duration-200 shadow-md"
+                                class="w-10 h-10 rounded-[8px] bg-[#111322] hover:bg-[#1A1F36] flex items-center justify-center text-white hover:scale-105 transition-colors duration-200 shadow-md"
                                 :aria-label="soc.label"
                             >
                                 <!-- Facebook -->
@@ -58,7 +58,7 @@
                                 </svg>
                                 <!-- Instagram -->
                                 <svg v-else-if="soc.id === 'instagram'" class="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0-3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                                 </svg>
                                 <!-- TikTok -->
                                 <svg v-else-if="soc.id === 'tiktok'" class="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -81,7 +81,7 @@
                                     type="text"
                                     :placeholder="tt('Họ và tên')"
                                     required
-                                    class="w-full h-12 px-4 rounded-[8px] bg-white/20 border border-[#5D6B98] text-white placeholder-[#B9C0D4] focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white text-sm sm:text-base transition-all"
+                                    class="w-full h-12 px-4 rounded-[8px] bg-white/20 border border-[#5D6B98] text-white placeholder-[#B9C0D4] focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white text-sm sm:text-base transition-colors duration-200"
                                 />
                             </div>
 
@@ -96,7 +96,7 @@
                                         type="email"
                                         placeholder="Email"
                                         required
-                                        class="w-full h-12 px-4 rounded-[8px] bg-white/20 border border-[#5D6B98] text-white placeholder-[#B9C0D4] focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white text-sm sm:text-base transition-all"
+                                        class="w-full h-12 px-4 rounded-[8px] bg-white/20 border border-[#5D6B98] text-white placeholder-[#B9C0D4] focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white text-sm sm:text-base transition-colors duration-200"
                                     />
                                 </div>
                                 <div>
@@ -108,7 +108,7 @@
                                         type="tel"
                                         :placeholder="tt('Số điện thoại')"
                                         required
-                                        class="w-full h-12 px-4 rounded-[8px] bg-white/20 border border-[#5D6B98] text-white placeholder-[#B9C0D4] focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white text-sm sm:text-base transition-all"
+                                        class="w-full h-12 px-4 rounded-[8px] bg-white/20 border border-[#5D6B98] text-white placeholder-[#B9C0D4] focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white text-sm sm:text-base transition-colors duration-200"
                                     />
                                 </div>
                             </div>
@@ -123,7 +123,7 @@
                                     rows="3"
                                     :placeholder="tt('Chia sẻ ý tưởng của bạn đến với HH Maker')"
                                     required
-                                    class="w-full h-24 p-3.5 rounded-[8px] bg-white/20 border border-[#5D6B98] text-white placeholder-[#B9C0D4] focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white text-sm sm:text-base transition-all resize-none"
+                                    class="w-full h-24 p-3.5 rounded-[8px] bg-white/20 border border-[#5D6B98] text-white placeholder-[#B9C0D4] focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white text-sm sm:text-base transition-colors duration-200 resize-none"
                                 ></textarea>
                             </div>
 
@@ -142,7 +142,7 @@
                             <button
                                 type="submit"
                                 :disabled="isSubmitting"
-                                class="w-full h-14 rounded-[8px] bg-[#111322] hover:bg-[#1A1F36] text-[#FAFAFA] font-semibold text-base flex items-center justify-center transition-all duration-200 shadow-md cursor-pointer disabled:opacity-50 mt-2"
+                                class="w-full h-14 rounded-[8px] bg-[#111322] hover:bg-[#1A1F36] text-[#FAFAFA] font-semibold text-base flex items-center justify-center transition-colors duration-200 active:scale-[0.98] shadow-md cursor-pointer disabled:opacity-50 mt-2"
                             >
                                 <span v-if="!isSubmitting">{{ tt('Gửi yêu cầu') }}</span>
                                 <span v-else class="inline-flex items-center gap-2">

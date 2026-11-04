@@ -90,6 +90,9 @@ class Product extends BaseModel
     protected $casts = [
         'images' => 'array',
         'image' => 'array',
+        'filter_attributes' => 'array',
+        'pdp_metadata' => 'array',
+        'specifications' => 'array',
     ];
 
     public function rules()
@@ -104,25 +107,65 @@ class Product extends BaseModel
     protected static function booted()
     {
         static::saving(function (self $model) {
-            if (strpos(request()->getRequestUri(), '/products/store') == false) return;
-
-            $model->view_count = request()->input('view_count') ?? 0;
-            $model->checkStatus($model);
+            if (strpos(request()->getRequestUri(), '/products/store') !== false) {
+                $model->view_count = request()->input('view_count') ?? 0;
+                $model->checkStatus($model);
+            }
         });
 
         static::saved(function (self $model) {
-            if (strpos(request()->getRequestUri(), '/products/store') == false) return;
-
-            $model->saveCategories($model);
-
-            // Auto-clear frontend caches
-            $locales = config('app.locales', ['vi', 'en']);
-            foreach ($locales as $locale) {
-                \Illuminate\Support\Facades\Cache::forget('galleries_index_' . $locale);
-                \Illuminate\Support\Facades\Cache::forget('home_page_data_' . $locale);
-                \Illuminate\Support\Facades\Cache::forget('inertia_layout_shared_data_' . $locale);
+            if (strpos(request()->getRequestUri(), '/products/store') !== false || request()->has('categories') || request()->has('category_id')) {
+                $model->saveCategories($model);
             }
+
+            static::clearProductCaches($model);
         });
+
+        static::deleted(function (self $model) {
+            static::clearProductCaches($model);
+        });
+    }
+
+    public static function clearProductCaches(?self $model = null): void
+    {
+        $locales = config('app.locales', ['vi', 'en']);
+        $slugs = [];
+
+        if ($model) {
+            if (!empty($model->slug)) {
+                $slugs[] = $model->slug;
+            }
+            if (!empty($model->seo_slug)) {
+                $slugs[] = $model->seo_slug;
+            }
+            if ($model->relationLoaded('translations') || method_exists($model, 'translations')) {
+                try {
+                    foreach ($model->translations()->get() as $translation) {
+                        if (!empty($translation->slug)) {
+                            $slugs[] = $translation->slug;
+                        }
+                        if (!empty($translation->seo_slug)) {
+                            $slugs[] = $translation->seo_slug;
+                        }
+                    }
+                } catch (\Throwable $e) {
+                    // Ignore if table not ready
+                }
+            }
+        }
+        $slugs = array_values(array_unique(array_filter($slugs)));
+
+        foreach ($locales as $locale) {
+            \Illuminate\Support\Facades\Cache::forget('products_index_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('galleries_index_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('home_page_data_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('inertia_layout_shared_data_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('search_page_data_' . $locale . '_');
+
+            foreach ($slugs as $slug) {
+                \Illuminate\Support\Facades\Cache::forget('product_show_' . $slug . '_' . $locale);
+            }
+        }
     }
 
     private function checkStatus($model)
@@ -151,8 +194,21 @@ class Product extends BaseModel
 
     public function saveCategories($model)
     {
-        $categories = array_column(request()->input('categories', []), 'id');
-        $model->categories()->sync($categories, 'id');
+        $rawCategories = request()->input('categories', []);
+        $categories = [];
+        if (is_array($rawCategories)) {
+            foreach ($rawCategories as $cat) {
+                if (is_array($cat) && isset($cat['id'])) {
+                    $categories[] = (int) $cat['id'];
+                } elseif (is_numeric($cat)) {
+                    $categories[] = (int) $cat;
+                }
+            }
+        }
+        if (empty($categories) && request()->filled('category_id')) {
+            $categories[] = (int) request()->input('category_id');
+        }
+        $model->categories()->sync(array_values(array_unique($categories)), 'id');
     }
 
     public function relatedProducts()
@@ -480,7 +536,6 @@ class Product extends BaseModel
 
     public function transformDetails()
     {
-
         $images = $variant['images'] ?? collect($this->images)
             ->map(function ($item) {
                 $detail = $this->getImageDetail($item);
@@ -493,14 +548,31 @@ class Product extends BaseModel
                 return $detail;
             });
 
-        return  [
+        return [
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
             'content' => transform_richtext($this->content),
             'slug' => $this->seo_slug ?? $this->slug,
+            'sku' => $this->sku,
+            'price' => $this->price,
+            'compare_at_price' => $this->compare_at_price,
+            'print_technology' => $this->print_technology,
+            'material' => $this->material,
+            'lead_time' => $this->lead_time,
+            'image' => $this->getImageDetail($this->image),
             'images' => $images,
             'category' => $this->category,
+            'filter_attributes' => [
+                'print_technology' => $this->print_technology,
+                'material' => $this->material,
+                'lead_time' => $this->lead_time,
+            ],
+            'pdp_metadata' => [
+                'print_technology' => $this->print_technology,
+                'material' => $this->material,
+                'lead_time' => $this->lead_time,
+            ],
         ];
     }
 

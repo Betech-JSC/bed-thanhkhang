@@ -1,67 +1,81 @@
 ---
 name: opsx-bootstrap
-description: Khởi tạo dự án mới hoặc đồng bộ Bộ Skill Chuẩn Toàn Diện của Team (OpenSpec OPSX, Graphify AST, Figma MCP Phased Workflow, UI Audit, Anti-UI-Slop, Multi-Agent Orchestration & SEO Suite 25+18) sang bất kỳ dự án Laravel/Inertia/Vue hoặc Next.js/React nào. Sử dụng khi người dùng gọi "/opsx-bootstrap", muốn thiết lập quy chuẩn team cho dự án mới, hoặc muốn đồng bộ bộ skill sang thư mục dự án khác.
+description: Trình cài đặt & đồng bộ siêu nhẹ 1 giây (Pure 1-Second Lightweight Installer) cho Bộ Skill Chuẩn Toàn Diện của Team (/opsx-cms-sync, /opsx-pixel-perfect, /opsx-animation, /ui-skill, /opsx-audit-handoff, /opsx-figma-workflow, /opsx-deploy). Khi người dùng gọi "/opsx-bootstrap", Agent CHỈ CHẠY DUY NHẤT 1 LỆNH bootstrap.sh (hoàn tất trong 1 giây) rồi báo cáo ngay, tuyệt đối không đọc/sửa thêm file hay chạy tác vụ nặng.
 ---
 
-# OPSX Bootstrap — Khởi Tạo & Nhân Bản Bộ Skill Chuẩn Của Team
+# OPSX Bootstrap — Trình Cài Đặt & Đồng Bộ Siêu Nhẹ 1 Giây (`Pure 1-Second Installer`)
 
-Skill này tự động hóa việc thiết lập hạ tầng phát triển chuẩn của Team (OpenSpec `OPSX` + Đồ thị kiến trúc `Graphify` + Bộ quy tắc an toàn `AGENTS.md` + 38 Skills & 18 Specialist Sub-Agents) cho dự án hiện tại hoặc nhân bản sang một dự án mới tinh chỉ với 1 lệnh.
+Skill này đóng vai trò thuần túy là **Trình Cài Đặt & Đồng Bộ File Siêu Tốc (`< 1 giây`)** để chép toàn bộ hệ sinh thái Skills, Workflows, Claude Commands, `AGENTS.md` và `openspec/config.yaml` sang dự án hiện tại hoặc dự án mới.
 
-## 1. Khi Nào Sử Dụng
-
-- **Tình huống A — Đồng đội vừa clone dự án về máy mới**: Chạy bootstrap tại chỗ để kiểm tra `openspec` CLI, đồng bộ instruction files, sinh đồ thị AST `graphify-out/graph.json` trên máy local và kiểm tra `.gitignore`.
-- **Tình huống B — Bắt đầu một dự án mới tinh (Greenfield hoặc Base CMS mới)**: Xuất nguyên bộ `.agents/` (skills, specialist agents, workflows) cùng bản mẫu `AGENTS.md` và `openspec/config.yaml` sang thư mục dự án mới.
-- **Tình huống C — Cài đặt Global trên máy cá nhân**: Cài `opsx-bootstrap` vào `$HOME/.gemini/config/skills/opsx-bootstrap` để mở bất kỳ thư mục dự án nào trên Antigravity cũng gọi được `/opsx-bootstrap` ngay.
+> ⚡ **QUY TẮC BẤT BIẾN (1 LỆNH — 1 GIÂY — KHÔNG LÀM THÊM)**:
+> Khi người dùng gọi `/opsx-bootstrap`, mục tiêu duy nhất là **chép bộ skill vào dự án trong 1 giây**.
+> - **TUYỆT ĐỐI KHÔNG** chạy `graphify . --code-only` mặc định trong lúc bootstrap.
+> - **TUYỆT ĐỐI KHÔNG** đi đọc `composer.json`, `package.json` hay dùng `edit_file` sửa thủ công `openspec/config.yaml` và `AGENTS.md` sau khi chạy script (bản thân `bootstrap.sh` đã tự động đồng bộ sẵn `openspec/config.yaml` và `AGENTS.md` trong `0.1 giây`).
+> - **TUYỆT ĐỐI KHÔNG** chạy gộp bất kỳ tác vụ kiểm toán UI, CMS hay build nào trong `/opsx-bootstrap`.
 
 ---
 
-## 2. Hai Chế Độ Vận Hành Của `scripts/bootstrap.sh`
+## 1. Hệ Sinh Thái Các Lệnh Chuyên Biệt Sau Khi Bootstrap (`Hub-and-Spoke`)
 
-### Chế độ 1: Chạy trực tiếp trên dự án hiện tại
+Sau khi chạy `/opsx-bootstrap` (mất 1 giây), người dùng sẽ gọi từng lệnh chuyên biệt ở các đoạn hội thoại riêng để không bao giờ bị tràn bộ nhớ:
+
+| Lệnh kích hoạt (Antigravity / Claude) | Skill phụ trách | Nhiệm vụ chuyên biệt độc lập |
+| :--- | :--- | :--- |
+| **`/opsx-bootstrap`** | `opsx-bootstrap` | **Pure 1-Second Installer**: Chỉ copy & đồng bộ `.agents/`, `.agent/`, `.claude/commands/opsx/`, `AGENTS.md`, `openspec/config.yaml` trong **1 giây**. |
+| **`/opsx-cms-sync`** (`/opsx:cms-sync`) | `opsx-cms-sync` | **Hub Điều Phối Hệ Thống CMS Dynamic A–Z**: Kiểm toán 8 trụ cột CMS đối chiếu Figma -> Bảng Confirm `[+] Thêm / [-] Bỏ / [=] Giữ` -> Xuất Handoff Prompts -> Nghiệm thu E2E. |
+| **`/opsx-pixel-perfect`** (`/opsx:pixel-perfect`) | `opsx-pixel-perfect-ui` | **Hub Điều Phối Giao Diện 100% Pixel-Perfect vs Figma MCP**: Hỗ trợ kiểm toán toàn trang hoặc từng trang (`--page <TenTrang>`) -> Bảng Confirm `[+] Thêm / [-] Bỏ / [=] Giữ` -> Xuất Handoff Prompts -> Nghiệm thu đa khung nhìn. |
+| **`/opsx-animation`** (`/opsx:animation` hoặc `/ui-skill`) | `opsx-animation` & `ui-skill` | **Hub Điều Phối Hệ Thống Animation Chuẩn LUXI (4 Quy Tắc Vàng)**: (1) Mỗi phần tử tối đa 1 animation, (2) Cấm `opacity: 0` trắng màn hình, (3) Nút qua lại `< / >` bắt buộc trượt ngang `translate-x`, (4) Giữ nguyên 100% `ProductGallery.vue` -> Bảng Confirm -> Xuất Handoff Prompts. |
+| **`/opsx-figma-workflow`** | `opsx-figma-workflow` | **Dựng Giao Diện Mới Từ Figma MCP Theo Phase**: Điều phối 3 kịch bản (`greenfield-6-phases`, `home-first-incremental`, `batch-pages-sequential-qa`). |
+| **`/opsx-audit-handoff`** (`/opsx:audit-handoff`) | `opsx-audit-handoff` | **Kiểm Toán Toàn Diện 5 Tầng Trước Bàn Giao**: Rà soát bảo mật, dọn sạch hardcode return cố định toàn bộ CMS (`scan-cms-hardcoded.py`), làm nhẹ source. |
+| **`/opsx-deploy`** | `vps-cicd-deploy` | **Triển Khai VPS Production & GitHub Actions CI/CD 2-Job**: Cấu hình Nginx Subdomain, SSL Certbot, Database & SSH Rsync. |
+
+---
+
+## 2. Các Chế Độ Của `scripts/bootstrap.sh` (`Hoàn Tất Trong 1 Giây`)
+
+### Chế độ 1: Đồng bộ ngay tại dự án hiện tại
 ```bash
 ./.agents/skills/opsx-bootstrap/scripts/bootstrap.sh
 ```
-Script thực hiện tuần tự, an toàn và idempotent (chạy lại nhiều lần không gây lỗi, không xóa bất kỳ file nào):
-1. **Kiểm tra OpenSpec CLI**: Xác minh `openspec` đã cài đặt (nếu thiếu sẽ hướng dẫn cài `npm install -g @fission-ai/openspec@latest`), tự chạy `openspec init --tools antigravity --no-animation` nếu chưa có `openspec/` và chạy `openspec update`.
-2. **Tự động nhận diện Tech Stack**: Đọc `composer.json`, `package.json` và cấu trúc thư mục để xác định chính xác kiến trúc dự án:
-   - *Laravel + Inertia + Vue 3 (BED CMS)* (`resources/Frontend/js`)
-   - *Laravel + Inertia + Vue 3 (Standard)* (`resources/js`)
-   - *Next.js / React* (`src/app`, `src/components` hoặc `app/`)
-   - Ghi nhận các thư viện UI/CSS đi kèm (Tailwind CSS, PrimeVue, Sass, Ziggy, vue-i18n, TypeScript...).
-3. **Khởi tạo Đồ thị AST với Graphify**: Tự dò binary `graphify` (`command -v graphify` hoặc `"$HOME/.local/bin/graphify"`) và chạy `graphify . --code-only` để sinh `graphify-out/graph.json`. Nếu máy chưa cài `graphify`, script in hướng dẫn `uv tool install graphifyy` rõ ràng mà **không làm crash** quy trình.
-4. **Kiểm tra an toàn `.gitignore`**:
-   - Cảnh báo rõ nếu `.gitignore` đang chặn `.agents`, `.agent`, `/openspec` hoặc `.openspec` (để team không vô tình bỏ sót bộ skill khi `git push`).
-   - Tự động bổ sung `/graphify-out` vào cuối `.gitignore` nếu chưa có.
-
-### Chế độ 2: Xuất bộ Skill chuẩn sang dự án mới (`--export-to`)
+Hoặc nếu dự án mới chưa có `.agents/`:
 ```bash
-./.agents/skills/opsx-bootstrap/scripts/bootstrap.sh --export-to /duong/dan/toi/du-an-moi
+"$HOME/.gemini/config/skills/opsx-bootstrap/scripts/bootstrap.sh" --export-to .
 ```
-1. Sao chép đầy đủ `.agents/skills/`, `.agents/agents/`, `.agents/workflows/` và `.agents/scripts/` (trọn bộ script Python hỗ trợ SEO Suite) sang dự án đích.
-2. Nếu dự án đích **chưa có** `AGENTS.md`, tự tạo từ `resources/AGENTS.template.md` (tuyệt đối không ghi đè nếu dự án đích đã có `AGENTS.md`).
-3. Tự động kích hoạt Chế độ 1 ngay trên thư mục dự án đích.
-4. Nếu `openspec/config.yaml` ở dự án đích chưa khai báo `context:`, gợi ý Agent hoặc lập trình viên điền ngữ cảnh dự án dựa trên `resources/openspec-config.template.yaml`.
+
+### Chế độ 2: Xuất sang một thư mục dự án khác (`--export-to`)
+```bash
+./.agents/skills/opsx-bootstrap/scripts/bootstrap.sh --export-to /duong/dan/du-an-moi [--with-cicd <project-slug>]
+```
+Script tự động thực hiện trọn gói trong **1 giây** (100% không xóa file):
+1. Sao chép toàn bộ `.agents/skills/`, `.agents/agents/`, `.agents/workflows/`, `.agents/scripts/` sang dự án đích.
+2. Đồng bộ song song sang `.agent/skills/`, `.agent/workflows/` và `.claude/commands/opsx/{cms-sync,pixel-perfect,animation,ui-skill,audit-handoff}.md`.
+3. Tự động khởi tạo hoặc cập nhật `AGENTS.md` và `openspec/config.yaml` từ template chuẩn ngay trong bash script.
+4. Tự động bảo vệ `.gitignore` (thêm `/graphify-out`).
+5. **Mặc định bỏ qua quét `graphify`** để trả kết quả tức thì trong 1 giây (chỉ chạy khi truyền cờ `--with-graphify`).
 
 ---
 
-## 3. Cài Đặt Global Tùy Chọn Cho Từng Thành Viên (`install-global.sh`)
-
-Để gọi được `/opsx-bootstrap` ngay cả khi mở một thư mục dự án mới chưa có `.agents/`, thành viên chỉ cần chạy 1 lần trên máy của mình:
+## 3. Cài Đặt Global Cho Máy Cá Nhân (`install-global.sh`)
 
 ```bash
 ./.agents/skills/opsx-bootstrap/scripts/install-global.sh
 ```
-
-Script sẽ đồng bộ `opsx-bootstrap` vào `"$HOME/.gemini/config/skills/opsx-bootstrap"` kèm bản lưu bộ skills chuẩn của team tại `"$HOME/.gemini/config/team-skill-suite/.agents"` để lệnh `--export-to .` luôn sẵn sàng ở mọi workspace mới.
+Đồng bộ toàn bộ bộ skill mới nhất vào `"$HOME/.gemini/config/skills/"` và `"$HOME/.gemini/config/team-skill-suite/.agents"`.
 
 ---
 
-## 4. Quy Trình Dành Cho Agent Khi Người Dùng Gọi `/opsx-bootstrap`
+## 4. QUY TRÌNH BẮT BUỘC DÀNH CHO AGENT KHI NGƯỜI DÙNG GỌI `/opsx-bootstrap` (`1 COMMAND ONLY`)
 
-1. Xác định mục tiêu của người dùng:
-   - Nếu khởi tạo ngay tại workspace đang mở: chạy `./.agents/skills/opsx-bootstrap/scripts/bootstrap.sh` (hoặc `"$HOME/.gemini/config/skills/opsx-bootstrap/scripts/bootstrap.sh" --export-to .` nếu workspace mới chưa có `.agents/`).
-   - Nếu xuất sang thư mục khác: chạy với cờ `--export-to "<target_path>"`.
-2. Sau khi script chạy xong, đọc `composer.json` / `package.json` của dự án đích và kiểm tra `openspec/config.yaml`:
-   - Nếu `openspec/config.yaml` chưa có mục `context:` thực tế, hãy cập nhật `context:` dựa trên bản mẫu [openspec-config.template.yaml](./resources/openspec-config.template.yaml) khớp 100% với tech stack vừa nhận diện.
-3. Kiểm tra `AGENTS.md` của dự án đích đối chiếu với [AGENTS.template.md](./resources/AGENTS.template.md) để đảm bảo đủ 6 nguyên tắc vận hành của team.
-4. Báo cáo kết quả kèm raw terminal output của script, tech stack nhận diện được, số lượng skills/agents hiện diện và trạng thái `graphify-out/graph.json`.
+Khi người dùng gõ `/opsx-bootstrap`:
+1. **CHỈ CHẠY DUY NHẤT 1 LỆNH SAU**:
+   - Nếu workspace chưa có `.agents/skills/opsx-cms-sync`:
+     ```bash
+     "$HOME/.gemini/config/skills/opsx-bootstrap/scripts/bootstrap.sh" --export-to .
+     ```
+   - Nếu workspace đã có đủ `.agents/skills/opsx-cms-sync`:
+     ```bash
+     ./.agents/skills/opsx-bootstrap/scripts/bootstrap.sh
+     ```
+2. **DỪNG LẠI NGAY VÀ BÁO CÁO KẾT QUẢ**:
+   - In ngay output của `bootstrap.sh` và danh sách các lệnh Hub (`/opsx-cms-sync`, `/opsx-pixel-perfect`, `/opsx-animation`, `/opsx-audit-handoff`, `/opsx-deploy`) cho người dùng.
+   - **CẤM TUYỆT ĐỐI**: Không đọc thêm `composer.json`/`package.json`, không gọi `edit_file` sửa `openspec/config.yaml` hay `AGENTS.md`, không chạy `graphify`, không chạy `build` hay `test`. Toàn bộ `/opsx-bootstrap` phải kết thúc trong vài giây!

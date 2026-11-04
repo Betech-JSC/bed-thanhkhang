@@ -119,10 +119,20 @@ class Policy extends BaseModel
     protected static function booted()
     {
         static::saved(function (self $model) {
-            $locales = config('app.locales', ['vi', 'en']);
-            foreach ($locales as $locale) {
-                \Illuminate\Support\Facades\Cache::forget('inertia_layout_shared_data_' . $locale);
-            }
+            static::clearPolicyCaches();
         });
+
+        static::deleted(function (self $model) {
+            static::clearPolicyCaches();
+        });
+    }
+
+    public static function clearPolicyCaches(): void
+    {
+        $locales = config('app.locales', ['vi', 'en']);
+        foreach ($locales as $locale) {
+            \Illuminate\Support\Facades\Cache::forget('inertia_layout_shared_data_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('policies_index_' . $locale);
+        }
     }
 }

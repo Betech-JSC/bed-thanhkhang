@@ -26,6 +26,8 @@ class Setting extends Model
                 'general_working_hours' => 'nullable',
                 'general_facebook' => 'nullable',
                 'general_tiktok' => 'nullable',
+                'map_iframe' => 'nullable',
+                'general_map_iframe' => 'nullable',
                 'messagePool' => 'nullable',
                 'notification_popup_mode' => 'nullable',
                 'notification_popup_name_style' => 'nullable',
