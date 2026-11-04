@@ -9,6 +9,12 @@ import { createI18n } from 'vue-i18n'
 import route from 'ziggy-js'
 import { Ziggy } from '../../../public/build/ziggy.frontend.js'
 
+if (Ziggy.routes) {
+    for (const name in Ziggy.routes) {
+        delete Ziggy.routes[name].domain
+    }
+}
+
 const appName = import.meta.env.VITE_APP_NAME
 const appPort = import.meta.env.VITE_APP_PORT || 13714
 
@@ -61,14 +67,12 @@ createServer(
                             route(
                                 name,
                                 params,
-                                absolute,
-                                config = {
-                                    ...Ziggy,
-                                    location: new URL(Ziggy.url),
-                                }
+                                absolute = false,
+                                config = { ...Ziggy }
                             ) {
                                 try {
-                                    return route(this.routeLocaleName(name), params, absolute, config)
+                                    const res = route(this.routeLocaleName(name), params, absolute, config)
+                                    return res === '' ? '/' : res
                                 } catch (e) {
                                     console.error('Ziggy route error for: ' + name, e)
                                     return '#'
