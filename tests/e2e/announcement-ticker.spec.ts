@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import * as path from 'path';
 import * as fs from 'fs';
 
-test.describe('HH Maker Homepage Flip Announcement Ticker (CMS & Multilingual)', () => {
+test.describe('HH Maker Homepage Flip Announcement Ticker (Refined Option A: Minimalist Center-Aligned)', () => {
     test.beforeAll(() => {
         const evidenceDir = path.join('storage', 'app', 'public', 'evidence');
         if (!fs.existsSync(evidenceDir)) {
@@ -14,102 +14,93 @@ test.describe('HH Maker Homepage Flip Announcement Ticker (CMS & Multilingual)',
         }
     });
 
-    test('1. Verify Vietnamese Homepage (/) Announcement Ticker', async ({ page }, testInfo) => {
+    test('1. Verify Vietnamese Homepage (/) Refined Minimalist Announcement Ticker', async ({ page }, testInfo) => {
         const isDesktop = testInfo.project.name.includes('Desktop');
 
         await page.goto('/', { waitUntil: 'networkidle' });
         expect(page.url()).toContain('8000');
 
-        // Verify Hero Section is rendered
-        const hero = page.locator('section.relative').first();
-        await expect(hero).toBeVisible();
-
         // Locate Announcement Ticker between Hero and Featured Products
-        const ticker = page.locator('.perspective-container').locator('..');
-        await expect(ticker).toBeVisible();
+        const tickerContainer = page.locator('.perspective-container').locator('..');
+        await expect(tickerContainer).toBeVisible();
 
-        // Verify LED Pulse is present
-        const ledPulse = ticker.locator('.animate-ping');
-        await expect(ledPulse).toBeVisible();
+        // 1. Verify Frosted Gray & Minimalist Styling classes
+        const containerClasses = await tickerContainer.getAttribute('class');
+        expect(containerClasses).toContain('bg-[#202533]/85');
+        expect(containerClasses).toContain('border-white/10');
+        expect(containerClasses).toContain('rounded-[12px]');
 
-        // Verify Category Badge text in Vietnamese
-        const badge = ticker.locator('span.whitespace-nowrap');
-        await expect(badge).toBeVisible();
-        const badgeText = await badge.innerText();
-        expect(['GIAO HÀNG', 'KHUYẾN MÃI', 'HOT UPDATE']).toContain(badgeText);
+        // 2. Verify Category Badge & Neon LED Pulse are completely REMOVED
+        const ledPulse = tickerContainer.locator('.animate-ping');
+        await expect(ledPulse).toHaveCount(0);
 
-        // Verify Title text is displayed in Vietnamese
-        const titleEl = ticker.locator('.split-flap-card');
-        await expect(titleEl).toBeVisible();
-        const titleText = await titleEl.innerText();
+        // 3. Verify Navigation Arrows, Counter, and CTA button are completely REMOVED
+        const nextBtn = tickerContainer.locator('button[aria-label="Next announcement"]');
+        await expect(nextBtn).toHaveCount(0);
+        const prevBtn = tickerContainer.locator('button[aria-label="Previous announcement"]');
+        await expect(prevBtn).toHaveCount(0);
+        const ctaBtn = tickerContainer.locator('a, button').filter({ hasText: /Tư vấn|Xem ngay|Contact|Explore/ });
+        await expect(ctaBtn).toHaveCount(0);
+
+        // 4. Verify Title text is displayed in Vietnamese and centered
+        const titleSpan = tickerContainer.locator('.split-flap-card span');
+        await expect(titleSpan).toBeVisible();
+        const titleText = await titleSpan.innerText();
         expect(
             titleText.includes('Giao hàng hỏa tốc trong 24h') ||
             titleText.includes('Ưu đãi in 3D SLA')
         ).toBeTruthy();
 
-        // Verify CTA button on Desktop
+        // 5. Verify typography classes (centered, upright, font-medium, slate-100)
+        const spanClasses = await titleSpan.getAttribute('class');
+        expect(spanClasses).toContain('text-center');
+        expect(spanClasses).toContain('font-medium');
+        expect(spanClasses).toContain('text-slate-100');
+
+        // 6. Screenshot on Desktop
         if (isDesktop) {
-            const ctaBtn = ticker.locator('a, button').filter({ hasText: /Tư vấn|Xem ngay/ });
-            await expect(ctaBtn.first()).toBeVisible();
-
-            // Verify Prev / Next buttons
-            const nextBtn = ticker.locator('button[aria-label="Next announcement"]');
-            await expect(nextBtn).toBeVisible();
-            const prevBtn = ticker.locator('button[aria-label="Previous announcement"]');
-            await expect(prevBtn).toBeVisible();
-
-            // Test clicking next button to cycle announcement
-            await nextBtn.click();
-            await page.waitForTimeout(600); // Wait for 3D flip animation
-            const newTitleText = await titleEl.innerText();
-            expect(newTitleText.length).toBeGreaterThan(5);
-
-            // Screenshot Vietnamese Ticker
-            await ticker.screenshot({
+            await tickerContainer.screenshot({
+                path: path.join('storage', 'app', 'public', 'evidence', 'ticker-refined-desktop.png'),
+            });
+            await tickerContainer.screenshot({
                 path: path.join('storage', 'app', 'public', 'evidence', 'ticker-vi-desktop.png'),
             });
             await page.screenshot({
-                path: path.join('tests', 'e2e', 'screenshots', 'homepage-vi-desktop.png'),
+                path: path.join('tests', 'e2e', 'screenshots', 'homepage-refined-desktop.png'),
                 fullPage: false,
             });
         }
     });
 
-    test('2. Verify English Homepage (/en) Announcement Ticker', async ({ page }, testInfo) => {
+    test('2. Verify English Homepage (/en) Refined Minimalist Announcement Ticker', async ({ page }, testInfo) => {
         const isDesktop = testInfo.project.name.includes('Desktop');
 
         await page.goto('/en', { waitUntil: 'networkidle' });
         expect(page.url()).toContain('/en');
 
-        const ticker = page.locator('.perspective-container').locator('..');
-        await expect(ticker).toBeVisible();
+        const tickerContainer = page.locator('.perspective-container').locator('..');
+        await expect(tickerContainer).toBeVisible();
 
-        // Verify Category Badge text in English
-        const badge = ticker.locator('span.whitespace-nowrap');
-        await expect(badge).toBeVisible();
-        const badgeText = await badge.innerText();
-        expect(['DELIVERY', 'PROMOTION', 'HOT UPDATE']).toContain(badgeText);
+        // Verify Frosted Gray & Minimalist Styling
+        const containerClasses = await tickerContainer.getAttribute('class');
+        expect(containerClasses).toContain('bg-[#202533]/85');
 
         // Verify Title text is displayed in English
-        const titleEl = ticker.locator('.split-flap-card');
-        await expect(titleEl).toBeVisible();
-        const titleText = await titleEl.innerText();
+        const titleSpan = tickerContainer.locator('.split-flap-card span');
+        await expect(titleSpan).toBeVisible();
+        const titleText = await titleSpan.innerText();
         expect(
             titleText.includes('Express 24-hour fast delivery') ||
             titleText.includes('High-Precision SLA 3D Printing')
         ).toBeTruthy();
 
-        if (isDesktop) {
-            const ctaBtn = ticker.locator('a, button').filter({ hasText: /Contact|Explore/ });
-            await expect(ctaBtn.first()).toBeVisible();
+        // Ensure no badge or arrows in English version either
+        await expect(tickerContainer.locator('.animate-ping')).toHaveCount(0);
+        await expect(tickerContainer.locator('button[aria-label="Next announcement"]')).toHaveCount(0);
 
-            // Screenshot English Ticker
-            await ticker.screenshot({
+        if (isDesktop) {
+            await tickerContainer.screenshot({
                 path: path.join('storage', 'app', 'public', 'evidence', 'ticker-en-desktop.png'),
-            });
-            await page.screenshot({
-                path: path.join('tests', 'e2e', 'screenshots', 'homepage-en-desktop.png'),
-                fullPage: false,
             });
         }
     });
@@ -118,8 +109,8 @@ test.describe('HH Maker Homepage Flip Announcement Ticker (CMS & Multilingual)',
         await page.setViewportSize({ width: 375, height: 812 });
         await page.goto('/', { waitUntil: 'networkidle' });
 
-        const ticker = page.locator('.perspective-container').locator('..');
-        await expect(ticker).toBeVisible();
+        const tickerContainer = page.locator('.perspective-container').locator('..');
+        await expect(tickerContainer).toBeVisible();
 
         // Check horizontal overflow
         const hasHorizontalScroll = await page.evaluate(() => {
@@ -127,12 +118,15 @@ test.describe('HH Maker Homepage Flip Announcement Ticker (CMS & Multilingual)',
         });
         expect(hasHorizontalScroll).toBeFalsy();
 
-        // Capture mobile screenshot
-        await ticker.screenshot({
+        // Capture mobile screenshots
+        await tickerContainer.screenshot({
+            path: path.join('storage', 'app', 'public', 'evidence', 'ticker-refined-mobile.png'),
+        });
+        await tickerContainer.screenshot({
             path: path.join('storage', 'app', 'public', 'evidence', 'ticker-vi-mobile.png'),
         });
         await page.screenshot({
-            path: path.join('tests', 'e2e', 'screenshots', 'homepage-vi-mobile.png'),
+            path: path.join('tests', 'e2e', 'screenshots', 'homepage-refined-mobile.png'),
             fullPage: false,
         });
     });

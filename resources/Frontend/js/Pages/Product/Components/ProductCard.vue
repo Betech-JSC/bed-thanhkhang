@@ -29,9 +29,10 @@
                     <img
                         :src="productImageSrc"
                         :alt="productImageAlt"
-                        class="w-full h-full object-cover select-none"
+                        class="w-full h-full object-cover select-none group-hover:scale-105 transition-transform duration-500 ease-out"
                         loading="eager"
                         decoding="sync"
+                        @error="onImageError"
                     />
                 </div>
             </Transition>
@@ -114,22 +115,33 @@ export default {
             return this.route('products.index');
         },
         productImageSrc() {
+            let src = '/assets/images/products/figma-product-sample.png';
             if (typeof this.product.image === 'string' && this.product.image) {
-                return this.product.image;
+                src = this.product.image;
+            } else if (this.product.image && typeof this.product.image === 'object') {
+                src = this.product.image.url || this.product.image.path || src;
+            } else if (typeof this.product.thumbnail === 'string' && this.product.thumbnail) {
+                src = this.product.thumbnail;
             }
-            if (this.product.image && typeof this.product.image === 'object') {
-                return this.product.image.url || this.product.image.path || '/assets/images/products/figma-product-sample.png';
+
+            // Chuẩn hóa URL nếu có chứa /static// hoặc /static/assets/ hoặc /static/images/
+            if (typeof src === 'string') {
+                src = src.replace(/\/static\/\/?(assets\/|images\/)/g, '/$1')
+                         .replace(/\/static\/\//g, '/');
             }
-            if (typeof this.product.thumbnail === 'string' && this.product.thumbnail) {
-                return this.product.thumbnail;
-            }
-            return '/assets/images/products/figma-product-sample.png';
+
+            return src;
         },
         productImageAlt() {
             if (this.product.image && typeof this.product.image === 'object' && this.product.image.alt) {
                 return this.product.image.alt;
             }
             return this.product.name || this.product.title || 'Mẫu in 3D HH Maker';
+        },
+    },
+    methods: {
+        onImageError(e) {
+            e.target.src = '/assets/images/products/figma-product-sample.png';
         },
     },
 }

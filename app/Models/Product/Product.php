@@ -385,20 +385,26 @@ class Product extends BaseModel
         $variant = $this->variants->where('is_default')->first();
 
         if (!empty($variant->id) && count($variant->images) > 0) {
+            $img = $variant->images[0];
+            $detail = $this->getImageDetail($img);
             return [
-                'url' => static_url($variant->images[0]['path']) ?? null,
-                'path' => $variant->images[0]['path'] ?? null,
-                'alt' => $variant->images[0]['alt'] ?? $this->title,
+                'url' => $detail['url'],
+                'path' => $img['path'] ?? null,
+                'alt' => $detail['alt'],
             ];
         }
 
-        return $this->images
-            ? [
-                'url' => static_url($this->images[0]['path']) ?? null,
-                'path' => $this->images[0]['path'] ?? null,
-                'alt' => $this->images[0]['alt'] ?? $this->title,
-            ]
-            : null;
+        if ($this->images && count($this->images) > 0) {
+            $img = $this->images[0];
+            $detail = $this->getImageDetail($img);
+            return [
+                'url' => $detail['url'],
+                'path' => $img['path'] ?? null,
+                'alt' => $detail['alt'],
+            ];
+        }
+
+        return null;
     }
 
     public function getUrlAttribute(): array
@@ -434,8 +440,36 @@ class Product extends BaseModel
 
     public function getImageDetail($image)
     {
+        if (is_string($image)) {
+            $image = ['path' => $image];
+        }
+
+        if (empty($image) || !isset($image['path'])) {
+            return [
+                'url' => null,
+                'alt' => $image['alt'] ?? $this->title,
+            ];
+        }
+
+        $path = $image['path'];
+        $url = null;
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            $url = $path;
+        } elseif (
+            str_starts_with($path, '/assets/') ||
+            str_starts_with($path, '/images/') ||
+            str_starts_with($path, 'assets/') ||
+            str_starts_with($path, 'images/') ||
+            (function_exists('public_path') && file_exists(public_path(ltrim($path, '/'))))
+        ) {
+            $url = asset(ltrim($path, '/'));
+        } else {
+            $url = static_url($path);
+        }
+
         return [
-            'url' => isset($image['path']) ? static_url($image['path']) : null,
+            'url' => $url,
             'alt' => $image['alt'] ?? $this->title,
         ];
     }
@@ -504,10 +538,14 @@ class Product extends BaseModel
     {
         $images = $variant['images'] ?? collect($this->images)
             ->map(function ($item) {
-                return [
-                    'url' => static_url($item['path']) ?? null,
-                    'alt' => $item['alt'] ?? $this->title
-                ];
+                $detail = $this->getImageDetail($item);
+                if (is_array($item)) {
+                    return array_merge($item, [
+                        'url' => $detail['url'],
+                        'alt' => $detail['alt'],
+                    ]);
+                }
+                return $detail;
             });
 
         return [
