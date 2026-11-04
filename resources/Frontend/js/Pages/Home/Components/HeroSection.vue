@@ -1,5 +1,5 @@
 <template>
-    <section class="relative py-4 lg:py-6 pb-8 md:pb-12 overflow-hidden">
+    <section class="relative pt-4 lg:pt-6 pb-3 md:pb-4 overflow-hidden">
         <div class="w-full max-w-[1279px] mx-auto px-4 sm:px-6 lg:px-0">
             <!-- Hero Card Wrapper (Figma Node 2261:5475: 1279px x 616px) -->
             <div
@@ -24,19 +24,19 @@
                 <div class="relative z-10 max-w-xl lg:max-w-2xl px-6 py-12 sm:px-10 lg:px-20 space-y-6">
                     <!-- Subtitle (Figma Node 2261:5482) -->
                     <div class="text-sm sm:text-base font-normal text-[#D1E0FF] tracking-wider uppercase">
-                        {{ subtitle }}
+                        {{ tt(subtitle) }}
                     </div>
 
                     <!-- Main Title (Figma Node 2261:5483: 38px, font-bold 700, leading-[46px]) -->
                     <h1
                         class="text-3xl sm:text-4xl lg:text-[38px] font-bold text-[#FAFAFA] uppercase tracking-tight leading-[1.2] lg:leading-[46px] font-sans"
                     >
-                        {{ title }}
+                        {{ tt(title) }}
                     </h1>
 
                     <!-- Description (Figma Node 2261:5484: 16px, leading-[26px]) -->
                     <p class="text-sm sm:text-base text-[#D1E0FF] leading-[26px] max-w-lg font-normal">
-                        {{ description }}
+                        {{ tt(description) }}
                     </p>
 
                     <!-- Dual CTA Buttons (Figma Nodes 2261:5488 & 2261:5493) -->
@@ -45,14 +45,14 @@
                             :href="primaryCtaLink || '#featured-carousel'"
                             class="inline-flex items-center justify-center h-10 px-5 text-sm sm:text-base font-medium rounded-[8px] bg-[#F5F8FF] text-[#111322] hover:bg-white hover:shadow-lg transition-all duration-200"
                         >
-                            {{ primaryCtaText }}
+                            {{ tt(primaryCtaText) }}
                         </a>
 
                         <a
                             :href="secondaryCtaLink || '#contact-section'"
                             class="inline-flex items-center justify-center h-10 px-5 rounded-[8px] border border-[#F5F8FF] text-[#F5F8FF] hover:bg-white/10 hover:border-white text-sm sm:text-base font-medium transition-all duration-200"
                         >
-                            {{ secondaryCtaText }}
+                            {{ tt(secondaryCtaText) }}
                         </a>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                     <a
                         :href="primaryCtaLink || '#featured-carousel'"
                         class="relative w-28 h-28 lg:w-[114px] lg:h-[114px] flex items-center justify-center group"
-                        aria-label="Khám phá ngay"
+                        :aria-label="tt('Khám phá ngay')"
                     >
                         <!-- Rotating Text SVG -->
                         <svg
@@ -79,7 +79,7 @@
                             </defs>
                             <text class="text-[9.2px] uppercase font-medium tracking-[2.6px] fill-[#FAFAFA]">
                                 <textPath href="#circlePath">
-                                    FROM IDEAS TO REALITY - FROM IDEAS TO REALITY - 
+                                    {{ tt('FROM IDEAS TO REALITY - FROM IDEAS TO REALITY - ') }}
                                 </textPath>
                             </text>
                         </svg>

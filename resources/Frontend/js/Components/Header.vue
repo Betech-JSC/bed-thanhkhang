@@ -79,10 +79,11 @@
                 <!-- Right Actions Desktop (Node 2380:1132 / Frame 1000005802): Search, Lang Switcher, CTA -->
                 <div class="flex items-center gap-8 xl:gap-10 shrink-0">
                     <!-- 1. Icon Tìm kiếm (Node 2352:10286) -->
-                    <Link
-                        :href="route('search')"
-                        class="w-6 h-6 flex items-center justify-center hover:opacity-80 transition-opacity shrink-0"
-                        title="Tìm kiếm"
+                    <button
+                        type="button"
+                        @click="isSearchOpen = true"
+                        class="w-6 h-6 flex items-center justify-center hover:opacity-80 transition-opacity shrink-0 cursor-pointer"
+                        title="Tìm kiếm (Ctrl+K)"
                         aria-label="Tìm kiếm"
                     >
                         <img
@@ -90,7 +91,7 @@
                             alt="Tìm kiếm"
                             class="w-6 h-6 object-contain"
                         />
-                    </Link>
+                    </button>
 
                     <!-- 2. Language Switcher (Node 2380:1477) -->
                     <div class="w-[96px] h-[34px] border border-[#5D6B98] rounded-[8px] flex items-center justify-between p-1 shrink-0 select-none">
@@ -145,9 +146,10 @@
 
             <!-- Mobile Controls (< 1024px) -->
             <div class="flex items-center gap-3 lg:hidden shrink-0">
-                <Link
-                    :href="route('search')"
-                    class="w-6 h-6 flex items-center justify-center hover:opacity-80 transition-opacity"
+                <button
+                    type="button"
+                    @click="isSearchOpen = true"
+                    class="w-6 h-6 flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
                     title="Tìm kiếm"
                     aria-label="Tìm kiếm"
                 >
@@ -156,7 +158,7 @@
                         alt="Tìm kiếm"
                         class="w-5 h-5 object-contain"
                     />
-                </Link>
+                </button>
 
                 <button
                     type="button"
@@ -359,16 +361,23 @@
                 </aside>
             </Transition>
         </Teleport>
+
+        <!-- Dark Tech Search Modal Teleport to body -->
+        <Teleport to="body">
+            <SearchModal :is-open="isSearchOpen" @close="isSearchOpen = false" />
+        </Teleport>
     </header>
 </template>
 
 <script>
 import { Link } from '@inertiajs/inertia-vue3'
+import SearchModal from '@/Components/SearchModal.vue'
 
 export default {
     name: 'Header',
     components: {
         Link,
+        SearchModal,
     },
     props: {
         fullPath: {
@@ -384,6 +393,7 @@ export default {
         return {
             menuSelected: null,
             isDrawerOpen: false,
+            isSearchOpen: false,
         }
     },
     computed: {
@@ -683,8 +693,19 @@ export default {
             )
         },
         handleKeydown(e) {
-            if (e.key === 'Escape' && this.isDrawerOpen) {
-                this.closeDrawer()
+            // Phím tắt Ctrl+K hoặc Cmd+K mở modal tìm kiếm
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
+                e.preventDefault()
+                this.isSearchOpen = !this.isSearchOpen
+                return
+            }
+            if (e.key === 'Escape') {
+                if (this.isSearchOpen) {
+                    this.isSearchOpen = false
+                }
+                if (this.isDrawerOpen) {
+                    this.closeDrawer()
+                }
             }
         },
     },

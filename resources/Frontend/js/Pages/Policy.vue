@@ -1,117 +1,253 @@
 <template>
-    <main class="py-[160px]">
-        <section class="">
-            <div class="container grid grid-cols-12">
-                <div class="col-span-full">
-                    <div class="grid grid-cols-12 xl:gap-x-[32px] md:gap-x-[22px] max-lg:gap-y-4 max-md:gap-y-2">
-                        <!-- Mobile -->
-                        <div v-if="list_sidebar && list_sidebar.length" class="col-span-full lg:hidden">
-                            <div
-                                @click="togglePolicyMobile"
-                                class="relative overflow-hidden bg-white shadow-xs cursor-pointer"
-                            >
-                                <div
-                                    class="w-full relative py-[10px] px-[12px] md:px-[16px] flex items-center space-x-[8px] border-l-[5px] overflow-hidden text-grey-700 text-base border-primary-600"
-                                >
-                                    {{ content.title }}
-                                </div>
-                                <div
-                                    class="absolute top-0 right-[12px] md:right-[16px] flex items-center justify-center h-full"
-                                >
-                                    <div
-                                        class="scale-150 -rotate-90 opacity-50"
-                                        :class="{ '!rotate-90': isOpenMobile }"
-                                    >
-                                        <IconCaretDown />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    <Head>
+        <title>{{ pageTitle }}</title>
+        <meta name="description" :content="pageDescription" />
+        <meta property="og:title" :content="pageTitle" />
+        <meta property="og:description" :content="pageDescription" />
+        <meta property="og:type" content="article" />
+    </Head>
 
-                        <!-- Desktop -->
-                        <div
-                            v-if="isOpenMobile"
-                            class="fixed inset-0 duration-200 bg-black lg:hidden opacity-70"
-                            :class="isOpenMobile && 'z-[80]'"
-                            @click="togglePolicyMobile"
-                        ></div>
+    <div class="bg-[#111322] min-h-screen text-white selection:bg-primary selection:text-white pt-6 sm:pt-10 pb-20">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1152px]">
+            <!-- Header Section -->
+            <div class="space-y-3 mb-8 sm:mb-12 border-b border-[#5D6B98]/30 pb-6 sm:pb-8">
+                <span class="text-sm font-semibold tracking-wider text-[#84ADFF] uppercase select-none leading-[20px] block">
+                    {{ tt('CHÍNH SÁCH & ĐIỀU KHOẢN') }}
+                </span>
+                <h1 class="text-2xl sm:text-3xl lg:text-[38px] font-bold text-[#FAFAFA] tracking-tight leading-tight lg:leading-[46px]">
+                    {{ tt('Chính sách & Cam kết xưởng in 3D HH Maker') }}
+                </h1>
+                <p class="text-[#B9C0D4] text-sm sm:text-base leading-relaxed max-w-3xl">
+                    {{ tt('Thông tin chi tiết về điều khoản dịch vụ, bảo vệ quyền sở hữu trí tuệ bản vẽ CAD và chính sách bảo hành in 3D.') }}
+                </p>
+            </div>
 
-                        <div
-                            v-if="list_sidebar && list_sidebar.length"
-                            class="relative col-span-3 max-lg:fixed max-lg:h-screen max-lg:top-[60px] max-lg:left-0 max-lg:duration-200 max-lg:w-1/2 max-md:w-3/4 bg-white px-4 py-6 rounded-xl"
-                            :class="[
-                                isOpenMobile ? '' : 'max-lg:transform max-lg:translate-x-[-100%]',
-                                isOpenMobile ? 'z-[80]' : '',
-                            ]"
-                        >
-                            <div class="md:sticky md:top-[20px] md:space-y-[12px] space-y-[6px] font-medium">
-                                <Link
-                                    :href="route('policies.show', policy.slug)"
-                                    v-for="(policy, index) in list_sidebar"
-                                    :key="index"
-                                    class="block"
-                                >
-                                    <div
-                                        class="label-1"
-                                        :class="checkActive(policy.slug) ? 'active-tab-policy' : 'tab-policy'"
-                                    >
-                                        {{ policy.title }}
-                                    </div>
-                                </Link>
-                            </div>
-                        </div>
+            <!-- Mobile Category Selector -->
+            <div v-if="list_sidebar && list_sidebar.length" class="lg:hidden mb-6">
+                <button
+                    type="button"
+                    @click="isOpenMobile = !isOpenMobile"
+                    class="w-full bg-white/10 border border-[#5D6B98] backdrop-blur-[10px] rounded-xl px-4 py-3 flex items-center justify-between text-left text-[#FAFAFA] font-medium"
+                >
+                    <span class="truncate">{{ content ? tt(content.title) : tt('Danh mục chính sách') }}</span>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="w-5 h-5 transition-transform duration-200"
+                        :class="{ 'rotate-180': isOpenMobile }"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
 
-                        <!-- Main Content -->
-                        <div v-if="content" class="bg-white col-span-full lg:col-span-9 space-y-[1rem] rounded-3xl p-6">
-                            <div v-html="content.content" class="prose" />
-                        </div>
-                    </div>
+                <div
+                    v-show="isOpenMobile"
+                    class="mt-2 bg-[#1A1C32] border border-[#5D6B98] rounded-xl p-2 space-y-1 shadow-xl"
+                >
+                    <Link
+                        v-for="(policy, index) in list_sidebar"
+                        :key="index"
+                        :href="getPolicyUrl(policy)"
+                        @click="isOpenMobile = false"
+                        class="block px-3 py-2.5 rounded-lg text-sm transition-colors"
+                        :class="checkActive(policy.slug)
+                            ? 'bg-[#243971] text-white font-semibold border border-[#528BFF]'
+                            : 'text-[#B9C0D4] hover:bg-white/5 hover:text-white'"
+                    >
+                        {{ tt(policy.title) }}
+                    </Link>
                 </div>
             </div>
-        </section>
-    </main>
+
+            <!-- Main Layout Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <!-- Desktop Sidebar Menu -->
+                <aside
+                    v-if="list_sidebar && list_sidebar.length"
+                    class="hidden lg:block lg:col-span-4 xl:col-span-3 sticky top-24"
+                >
+                    <div class="bg-white/5 border border-[#5D6B98]/40 backdrop-blur-[10px] rounded-2xl p-4 sm:p-5 shadow-lg space-y-2">
+                        <div class="text-xs font-semibold tracking-wider text-[#84ADFF] uppercase px-3 py-2">
+                            {{ tt('Danh mục chính sách') }}
+                        </div>
+                        <nav class="space-y-1.5">
+                            <Link
+                                v-for="(policy, index) in list_sidebar"
+                                :key="index"
+                                :href="getPolicyUrl(policy)"
+                                class="flex items-center px-3.5 py-3 rounded-xl text-sm font-medium transition-all duration-200 border"
+                                :class="checkActive(policy.slug)
+                                    ? 'bg-[#243971] text-[#FAFAFA] border-[#528BFF] shadow-[0_0_12px_rgba(82,139,255,0.35)] font-semibold'
+                                    : 'border-transparent text-[#B9C0D4] hover:bg-white/5 hover:text-white'"
+                            >
+                                <span class="truncate">{{ tt(policy.title) }}</span>
+                            </Link>
+                        </nav>
+                    </div>
+                </aside>
+
+                <!-- Content Area -->
+                <section class="col-span-12 lg:col-span-8 xl:col-span-9">
+                    <article
+                        v-if="content"
+                        class="bg-white/5 border border-[#5D6B98]/40 backdrop-blur-[10px] rounded-2xl p-6 sm:p-8 md:p-10 shadow-2xl space-y-6"
+                    >
+                        <header class="border-b border-[#5D6B98]/30 pb-4 space-y-2">
+                            <h2 class="text-2xl sm:text-3xl font-bold text-[#FAFAFA] tracking-tight">
+                                {{ tt(content.title) }}
+                            </h2>
+                            <div class="text-xs sm:text-sm text-[#84ADFF] flex items-center gap-2">
+                                <span>{{ tt('Cập nhật lần cuối') }}:</span>
+                                <span class="font-mono text-[#D1E0FF]">{{ content.formatted_updated_at || '11/2026' }}</span>
+                            </div>
+                        </header>
+
+                        <div
+                            v-html="content.content"
+                            class="policy-prose"
+                        />
+                    </article>
+
+                    <div
+                        v-else
+                        class="bg-white/5 border border-[#5D6B98]/40 rounded-2xl p-12 text-center text-[#B9C0D4]"
+                    >
+                        {{ tt('Không tìm thấy nội dung chính sách.') }}
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
+import { Head, Link } from '@inertiajs/inertia-vue3'
+
 export default {
-    props: ['list_sidebar', 'content'],
+    name: 'PolicyPage',
+    components: {
+        Head,
+        Link,
+    },
+    props: {
+        list_sidebar: {
+            type: Array,
+            default: () => [],
+        },
+        content: {
+            type: Object,
+            default: () => null,
+        },
+        seo: {
+            type: Object,
+            default: () => null,
+        },
+    },
     data() {
         return {
             isOpenMobile: false,
         }
     },
-
-    methods: {
-        togglePolicyMobile() {
-            this.isOpenMobile = !this.isOpenMobile
+    computed: {
+        currentLocale() {
+            return this.$inertia?.page?.props?.locale?.current || this.$page?.props?.locale?.current || 'vi'
         },
-
-        checkActive(url) {
-            const fullPath = this.$page.url
-            const arrPath = fullPath.split('/')
-            this.currentPolicy = this.list_sidebar.find((x) => x.slug === arrPath[arrPath.length - 1])
-            return url == arrPath[arrPath.length - 1]
+        pageTitle() {
+            if (this.seo?.title) return this.seo.title
+            const itemTitle = this.content ? this.tt(this.content.title) : this.tt('Chính sách & Điều khoản')
+            return this.currentLocale === 'en'
+                ? `${itemTitle} - HH Maker | 3D Printing Workshop`
+                : `${itemTitle} - HH Maker | Xưởng in 3D`
+        },
+        pageDescription() {
+            if (this.seo?.description) return this.seo.description
+            return this.currentLocale === 'en'
+                ? 'Official service policies, warranty terms, and privacy commitments for 3D printing and custom modeling at HH Maker.'
+                : 'Thông tin chính sách dịch vụ, cam kết bảo mật và quy định bảo hành in 3D chuyên nghiệp tại HH Maker.'
+        },
+    },
+    methods: {
+        checkActive(slug) {
+            const currentSlug = this.content?.slug || ''
+            if (slug === currentSlug) return true
+            const currentPath = (this.$page?.url || '').split('?')[0]
+            return currentPath.endsWith(`/${slug}`)
+        },
+        getPolicyUrl(policy) {
+            const slug = policy?.slug || ''
+            if (typeof this.route === 'function') {
+                try {
+                    return this.route('policies.show', slug)
+                } catch (e) {
+                    // Fallback to localized URL
+                }
+            }
+            return this.currentLocale === 'en' ? `/en/policies/${slug}` : `/chinh-sach/${slug}`
         },
     },
 }
 </script>
 
 <style lang="scss">
-.active-tab-policy {
-    @apply text-[#18191E] font-medium font-sans border-l-2 border-l-[#2F49D9] pl-2;
-}
+.policy-prose {
+    color: #D1E0FF;
+    line-height: 1.75;
+    font-size: 1rem;
 
-.policy-item {
-    svg path {
-        @apply duration-200;
+    h3 {
+        color: #FAFAFA;
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-top: 1.75rem;
+        margin-bottom: 0.75rem;
+        font-family: inherit;
+        border-left: 3px solid #2970FF;
+        padding-left: 0.75rem;
     }
-}
-.tab-policy {
-    @apply text-[#79716B] font-medium font-sans pl-2;
-}
-.icon-policy {
-    svg {
-        @apply w-[28px] h-[28px];
+
+    h4 {
+        color: #FAFAFA;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-top: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+
+    p {
+        color: #B9C0D4;
+        margin-bottom: 1rem;
+        font-size: 0.975rem;
+    }
+
+    ul {
+        list-style-type: disc;
+        padding-left: 1.5rem;
+        margin-bottom: 1rem;
+        color: #B9C0D4;
+
+        li {
+            margin-bottom: 0.5rem;
+            color: #B9C0D4;
+        }
+    }
+
+    ol {
+        list-style-type: decimal;
+        padding-left: 1.5rem;
+        margin-bottom: 1rem;
+        color: #B9C0D4;
+
+        li {
+            margin-bottom: 0.5rem;
+            color: #B9C0D4;
+        }
+    }
+
+    strong {
+        color: #FAFAFA;
+        font-weight: 600;
     }
 }
 </style>

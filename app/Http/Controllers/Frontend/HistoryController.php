@@ -31,11 +31,22 @@ class HistoryController extends Controller
                 ];
             });
 
+            $locale = current_locale();
+            $seo = [
+                'title' => $locale === 'en'
+                    ? 'About Us - HH Maker | Turning Creativity Beyond the Screen'
+                    : 'Giới thiệu - HH Maker | Đưa sáng tạo vượt ra khỏi màn hình',
+                'description' => $locale === 'en'
+                    ? 'HH Maker connects 3D art with modern manufacturing technology, transforming initial ideas into physical products you can hold in your hands.'
+                    : 'HH Maker kết nối nghệ thuật 3D với công nghệ chế tác hiện đại, để một ý tưởng sơ khai có thể trở thành sản phẩm vật lý bạn cầm trên tay.',
+            ];
+
             if (request()->wantsJson()) {
-                return response()->json($data);
+                return response()->json(array_merge($data, ['seo' => $seo]));
             }
 
-            return Inertia::render('About/Index', $data);
+            return Inertia::render('About/Index', array_merge($data, ['seo' => $seo]))
+                ->withViewData(['seo' => $seo]);
         } catch (\Throwable $th) {
             report($th);
             return abort(500);

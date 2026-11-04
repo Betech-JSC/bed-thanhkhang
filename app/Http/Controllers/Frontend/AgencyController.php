@@ -46,11 +46,22 @@ class AgencyController extends Controller
                 ];
             });
 
+            $locale = current_locale();
+            $seo = [
+                'title' => $locale === 'en'
+                    ? 'Contact & Consultation - HH Maker | Turning Creativity Beyond the Screen'
+                    : 'Liên hệ tư vấn - HH Maker | Đưa sáng tạo vượt ra khỏi màn hình',
+                'description' => $locale === 'en'
+                    ? 'Get in touch with HH Maker to discuss 3D design concepts, industrial 3D printing services, or bespoke custom fabrication.'
+                    : 'Liên hệ ngay với HH Maker để trao đổi ý tưởng thiết kế 3D, gia công in 3D công nghiệp hoặc chế tác sản phẩm custom theo yêu cầu.',
+            ];
+
             if (request()->wantsJson()) {
-                return response()->json($data);
+                return response()->json(array_merge($data, ['seo' => $seo]));
             }
 
-            return Inertia::render('Contact', $data);
+            return Inertia::render('Contact', array_merge($data, ['seo' => $seo]))
+                ->withViewData(['seo' => $seo]);
         } catch (\Throwable $th) {
             report($th);
             return abort(500);

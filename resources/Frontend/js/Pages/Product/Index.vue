@@ -597,8 +597,17 @@ export default {
                 this.currentPage = 1;
             },
         },
+        '$page.url': {
+            handler() {
+                this.initSearchFromUrl();
+            },
+        },
+    },
+    created() {
+        this.initSearchFromUrl();
     },
     mounted() {
+        this.initSearchFromUrl();
         if (typeof document !== 'undefined') {
             document.addEventListener('click', this.handleDocumentClick);
         }
@@ -609,6 +618,21 @@ export default {
         }
     },
     methods: {
+        initSearchFromUrl() {
+            if (typeof window !== 'undefined') {
+                const params = new URLSearchParams(window.location.search);
+                const searchVal = params.get('search') || params.get('keyword') || params.get('q');
+                if (searchVal && searchVal.trim()) {
+                    this.filters.search = searchVal.trim();
+                    return;
+                }
+            }
+            // Check Ziggy or route params
+            const ziggySearch = this.$page?.props?.ziggy?.query?.search || this.$attrs?.route?.params?.search;
+            if (ziggySearch && typeof ziggySearch === 'string' && ziggySearch.trim()) {
+                this.filters.search = ziggySearch.trim();
+            }
+        },
         handleDocumentClick(e) {
             if (this.$refs.sortDropdownRef && !this.$refs.sortDropdownRef.contains(e.target)) {
                 this.isSortOpen = false;

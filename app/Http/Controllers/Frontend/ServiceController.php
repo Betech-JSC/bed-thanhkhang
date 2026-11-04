@@ -11,21 +11,34 @@ class ServiceController extends Controller
 {
     public function index()
     {
-        $services = Service::query()
-            ->active()
-            ->sortByPosition()
-            ->get()
-            ->map(fn($item) => $item->transform());
+        $locale = current_locale();
+        $data = Cache::remember('services_index_' . $locale, 3600, function () {
+            $services = Service::query()
+                ->active()
+                ->sortByPosition()
+                ->get()
+                ->map(fn($item) => $item->transform());
 
-        $data = [
-            'services' => $services,
+            return [
+                'services' => $services,
+            ];
+        });
+
+        $seo = [
+            'title' => $locale === 'en'
+                ? 'On-Demand 3D Printing & Design Services - HH Maker'
+                : 'Dịch Vụ In Ấn & Thiết Kế 3D Theo Yêu Cầu - HH Maker',
+            'description' => $locale === 'en'
+                ? 'HH Maker accompanies you from clarifying concepts to choosing fabrication methods: 3D Design, 3D Machining, and Custom Creations with the highest finishing standards.'
+                : 'HH Maker đồng hành từ làm rõ ý tưởng đến lựa chọn cách tạo ra sản phẩm: Thiết kế 3D, Gia công 3D, và Làm đồ custom với tiêu chuẩn hoàn thiện cao nhất.',
         ];
 
         if (request()->wantsJson()) {
-            return response()->json($data);
+            return response()->json(array_merge($data, ['seo' => $seo]));
         }
 
-        return Inertia::render('Services/Index', $data);
+        return Inertia::render('Services/Index', array_merge($data, ['seo' => $seo]))
+            ->withViewData(['seo' => $seo]);
     }
 
     public function show($slug)

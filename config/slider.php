@@ -7,6 +7,11 @@ return [
             'value' => 'HOME_SLIDER',
             'banner' => false,
         ],
+        'HOME_ANNOUNCEMENT_TICKER' => [
+            'title' => 'Thanh thông báo Flip trang chủ',
+            'value' => 'HOME_ANNOUNCEMENT_TICKER',
+            'banner' => false,
+        ],
         'BANNER_ABOUT_HERO' => [
             'title' => 'Hero Banner trang Giới thiệu',
             'value' => 'BANNER_ABOUT_HERO',

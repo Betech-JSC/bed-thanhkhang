@@ -13,7 +13,7 @@
                 </span>
                 <!-- Tiêu đề (Figma Node 2283:6889: 28px / 33px / Bold / #FAFAFA) -->
                 <h2 class="text-xl sm:text-2xl lg:text-[28px] font-bold text-[#FAFAFA] leading-[33px]">
-                    {{ step.title }}
+                    {{ tt(step.title) }}
                 </h2>
             </div>
 
@@ -21,7 +21,7 @@
             <div class="w-full lg:w-[872px] space-y-6">
                 <!-- Mô tả bước (Figma Node 2283:6891: 18px / 27px / #FAFAFA) -->
                 <p class="text-base sm:text-lg text-[#FAFAFA] leading-relaxed lg:leading-[27px] font-normal">
-                    {{ step.description }}
+                    {{ tt(step.description) }}
                 </p>
 
                 <!-- Phối hợp: 2-Column Coordination Table (Figma Node 2283:6892, gap: 32px) -->
@@ -29,20 +29,20 @@
                     <!-- Column 1: BẠN CHUẨN BỊ (Figma 420px wide, gap: 8px) -->
                     <div class="flex flex-col gap-2">
                         <h3 class="text-[13px] font-semibold text-[#84ADFF] leading-[16px] tracking-wider uppercase">
-                            BẠN CHUẨN BỊ
+                            {{ tt('BẠN CHUẨN BỊ') }}
                         </h3>
                         <p class="text-sm sm:text-base text-[#B9C0D4] leading-relaxed lg:leading-[26px]">
-                            {{ step.clientPrep }}
+                            {{ tt(step.clientPrep) }}
                         </p>
                     </div>
 
                     <!-- Column 2: HH MAKER THỰC HIỆN (Figma 420px wide, gap: 8px) -->
                     <div class="flex flex-col gap-2">
                         <h3 class="text-[13px] font-semibold text-[#84ADFF] leading-[16px] tracking-wider uppercase">
-                            HH MAKER THỰC HIỆN
+                            {{ tt('HH MAKER THỰC HIỆN') }}
                         </h3>
                         <p class="text-sm sm:text-base text-[#B9C0D4] leading-relaxed lg:leading-[26px]">
-                            {{ step.makerAction }}
+                            {{ tt(step.makerAction) }}
                         </p>
                     </div>
                 </div>

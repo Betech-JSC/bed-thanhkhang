@@ -5,21 +5,21 @@
             <!-- Breadcrumbs -->
             <nav class="flex items-center gap-2.5 text-sm select-none" aria-label="Breadcrumb">
                 <Link
-                    href="/"
+                    :href="homeUrl"
                     class="text-[#B9C0D4] hover:text-white transition-colors"
                 >
-                    Trang chủ
+                    {{ tt('Trang chủ') }}
                 </Link>
                 <span class="text-[#404968]">/</span>
                 <Link
                     :href="servicesUrl"
                     class="text-[#B9C0D4] hover:text-white transition-colors"
                 >
-                    Dịch vụ
+                    {{ tt('Dịch vụ') }}
                 </Link>
                 <span class="text-[#84ADFF]">/</span>
                 <span class="text-[#84ADFF] font-medium truncate max-w-[240px] sm:max-w-none">
-                    {{ title }}
+                    {{ tt(title) }}
                 </span>
             </nav>
 
@@ -29,7 +29,7 @@
                     {{ displayHeadline }}
                 </h1>
                 <p class="text-base sm:text-lg text-[#B9C0D4] leading-relaxed lg:leading-[26px] font-sans">
-                    {{ description || defaultDescription }}
+                    {{ tt(description || defaultDescription) }}
                 </p>
             </div>
         </div>
@@ -56,7 +56,7 @@
                     <!-- Column 1: BẮT ĐẦU TỪ (Node 2352:11861) -->
                     <div class="md:col-span-4 flex flex-col justify-center space-y-4 md:pl-2">
                         <span class="text-xs sm:text-[12px] font-semibold text-[#D1E0FF] tracking-wider uppercase select-none font-sans leading-[15px]">
-                            BẮT ĐẦU TỪ
+                            {{ tt('BẮT ĐẦU TỪ') }}
                         </span>
                         <div class="space-y-2 font-sans">
                             <div
@@ -64,7 +64,7 @@
                                 :key="idx"
                                 class="text-lg sm:text-[20px] font-normal text-[#FAFAFA] leading-[29px]"
                             >
-                                {{ item }}
+                                {{ tt(item) }}
                             </div>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                     <!-- Column 2: CÙNG LÀM RÕ (Node 2352:11867) -->
                     <div class="md:col-span-4 flex flex-col justify-center space-y-4 md:pl-2">
                         <span class="text-xs sm:text-[12px] font-semibold text-[#D1E0FF] tracking-wider uppercase select-none font-sans leading-[15px]">
-                            CÙNG LÀM RÕ
+                            {{ tt('CÙNG LÀM RÕ') }}
                         </span>
                         <div class="space-y-2 font-sans">
                             <div
@@ -80,7 +80,7 @@
                                 :key="idx"
                                 class="text-lg sm:text-[20px] font-normal text-[#FAFAFA] leading-[29px]"
                             >
-                                {{ item }}
+                                {{ tt(item) }}
                             </div>
                         </div>
                     </div>
@@ -92,7 +92,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { Link } from '@inertiajs/inertia-vue3'
+import { Link, usePage } from '@inertiajs/inertia-vue3'
 
 const props = defineProps({
     title: {
@@ -109,21 +109,33 @@ const props = defineProps({
     },
 })
 
-const defaultDescription =
-    'Một ý tưởng chưa cần hoàn chỉnh để bắt đầu. Cùng HH Maker làm rõ tỉ lệ, cấu trúc và chi tiết, để mô hình 3D không chỉ dễ hình dung mà còn hướng đến khả năng chế tác thực tế.'
+const page = usePage()
+const isEn = computed(() => page.props.value?.locale?.current === 'en')
+
+const homeUrl = computed(() => (isEn.value ? '/en' : '/'))
 
 const servicesUrl = computed(() => {
     try {
         if (typeof route === 'function') {
-            return route('services.index')
+            const routeName = isEn.value ? 'en.services.index' : 'vi.services.index'
+            return route(routeName)
         }
-    } catch {
-        // Fallback
-    }
-    return '/dich-vu'
+    } catch {}
+    return isEn.value ? '/en/services' : '/dich-vu'
 })
 
+const defaultDescription = computed(() =>
+    isEn.value
+        ? 'An idea does not need to be complete to begin. Together with HH Maker, clarify proportions, structure, and details, ensuring the 3D model is not only easy to visualize but also ready for real-world manufacturing.'
+        : 'Một ý tưởng chưa cần hoàn chỉnh để bắt đầu. Cùng HH Maker làm rõ tỉ lệ, cấu trúc và chi tiết, để mô hình 3D không chỉ dễ hình dung mà còn hướng đến khả năng chế tác thực tế.'
+)
+
 const displayHeadline = computed(() => {
+    if (isEn.value) {
+        if (!props.title) return '3D Design: From sketch to concrete geometry'
+        if (props.title.includes(':')) return props.title
+        return `${props.title}: From sketch to concrete geometry`
+    }
     if (!props.title) return 'Thiết kế 3D: Từ phác thảo đến hình khối rõ ràng'
     if (props.title.includes(':')) return props.title
     return `${props.title}: Từ phác thảo đến hình khối rõ ràng`

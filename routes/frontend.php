@@ -21,6 +21,7 @@ Route::get('sitemap.xml', [SitemapController::class, 'index']);
 Route::redirect('/ho-so-ca-nhan', '/dashboard/update-profile');
 Route::redirect('/about', '/gioi-thieu');
 Route::redirect('/about-us', '/gioi-thieu');
+Route::redirect('/search', '/tim-kiem');
 
 if (app()->environment('local')) {
     Route::get('/dev-login-user/{id}', function ($id) {

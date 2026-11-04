@@ -3,14 +3,14 @@
         <!-- Mục 01: Khi nào bạn cần thiết kế 3D? (Figma Node 2367:2197) -->
         <section id="section-01" class="scroll-mt-32 space-y-4">
             <h2 class="text-2xl sm:text-[28px] font-bold text-[#FAFAFA] leading-tight sm:leading-[36px]">
-                Khi nào bạn cần thiết kế 3D?
+                {{ tt('Khi nào bạn cần thiết kế 3D?') }}
             </h2>
             <div class="space-y-3.5 text-base text-[#B9C0D4] leading-[26px]">
                 <p>
-                    Bạn đã hình dung một món đồ nhưng chưa có mô hình để triển khai? Một bức ảnh thường chỉ cho thấy một góc nhìn; bản phác thảo có thể chưa thể hiện rõ chiều sâu, tỉ lệ hay cách các phần kết nối với nhau.
+                    {{ tt('Bạn đã hình dung một món đồ nhưng chưa có mô hình để triển khai? Một bức ảnh thường chỉ cho thấy một góc nhìn; bản phác thảo có thể chưa thể hiện rõ chiều sâu, tỉ lệ hay cách các phần kết nối với nhau.') }}
                 </p>
                 <p>
-                    Thiết kế 3D giúp làm rõ những điều đó trước khi chuyển sang sản phẩm vật lý. Đây là bước phù hợp khi bạn muốn phát triển một hình dáng mới, điều chỉnh mẫu tham khảo hoặc kiểm tra các chi tiết cần lắp ghép. HH Maker cùng bạn chuyển thông tin ban đầu thành phương án có thể xem xét và trao đổi cụ thể hơn.
+                    {{ tt('Thiết kế 3D giúp làm rõ những điều đó trước khi chuyển sang sản phẩm vật lý. Đây là bước phù hợp khi bạn muốn phát triển một hình dáng mới, điều chỉnh mẫu tham khảo hoặc kiểm tra các chi tiết cần lắp ghép. HH Maker cùng bạn chuyển thông tin ban đầu thành phương án có thể xem xét và trao đổi cụ thể hơn.') }}
                 </p>
             </div>
         </section>
@@ -19,10 +19,10 @@
         <section id="section-02" class="scroll-mt-32 space-y-5">
             <div class="space-y-3">
                 <h2 class="text-2xl sm:text-[28px] font-bold text-[#FAFAFA] leading-tight sm:leading-[36px]">
-                    Từ ý tưởng tới mô hình 3D
+                    {{ tt('Từ ý tưởng tới mô hình 3D') }}
                 </h2>
                 <p class="text-base text-[#B9C0D4] leading-[28px]">
-                    Không nhất thiết phải chốt mọi chi tiết từ đầu. Điều quan trọng là làm rõ từng phần theo thứ tự, để những điều chỉnh sau đó có cơ sở.
+                    {{ tt('Không nhất thiết phải chốt mọi chi tiết từ đầu. Điều quan trọng là làm rõ từng phần theo thứ tự, để những điều chỉnh sau đó có cơ sở.') }}
                 </p>
             </div>
 
@@ -43,10 +43,10 @@
                     <!-- Nội dung bước -->
                     <div class="space-y-1.5 flex-grow">
                         <h3 class="text-lg sm:text-[19px] font-semibold text-[#FAFAFA] leading-[27px]">
-                            {{ step.title }}
+                            {{ tt(step.title) }}
                         </h3>
                         <p class="text-base text-[#B9C0D4] leading-[28px]">
-                            {{ step.description }}
+                            {{ tt(step.description) }}
                         </p>
                     </div>
                 </div>
@@ -57,10 +57,10 @@
         <section id="section-03" class="scroll-mt-32 space-y-5">
             <div class="space-y-3">
                 <h2 class="text-2xl sm:text-[28px] font-bold text-[#FAFAFA] leading-tight sm:leading-[36px]">
-                    Bạn cần chuẩn bị gì?
+                    {{ tt('Bạn cần chuẩn bị gì?') }}
                 </h2>
                 <p class="text-base text-[#B9C0D4] leading-[28px]">
-                    Thông tin càng rõ, việc trao đổi càng sát với mong muốn của bạn. Trước khi gửi yêu cầu, hãy tập hợp những nội dung dưới đây; phần nào chưa chắc có thể ghi chú để cùng thảo luận.
+                    {{ tt('Thông tin càng rõ, việc trao đổi càng sát với mong muốn của bạn. Trước khi gửi yêu cầu, hãy tập hợp những nội dung dưới đây; phần nào chưa chắc có thể ghi chú để cùng thảo luận.') }}
                 </p>
             </div>
 
@@ -79,10 +79,10 @@
                     <!-- Detail -->
                     <div class="space-y-1 flex-grow">
                         <h4 class="text-[16px] font-semibold text-[#FAFAFA] leading-[24px]">
-                            {{ item.title }}
+                            {{ tt(item.title) }}
                         </h4>
                         <p class="text-[15px] text-[#B9C0D4] leading-[26px]">
-                            {{ item.description }}
+                            {{ tt(item.description) }}
                         </p>
                     </div>
                 </div>
@@ -92,16 +92,16 @@
         <!-- Mục 04: Cùng hoàn thiện trước khi gia công (Figma Node 2367:2253) -->
         <section id="section-04" class="scroll-mt-32 space-y-5">
             <h2 class="text-2xl sm:text-[28px] font-bold text-[#FAFAFA] leading-tight sm:leading-[36px]">
-                Cùng hoàn thiện trước khi gia công
+                {{ tt('Cùng hoàn thiện trước khi gia công') }}
             </h2>
             <p class="text-base text-[#B9C0D4] leading-[28px]">
-                Kết quả của giai đoạn thiết kế là phương án mô hình 3D cùng các chi tiết đã thống nhất: hình dáng, tỉ lệ, kích thước và những yêu cầu liên quan đến cách sử dụng. Đây là cơ sở để trao đổi bước gia công tiếp theo, không phải sản phẩm vật lý hoàn thiện.
+                {{ tt('Kết quả của giai đoạn thiết kế là phương án mô hình 3D cùng các chi tiết đã thống nhất: hình dáng, tỉ lệ, kích thước và những yêu cầu liên quan đến cách sử dụng. Đây là cơ sở để trao đổi bước gia công tiếp theo, không phải sản phẩm vật lý hoàn thiện.') }}
             </p>
 
             <!-- Callout Lưu Ý Về Mô Hình (Figma Node 2367:2256 - viền trái #2970FF 2px, padding-left 20px) -->
             <div class="border-l-2 border-[#2970FF] pl-5 py-2">
                 <p class="text-base text-[#B2CCFF] leading-[28px]">
-                    Một mô hình đẹp trên màn hình vẫn cần được xem xét với vật liệu và cách chế tác thực tế. Hãy thống nhất các yêu cầu quan trọng trước khi chuyển sang gia công.
+                    {{ tt('Một mô hình đẹp trên màn hình vẫn cần được xem xét với vật liệu và cách chế tác thực tế. Hãy thống nhất các yêu cầu quan trọng trước khi chuyển sang gia công.') }}
                 </p>
             </div>
         </section>
@@ -109,7 +109,7 @@
         <!-- Dynamic CMS Content (nếu backend có nội dung nhập thêm từ admin) -->
         <section v-if="hasDynamicContent" class="pt-6 border-t border-[#404968]">
             <h3 class="text-xl font-bold text-[#FAFAFA] mb-4">
-                Thông tin chi tiết bổ sung
+                {{ tt('Thông tin chi tiết bổ sung') }}
             </h3>
             <div
                 class="prose prose-invert max-w-none text-[#B9C0D4] leading-relaxed"

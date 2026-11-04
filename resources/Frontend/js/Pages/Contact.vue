@@ -1,10 +1,10 @@
 <template>
     <Head>
-        <title>Liên hệ tư vấn - HH Maker | Đưa sáng tạo vượt ra khỏi màn hình</title>
-        <meta
-            name="description"
-            content="Liên hệ ngay với HH Maker để trao đổi ý tưởng thiết kế 3D, gia công in 3D công nghiệp hoặc chế tác sản phẩm custom theo yêu cầu."
-        />
+        <title>{{ pageTitle }}</title>
+        <meta name="description" :content="pageDescription" />
+        <meta property="og:title" :content="pageTitle" />
+        <meta property="og:description" :content="pageDescription" />
+        <meta property="og:type" content="website" />
     </Head>
 
     <div class="bg-[#111322] text-white min-h-screen overflow-x-hidden selection:bg-primary selection:text-white">
@@ -20,15 +20,15 @@
                     <!-- Left Hero Content (Figma Node 2283:6728) -->
                     <div class="lg:col-span-7 space-y-4 md:space-y-6 pt-4 sm:pt-6">
                         <div class="inline-block text-[#D1E0FF] text-sm md:text-base font-semibold tracking-wider uppercase">
-                            KẾT NỐI VỚI HH MAKER
+                            {{ tt('KẾT NỐI VỚI HH MAKER') }}
                         </div>
 
                         <h1 class="text-white text-3xl sm:text-4xl lg:text-[38px] lg:leading-[46px] font-bold uppercase tracking-tight max-w-[740px]">
-                            KỂ CHÚNG TÔI NGHE Ý TƯỞNG CỦA BẠN
+                            {{ tt('KỂ CHÚNG TÔI NGHE Ý TƯỞNG CỦA BẠN') }}
                         </h1>
 
                         <p class="text-[#D1E0FF] text-base md:text-lg leading-[26px] max-w-[519px] font-normal">
-                            Một bản phác thảo, một file 3D hay một ý tưởng chưa thành hình. Hãy bắt đầu cuộc trao đổi qua kênh thuận tiện nhất với bạn.
+                            {{ tt('Một bản phác thảo, một file 3D hay một ý tưởng chưa thành hình. Hãy bắt đầu cuộc trao đổi qua kênh thuận tiện nhất với bạn.') }}
                         </p>
                     </div>
 
@@ -36,7 +36,7 @@
                     <div class="hidden lg:flex lg:col-span-5 items-center justify-end relative">
                         <img
                             src="/images/contact/hh_maker-01_2.png"
-                            alt="HH Maker Logo 3D - From Ideas To Reality"
+                            :alt="tt('HH Maker Logo 3D - From Ideas To Reality')"
                             class="w-[260px] xl:w-[310px] max-w-full h-auto object-contain pointer-events-none select-none drop-shadow-[0_12px_28px_rgba(0,0,0,0.35)] transition-transform duration-500 hover:scale-[1.02]"
                             loading="eager"
                         />
@@ -59,7 +59,6 @@
                         class="bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] rounded-[12px] p-7 transition-all duration-300 hover:border-primary hover:bg-white/[0.28] hover:shadow-glow-primary-subtle group flex flex-col justify-between min-h-[193px]"
                     >
                         <div class="w-10 h-10 rounded-lg flex items-center justify-center text-white group-hover:text-primary transition-colors">
-                            <!-- Lucide MessageCircle (28x28) -->
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="28"
@@ -76,10 +75,10 @@
                         </div>
                         <div class="space-y-2 mt-4">
                             <h3 class="text-2xl font-semibold text-[#FAFAFA] group-hover:text-primary transition-colors leading-[29px]">
-                                Tư vấn qua Zalo
+                                {{ tt('Tư vấn qua Zalo') }}
                             </h3>
                             <p class="text-base text-[#B9C0D4] leading-[26px]">
-                                Trao đổi ý tưởng, hình ảnh và yêu cầu sản phẩm
+                                {{ tt('Trao đổi ý tưởng, hình ảnh và yêu cầu sản phẩm') }}
                             </p>
                         </div>
                     </a>
@@ -90,7 +89,6 @@
                         class="bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] rounded-[12px] p-7 transition-all duration-300 hover:border-primary hover:bg-white/[0.28] hover:shadow-glow-primary-subtle group flex flex-col justify-between min-h-[193px]"
                     >
                         <div class="w-10 h-10 rounded-lg flex items-center justify-center text-white group-hover:text-primary transition-colors">
-                            <!-- Lucide Phone (28x28) -->
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="28"
@@ -112,7 +110,7 @@
                                 {{ displayPhone }}
                             </h3>
                             <p class="text-base text-[#B9C0D4] leading-[26px]">
-                                Gọi HH Maker để trao đổi trực tiếp về dự án của bạn
+                                {{ tt('Gọi HH Maker để trao đổi trực tiếp về dự án của bạn') }}
                             </p>
                         </div>
                     </a>
@@ -123,7 +121,6 @@
                         class="bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] rounded-[12px] p-7 transition-all duration-300 hover:border-primary hover:bg-white/[0.28] hover:shadow-glow-primary-subtle group flex flex-col justify-between min-h-[193px]"
                     >
                         <div class="w-10 h-10 rounded-lg flex items-center justify-center text-white group-hover:text-primary transition-colors">
-                            <!-- Lucide Mail (28x28) -->
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="28"
@@ -144,7 +141,7 @@
                                 {{ displayEmail }}
                             </h3>
                             <p class="text-base text-[#B9C0D4] leading-[26px]">
-                                Gửi mô tả chi tiết và tài liệu tham khảo của bạn
+                                {{ tt('Gửi mô tả chi tiết và tài liệu tham khảo của bạn') }}
                             </p>
                         </div>
                     </a>
@@ -162,13 +159,13 @@
                     <div class="w-full lg:w-[380px] shrink-0 flex flex-col justify-between space-y-6">
                         <div class="space-y-3">
                             <div class="text-[#84ADFF] text-sm md:text-base font-semibold tracking-wider uppercase">
-                                TỪ Ý TƯỞNG ĐẾN HIỆN THỰC
+                                {{ tt('TỪ Ý TƯỞNG ĐẾN HIỆN THỰC') }}
                             </div>
                             <h2 class="text-white text-2xl sm:text-3xl lg:text-[36px] font-bold leading-tight lg:leading-[42px]">
-                                CÙNG BẮT ĐẦU MỘT SẢN PHẨM MỚI.
+                                {{ tt('CÙNG BẮT ĐẦU MỘT SẢN PHẨM MỚI.') }}
                             </h2>
                             <p class="text-[#B9C0D4] text-sm sm:text-base leading-[26px]">
-                                Điền thông tin để HH Maker hiểu thêm về nhu cầu của bạn và có cơ sở trao đổi phương án phù hợp.
+                                {{ tt('Điền thông tin để HH Maker hiểu thêm về nhu cầu của bạn và có cơ sở trao đổi phương án phù hợp.') }}
                             </p>
                         </div>
 
@@ -176,7 +173,7 @@
                         <div class="w-full max-w-[380px] mx-auto lg:mx-0 rounded-[12px] overflow-hidden border border-[#5D6B98]/40 shadow-2xl bg-dark-surface/40 group">
                             <img
                                 src="/images/contact/dieu_khac_xanh.png"
-                                alt="HH Maker tác phẩm điêu khắc 3D xanh"
+                                :alt="tt('HH Maker tác phẩm điêu khắc 3D xanh')"
                                 class="w-full h-auto aspect-[380/384] object-cover transition-transform duration-500 group-hover:scale-105 select-none"
                                 loading="lazy"
                             />
@@ -186,7 +183,7 @@
                     <!-- Cột Phải: Biểu mẫu Form (Node 2283:6775) - Width 708px -->
                     <div class="w-full lg:w-[708px] shrink-0">
                         <h3 class="text-white text-2xl sm:text-[28px] font-bold leading-[33px] mb-6">
-                            Thông tin yêu cầu
+                            {{ tt('Thông tin yêu cầu') }}
                         </h3>
 
                         <form @submit.prevent="submitContact" novalidate class="space-y-5">
@@ -195,12 +192,12 @@
                                 <!-- Họ và tên (Node 2283:6778) -->
                                 <div>
                                     <label class="block text-sm font-medium text-[#FAFAFA] mb-2">
-                                        Họ và tên <span class="text-red-400">*</span>
+                                        {{ tt('Họ và tên') }} <span class="text-red-400">*</span>
                                     </label>
                                     <input
                                         type="text"
                                         v-model="form.name"
-                                        placeholder="Nhập họ và tên"
+                                        :placeholder="tt('Nhập họ và tên')"
                                         :class="[
                                             'w-full h-[52px] bg-white/20 border rounded-[8px] px-4 text-[#FAFAFA] placeholder-[#B9C0D4] text-sm transition-all focus:outline-none',
                                             clientErrors.name || form.errors.name
@@ -216,12 +213,12 @@
                                 <!-- Số điện thoại (Node 2283:6782) -->
                                 <div>
                                     <label class="block text-sm font-medium text-[#FAFAFA] mb-2">
-                                        Số điện thoại <span class="text-red-400">*</span>
+                                        {{ tt('Số điện thoại') }} <span class="text-red-400">*</span>
                                     </label>
                                     <input
                                         type="tel"
                                         v-model="form.phone"
-                                        placeholder="Nhập số điện thoại"
+                                        :placeholder="tt('Nhập số điện thoại')"
                                         :class="[
                                             'w-full h-[52px] bg-white/20 border rounded-[8px] px-4 text-[#FAFAFA] placeholder-[#B9C0D4] text-sm transition-all focus:outline-none',
                                             clientErrors.phone || form.errors.phone
@@ -238,17 +235,17 @@
                             <!-- Hàng 2: Email (Node 2283:6786) -->
                             <div>
                                 <label class="block text-sm font-medium text-[#FAFAFA] mb-2">
-                                    Email
+                                    {{ tt('Email') }}
                                 </label>
                                 <input
                                     type="email"
                                     v-model="form.email"
-                                    placeholder="Nhập địa chỉ email"
+                                    :placeholder="tt('Nhập địa chỉ email')"
                                     :class="[
                                         'w-full h-[52px] bg-white/20 border rounded-[8px] px-4 text-[#FAFAFA] placeholder-[#B9C0D4] text-sm transition-all focus:outline-none',
                                         clientErrors.email || form.errors.email
                                             ? 'border-red-500 focus:border-red-500'
-                                            : 'border-[#5D6B98] focus:border-primary focus:ring-1 focus:ring-primary focus:bg-white/[0.25]'
+                                             : 'border-[#5D6B98] focus:border-primary focus:ring-1 focus:ring-primary focus:bg-white/[0.25]'
                                     ]"
                                 />
                                 <p v-if="clientErrors.email || form.errors.email" class="text-xs text-red-400 mt-1.5">
@@ -259,7 +256,7 @@
                             <!-- Hàng 3: Dịch vụ quan tâm (Node 2283:6790 - Pill buttons) -->
                             <div>
                                 <label class="block text-sm font-medium text-[#FAFAFA] mb-2.5">
-                                    Bạn cần hỗ trợ điều gì?
+                                    {{ tt('Bạn cần hỗ trợ điều gì?') }}
                                 </label>
                                 <div class="flex flex-wrap gap-2.5 sm:gap-3">
                                     <button
@@ -274,7 +271,7 @@
                                                 : 'bg-[#1A1C32] border border-[#2C3049] text-[#FAFAFA] hover:border-[#5D6B98] hover:text-white'
                                         ]"
                                     >
-                                        {{ service }}
+                                        {{ tt(service) }}
                                     </button>
                                 </div>
                             </div>
@@ -282,12 +279,12 @@
                             <!-- Hàng 4: Mô tả ý tưởng (Node 2283:6802) -->
                             <div>
                                 <label class="block text-sm font-medium text-[#FAFAFA] mb-2">
-                                    Mô tả ý tưởng <span class="text-red-400">*</span>
+                                    {{ tt('Mô tả ý tưởng') }} <span class="text-red-400">*</span>
                                 </label>
                                 <textarea
                                     v-model="form.content"
                                     rows="4"
-                                    placeholder="Chia sẻ ý tưởng, hình ảnh hoặc bản phác thảo của bạn..."
+                                    :placeholder="tt('Chia sẻ ý tưởng, hình ảnh hoặc bản phác thảo của bạn...')"
                                     :class="[
                                         'w-full h-[136px] bg-white/20 border rounded-[8px] p-4 text-[#FAFAFA] placeholder-[#B9C0D4] text-sm transition-all focus:outline-none resize-none',
                                         clientErrors.content || form.errors.content
@@ -317,7 +314,7 @@
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                <span>{{ form.processing ? 'Đang gửi yêu cầu...' : 'Gửi yêu cầu tư vấn' }}</span>
+                                <span>{{ form.processing ? tt('Đang gửi yêu cầu...') : tt('Gửi yêu cầu tư vấn') }}</span>
                             </button>
                         </form>
                     </div>
@@ -332,10 +329,10 @@
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1152px]">
                 <div class="space-y-3 mb-8 sm:mb-10">
                     <div class="text-[#84ADFF] text-sm font-semibold tracking-wider uppercase">
-                        CÂU HỎI THƯỜNG GẶP
+                        {{ tt('CÂU HỎI THƯỜNG GẶP') }}
                     </div>
                     <h2 class="text-white text-2xl sm:text-3xl lg:text-[32px] lg:leading-[37px] font-bold">
-                        Giải đáp trước khi liên hệ
+                        {{ tt('Giải đáp trước khi liên hệ') }}
                     </h2>
                 </div>
 
@@ -352,7 +349,7 @@
                             :aria-expanded="activeFaq === index"
                         >
                             <span class="text-base sm:text-[18px] sm:leading-[22px] font-medium text-[#FAFAFA] pr-4">
-                                {{ faq.question }}
+                                {{ tt(faq.question) }}
                             </span>
                             <span
                                 class="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-[#FAFAFA] bg-white/10 transition-transform duration-300"
@@ -386,7 +383,7 @@
                                 v-show="activeFaq === index"
                                 class="px-6 pb-6 pt-2 text-[#B9C0D4] text-base leading-[26px] border-t border-white/10"
                             >
-                                {{ faq.answer }}
+                                {{ tt(faq.answer) }}
                             </div>
                         </transition>
                     </div>
@@ -417,10 +414,10 @@
 
                 <div class="space-y-2">
                     <h3 class="text-xl sm:text-2xl font-bold text-white">
-                        Gửi yêu cầu thành công!
+                        {{ tt('Gửi yêu cầu thành công!') }}
                     </h3>
                     <p class="text-[#B9C0D4] text-sm sm:text-base leading-relaxed">
-                        Hệ thống đã nhận được thông tin yêu cầu của bạn. Đội ngũ kỹ thuật HH Maker sẽ liên hệ và tư vấn phương án phù hợp trong thời gian sớm nhất.
+                        {{ tt('Hệ thống đã nhận được thông tin yêu cầu của bạn. Đội ngũ kỹ thuật HH Maker sẽ liên hệ và tư vấn phương án phù hợp trong thời gian sớm nhất.') }}
                     </p>
                 </div>
 
@@ -429,7 +426,7 @@
                     @click="showSuccessModal = false"
                     class="w-full mt-4 h-[44px] rounded-[8px] bg-primary text-white font-medium text-sm hover:bg-primary-600 transition-colors cursor-pointer"
                 >
-                    Đóng thông báo
+                    {{ tt('Đóng thông báo') }}
                 </button>
             </div>
         </BaseModal>
@@ -442,14 +439,37 @@ import { usePage } from '@inertiajs/inertia-vue3'
 import { Head, useForm } from '@inertiajs/inertia-vue3'
 import BaseModal from '@/Components/Base/BaseModal.vue'
 
-defineProps({
+const props = defineProps({
     agencies: {
         type: Array,
         default: () => [],
     },
+    seo: {
+        type: Object,
+        default: () => null,
+    },
 })
 
 const page = usePage()
+const isEn = computed(() => (page.props.value?.locale?.current || 'vi') === 'en')
+
+const pageTitle = computed(() => {
+    return (
+        props.seo?.title ||
+        (isEn.value
+            ? 'Contact & Consultation - HH Maker | Turning Creativity Beyond the Screen'
+            : 'Liên hệ tư vấn - HH Maker | Đưa sáng tạo vượt ra khỏi màn hình')
+    )
+})
+
+const pageDescription = computed(() => {
+    return (
+        props.seo?.description ||
+        (isEn.value
+            ? 'Get in touch with HH Maker to discuss 3D design concepts, industrial 3D printing services, or bespoke custom fabrication.'
+            : 'Liên hệ ngay với HH Maker để trao đổi ý tưởng thiết kế 3D, gia công in 3D công nghiệp hoặc chế tác sản phẩm custom theo yêu cầu.')
+    )
+})
 
 const displayZaloUrl = computed(() => {
     const raw = page.props.value?.global?.general_zalo
@@ -518,30 +538,40 @@ const validate = () => {
     clientErrors.content = ''
 
     if (!form.name || form.name.trim().length < 2) {
-        clientErrors.name = 'Vui lòng nhập họ và tên (tối thiểu 2 ký tự).'
+        clientErrors.name = isEn.value
+            ? 'Please enter your full name (minimum 2 characters).'
+            : 'Vui lòng nhập họ và tên (tối thiểu 2 ký tự).'
         isValid = false
     }
 
     const phoneTrimmed = (form.phone || '').trim()
     const phoneRegex = /^(0[3|5|7|8|9])[0-9]{8}$/
     if (!phoneTrimmed) {
-        clientErrors.phone = 'Vui lòng nhập số điện thoại.'
+        clientErrors.phone = isEn.value
+            ? 'Please enter your phone number.'
+            : 'Vui lòng nhập số điện thoại.'
         isValid = false
     } else if (!phoneRegex.test(phoneTrimmed) && phoneTrimmed.length < 10) {
-        clientErrors.phone = 'Số điện thoại không hợp lệ (ví dụ: 0906636425).'
+        clientErrors.phone = isEn.value
+            ? 'Invalid phone number (e.g. 0906636425).'
+            : 'Số điện thoại không hợp lệ (ví dụ: 0906636425).'
         isValid = false
     }
 
     if (form.email && form.email.trim().length > 0) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegex.test(form.email.trim())) {
-            clientErrors.email = 'Địa chỉ email không đúng định dạng.'
+            clientErrors.email = isEn.value
+                ? 'Invalid email format.'
+                : 'Địa chỉ email không đúng định dạng.'
             isValid = false
         }
     }
 
     if (!form.content || form.content.trim().length < 5) {
-        clientErrors.content = 'Vui lòng mô tả ý tưởng hoặc yêu cầu của bạn (tối thiểu 5 ký tự).'
+        clientErrors.content = isEn.value
+            ? 'Please describe your idea or requirements (minimum 5 characters).'
+            : 'Vui lòng mô tả ý tưởng hoặc yêu cầu của bạn (tối thiểu 5 ký tự).'
         isValid = false
     }
 

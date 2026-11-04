@@ -20,7 +20,7 @@
                     <!-- Row Header: Category Name + Prev/Next Controls (Figma Node 2261:5580) -->
                     <div class="flex items-center justify-between gap-4">
                         <h3 class="text-xl sm:text-2xl font-bold text-[#FAFAFA] font-sans">
-                            {{ category.name }}
+                            {{ tt(category.name) }}
                         </h3>
 
                         <!-- Navigation Arrows (Figma Node 2261:5592) -->
@@ -84,10 +84,10 @@
                                 <!-- Bottom: Dark Slate Card Footer (Figma Node 2261:5600: height 84px, bg #30374F) -->
                                 <div class="h-[84px] bg-[#30374F] px-6 py-3 flex flex-col justify-center space-y-1">
                                     <h4 class="text-base font-bold text-[#F5F8FF] truncate font-sans leading-[22px]">
-                                        {{ item.title }}
+                                        {{ tt(item.title) }}
                                     </h4>
                                     <p class="text-xs text-[#B9C0D4] truncate font-normal leading-[17px]">
-                                        {{ item.description }}
+                                        {{ tt(item.description) }}
                                     </p>
                                 </div>
                             </div>
@@ -97,11 +97,11 @@
                     <!-- Row CTA Button: "Xem thêm sản phẩm khác" (Figma Node 2261:5613 - Frame 260: 239x48px, gradient 90deg #2970FF to #00359E) -->
                     <div class="flex justify-center pt-2 sm:pt-4">
                         <Link
-                            :href="category.url || '/san-pham'"
+                            :href="($page?.props?.locale?.current === 'en') ? (category.url ? category.url.replace('/san-pham', '/en/products') : '/en/products') : (category.url || '/san-pham')"
                             class="w-[239px] h-[48px] rounded-[8px] text-[#FFFFFF] text-base font-semibold inline-flex items-center justify-center hover:opacity-90 transition-opacity shadow-md cursor-pointer active:scale-95"
                             style="background: linear-gradient(90deg, #2970FF 0%, #00359E 89%);"
                         >
-                            Xem thêm sản phẩm khác
+                            {{ tt('Xem thêm sản phẩm khác') }}
                         </Link>
                     </div>
                 </div>

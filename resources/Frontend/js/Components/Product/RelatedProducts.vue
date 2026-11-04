@@ -61,15 +61,12 @@
                         </p>
                     </div>
 
-                    <div class="flex items-center justify-between pt-4 mt-3 border-t border-[#30374F]/70">
-                        <span class="text-sm font-bold text-white">
-                            {{ item.priceFormatted || tt('Liên hệ báo giá') }}
-                        </span>
+                    <div class="flex items-center justify-end pt-3 mt-3 border-t border-[#30374F]/70">
                         <Link
                             :href="item.slug ? route('products.show', { slug: item.slug }) : route('products.index')"
-                            class="inline-flex items-center gap-1 text-xs font-semibold text-[#84ADFF] group-hover:translate-x-0.5 transition-transform"
+                            class="inline-flex items-center gap-1.5 text-xs font-semibold text-[#84ADFF] hover:text-[#528BFF] group-hover:translate-x-1 transition-all"
                         >
-                            {{ tt('Chi tiết') }}
+                            {{ tt('Xem chi tiết') }}
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                             </svg>
@@ -112,7 +109,6 @@ export default {
                     category: p.category?.title || p.category_name || (this.isEn ? '3D Printed Model' : 'Mô hình in 3D'),
                     image: p.image?.url || p.thumbnail || p.cover || `/images/pdp/related_${(idx % 4) + 1}.png`,
                     description: p.description || p.excerpt || '',
-                    priceFormatted: p.price ? new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(p.price) : this.tt('Liên hệ báo giá'),
                 }))
             }
 
@@ -125,7 +121,6 @@ export default {
                         category: 'Space Decor',
                         image: '/images/pdp/related_1.png',
                         description: 'Crisp contours, matte PLA fingerprint-resistant finish, high color retention.',
-                        priceFormatted: '$12.00',
                     },
                     {
                         id: 2,
@@ -134,7 +129,6 @@ export default {
                         category: 'Space Decor',
                         image: '/images/pdp/related_2.png',
                         description: 'Smart drainage design ideal for desk succulents and workspace greenery.',
-                        priceFormatted: '$6.00',
                     },
                     {
                         id: 3,
@@ -143,7 +137,6 @@ export default {
                         category: 'Daily Essentials',
                         image: '/images/pdp/related_3.png',
                         description: 'Ergonomic 60-degree viewing angle, compatible with all smartphone models.',
-                        priceFormatted: '$9.50',
                     },
                     {
                         id: 4,
@@ -152,7 +145,6 @@ export default {
                         category: 'Custom Manufacturing',
                         image: '/images/pdp/related_4.png',
                         description: '14 flexible articulated joints, seamless print-in-place without metal screws.',
-                        priceFormatted: '$15.00',
                     },
                 ]
             }
@@ -166,7 +158,6 @@ export default {
                     category: 'Trang trí bàn làm việc',
                     image: '/images/pdp/related_1.png',
                     description: 'Tạo hình sắc nét, vật liệu PLA matte chống bám vân tay, độ bền màu cao.',
-                    priceFormatted: '250.000 ₫',
                 },
                 {
                     id: 2,
@@ -175,7 +166,6 @@ export default {
                     category: 'Decor không gian',
                     image: '/images/pdp/related_2.png',
                     description: 'Thiết kế thoát nước thông minh cho sen đá và cây để bàn văn phòng.',
-                    priceFormatted: '120.000 ₫',
                 },
                 {
                     id: 3,
@@ -184,7 +174,6 @@ export default {
                     category: 'Phụ kiện công nghệ',
                     image: '/images/pdp/related_3.png',
                     description: 'Góc nghiêng công thái học 60 độ, tương thích tất cả các dòng smartphone.',
-                    priceFormatted: '190.000 ₫',
                 },
                 {
                     id: 4,
@@ -193,7 +182,6 @@ export default {
                     category: 'Mô hình khớp động',
                     image: '/images/pdp/related_4.png',
                     description: '14 khớp linh hoạt, in liền mạch không cần lắp ráp vít kim loại.',
-                    priceFormatted: '320.000 ₫',
                 },
             ]
         },

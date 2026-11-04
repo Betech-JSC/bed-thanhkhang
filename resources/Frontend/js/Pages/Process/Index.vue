@@ -32,21 +32,44 @@
 </template>
 
 <script setup>
-import { Head } from '@inertiajs/inertia-vue3'
+import { computed } from 'vue'
+import { Head, usePage } from '@inertiajs/inertia-vue3'
 import ProcessHero from './Components/ProcessHero.vue'
 import ProcessStepper from './Components/ProcessStepper.vue'
 import ProcessStepItem from './Components/ProcessStepItem.vue'
 import ProcessFaq from './Components/ProcessFaq.vue'
 
-defineProps({
+const props = defineProps({
     heroBanner: {
+        type: Object,
+        default: () => null,
+    },
+    seo: {
         type: Object,
         default: () => null,
     },
 })
 
-const pageTitle = 'Quy Trình Gia Công & Chế Tác 3D Chuyên Nghiệp - HH Maker'
-const pageDescription = 'Khám phá quy trình 5 bước in 3D và thiết kế chuyên nghiệp tại HH Maker: Từ liên hệ, báo giá chi tiết, gia công chuẩn xác, đóng gói cẩn thận đến giao hàng an toàn.'
+const page = usePage()
+const currentLocale = computed(() => page.props.value?.locale?.current || 'vi')
+
+const pageTitle = computed(() => {
+    return (
+        props.seo?.title ||
+        (currentLocale.value === 'en'
+            ? 'Professional 3D Printing & Manufacturing Process - HH Maker'
+            : 'Quy Trình Gia Công & Chế Tác 3D Chuyên Nghiệp - HH Maker')
+    )
+})
+
+const pageDescription = computed(() => {
+    return (
+        props.seo?.description ||
+        (currentLocale.value === 'en'
+            ? 'Explore HH Maker\'s 5-step professional 3D printing and design process: From contact, detailed quotation, precise fabrication, careful packaging to safe delivery.'
+            : 'Khám phá quy trình 5 bước in 3D và thiết kế chuyên nghiệp tại HH Maker: Từ liên hệ, báo giá chi tiết, gia công chuẩn xác, đóng gói cẩn thận đến giao hàng an toàn.')
+    )
+})
 
 const processSteps = [
     {

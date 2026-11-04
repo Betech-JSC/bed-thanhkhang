@@ -27,17 +27,17 @@
                 <div class="relative z-10 max-w-[599px] space-y-4 sm:space-y-4 pt-4 sm:pt-6">
                     <!-- Category (Figma Node 2283:7953: 16px / 22px / #D1E0FF) -->
                     <p class="text-[#D1E0FF] text-sm sm:text-base font-medium tracking-wider uppercase select-none">
-                        {{ categoryText }}
+                        {{ tt(categoryText) }}
                     </p>
 
                     <!-- Main Headline (Figma Node 2283:7954: 38px / 46px / #FAFAFA / Bold) -->
                     <h1 class="text-[#FAFAFA] text-2xl sm:text-3xl lg:text-[38px] lg:leading-[46px] font-bold uppercase tracking-tight whitespace-pre-line">
-                        {{ headlineText }}
+                        {{ tt(headlineText) }}
                     </h1>
 
                     <!-- Description (Figma Node 2283:7955: 16px / 26px / #D1E0FF) -->
                     <p class="text-[#D1E0FF] text-sm sm:text-base leading-relaxed lg:leading-[26px] font-normal max-w-[599px]">
-                        {{ descriptionText }}
+                        {{ tt(descriptionText) }}
                     </p>
 
                     <!-- Mobile Quick CTA Button -->
@@ -47,7 +47,7 @@
                             @click="handleCtaClick"
                             class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-sm font-medium transition-colors shadow-glow-primary-subtle"
                         >
-                            <span>{{ ctaText }}</span>
+                            <span>{{ tt(ctaText) }}</span>
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                             </svg>
@@ -61,8 +61,8 @@
                         type="button"
                         @click="scrollToSteps"
                         class="group relative w-24 h-24 sm:w-28 sm:h-28 lg:w-[114px] lg:h-[114px] rounded-full flex items-center justify-center cursor-pointer transition-transform duration-300 hover:scale-105 focus:outline-none"
-                        title="Cuộn xuống xem 5 bước quy trình"
-                        aria-label="Cuộn xuống xem 5 bước quy trình"
+                        :title="tt('Cuộn xuống xem 5 bước quy trình')"
+                        :aria-label="tt('Cuộn xuống xem 5 bước quy trình')"
                     >
                         <!-- Circular Backdrop Glow -->
                         <div

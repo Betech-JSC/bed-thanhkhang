@@ -34,10 +34,10 @@
                             <h2
                                 class="text-2xl sm:text-3xl lg:text-[38px] font-bold text-[#F5F8FF] uppercase tracking-tight font-sans leading-tight lg:leading-[46px]"
                             >
-                                {{ title }}
+                                {{ tt(title) }}
                             </h2>
                             <p class="text-sm sm:text-base text-[#D1E0FF] leading-relaxed font-normal max-w-[430px]">
-                                {{ description }}
+                                {{ tt(description) }}
                             </p>
                         </div>
 
@@ -74,12 +74,12 @@
                             <!-- Dòng 1: Họ và tên* (full width) (Figma Node 2261:5769) -->
                             <div>
                                 <label class="block text-sm sm:text-base font-medium text-[#FAFAFA] mb-1.5">
-                                    Họ và tên*
+                                    {{ tt('Họ và tên') }}*
                                 </label>
                                 <input
                                     v-model="form.name"
                                     type="text"
-                                    placeholder="Họ và tên"
+                                    :placeholder="tt('Họ và tên')"
                                     required
                                     class="w-full h-12 px-4 rounded-[8px] bg-white/20 border border-[#5D6B98] text-white placeholder-[#B9C0D4] focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white text-sm sm:text-base transition-all"
                                 />
@@ -101,12 +101,12 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm sm:text-base font-medium text-[#FAFAFA] mb-1.5">
-                                        Số điện thoại*
+                                        {{ tt('Số điện thoại') }}*
                                     </label>
                                     <input
                                         v-model="form.phone"
                                         type="tel"
-                                        placeholder="Số điện thoại"
+                                        :placeholder="tt('Số điện thoại')"
                                         required
                                         class="w-full h-12 px-4 rounded-[8px] bg-white/20 border border-[#5D6B98] text-white placeholder-[#B9C0D4] focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white text-sm sm:text-base transition-all"
                                     />
@@ -116,12 +116,12 @@
                             <!-- Dòng 3: Nhập lời nhắn* (textarea) (Figma Node 2261:5806) -->
                             <div>
                                 <label class="block text-sm sm:text-base font-medium text-[#FAFAFA] mb-1.5">
-                                    Nhập lời nhắn*
+                                    {{ tt('Nhập lời nhắn') }}*
                                 </label>
                                 <textarea
                                     v-model="form.note"
                                     rows="3"
-                                    placeholder="Chia sẻ ý tưởng của bạn đến với HH Maker"
+                                    :placeholder="tt('Chia sẻ ý tưởng của bạn đến với HH Maker')"
                                     required
                                     class="w-full h-24 p-3.5 rounded-[8px] bg-white/20 border border-[#5D6B98] text-white placeholder-[#B9C0D4] focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white text-sm sm:text-base transition-all resize-none"
                                 ></textarea>
@@ -135,7 +135,7 @@
                                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/>
                                 </svg>
-                                <span>Gửi yêu cầu thành công! HH Maker sẽ liên hệ hỗ trợ bạn.</span>
+                                <span>{{ tt('Gửi yêu cầu thành công! HH Maker sẽ liên hệ hỗ trợ bạn.') }}</span>
                             </div>
 
                             <!-- Dòng 4: Nút "Gửi yêu cầu" (nền đen #111322, bo góc 8px) (Figma Node 2261:5816) -->
@@ -144,13 +144,13 @@
                                 :disabled="isSubmitting"
                                 class="w-full h-14 rounded-[8px] bg-[#111322] hover:bg-[#1A1F36] text-[#FAFAFA] font-semibold text-base flex items-center justify-center transition-all duration-200 shadow-md cursor-pointer disabled:opacity-50 mt-2"
                             >
-                                <span v-if="!isSubmitting">Gửi yêu cầu</span>
+                                <span v-if="!isSubmitting">{{ tt('Gửi yêu cầu') }}</span>
                                 <span v-else class="inline-flex items-center gap-2">
                                     <svg class="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24" fill="none">
                                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                                     </svg>
-                                    Đang gửi...
+                                    {{ tt('Đang gửi...') }}
                                 </span>
                             </button>
                         </form>

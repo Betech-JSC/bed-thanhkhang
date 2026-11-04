@@ -1,12 +1,12 @@
 <template>
-    <section id="featured-carousel" class="py-10 md:py-16">
+    <section id="featured-carousel" class="pt-6 md:pt-10 pb-10 md:pb-16">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 space-y-8 md:space-y-10">
             <!-- Section Header (Figma Node 2261:5504) -->
             <div class="text-center">
                 <h2
                     class="text-2xl sm:text-3xl lg:text-[38px] font-bold text-[#FAFAFA] uppercase tracking-tight leading-[46px] font-sans"
                 >
-                    {{ title }}
+                    {{ tt(title) }}
                 </h2>
             </div>
 
@@ -51,10 +51,10 @@
                         <!-- Bottom Footer: Dark Slate Card (Figma Node 2261:5510: height 84px, bg #30374F) -->
                         <div class="h-[84px] bg-[#30374F] px-6 py-3 flex flex-col justify-center space-y-1">
                             <h3 class="text-base font-bold text-[#F5F8FF] truncate leading-[22px]">
-                                {{ item.name }}
+                                {{ tt(item.name) }}
                             </h3>
                             <p class="text-xs text-[#B9C0D4] truncate font-normal leading-[17px]">
-                                {{ item.description }}
+                                {{ tt(item.description) }}
                             </p>
                         </div>
                     </div>

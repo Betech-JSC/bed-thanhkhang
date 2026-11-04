@@ -16,17 +16,17 @@
                 <div class="max-w-[626px] space-y-4">
                     <!-- Badge chuyên mục -->
                     <span class="inline-block text-xs sm:text-sm font-semibold tracking-wider text-[#84ADFF] uppercase select-none font-sans">
-                        CÁC DỊCH VỤ IN ẤN TẠI HH MAKER
+                        {{ tt('CÁC DỊCH VỤ IN ẤN TẠI HH MAKER') }}
                     </span>
 
                     <!-- Tiêu đề H1 -->
                     <h1 class="text-2xl sm:text-3xl lg:text-display-hero font-bold text-[#FAFAFA] font-sans">
-                        MỘT Ý TƯỞNG - NHIỀU KHẢ NĂNG
+                        {{ tt('MỘT Ý TƯỞNG - NHIỀU KHẢ NĂNG') }}
                     </h1>
 
                     <!-- Lời dẫn -->
                     <p class="text-sm sm:text-base text-[#B9C0D4] leading-relaxed lg:leading-[26px] font-sans">
-                        Bạn có thể bắt đầu bằng một file 3D, một bản vẽ hay chỉ một hình dung. HH Maker đồng hành từ việc làm rõ ý tưởng đến lựa chọn cách tạo ra sản phẩm.
+                        {{ tt('Bạn có thể bắt đầu bằng một file 3D, một bản vẽ hay chỉ một hình dung. HH Maker đồng hành từ việc làm rõ ý tưởng đến lựa chọn cách tạo ra sản phẩm.') }}
                     </p>
                 </div>
             </section>
@@ -46,7 +46,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { Head } from '@inertiajs/inertia-vue3'
+import { Head, usePage } from '@inertiajs/inertia-vue3'
 import ServiceBlock from './Components/ServiceBlock.vue'
 
 const props = defineProps({
@@ -56,10 +56,22 @@ const props = defineProps({
     },
 })
 
-const pageTitle = 'Dịch Vụ In Ấn & Thiết Kế 3D Theo Yêu Cầu - HH Maker'
-const pageDescription = 'HH Maker đồng hành từ làm rõ ý tưởng đến lựa chọn cách tạo ra sản phẩm: Thiết kế 3D, Gia công 3D, và Làm đồ custom với tiêu chuẩn hoàn thiện cao nhất.'
+const page = usePage()
+const currentLocale = computed(() => page.props.value?.locale?.current || 'vi')
 
-const defaultServices = [
+const pageTitle = computed(() =>
+    currentLocale.value === 'en'
+        ? 'On-Demand 3D Printing & Design Services - HH Maker'
+        : 'Dịch Vụ In Ấn & Thiết Kế 3D Theo Yêu Cầu - HH Maker'
+)
+
+const pageDescription = computed(() =>
+    currentLocale.value === 'en'
+        ? 'HH Maker accompanies you from clarifying concepts to choosing fabrication methods: 3D Design, 3D Machining, and Custom Creations with the highest finishing standards.'
+        : 'HH Maker đồng hành từ làm rõ ý tưởng đến lựa chọn cách tạo ra sản phẩm: Thiết kế 3D, Gia công 3D, và Làm đồ custom với tiêu chuẩn hoàn thiện cao nhất.'
+)
+
+const defaultServicesVi = [
     {
         id: 'service-01',
         serviceKey: 'design',
@@ -113,12 +125,73 @@ const defaultServices = [
     },
 ]
 
+const defaultServicesEn = [
+    {
+        id: 'service-01',
+        serviceKey: 'design',
+        slug: 'thiet-ke-3d',
+        category: '01 / SERVICE',
+        title: '3D Design',
+        subtitle: 'From sketch to concrete geometry.',
+        description: 'Have an idea but no 3D model yet? HH Maker works with you to define proportions, structure, and details, transforming reference photos or sketches into 3D designs tailored for practical manufacturing.',
+        image: '/images/services/service-design-3d.png',
+        tags: ['Concept Development', '3D Modeling', 'Print Optimization'],
+        prepTitle: 'YOU PREPARE',
+        preparation: 'Ideas, reference images, intended dimensions, and functional requirements.',
+        compTitle: 'WE CO-CREATE',
+        completion: '3D model blueprint and technical details aligned before production.',
+        ctaText: 'Consult 3D Design',
+        reverse: false,
+    },
+    {
+        id: 'service-02',
+        serviceKey: 'print',
+        slug: 'gia-cong-3d',
+        category: '02 / SERVICE',
+        title: '3D Machining & Printing',
+        subtitle: 'Bringing digital designs into the physical world.',
+        description: 'From existing 3D files, we review geometry, recommend suitable materials, and select the optimal printing method. Manufacturing focuses on layer resolution, surface finish, and functional mechanical aspects.',
+        image: '/images/services/service-print-3d.png',
+        tags: ['Model Verification', 'Material Consultation', 'Printing & Finishing'],
+        prepTitle: 'YOU PREPARE',
+        preparation: '3D files, quantities, dimensions, and surface or assembly tolerances.',
+        compTitle: 'WE CO-CREATE',
+        completion: 'Physical parts produced to agreed specifications and machining standards.',
+        ctaText: 'Consult 3D Machining',
+        reverse: true,
+    },
+    {
+        id: 'service-03',
+        serviceKey: 'custom',
+        slug: 'lam-do-custom',
+        category: '03 / SERVICE',
+        title: 'Custom Bespoke Creations',
+        subtitle: 'Not just different. Exclusively yours.',
+        description: 'Personalizing accessories, home decor, or crafting custom items from scratch. HH Maker combines design and machining to balance form, color, typography, and ergonomics in a single unified solution.',
+        image: '/images/services/service-custom-3d.png',
+        tags: ['Personal Gifts', 'Accessories', 'Spatial Decor'],
+        prepTitle: 'YOU PREPARE',
+        preparation: 'Story or requirements, sample models you wish to personalize.',
+        compTitle: 'WE CO-CREATE',
+        completion: 'Unique signature product tailored to the discussed concept.',
+        ctaText: 'Consult Custom Creations',
+        reverse: false,
+    },
+]
+
+const activeDefaultServices = computed(() =>
+    currentLocale.value === 'en' ? defaultServicesEn : defaultServicesVi
+)
+
 const serviceList = computed(() => {
+    const defaults = activeDefaultServices.value
     if (!props.services || props.services.length === 0) {
-        return defaultServices
+        return defaults
     }
-    return defaultServices.map((def) => {
-        const backendItem = props.services.find((s) => s.slug === def.slug || s.title?.toLowerCase() === def.title?.toLowerCase())
+    return defaults.map((def, idx) => {
+        const backendItem = props.services.find(
+            (s) => s.id === (idx + 1) || s.slug === def.slug || s.title?.toLowerCase() === def.title?.toLowerCase()
+        )
         if (!backendItem) return def
         return {
             ...def,

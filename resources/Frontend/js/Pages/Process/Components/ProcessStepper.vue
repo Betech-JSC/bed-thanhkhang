@@ -14,7 +14,7 @@
                     @keydown.enter="scrollToStep(step.number)"
                     @keydown.space.prevent="scrollToStep(step.number)"
                     class="group relative border-t-2 border-[#84ADFF] pt-5 pb-5 pl-4 pr-2 transition-colors duration-200 cursor-pointer flex flex-col justify-between min-h-[96px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#84ADFF]/50"
-                    :title="'Xem chi tiết bước ' + step.number + ': ' + step.title"
+                    :title="tt('Xem chi tiết bước') + ' ' + step.number + ': ' + tt(step.title)"
                 >
                     <!-- Top Row: Step Number & Trailing Icon (Figma 206x18px) -->
                     <div class="flex items-center justify-between w-full">
@@ -61,7 +61,7 @@
                     <!-- Bottom Row: Step Title (Figma 16px / 26px / Semibold / #FAFAFA) -->
                     <div class="mt-3">
                         <span class="text-base font-semibold text-[#FAFAFA] group-hover:text-white transition-colors block leading-[26px]">
-                            {{ step.title }}
+                            {{ tt(step.title) }}
                         </span>
                     </div>
 

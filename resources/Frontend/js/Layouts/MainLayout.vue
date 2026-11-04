@@ -1,6 +1,5 @@
 <template>
     <div class="min-h-screen flex flex-col bg-dark-bg text-secondary font-sans selection:bg-primary selection:text-white">
-        <LoadingPage v-if="isProduction && isLoading" />
         <Header />
         <main class="flex-grow pt-[var(--header-height-md)] lg:pt-[var(--header-height-lg)] xl:pt-[var(--header-height-xl)]">
             <slot />
@@ -14,7 +13,6 @@
 <script>
 import Header from '@/Components/Header.vue'
 import Footer from '@/Components/Footer.vue'
-import LoadingPage from '@/Components/LoadingPage.vue'
 import NotificationPopup from '@/Components/NotificationPopup.vue'
 import DailyRewardPopup from '@/Components/DailyRewardPopup.vue'
 
@@ -23,41 +21,10 @@ export default {
     components: {
         Header,
         Footer,
-        LoadingPage,
         NotificationPopup,
         DailyRewardPopup,
     },
-    data() {
-        return {
-            isLoading: false,
-            isProduction: import.meta.env.PROD,
-        }
-    },
-    created() {
-        if (this.isProduction && this.$attrs.route?.path === '/') {
-            this.isLoading = true
-            if (typeof document !== 'undefined') {
-                document.body.classList.add('overflow-hidden')
-            }
-            setTimeout(() => {
-                this.isLoading = false
-                if (typeof document !== 'undefined') {
-                    document.body.classList.remove('overflow-hidden')
-                }
-            }, 3000)
-        }
-    },
     watch: {
-        isLoading(newValue) {
-            if (typeof document !== 'undefined') {
-                if (newValue) {
-                    document.body.classList.add('overflow-hidden')
-                } else {
-                    document.body.classList.remove('overflow-hidden')
-                }
-            }
-        },
-
         '$page.url': function () {
             if (typeof document === 'undefined') return
 
