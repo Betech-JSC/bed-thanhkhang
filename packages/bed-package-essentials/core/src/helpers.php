@@ -258,7 +258,7 @@ if (!function_exists('setting_bar')) {
             'notification' => config('core.setting.form.notification.enable', true),
             'smtp' => config('core.setting.form.smtp.enable', true),
             'custom_vars' => config('core.setting.form.custom_vars.enable', true),
-            'points' => true,
+            'points' => false,
             'info' => config('core.setting.info.enable', true),
             'email' => config('core.setting.email.enable', true)
         ];

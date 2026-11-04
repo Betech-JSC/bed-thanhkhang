@@ -15,4 +15,5 @@ return [
     'search' => 'tim-kiem',
     'prizes' => 'giai-thuong',
     'projects' => 'do-an',
+    'quy-trinh' => 'quy-trinh',
 ];

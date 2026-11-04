@@ -28,7 +28,7 @@
                             <button
                                 type="button"
                                 @click="scrollRow(rIdx, 'prev')"
-                                class="w-8 h-8 rounded-full border border-white/20 text-white/80 hover:text-white hover:border-primary hover:bg-primary/20 flex items-center justify-center transition-all duration-200 cursor-pointer shadow-sm active:scale-95"
+                                class="w-8 h-8 text-white/60 hover:text-white flex items-center justify-center transition-colors cursor-pointer select-none active:scale-95"
                                 aria-label="Previous Slide"
                             >
                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -38,7 +38,7 @@
                             <button
                                 type="button"
                                 @click="scrollRow(rIdx, 'next')"
-                                class="w-8 h-8 rounded-full border border-white/20 text-white/80 hover:text-white hover:border-primary hover:bg-primary/20 flex items-center justify-center transition-all duration-200 cursor-pointer shadow-sm active:scale-95"
+                                class="w-8 h-8 text-white/60 hover:text-white flex items-center justify-center transition-colors cursor-pointer select-none active:scale-95"
                                 aria-label="Next Slide"
                             >
                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -348,3 +348,15 @@ export default {
     },
 };
 </script>
+<style scoped>
+.no-scrollbar::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+.no-scrollbar {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+}
+</style>
+

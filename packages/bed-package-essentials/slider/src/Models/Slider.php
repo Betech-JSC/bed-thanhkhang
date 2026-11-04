@@ -43,7 +43,12 @@ class Slider extends BaseModel
 
     public $translatedAttributes = [
         'title',
+        'subtitle',
         'description',
+        'primary_cta_text',
+        'primary_cta_link',
+        'secondary_cta_text',
+        'secondary_cta_link',
         'link',
         'target',
         'image_mobile',
@@ -98,7 +103,12 @@ class Slider extends BaseModel
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'subtitle' => $this->subtitle ?? $this->custom_fields['subtitle'] ?? null,
             'description' => $this->description,
+            'primary_cta_text' => $this->primary_cta_text ?? $this->custom_fields['primary_cta_text'] ?? null,
+            'primary_cta_link' => $this->primary_cta_link ?? $this->custom_fields['primary_cta_link'] ?? null,
+            'secondary_cta_text' => $this->secondary_cta_text ?? $this->custom_fields['secondary_cta_text'] ?? null,
+            'secondary_cta_link' => $this->secondary_cta_link ?? $this->custom_fields['secondary_cta_link'] ?? null,
             'link' => $this->link,
             'is_video' => $this->is_video === 1 ? true : false,
             'position_display' => $this->position_display,

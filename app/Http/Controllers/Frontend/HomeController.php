@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller;
 use App\Models\Post\Post;
 use App\Models\Post\PostCategory;
 use App\Models\Product\Product;
+use App\Models\Service;
 use JamstackVietnam\Slider\Models\Slider;
 use Illuminate\Support\Facades\Cache;
 
@@ -20,6 +21,13 @@ class HomeController extends Controller
             $data = Cache::remember('home_page_data_' . app()->getLocale(), 3600, function () {
                 // Get Home Slider
                 $sliders = Slider::getByPosition('HOME_SLIDER');
+
+                // Fetch Active Services
+                $services = Service::query()
+                    ->active()
+                    ->sortByPosition()
+                    ->get()
+                    ->map(fn($service) => $service->transform());
 
                 // Fetch Featured Products
                 $products = Product::query()
@@ -49,6 +57,7 @@ class HomeController extends Controller
                 // Prepare Response Data
                 return [
                     'sliders' => $sliders,
+                    'services' => $services,
                     'products' => $products,
                     'featured_posts' => $featured_posts,
                     'feedback' => $feedback,
@@ -98,60 +107,15 @@ class HomeController extends Controller
             ];
 
             $filterPost = $filter;
+            $filterPost['limit'] = 4;
+            $data = Cache::remember('search_page_data_' . app()->getLocale() . '_' . request()->input('keyword'), 3600, function () use ($filter, $filterPost) {
+                return [
+                    'products' => Product::getSearch($filter),
+                    'posts' => Post::getSearch($filterPost),
+                ];
+            });
 
-            if (request()->has('page') && request()->has('type')) {
-                switch (request()->input('type')) {
-                    case 'PRODUCT':
-                        $filterPost['page'] = request()->input('page');
-                        $products = $this->searchPost($filterPost);
-
-                        return response()->json([
-                            'success' => true,
-                            'data' => $products,
-                            'message' => 'ok',
-                        ], 200);
-                }
-
-                return response()->json([
-                    'success' => true,
-                    'data' => [],
-                    'message' => 'ok',
-                ], 200);
-            }
-
-            $products = $this->searchPost($filterPost);
-
-            $data = [
-                'products' => $products
-            ];
-
-            if (request()->wantsJson()) {
-                return response()->json($data);
-            }
-            return response()->json([
-                'success' => true,
-                'data' => $data,
-                'message' => 'ok',
-            ], 200);
-        } catch (\Throwable $th) {
-            dd($th);
-        }
-    }
-
-    public function searchPost($filter)
-    {
-        try {
-            return Post::query()
-                ->active()
-                ->activeCategories()
-                ->wherePosts()
-                ->filter($filter)
-                ->paginate($filter['limit'] ?? 8)
-                ->onEachSide(0)
-                ->through(function ($item) {
-                    return $item->transform();
-                })
-                ->withQueryString();
+            return response()->json($data);
         } catch (\Throwable $th) {
             dd($th);
         }

@@ -16,8 +16,8 @@
                     <!-- Background Image from Figma with Dark Tech Overlays -->
                     <div class="absolute inset-0 z-0">
                         <img
-                            src="/assets/images/about/hero-about.png"
-                            alt="Xưởng chế tác 3D HH Maker"
+                            :src="bannerImage"
+                            :alt="bannerImageAlt"
                             class="w-full h-full object-cover object-center"
                         />
                         <!-- Dark gradient overlay for text readability -->
@@ -30,15 +30,15 @@
                         <!-- Left: Main Headline & Intro (Figma 2283:7579) -->
                         <div class="lg:col-span-8 space-y-4 md:space-y-6 max-w-2xl">
                             <p class="text-[#D1E0FF] text-base font-medium leading-[22px]">
-                                Giới thiệu về HH Maker
+                                {{ bannerSubtitle }}
                             </p>
 
                             <h1 class="text-3xl sm:text-4xl lg:text-display-hero font-bold font-display uppercase tracking-tight text-[#FAFAFA] leading-[1.18]">
-                                ĐƯA SÁNG TẠO VƯỢT RA KHỎI MÀN HÌNH
+                                {{ bannerTitle }}
                             </h1>
 
                             <p class="text-[#D1E0FF] text-base md:text-lg leading-relaxed font-normal max-w-xl">
-                                Chúng tôi kết nối nghệ thuật 3D với công nghệ chế tác hiện đại, để một ý tưởng sơ khai có thể trở thành sản phẩm bạn cầm trên tay.
+                                {{ bannerDescription }}
                             </p>
                         </div>
 
@@ -46,25 +46,28 @@
                         <div class="lg:col-span-4 flex lg:justify-end">
                             <div class="relative w-28 h-28 md:w-32 md:h-32 flex items-center justify-center shrink-0">
                                 <svg class="w-full h-full animate-[spin_15s_linear_infinite]" viewBox="0 0 120 120">
-                                    <path
-                                        id="circlePath"
-                                        d="M 60, 60 m -45, 0 a 45,45 0 1,1 90,0 a 45,45 0 1,1 -90,0"
-                                        fill="transparent"
-                                    />
+                                    <defs>
+                                        <path
+                                            id="aboutCirclePath"
+                                            d="M 60, 60 m -45, 0 a 45,45 0 1,1 90,0 a 45,45 0 1,1 -90,0"
+                                            fill="transparent"
+                                        />
+                                    </defs>
                                     <text class="text-[9.5px] font-mono tracking-[2px] uppercase fill-white/90 font-medium">
-                                        <textPath href="#circlePath" startOffset="0%">
+                                        <textPath href="#aboutCirclePath" startOffset="0%">
                                             FROM IDEAS TO REALITY - FROM IDEAS TO REALITY -
                                         </textPath>
                                     </text>
                                 </svg>
-                                <div class="absolute w-12 h-12 rounded-full bg-dark-bg/85 border border-primary/40 flex items-center justify-center text-primary backdrop-blur-md shadow-glow-primary">
+                                <!-- Centered Transparent Arrow Icon without inner circle (matching Figma design) -->
+                                <div class="absolute inset-0 m-auto w-10 h-10 flex items-center justify-center text-[#FAFAFA] pointer-events-none">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
-                                        class="w-5 h-5 text-white"
+                                        class="w-5 h-5"
                                         viewBox="0 0 24 24"
                                         fill="none"
                                         stroke="currentColor"
-                                        stroke-width="2.5"
+                                        stroke-width="2"
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
                                     >
@@ -244,19 +247,19 @@
                 >
                     <div class="space-y-3 max-w-3xl">
                         <h2 class="text-2xl sm:text-3xl lg:text-[32px] font-bold font-display text-[#FAFAFA] leading-tight lg:leading-[37px]">
-                            Ý tưởng của bạn, bước tiếp theo của chúng ta.
+                            {{ ctaTitle }}
                         </h2>
                         <p class="text-[#FAFAFA] text-base leading-relaxed lg:leading-[26px]">
-                            Chia sẻ mong muốn của bạn. HH Maker sẽ cùng bạn tìm hướng thiết kế và gia công phù hợp.
+                            {{ ctaDescription }}
                         </p>
                     </div>
 
                     <div class="shrink-0">
                         <Link
-                            :href="route('contact')"
+                            :href="ctaButtonLink"
                             class="inline-flex items-center justify-center px-6 py-2.5 bg-[#F5F8FF] hover:bg-white text-[#111322] font-medium text-base rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-[1.02]"
                         >
-                            Nhận tư vấn ngay
+                            {{ ctaButtonText }}
                         </Link>
                     </div>
                 </div>
@@ -273,6 +276,62 @@ export default {
     components: {
         Head,
         Link,
+    },
+    props: {
+        heroBanner: {
+            type: Object,
+            default: () => null,
+        },
+        posts: {
+            type: Array,
+            default: () => [],
+        },
+    },
+    computed: {
+        bannerSubtitle() {
+            return this.heroBanner?.subtitle || 'Giới thiệu về HH Maker'
+        },
+        bannerTitle() {
+            return this.heroBanner?.title || 'ĐƯA SÁNG TẠO VƯỢT RA KHỎI MÀN HÌNH'
+        },
+        bannerDescription() {
+            return (
+                this.heroBanner?.description ||
+                'Chúng tôi kết nối nghệ thuật 3D với công nghệ chế tác hiện đại, để một ý tưởng sơ khai có thể trở thành sản phẩm bạn cầm trên tay.'
+            )
+        },
+        bannerImage() {
+            return this.heroBanner?.image?.url || '/assets/images/about/hero-about.png'
+        },
+        bannerImageAlt() {
+            return this.heroBanner?.image?.alt || 'Xưởng chế tác 3D HH Maker'
+        },
+        globalCta() {
+            return (
+                this.$page?.props?.globalCtaBanner ||
+                this.$page?.props?.data?.banner?.BANNER_GLOBAL_CTA ||
+                null
+            )
+        },
+        ctaTitle() {
+            return this.globalCta?.title || 'Ý tưởng của bạn, bước tiếp theo của chúng ta.'
+        },
+        ctaDescription() {
+            return (
+                this.globalCta?.description ||
+                'Chia sẻ mong muốn của bạn. HH Maker sẽ cùng bạn tìm hướng thiết kế và gia công phù hợp.'
+            )
+        },
+        ctaButtonText() {
+            return this.globalCta?.primary_cta_text || 'Nhận tư vấn ngay'
+        },
+        ctaButtonLink() {
+            return (
+                this.globalCta?.primary_cta_link ||
+                this.globalCta?.link ||
+                (typeof route === 'function' ? route('contact') : '/lien-he')
+            )
+        },
     },
 }
 </script>

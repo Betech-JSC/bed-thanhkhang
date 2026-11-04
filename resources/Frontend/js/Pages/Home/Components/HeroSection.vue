@@ -1,5 +1,5 @@
 <template>
-    <section class="relative pt-24 lg:pt-32 pb-8 md:pb-12 overflow-hidden">
+    <section class="relative py-4 lg:py-6 pb-8 md:pb-12 overflow-hidden">
         <div class="w-full max-w-[1279px] mx-auto px-4 sm:px-6 lg:px-0">
             <!-- Hero Card Wrapper (Figma Node 2261:5475: 1279px x 616px) -->
             <div
@@ -42,14 +42,14 @@
                     <!-- Dual CTA Buttons (Figma Nodes 2261:5488 & 2261:5493) -->
                     <div class="pt-2 flex flex-wrap items-center gap-3 sm:gap-4">
                         <a
-                            href="#featured-carousel"
+                            :href="primaryCtaLink || '#featured-carousel'"
                             class="inline-flex items-center justify-center h-10 px-5 text-sm sm:text-base font-medium rounded-[8px] bg-[#F5F8FF] text-[#111322] hover:bg-white hover:shadow-lg transition-all duration-200"
                         >
                             {{ primaryCtaText }}
                         </a>
 
                         <a
-                            href="#contact-section"
+                            :href="secondaryCtaLink || '#contact-section'"
                             class="inline-flex items-center justify-center h-10 px-5 rounded-[8px] border border-[#F5F8FF] text-[#F5F8FF] hover:bg-white/10 hover:border-white text-sm sm:text-base font-medium transition-all duration-200"
                         >
                             {{ secondaryCtaText }}
@@ -62,7 +62,7 @@
                     class="absolute bottom-6 right-6 lg:bottom-10 lg:right-10 hidden sm:flex items-center justify-center z-10"
                 >
                     <a
-                        href="#featured-carousel"
+                        :href="primaryCtaLink || '#featured-carousel'"
                         class="relative w-28 h-28 lg:w-[114px] lg:h-[114px] flex items-center justify-center group"
                         aria-label="Khám phá ngay"
                     >
@@ -133,9 +133,17 @@ export default {
             type: String,
             default: 'Khám phá ngay',
         },
+        primaryCtaLink: {
+            type: String,
+            default: '#featured-carousel',
+        },
         secondaryCtaText: {
             type: String,
             default: 'Nhận tư vấn thiết kế',
+        },
+        secondaryCtaLink: {
+            type: String,
+            default: '#contact-section',
         },
     },
     data() {

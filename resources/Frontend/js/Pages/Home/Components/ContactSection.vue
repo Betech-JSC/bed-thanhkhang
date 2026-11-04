@@ -185,12 +185,28 @@ export default {
             },
             isSubmitting: false,
             submitSuccess: false,
-            socialLinks: [
-                { id: 'facebook', label: 'Facebook HH Maker', url: 'https://facebook.com' },
-                { id: 'instagram', label: 'Instagram', url: 'https://instagram.com' },
-                { id: 'tiktok', label: 'TikTok HH Maker', url: 'https://tiktok.com' },
-            ],
         };
+    },
+    computed: {
+        socialLinks() {
+            return [
+                {
+                    id: 'facebook',
+                    label: 'Facebook HH Maker',
+                    url: this.$page.props.global?.general_facebook || 'https://facebook.com',
+                },
+                {
+                    id: 'instagram',
+                    label: 'Instagram',
+                    url: this.$page.props.global?.general_instagram || 'https://instagram.com',
+                },
+                {
+                    id: 'tiktok',
+                    label: 'TikTok HH Maker',
+                    url: this.$page.props.global?.general_tiktok || 'https://tiktok.com',
+                },
+            ];
+        },
     },
     methods: {
         async submitForm() {
@@ -198,8 +214,22 @@ export default {
             this.submitSuccess = false;
 
             try {
+                const targetUrl = typeof route === 'function' ? route('contact.store') : '/contacts';
+                const payload = {
+                    type: 'CONTACT_FORM',
+                    name: this.form.name,
+                    email: this.form.email,
+                    phone: this.form.phone,
+                    data: {
+                        'Họ và tên': this.form.name,
+                        'Số điện thoại': this.form.phone,
+                        'Email': this.form.email,
+                        'Nội dung cần hỗ trợ': this.form.note,
+                        'Dịch vụ quan tâm': 'Tư vấn in 3D',
+                    },
+                };
                 if (window.axios) {
-                    await window.axios.post('/api/contact', this.form).catch(() => {});
+                    await window.axios.post(targetUrl, payload).catch(() => {});
                 }
             } catch (e) {
                 // Keep resilient

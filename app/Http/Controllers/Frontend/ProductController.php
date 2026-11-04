@@ -33,8 +33,12 @@ class ProductController extends Controller
                     'products' => $products,
                     'categories' => $categories,
                     'seo' => [
-                        'title' => 'Danh mục Sản phẩm in 3D - HH Maker | Công nghệ FDM, SLA, SLS',
-                        'description' => 'Khám phá bộ sưu tập sản phẩm in 3D công nghệ cao từ HH Maker. Đa dạng vật liệu Resin 8K, PLA+, PETG, Carbon Fiber chính xác từng micron.',
+                        'title' => current_locale() === 'en'
+                            ? '3D Printed Products Catalog - HH Maker | FDM, SLA, SLS Technology'
+                            : 'Danh mục Sản phẩm in 3D - HH Maker | Công nghệ FDM, SLA, SLS',
+                        'description' => current_locale() === 'en'
+                            ? 'Explore high-tech 3D printed products by HH Maker. Diverse materials including 8K Resin, PLA+, PETG, Carbon Fiber with micron precision.'
+                            : 'Khám phá bộ sưu tập sản phẩm in 3D công nghệ cao từ HH Maker. Đa dạng vật liệu Resin 8K, PLA+, PETG, Carbon Fiber chính xác từng micron.',
                     ],
                 ];
             });

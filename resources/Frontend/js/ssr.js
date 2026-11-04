@@ -2,6 +2,7 @@ import MainLayout from '@/Layouts/MainLayout.vue'
 import { createInertiaApp, Head, Link } from '@inertiajs/inertia-vue3'
 import createServer from '@inertiajs/server'
 import messages from '@intlify/unplugin-vue-i18n/messages'
+import i18nMessages from '../../../public/build/locales/i18n.js'
 import { renderToString } from '@vue/server-renderer'
 import { createPinia } from 'pinia'
 import { createSSRApp, h } from 'vue'
@@ -17,6 +18,7 @@ if (Ziggy.routes) {
 
 const appName = import.meta.env.VITE_APP_NAME
 const appPort = import.meta.env.VITE_APP_PORT || 13714
+const mergedMessages = { ...messages, ...i18nMessages }
 
 createServer(
     (page) =>
@@ -41,11 +43,11 @@ createServer(
             },
             setup({ app, props, plugin }) {
                 const i18n = createI18n({
-                    locale: props.initialPage.props.locale.current,
-                    fallbackLocale: props.initialPage.props.locale.default,
+                    locale: props.initialPage.props.locale?.current || 'vi',
+                    fallbackLocale: props.initialPage.props.locale?.default || 'vi',
                     legacy: false,
                     globalInjection: true,
-                    messages: messages,
+                    messages: mergedMessages,
                 })
                 return createSSRApp({
                     render: () => h(app, props),
@@ -57,13 +59,17 @@ createServer(
                     .component('Head', Head)
                     .mixin({
                         methods: {
-                             routeLocaleName(name) {
-                                 const locale = this.$inertia?.page?.props?.locale?.current || this.$page?.props?.locale?.current || props.initialPage?.props?.locale?.current || 'vi'
-                                 if (!locale) return name
-                                 const localeName = locale + '.' + name
+                            routeLocaleName(name) {
+                                if (!name) return ''
+                                if (name.startsWith('vi.') || name.startsWith('en.')) {
+                                    return Ziggy.routes && Ziggy.routes[name] ? name : name
+                                }
+                                const locale = this.$inertia?.page?.props?.locale?.current || this.$page?.props?.locale?.current || props.initialPage?.props?.locale?.current || 'vi'
+                                if (!locale) return name
+                                const localeName = locale + '.' + name
 
-                                 return Ziggy.routes[localeName] ? localeName : name
-                             },
+                                return Ziggy.routes && Ziggy.routes[localeName] ? localeName : name
+                            },
                             route(
                                 name,
                                 params,
@@ -82,7 +88,35 @@ createServer(
                                 return Ziggy.routes
                             },
                             tt(text) {
-                                return this.$t(text)
+                                if (!text) return ''
+                                const locale = this.$inertia?.page?.props?.locale?.current || this.$page?.props?.locale?.current || 'vi'
+
+                                if (this.$i18n) {
+                                    if (typeof this.$i18n.locale === 'object' && this.$i18n.locale.value !== locale) {
+                                        this.$i18n.locale.value = locale
+                                    } else if (typeof this.$i18n.locale === 'string' && this.$i18n.locale !== locale) {
+                                        this.$i18n.locale = locale
+                                    }
+                                }
+
+                                try {
+                                    const currentMsgs = this.$i18n?.messages?.[locale] || mergedMessages?.[locale]
+                                    if (currentMsgs?.ui?.[text]) {
+                                        return currentMsgs.ui[text]
+                                    }
+                                    if (currentMsgs?.[text]) {
+                                        return currentMsgs[text]
+                                    }
+                                } catch (e) {}
+
+                                if (typeof this.$te === 'function' && this.$te(`ui.${text}`)) {
+                                    return this.$t(`ui.${text}`)
+                                }
+                                if (typeof this.$te === 'function' && this.$te(text)) {
+                                    return this.$t(text)
+                                }
+
+                                return text
                             },
                         },
                     })

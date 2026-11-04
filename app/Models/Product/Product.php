@@ -41,6 +41,11 @@ class Product extends BaseModel
         'image',
         'video_url',
         'sku',
+        'price',
+        'compare_at_price',
+        'print_technology',
+        'material',
+        'lead_time',
 
         'inject_head',
         'inject_body_start',
@@ -107,6 +112,8 @@ class Product extends BaseModel
 
         static::saved(function (self $model) {
             if (strpos(request()->getRequestUri(), '/products/store') == false) return;
+
+            $model->saveCategories($model);
 
             // Auto-clear frontend caches
             $locales = config('app.locales', ['vi', 'en']);
@@ -391,6 +398,11 @@ class Product extends BaseModel
             'categories' => $categories,
             'image' => $this->image,
             'sku' => $this->sku,
+            'price' => $this->price,
+            'compare_at_price' => $this->compare_at_price,
+            'print_technology' => $this->print_technology,
+            'material' => $this->material,
+            'lead_time' => $this->lead_time,
             'description' => $this->description,
             'is_new' => $this->is_new,
             'is_stock' => $this->is_stock,

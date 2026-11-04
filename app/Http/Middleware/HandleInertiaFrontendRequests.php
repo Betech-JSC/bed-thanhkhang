@@ -71,14 +71,7 @@ class HandleInertiaFrontendRequests extends Middleware
                 ->map(fn($item) => $item->transformFaqs());
 
             $banner_home = Slider::getByPosition('HOME_SLIDER');
-            $banner_about_1 = Slider::getByPosition('BANNER_ABOUT_SECTION_1');
-            $banner_about_2 = Slider::getByPosition('BANNER_ABOUT_SECTION_2');
-            $banner_gallery = Slider::getByPosition('BANNER_GALLERY');
-            $banner_feedback = Slider::getByPosition('BANNER_FEEDBACK');
-            $banner_course = Slider::getByPosition('BANNER_COURSE');
-            $banner_resource = Slider::getByPosition('BANNER_RESOURCE');
-            $banner_service = Slider::getByPosition('BANNER_SERVICE');
-            $banner_prize = Slider::getByPosition('BANNER_PRIZE');
+            $globalCtaBanner = Slider::getByPosition('BANNER_GLOBAL_CTA');
 
             return [
                 'prizes' => $prizes,
@@ -87,16 +80,11 @@ class HandleInertiaFrontendRequests extends Middleware
                 'members' => $members,
                 'policies' => $policies,
                 'faqs' => $faqs,
+                'globalCtaBanner' => $globalCtaBanner,
                 'banner' => [
                     'banner_home' => $banner_home,
-                    'banner_about_1' => $banner_about_1,
-                    'banner_about_2' => $banner_about_2,
-                    'banner_gallery' => $banner_gallery,
-                    'banner_feedback' => $banner_feedback,
-                    'banner_course' => $banner_course,
-                    'banner_resource' => $banner_resource,
-                    'banner_service' => $banner_service,
-                    'banner_prize' => $banner_prize,
+                    'BANNER_GLOBAL_CTA' => $globalCtaBanner,
+                    'global_cta' => $globalCtaBanner,
                 ]
             ];
         });
@@ -125,6 +113,7 @@ class HandleInertiaFrontendRequests extends Middleware
 
         $share = array_merge(parent::share($request), [
             'global' => $global,
+            'globalCtaBanner' => $layoutData['globalCtaBanner'] ?? null,
             'locale' => [
                 'current' => current_locale(),
                 'default' => config('app.locale'),

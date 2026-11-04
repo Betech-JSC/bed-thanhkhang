@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Betech'),
+    'name' => env('APP_NAME', 'HH Maker'),
 
     /*
     |--------------------------------------------------------------------------
@@ -85,8 +85,9 @@ return [
     */
 
     'locale' => 'vi',
-    'locales' =>  [
+    'locales' => [
         'vi',
+        'en',
     ],
     'locale_default_frontend' => 'vi',
     'locale_default_backend' => 'vi',

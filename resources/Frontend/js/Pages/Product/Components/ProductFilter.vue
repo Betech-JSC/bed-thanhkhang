@@ -4,7 +4,7 @@
         <div class="bg-[#30374F] rounded-[12px] p-4 flex flex-col gap-4 shadow-lg min-h-[464px]">
             <!-- Header on mobile with close button -->
             <div class="flex items-center justify-between pb-2 border-b border-[#404968] lg:hidden">
-                <span class="text-sm font-bold text-white uppercase tracking-wider">Bộ lọc sản phẩm</span>
+                <span class="text-sm font-bold text-white uppercase tracking-wider">{{ tt('Bộ lọc sản phẩm') }}</span>
                 <button
                     type="button"
                     @click="$emit('close')"
@@ -18,7 +18,7 @@
 
             <!-- Title: Danh mục sản phẩm (Figma 2346:997) -->
             <h4 class="text-sm font-semibold text-[#B9C0D4] uppercase tracking-wide leading-[21px]">
-                DANH MỤC SẢN PHẨM
+                {{ tt('DANH MỤC SẢN PHẨM') }}
             </h4>
 
             <!-- 1. Search Box (Figma 2380:1524) -->
@@ -27,7 +27,7 @@
                     type="text"
                     :value="filters.search"
                     @input="updateFilter('search', $event.target.value)"
-                    placeholder="Tìm kiếm sản phẩm…"
+                    :placeholder="tt('Tìm kiếm sản phẩm…')"
                     class="w-full bg-transparent text-sm text-[#FAFAFA] placeholder-[#B9C0D4] focus:outline-none pr-2"
                 />
                 <!-- Search Icon on the RIGHT -->
@@ -52,23 +52,23 @@
                 </svg>
             </div>
 
-            <!-- 2. Danh mục sản phẩm (Figma 2346:708 - 4 mục chuẩn) -->
+            <!-- 2. Danh mục sản phẩm (Động từ Backend + fallback Figma 2346:708) -->
             <div class="flex flex-col gap-1">
                 <button
-                    v-for="cat in defaultCategories"
+                    v-for="cat in displayCategories"
                     :key="cat.id"
                     type="button"
                     @click="selectCategory(cat.id)"
                     class="w-full h-[44px] px-3 rounded-lg text-sm flex items-center justify-between transition-colors duration-150 text-left"
                     :class="
-                        filters.category === cat.id
+                        (filters.category === cat.id || (cat.slug && filters.category === cat.slug))
                             ? 'bg-[#404968] text-[#FAFAFA] font-medium'
                             : 'text-[#EFF1F5] hover:bg-[#404968]/50 hover:text-white'
                     "
                 >
                     <span>{{ cat.name }}</span>
                     <svg
-                        v-if="filters.category !== cat.id"
+                        v-if="filters.category !== cat.id && (!cat.slug || filters.category !== cat.slug)"
                         class="w-4 h-4 text-[#B9C0D4]"
                         viewBox="0 0 16 16"
                         fill="currentColor"
@@ -81,7 +81,7 @@
             <!-- 3. Lọc theo nhu cầu (Figma 2390:1536 - Text bên trái, Checkbox bên phải justify-between) -->
             <div class="pt-2 flex flex-col gap-2.5">
                 <h4 class="text-sm font-semibold text-[#B9C0D4] uppercase tracking-wide leading-[21px]">
-                    LỌC THEO NHU CẦU
+                    {{ tt('LỌC THEO NHU CẦU') }}
                 </h4>
                 <div class="flex flex-col gap-2">
                     <button
@@ -95,7 +95,7 @@
                         <span
                             class="text-sm transition-colors"
                             :class="
-                                filters.purposes.includes(purpose)
+                                isPurposeSelected(purpose)
                                     ? 'text-[#FAFAFA] font-medium'
                                     : 'text-[#EFF1F5] group-hover:text-white'
                             "
@@ -103,27 +103,25 @@
                             {{ purpose }}
                         </span>
 
-                        <!-- Checkbox 16x16px bên PHẢI (Figma 2390:1539) -->
+                        <!-- Custom Checkbox bên PHẢI (Figma 2390:1539) -->
                         <div
-                            class="w-4 h-4 rounded-[4px] flex items-center justify-center shrink-0 transition-all duration-150"
+                            class="w-[18px] h-[18px] rounded border flex items-center justify-center transition-colors shrink-0"
                             :class="
-                                filters.purposes.includes(purpose)
-                                    ? 'bg-[#2970FF] border border-[#2970FF]'
-                                    : 'border border-[#EFF1F5] bg-transparent group-hover:border-[#84ADFF]'
+                                isPurposeSelected(purpose)
+                                    ? 'bg-[#2970FF] border-[#2970FF]'
+                                    : 'border-[#5D6B98] bg-transparent group-hover:border-[#84ADFF]'
                             "
                         >
                             <svg
-                                v-if="filters.purposes.includes(purpose)"
-                                class="w-2.5 h-2.5 text-white"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
+                                v-if="isPurposeSelected(purpose)"
+                                class="w-3 h-3 text-white"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
                             >
                                 <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="3"
-                                    d="M5 13l4 4L19 7"
+                                    fill-rule="evenodd"
+                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                    clip-rule="evenodd"
                                 />
                             </svg>
                         </div>
@@ -131,34 +129,37 @@
                 </div>
             </div>
 
-            <!-- Reset Filters if active -->
-            <div v-if="hasActiveFilters" class="pt-1">
+            <!-- Nút Reset Filter nếu đang lọc -->
+            <div v-if="hasActiveFilters" class="pt-2 border-t border-[#404968]">
                 <button
                     type="button"
                     @click="resetFilters"
-                    class="text-xs text-[#84ADFF] hover:underline"
+                    class="w-full py-2 text-xs font-semibold text-[#84ADFF] hover:text-white transition-colors flex items-center justify-center gap-1.5"
                 >
-                    Đặt lại bộ lọc
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    <span>{{ tt('Đặt lại bộ lọc') }}</span>
                 </button>
             </div>
         </div>
 
-        <!-- Custom Request Box (Figma 2346:998 - Cao 156px) -->
-        <div class="bg-[#30374F] rounded-[12px] p-4 flex flex-col justify-between h-[156px] shadow-lg">
+        <!-- Consultation Banner (Figma 2346:1004) -->
+        <div class="bg-[#30374F] rounded-[12px] p-4 flex flex-col gap-3 shadow-lg">
             <div class="space-y-1">
-                <h4 class="text-sm font-medium text-[#FAFAFA] leading-[20px]">
-                    Tuỳ chỉnh sản phẩm
+                <h4 class="text-sm font-semibold text-[#FAFAFA] leading-[21px]">
+                    {{ tt('Tuỳ chỉnh sản phẩm') }}
                 </h4>
                 <p class="text-[13px] text-[#B9C0D4] leading-[18px]">
-                    Màu sắc, kích thước và cá nhân hoá được tư vấn theo nhu cầu ?
+                    {{ tt('Màu sắc, kích thước và cá nhân hoá được tư vấn theo nhu cầu ?') }}
                 </p>
             </div>
             <Link
-                href="/lien-he"
+                :href="route('contact')"
                 class="w-full h-10 rounded-lg text-[#F5F8FF] text-base font-medium flex items-center justify-center transition-all duration-200 shadow-md hover:shadow-lg hover:opacity-95 select-none"
                 style="background: linear-gradient(90deg, #2970FF 0%, #00359E 89%);"
             >
-                Liên hệ tư vấn
+                {{ tt('Liên hệ tư vấn') }}
             </Link>
         </div>
     </div>
@@ -178,22 +179,40 @@ export default {
         },
     },
     emits: ['update:filters', 'reset', 'close'],
-    data() {
-        return {
-            defaultCategories: [
-                { id: 'all', name: 'Tất cả sản phẩm' },
-                { id: 'keychains', name: 'Móc khoá' },
-                { id: 'stationery', name: 'Văn phòng phẩm' },
-                { id: 'custom', name: 'Gia công theo yêu cầu' },
-            ],
-            purposes: [
-                'Trang trí không gian',
-                'Đồ dùng hằng ngày',
-                'Quà tặng cá nhân',
-            ],
-        }
-    },
     computed: {
+        purposes() {
+            return [
+                this.tt('Trang trí không gian'),
+                this.tt('Đồ dùng hằng ngày'),
+                this.tt('Quà tặng cá nhân'),
+            ]
+        },
+        defaultCategories() {
+            return [
+                { id: 'all', name: this.tt('Tất cả sản phẩm'), slug: 'all' },
+                { id: 'keychains', name: this.tt('Móc khoá'), slug: 'keychains' },
+                { id: 'stationery', name: this.tt('Văn phòng phẩm'), slug: 'stationery' },
+                { id: 'custom', name: this.tt('Gia công theo yêu cầu'), slug: 'custom' },
+            ]
+        },
+        displayCategories() {
+            if (this.categories && this.categories.length > 0) {
+                const list = [];
+                const hasAll = this.categories.some(c => c.id === 'all' || c.slug === 'all');
+                if (!hasAll) {
+                    list.push({ id: 'all', name: this.tt('Tất cả sản phẩm'), slug: 'all' });
+                }
+                this.categories.forEach(c => {
+                    list.push({
+                        id: c.slug || c.id,
+                        name: this.tt(c.title || c.name),
+                        slug: c.slug || c.id,
+                    });
+                });
+                return list;
+            }
+            return this.defaultCategories;
+        },
         hasActiveFilters() {
             return (
                 (this.filters.search && this.filters.search.trim() !== '') ||
@@ -203,6 +222,10 @@ export default {
         },
     },
     methods: {
+        isPurposeSelected(purpose) {
+            if (!this.filters.purposes) return false;
+            return this.filters.purposes.includes(purpose);
+        },
         updateFilter(key, value) {
             this.$emit('update:filters', {
                 ...this.filters,

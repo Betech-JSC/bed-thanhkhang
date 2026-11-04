@@ -9,6 +9,7 @@ use App\Http\Controllers\Frontend\HistoryController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\ContactController;
 use App\Http\Controllers\Frontend\ProductController;
+use App\Http\Controllers\Frontend\ProcessController;
 use App\Http\Controllers\Frontend\ServiceController;
 use App\Http\Controllers\Frontend\SitemapController;
 use App\Http\Controllers\Frontend\PolicyController;
@@ -98,11 +99,9 @@ Route::middleware(['meta_seo', 'opening'])->group(function () {
         });
 
         // quy trình gia công 3D
-        Route::get(Lang::uri('quy-trinh'), fn() => Inertia::render('Process/Index'))->name('process.index');
+        Route::get(Lang::uri('quy-trinh'), [ProcessController::class, 'index'])->name('process.index');
 
-        Route::get('ve-chung-toi', function () {
-            return Inertia::render('About/Index');
-        });
+        Route::get('ve-chung-toi', [HistoryController::class, 'index']);
 
         Route::post(Lang::uri('contacts'), [ContactController::class, 'store'])->name('contact.store');
 

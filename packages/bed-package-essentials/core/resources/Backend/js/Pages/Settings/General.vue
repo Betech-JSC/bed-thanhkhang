@@ -39,6 +39,38 @@
                             }"
                         />
                         <Field
+                            v-model="form.general_zalo"
+                            :field="{
+                                label: 'Số / Link Zalo tư vấn kỹ thuật',
+                                name: 'general_zalo',
+                                placeholder: 'VD: 0906636425 hoặc https://zalo.me/0906636425',
+                            }"
+                        />
+                        <Field
+                            v-model="form.general_working_hours"
+                            :field="{
+                                label: 'Giờ làm việc xưởng',
+                                name: 'general_working_hours',
+                                placeholder: 'VD: Thứ 2 - Thứ 7: 08:00 - 18:00',
+                            }"
+                        />
+                        <Field
+                            v-model="form.general_facebook"
+                            :field="{
+                                label: 'Link Fanpage Facebook',
+                                name: 'general_facebook',
+                                placeholder: 'https://facebook.com/hhmaker3d',
+                            }"
+                        />
+                        <Field
+                            v-model="form.general_tiktok"
+                            :field="{
+                                label: 'Link Kênh TikTok',
+                                name: 'general_tiktok',
+                                placeholder: 'https://tiktok.com/@hhmaker3d',
+                            }"
+                        />
+                        <Field
                             v-model="form.notification_popup_mode"
                             :field="{
                                 type: 'dropdown',

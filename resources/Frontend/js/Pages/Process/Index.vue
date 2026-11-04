@@ -10,7 +10,7 @@
         </Head>
 
         <!-- SECTION 1: Hero Banner (Figma Node 2283:6841, 1440x680px) -->
-        <ProcessHero />
+        <ProcessHero :banner="heroBanner" />
 
         <!-- SECTION 2: Stepper Bar 5 Điểm Quy Trình (Figma Node 2283:6851, 1440x176px) -->
         <ProcessStepper />
@@ -37,6 +37,13 @@ import ProcessHero from './Components/ProcessHero.vue'
 import ProcessStepper from './Components/ProcessStepper.vue'
 import ProcessStepItem from './Components/ProcessStepItem.vue'
 import ProcessFaq from './Components/ProcessFaq.vue'
+
+defineProps({
+    heroBanner: {
+        type: Object,
+        default: () => null,
+    },
+})
 
 const pageTitle = 'Quy Trình Gia Công & Chế Tác 3D Chuyên Nghiệp - HH Maker'
 const pageDescription = 'Khám phá quy trình 5 bước in 3D và thiết kế chuyên nghiệp tại HH Maker: Từ liên hệ, báo giá chi tiết, gia công chuẩn xác, đóng gói cẩn thận đến giao hàng an toàn.'

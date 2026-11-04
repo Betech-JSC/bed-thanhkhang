@@ -18,21 +18,27 @@ class Contact extends BaseModel
     use SoftDeletes;
 
     const STATUS_NEW = 'NEW';
-    const STATUS_RESPONSE = 'RESPONSE';
-    const STATUS_CONFIRMED = 'CONFIRMED';
-    const STATUS_PROCESSED = 'PROCESSED';
-    const STATUS_CLOSE = 'CLOSE';
+    const STATUS_CHECKING_CAD = 'CHECKING_CAD';
+    const STATUS_QUOTED = 'QUOTED';
+    const STATUS_PROCESSING = 'PROCESSING';
+    const STATUS_COMPLETED = 'COMPLETED';
     const STATUS_IS_SPAM = 'IS_SPAM';
+
+    // Aliases for backward compatibility
+    const STATUS_RESPONSE = 'CHECKING_CAD';
+    const STATUS_CONFIRMED = 'QUOTED';
+    const STATUS_PROCESSED = 'PROCESSING';
+    const STATUS_CLOSE = 'COMPLETED';
 
     const TYPE_CONTACT = 'CONTACT';
 
     public const STATUS_LIST = [
-        self::STATUS_NEW => 'Mới',
-        self::STATUS_RESPONSE => 'Đã phản hồi',
-        self::STATUS_CONFIRMED => 'Đã xác nhận',
-        self::STATUS_PROCESSED => 'Đã xử lý',
-        self::STATUS_CLOSE => 'Đóng',
-        self::STATUS_IS_SPAM => 'Spam',
+        self::STATUS_NEW => 'Mới nhận',
+        self::STATUS_CHECKING_CAD => 'Đang kiểm tra file CAD',
+        self::STATUS_QUOTED => 'Đã báo giá',
+        self::STATUS_PROCESSING => 'Đang gia công/In',
+        self::STATUS_COMPLETED => 'Hoàn tất',
+        self::STATUS_IS_SPAM => 'Hủy/Spam',
     ];
 
     public const TYPE_LIST = [
@@ -41,25 +47,15 @@ class Contact extends BaseModel
 
     public function getFormattedStatusAttribute(): string
     {
-        if (!empty($this->status)) {
-            switch ($this->status) {
-                case 'NEW':
-                    return 'Mới';
-                case 'RESPONSE':
-                    return 'Đã phản hồi';
-                case 'CONFIRMED':
-                    return 'Đã xác nhận';
-                case 'PROCESSED':
-                    return 'Đã xử lý';
-                case 'CLOSE':
-                    return 'Đóng';
-                case 'IS_SPAM':
-                    return 'Spam';
-                default:
-                    return '';
-            }
-        }
-        return '';
+        return match ($this->status) {
+            self::STATUS_NEW => 'Mới nhận',
+            'CHECKING_CAD', 'RESPONSE' => 'Đang kiểm tra file CAD',
+            'QUOTED', 'CONFIRMED' => 'Đã báo giá',
+            'PROCESSING', 'PROCESSED' => 'Đang gia công/In',
+            'COMPLETED', 'CLOSE' => 'Hoàn tất',
+            'IS_SPAM', 'CANCELLED' => 'Hủy/Spam',
+            default => $this->status ?? '',
+        };
     }
 
     public function getFormattedTypeAttribute(): string
@@ -77,6 +73,8 @@ class Contact extends BaseModel
         'data',
         'type',
         'status',
+        'estimated_price',
+        'internal_notes',
         'images',
         'ip_address',
         'user_agent',
@@ -85,6 +83,7 @@ class Contact extends BaseModel
     protected $casts = [
         'data' => 'array',
         'images' => 'array',
+        'estimated_price' => 'decimal:2',
     ];
 
     protected $appends = [
@@ -103,6 +102,23 @@ class Contact extends BaseModel
 
     protected static function booted()
     {
+        static::saving(function ($model) {
+            if (request()->has('internal_notes')) {
+                $model->internal_notes = request()->input('internal_notes');
+            }
+            if (request()->has('estimated_price')) {
+                $model->estimated_price = request()->input('estimated_price');
+            }
+
+            // Bảo vệ 'data': Nếu model đã tồn tại và có data cũ, cấm ghi đè data thành null hoặc rỗng
+            if ($model->exists) {
+                $originalData = $model->getOriginal('data');
+                if (!empty($originalData) && empty($model->data)) {
+                    $model->data = is_string($originalData) ? json_decode($originalData, true) : $originalData;
+                }
+            }
+        });
+
         static::creating(function ($model) {
             $model->ip_address = $model->setIpAddress();
             $model->user_agent = $model->setUserAgent();
@@ -111,6 +127,10 @@ class Contact extends BaseModel
 
             if ($model->status == self::STATUS_IS_SPAM) {
                 $model->deleted_at = now();
+            }
+
+            if (!is_array($model->data)) {
+                $model->data = is_string($model->data) ? (json_decode($model->data, true) ?? []) : [];
             }
 
             if (is_array($model->data) && isset($model->data['note']) && !isset($model->data['customer_note'])) {
@@ -163,12 +183,15 @@ class Contact extends BaseModel
     private function isSpamContent()
     {
         $rules = ['*' => ['max:1000', new Blackwords]];
-        return !Validator::make($this->data, $rules)->passes();
+        return !Validator::make($this->data ?? [], $rules)->passes();
     }
 
     public function getDataContactAttribute()
     {
-        return json_decode($this->attributes['data']);
+        if (empty($this->attributes['data'])) {
+            return (object)[];
+        }
+        return is_string($this->attributes['data']) ? json_decode($this->attributes['data']) : (object)$this->attributes['data'];
     }
 
     public function getConfigTypeKey(): string

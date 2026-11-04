@@ -2,14 +2,16 @@
 
 return [
     'home' => '/',
-    'histories' => 'histories',
     'contact' => 'contact',
-    'resources' => 'resources',
     'products' => 'products',
-    'services' => 'service',
-    'posts' => 'posts',
-    'jobs' => 'career',
     'about-us' => 'about-us',
-    'courses' => 'courses',
+    'services' => 'services',
+    'posts' => 'posts',
+    'quy-trinh' => 'process',
     'search' => 'search',
+    'histories' => 'histories',
+    'policies' => 'policies',
+    'resources' => 'resources',
+    'courses' => 'courses',
+    'jobs' => 'career',
 ];

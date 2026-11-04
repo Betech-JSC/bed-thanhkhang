@@ -4,17 +4,17 @@
         <div class="flex items-center justify-between mb-6 lg:mb-8">
             <div>
                 <h2 class="text-2xl lg:text-3xl font-bold text-[#FAFAFA] font-sans tracking-tight">
-                    Sản phẩm khác
+                    {{ tt('Sản phẩm khác') }}
                 </h2>
                 <p class="text-xs sm:text-sm text-[#94A3B8] mt-1 font-sans">
-                    Khám phá thêm các mô hình thiết kế in 3D độc bản và decor độc đáo
+                    {{ tt('Khám phá thêm các mô hình thiết kế in 3D độc bản và decor độc đáo') }}
                 </p>
             </div>
             <Link
                 :href="route('products.index')"
                 class="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-[#84ADFF] hover:text-white transition-colors"
             >
-                Xem tất cả
+                {{ tt('Xem tất cả') }}
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
@@ -44,7 +44,7 @@
                         v-if="item.category"
                         class="absolute top-3 left-3 px-2.5 py-1 rounded text-[11px] font-semibold bg-[#111322]/80 text-[#84ADFF] border border-[#5D6B98]/40 backdrop-blur-sm"
                     >
-                        {{ item.category }}
+                        {{ tt(item.category) }}
                     </span>
                 </Link>
 
@@ -57,19 +57,19 @@
                             </Link>
                         </h3>
                         <p class="text-xs text-[#94A3B8] mt-1 line-clamp-2">
-                            {{ item.description || 'Chất liệu PLA cao cấp, công nghệ in FDM tỉ mỉ từng chi tiết.' }}
+                            {{ item.description || tt('Chất liệu PLA cao cấp, công nghệ in FDM tỉ mỉ từng chi tiết.') }}
                         </p>
                     </div>
 
                     <div class="flex items-center justify-between pt-4 mt-3 border-t border-[#30374F]/70">
                         <span class="text-sm font-bold text-white">
-                            {{ item.priceFormatted || 'Liên hệ báo giá' }}
+                            {{ item.priceFormatted || tt('Liên hệ báo giá') }}
                         </span>
                         <Link
                             :href="item.slug ? route('products.show', { slug: item.slug }) : route('products.index')"
                             class="inline-flex items-center gap-1 text-xs font-semibold text-[#84ADFF] group-hover:translate-x-0.5 transition-transform"
                         >
-                            Chi tiết
+                            {{ tt('Chi tiết') }}
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                             </svg>
@@ -84,7 +84,7 @@
                 :href="route('products.index')"
                 class="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-lg bg-[#141C2E] border border-[#404968] text-sm font-medium text-[#84ADFF]"
             >
-                Xem tất cả sản phẩm
+                {{ tt('Xem tất cả sản phẩm') }}
             </Link>
         </div>
     </section>
@@ -100,20 +100,64 @@ export default {
         },
     },
     computed: {
+        isEn() {
+            return (this.$page?.props?.locale?.current || 'vi') === 'en'
+        },
         productList() {
             if (this.products && this.products.length > 0) {
                 return this.products.slice(0, 4).map((p, idx) => ({
                     id: p.id || idx,
-                    title: p.title || p.name || 'Sản phẩm in 3D',
+                    title: p.title || p.name || (this.isEn ? '3D Printed Product' : 'Sản phẩm in 3D'),
                     slug: p.slug || '',
-                    category: p.category?.title || p.category_name || 'Mô hình in 3D',
+                    category: p.category?.title || p.category_name || (this.isEn ? '3D Printed Model' : 'Mô hình in 3D'),
                     image: p.image?.url || p.thumbnail || p.cover || `/images/pdp/related_${(idx % 4) + 1}.png`,
                     description: p.description || p.excerpt || '',
-                    priceFormatted: p.price ? new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(p.price) : 'Liên hệ báo giá',
+                    priceFormatted: p.price ? new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(p.price) : this.tt('Liên hệ báo giá'),
                 }))
             }
 
-            // Fallback to Figma related cards
+            if (this.isEn) {
+                return [
+                    {
+                        id: 1,
+                        title: 'Space Astronaut Model',
+                        slug: 'mo-hinh-phi-hanh-gia',
+                        category: 'Space Decor',
+                        image: '/images/pdp/related_1.png',
+                        description: 'Crisp contours, matte PLA fingerprint-resistant finish, high color retention.',
+                        priceFormatted: '$12.00',
+                    },
+                    {
+                        id: 2,
+                        title: 'Mini Geometric Plant Pot',
+                        slug: 'chau-cay-da-giac-mini',
+                        category: 'Space Decor',
+                        image: '/images/pdp/related_2.png',
+                        description: 'Smart drainage design ideal for desk succulents and workspace greenery.',
+                        priceFormatted: '$6.00',
+                    },
+                    {
+                        id: 3,
+                        title: 'Mecha Cyberpunk Phone Stand',
+                        slug: 'de-do-dien-thoai-mecha',
+                        category: 'Daily Essentials',
+                        image: '/images/pdp/related_3.png',
+                        description: 'Ergonomic 60-degree viewing angle, compatible with all smartphone models.',
+                        priceFormatted: '$9.50',
+                    },
+                    {
+                        id: 4,
+                        title: 'Articulated Robot Assembly Kit',
+                        slug: 'robot-khop-cu-dong',
+                        category: 'Custom Manufacturing',
+                        image: '/images/pdp/related_4.png',
+                        description: '14 flexible articulated joints, seamless print-in-place without metal screws.',
+                        priceFormatted: '$15.00',
+                    },
+                ]
+            }
+
+            // Fallback to Figma related cards in Vietnamese
             return [
                 {
                     id: 1,

@@ -1,16 +1,18 @@
 <template>
     <section
         id="process-section"
-        class="relative w-full overflow-hidden text-white py-12 lg:py-0 lg:h-[892px] flex items-center"
-        style="background: linear-gradient(0deg, #111322 20%, #2970FF 94%);"
+        class="relative w-full overflow-hidden text-white bg-dark-bg"
     >
-        <!-- Centered Main Container (max-w-[1280px] / max-w-7xl) -->
-        <div class="relative z-10 w-full max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col lg:flex-row items-stretch">
-            <!-- Left Column: 3D Wave Graphic + 05 Hero Headline -->
+        <!-- Centered Main Canvas matching Figma Node 2261:5723 (1440px x 892px) -->
+        <div
+            class="relative z-10 w-full max-w-[1440px] mx-auto min-h-[600px] lg:h-[892px] flex flex-col lg:flex-row items-stretch overflow-hidden"
+            style="background: linear-gradient(0deg, #111322 20%, #2970FF 94%);"
+        >
+            <!-- Left Column: 3D Wave Graphic + 05 Hero Headline (Figma Node 2261:5724: width 639px) -->
             <div
-                class="w-full lg:w-1/2 relative min-h-[460px] sm:min-h-[520px] lg:h-full flex flex-col justify-center px-6 sm:px-10 lg:pl-8 lg:pr-10 py-12 overflow-hidden"
+                class="w-full lg:w-[639px] shrink-0 relative min-h-[460px] sm:min-h-[520px] lg:h-full flex flex-col justify-center px-6 sm:px-12 lg:pl-[144px] lg:pr-10 py-12 overflow-hidden"
             >
-                <!-- Background 3D Wave Graphic contained within the left column (Figma Node 2261:5724 / 2261:5726) -->
+                <!-- Background 3D Wave Graphic flush with left edge -->
                 <img
                     :src="processImage"
                     alt="HH Maker 3D Layer Graphic"
@@ -18,7 +20,7 @@
                     loading="lazy"
                 />
 
-                <!-- Giant 05 & Headline directly overlaid on 3D Graphic -->
+                <!-- Giant 05 & Headline directly overlaid on 3D Graphic (Figma Node 2261:5727) -->
                 <div class="relative z-10 max-w-[435px]">
                     <div
                         class="process-giant-number text-[72px] sm:text-[96px] lg:text-[120px] font-bold text-[#FAFAFA] leading-none tracking-tight font-sans select-none drop-shadow-md"
@@ -34,9 +36,9 @@
                 </div>
             </div>
 
-            <!-- Right Column: Description & 5-Step Process -->
+            <!-- Right Column: Description & 5-Step Process (Figma Node 2261:5730: width 657px with 1px border-left) -->
             <div
-                class="w-full lg:w-1/2 lg:h-full lg:border-l lg:border-[#B5B5B5]/30 flex flex-col justify-center py-10 lg:py-12 lg:pl-12 lg:pr-6"
+                class="flex-1 lg:h-full lg:border-l lg:border-[#B5B5B5]/30 relative flex flex-col justify-center py-10 lg:py-12 px-6 sm:px-10 lg:pl-[64px] lg:pr-14"
             >
                 <p
                     class="text-sm sm:text-base text-[#FAFAFA] leading-relaxed lg:leading-[24px] font-normal max-w-[560px]"
@@ -44,7 +46,7 @@
                     {{ description }}
                 </p>
 
-                <!-- 5 Steps Minimalist Rows -->
+                <!-- 5 Steps Minimalist Rows (Figma Node 2261:5732) -->
                 <div class="mt-8 sm:mt-10 lg:mt-12 max-w-[560px] w-full border-b border-[#B5B5B5]/30">
                     <div
                         v-for="(step, idx) in steps"

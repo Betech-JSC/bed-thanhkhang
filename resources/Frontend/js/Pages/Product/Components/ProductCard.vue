@@ -10,7 +10,7 @@
                 v-if="product.isBestChoice"
                 class="absolute top-3 left-3 z-10 bg-[#00359E] text-[#F5F8FF] text-xs font-medium px-2.5 py-1 rounded shadow-sm pointer-events-none"
             >
-                Best choice
+                {{ tt('Best choice') }}
             </div>
 
             <!-- Product Showcase Image -->
@@ -36,7 +36,7 @@
                 {{ product.name || product.title }}
             </h3>
             <p class="text-xs text-[#B9C0D4] line-clamp-1 leading-[17px]">
-                {{ product.description || 'Mẫu thiết kế in 3D hoàn thiện tinh xảo, độ chính xác cơ khí cao.' }}
+                {{ product.description || tt('Mẫu thiết kế in 3D hoàn thiện tinh xảo, độ chính xác cơ khí cao.') }}
             </p>
         </div>
     </Link>
@@ -63,12 +63,12 @@ export default {
                 if (firstVal) return firstVal;
             }
             if (this.product.slug) {
-                return `/san-pham/${this.product.slug}`;
+                return this.route('products.show', { slug: this.product.slug });
             }
             if (this.product.id) {
-                return `/san-pham/${this.product.id}`;
+                return this.route('products.show', { slug: this.product.id });
             }
-            return '/san-pham';
+            return this.route('products.index');
         },
         productImageSrc() {
             if (typeof this.product.image === 'string' && this.product.image) {

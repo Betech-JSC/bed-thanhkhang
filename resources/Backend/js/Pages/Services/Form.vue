@@ -2,14 +2,17 @@
     <Form v-model="formData">
         <template #default="{ form }">
             <div class="card">
-                <div class="card-header">{{ tt('models.setting.general_information') }}</div>
+                <div class="card-header font-bold text-slate-800">
+                    {{ tt('models.setting.general_information') }}
+                </div>
                 <div class="card-body">
                     <Field
                         v-model="form.title"
                         :field="{
                             type: 'text',
                             name: 'title',
-                            label: 'Tiêu đề',
+                            label: 'Tên dịch vụ',
+                            placeholder: 'VD: Gia công in 3D FDM & SLA chính xác cao',
                         }"
                     />
                     <Field
@@ -17,15 +20,17 @@
                         :field="{
                             type: 'textarea',
                             name: 'description',
-                            label: 'Mô tả',
+                            label: 'Mô tả ngắn dịch vụ',
+                            rows: 3,
+                            placeholder: 'Tóm tắt quy mô, năng lực gia công và ứng dụng thực tế...',
                         }"
                     />
                     <Field
                         v-model="form.content"
                         :field="{
-                            type: 'text',
+                            type: 'richtext',
                             name: 'content',
-                            label: 'Link',
+                            label: 'Nội dung chi tiết dịch vụ',
                         }"
                     />
                 </div>
@@ -56,6 +61,7 @@
                         :field="{
                             type: 'file_upload',
                             name: 'image',
+                            label: 'Icon 3D / Hình đại diện dịch vụ',
                             multiple: false,
                         }"
                     />
@@ -71,12 +77,18 @@ export default {
         return {
             formData: {
                 ...this.item,
+                status: this.item.status ?? 'ACTIVE',
+                position: this.item.position ?? 0,
             },
         }
     },
     watch: {
         item() {
-            this.formData = this.item
+            this.formData = {
+                ...this.item,
+                status: this.item.status ?? 'ACTIVE',
+                position: this.item.position ?? 0,
+            }
         },
     },
 }
