@@ -66,7 +66,7 @@
                         <!-- Col 1: Bạn chuẩn bị -->
                         <div class="w-full lg:w-[290px] flex flex-col gap-2">
                             <h3 class="text-[13px] leading-[16px] font-semibold text-[#84ADFF] uppercase font-sans">
-                                {{ tt(service.prepTitle || 'BẠN CHUẨN BỊ') }}
+                                {{ service.prepTitle ? tt(service.prepTitle) : tt('BẠN CHUẨN BỊ') }}
                             </h3>
                             <p class="text-sm sm:text-[16px] sm:leading-[26px] font-normal text-[#B9C0D4] font-sans">
                                 {{ tt(service.preparation) }}
@@ -76,7 +76,7 @@
                         <!-- Col 2: Cùng hoàn thiện -->
                         <div class="w-full lg:w-[290px] flex flex-col gap-2">
                             <h3 class="text-[13px] leading-[16px] font-semibold text-[#84ADFF] uppercase font-sans">
-                                {{ tt(service.compTitle || 'CÙNG HOÀN THIỆN') }}
+                                {{ service.compTitle ? tt(service.compTitle) : tt('CÙNG HOÀN THIỆN') }}
                             </h3>
                             <p class="text-sm sm:text-[16px] sm:leading-[26px] font-normal text-[#B9C0D4] font-sans">
                                 {{ tt(service.completion) }}
@@ -119,17 +119,18 @@ const props = defineProps({
 })
 
 const page = usePage()
+const key = { tt: (s) => s }
 
 const detailUrl = computed(() => {
     if (props.href) {
         return props.href
     }
     const slugMap = {
-        'Gia công 3D': 'gia-cong-3d',
-        'Thiết kế 3D': 'thiet-ke-3d',
-        'Custom': 'lam-do-custom',
-        'Làm đồ custom': 'lam-do-custom',
-        'Làm đồ Custom': 'lam-do-custom',
+        [key.tt('Gia công 3D')]: 'gia-cong-3d',
+        [key.tt('Thiết kế 3D')]: 'thiet-ke-3d',
+        Custom: 'lam-do-custom',
+        [key.tt('Làm đồ custom')]: 'lam-do-custom',
+        [key.tt('Làm đồ Custom')]: 'lam-do-custom',
         '3D Design': 'thiet-ke-3d',
         '3D Machining & Printing': 'gia-cong-3d',
         'Custom Bespoke Creations': 'lam-do-custom',

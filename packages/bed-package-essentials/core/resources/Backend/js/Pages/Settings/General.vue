@@ -12,9 +12,25 @@
                             }"
                         />
                         <Field
+                            v-model="form.general_business_name_en"
+                            :field="{
+                                label: 'Tên doanh nghiệp (EN)',
+                                name: 'general_business_name_en',
+                                placeholder: 'VD: HH Maker (Để trống tự động lấy Tiếng Việt)',
+                            }"
+                        />
+                        <Field
                             v-model="form.general_site_name"
                             :field="{
                                 name: 'general_site_name',
+                            }"
+                        />
+                        <Field
+                            v-model="form.general_site_name_en"
+                            :field="{
+                                label: 'Tên website (EN)',
+                                name: 'general_site_name_en',
+                                placeholder: 'VD: HH Maker - 3D Design & Printing Service',
                             }"
                         />
                         <Field
@@ -29,6 +45,14 @@
                             :field="{
                                 label: 'Địa chỉ',
                                 name: 'general_address',
+                            }"
+                        />
+                        <Field
+                            v-model="form.general_address_en"
+                            :field="{
+                                label: 'Địa chỉ (EN)',
+                                name: 'general_address_en',
+                                placeholder: 'VD: No. 65 Street 9, Huong Lo 5 Residential Area, An Lac Ward, Ho Chi Minh City',
                             }"
                         />
                         <Field
@@ -52,6 +76,14 @@
                                 label: 'Giờ làm việc xưởng',
                                 name: 'general_working_hours',
                                 placeholder: 'VD: Thứ 2 - Thứ 7: 08:00 - 18:00',
+                            }"
+                        />
+                        <Field
+                            v-model="form.general_working_hours_en"
+                            :field="{
+                                label: 'Giờ làm việc xưởng (EN)',
+                                name: 'general_working_hours_en',
+                                placeholder: 'VD: Mon - Sat: 08:00 - 18:00',
                             }"
                         />
                         <Field

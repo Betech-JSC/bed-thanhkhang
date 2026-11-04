@@ -53,16 +53,15 @@ export default {
             )
         },
         title() {
-            return this.tt(this.ctaData?.title || 'Tạo nên phiên bản mang dấu ấn riêng')
+            return this.ctaData?.title ? this.tt(this.ctaData.title) : this.tt('Tạo nên phiên bản mang dấu ấn riêng')
         },
         description() {
-            return this.tt(
-                this.ctaData?.description ||
-                'Gửi hình ảnh tham khảo hoặc chia sẻ ý tưởng để HH Maker cùng bạn định hình sản phẩm mong muốn. Chúng tôi sẽ tư vấn giải pháp phù hợp với phong cách, nhu cầu và ngân sách của bạn.'
-            )
+            return this.ctaData?.description
+                ? this.tt(this.ctaData.description)
+                : this.tt('Gửi hình ảnh tham khảo hoặc chia sẻ ý tưởng để HH Maker cùng bạn định hình sản phẩm mong muốn. Chúng tôi sẽ tư vấn giải pháp phù hợp với phong cách, nhu cầu và ngân sách của bạn.')
         },
         ctaText() {
-            return this.tt(this.ctaData?.primary_cta_text || 'Nhận tư vấn ngay')
+            return this.ctaData?.primary_cta_text ? this.tt(this.ctaData.primary_cta_text) : this.tt('Nhận tư vấn ngay')
         },
         ctaLink() {
             return (

@@ -3,6 +3,8 @@ import { createInertiaApp, Head, Link } from '@inertiajs/inertia-vue3'
 import createServer from '@inertiajs/server'
 import messages from '@intlify/unplugin-vue-i18n/messages'
 import i18nMessages from '../../../public/build/locales/i18n.js'
+import viJson from '../lang/vi.json'
+import enJson from '../lang/en.json'
 import { renderToString } from '@vue/server-renderer'
 import { createPinia } from 'pinia'
 import { createSSRApp, h } from 'vue'
@@ -19,7 +21,26 @@ if (Ziggy.routes) {
 
 const appName = import.meta.env.VITE_APP_NAME
 const appPort = import.meta.env.VITE_APP_PORT || 13714
-const mergedMessages = { ...messages, ...i18nMessages }
+const rawMerged = { ...messages, ...i18nMessages }
+const mergedMessages = {
+    ...rawMerged,
+    vi: {
+        ...(rawMerged.vi || {}),
+        ...viJson,
+        ui: {
+            ...(rawMerged.vi?.ui || {}),
+            ...viJson,
+        },
+    },
+    en: {
+        ...(rawMerged.en || {}),
+        ...enJson,
+        ui: {
+            ...(rawMerged.en?.ui || {}),
+            ...enJson,
+        },
+    },
+}
 
 createServer(
     (page) =>

@@ -39,3 +39,5 @@ cookies.txt
 /public/*.png
 /public/figma_rendered/
 /public/assets/images/about/figma_inspect/
+__pycache__/
+*.py[cod]

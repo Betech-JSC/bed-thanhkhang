@@ -261,8 +261,8 @@ export default {
                     purposeKey: 'space_decor',
                     isBestChoice: true,
                     image: '/assets/images/products/figma-product-1.png',
-                    name_vi: 'Mô hình Iron Man Mark 85 - Resin 8K Chi Tiết Cao',
-                    description_vi: 'Mô hình giáp Iron Man tỉ lệ 1:10, độ chi tiết sắc nét từng đường rãnh cơ khí với công nghệ SLA quang hóa.',
+                    name_vi: this.tt('Mô hình Iron Man Mark 85 - Resin 8K Chi Tiết Cao'),
+                    description_vi: this.tt('Mô hình giáp Iron Man tỉ lệ 1:10, độ chi tiết sắc nét từng đường rãnh cơ khí với công nghệ SLA quang hóa.'),
                     name_en: 'Iron Man Mark 85 Model - High Detail 8K Resin',
                     description_en: '1:10 scale Iron Man armor model with crisp mechanical grooves produced using photochemical SLA technology.',
                 },
@@ -273,8 +273,8 @@ export default {
                     purposeKey: 'daily_essentials',
                     isBestChoice: false,
                     image: '/assets/images/products/figma-product-2.png',
-                    name_vi: 'Khung Vỏ Cơ Khí Robot Mini - Carbon Fiber Kháng Lực',
-                    description_vi: 'Khung robot gia cường sợi carbon chịu lực va đập vượt trội, kháng uốn và ổn định kích thước tuyệt đối.',
+                    name_vi: this.tt('Khung Vỏ Cơ Khí Robot Mini - Carbon Fiber Kháng Lực'),
+                    description_vi: this.tt('Khung robot gia cường sợi carbon chịu lực va đập vượt trội, kháng uốn và ổn định kích thước tuyệt đối.'),
                     name_en: 'Mini Robot Mechanical Chassis - Impact Resistant Carbon Fiber',
                     description_en: 'Carbon fiber reinforced robot chassis offering outstanding impact resistance, flexural strength, and dimensional stability.',
                 },
@@ -285,8 +285,8 @@ export default {
                     purposeKey: 'daily_essentials',
                     isBestChoice: false,
                     image: '/assets/images/products/figma-product-3.png',
-                    name_vi: 'Hộp Đựng Danh Thiếp & Bút Cyberpunk Hexagon',
-                    description_vi: 'Khay bút tổ ong đa giác phong cách Futuristic, tối ưu không gian làm việc công nghệ cao.',
+                    name_vi: this.tt('Hộp Đựng Danh Thiếp & Bút Cyberpunk Hexagon'),
+                    description_vi: this.tt('Khay bút tổ ong đa giác phong cách Futuristic, tối ưu không gian làm việc công nghệ cao.'),
                     name_en: 'Cyberpunk Hexagon Business Card & Pen Holder',
                     description_en: 'Futuristic honeycomb polygon organizer tray, optimizing high-tech desktop workspaces.',
                 },
@@ -297,8 +297,8 @@ export default {
                     purposeKey: 'personal_gifts',
                     isBestChoice: false,
                     image: '/assets/images/products/figma-product-4.png',
-                    name_vi: 'Móc Khoá Turbine Phản Lực Có Cánh Quạt Xoay',
-                    description_vi: 'Chi tiết cánh quạt turbine khí động học có thể thổi quay mượt mà, sơn phủ titan ánh kim bắt mắt.',
+                    name_vi: this.tt('Móc Khoá Turbine Phản Lực Có Cánh Quạt Xoay'),
+                    description_vi: this.tt('Chi tiết cánh quạt turbine khí động học có thể thổi quay mượt mà, sơn phủ titan ánh kim bắt mắt.'),
                     name_en: 'Jet Turbine Keychain with Spinning Fan Blades',
                     description_en: 'Aerodynamic turbine blades that spin smoothly when blown, finished with an eye-catching metallic titanium coating.',
                 },
@@ -309,8 +309,8 @@ export default {
                     purposeKey: 'space_decor',
                     isBestChoice: true,
                     image: '/assets/images/products/figma-product-5.png',
-                    name_vi: 'Giá Đỡ Tai Nghe Headphone Geometrical Voronoi',
-                    description_vi: 'Giá đỡ tai nghe dạng lưới cấu trúc bionic Voronoi siêu bền, tôn lên vẻ thẩm mỹ cho góc làm việc.',
+                    name_vi: this.tt('Giá Đỡ Tai Nghe Headphone Geometrical Voronoi'),
+                    description_vi: this.tt('Giá đỡ tai nghe dạng lưới cấu trúc bionic Voronoi siêu bền, tôn lên vẻ thẩm mỹ cho góc làm việc.'),
                     name_en: 'Voronoi Geometrical Headphone Stand',
                     description_en: 'Ultra-durable bionic Voronoi lattice headphone holder, elevating desktop aesthetics.',
                 },
@@ -321,8 +321,8 @@ export default {
                     purposeKey: 'daily_essentials',
                     isBestChoice: false,
                     image: '/assets/images/products/figma-product-6.png',
-                    name_vi: 'Bộ Cụm Bánh Răng Hành Tinh Planetary Gearbox',
-                    description_vi: 'Hộp số hành tinh tỉ số truyền 1:5, khớp răng chuẩn dung sai cơ khí, xoay êm ái linh hoạt.',
+                    name_vi: this.tt('Bộ Cụm Bánh Răng Hành Tinh Planetary Gearbox'),
+                    description_vi: this.tt('Hộp số hành tinh tỉ số truyền 1:5, khớp răng chuẩn dung sai cơ khí, xoay êm ái linh hoạt.'),
                     name_en: 'Planetary Gearbox Assembly Set',
                     description_en: '1:5 gear reduction planetary gearbox with precise mechanical tolerances and smooth rotation.',
                 },
@@ -333,8 +333,8 @@ export default {
                     purposeKey: 'space_decor',
                     isBestChoice: false,
                     image: '/assets/images/products/figma-product-7.png',
-                    name_vi: 'Tượng Điêu Khắc Nghệ Thuật Low-Poly Cyber Wolf',
-                    description_vi: 'Tượng sói phong cách đa giác góc cạnh, bề mặt được xử lý mịn màng và phủ lớp nano bảo vệ bền bỉ.',
+                    name_vi: this.tt('Tượng Điêu Khắc Nghệ Thuật Low-Poly Cyber Wolf'),
+                    description_vi: this.tt('Tượng sói phong cách đa giác góc cạnh, bề mặt được xử lý mịn màng và phủ lớp nano bảo vệ bền bỉ.'),
                     name_en: 'Low-Poly Cyber Wolf Art Sculpture',
                     description_en: 'Geometric faceted wolf sculpture featuring smooth surfaces and protective nano-coating.',
                 },
@@ -345,8 +345,8 @@ export default {
                     purposeKey: 'personal_gifts',
                     isBestChoice: false,
                     image: '/assets/images/products/figma-product-8.png',
-                    name_vi: 'Móc Khoá Động Cơ V8 Piston Chuyển Động',
-                    description_vi: 'Mô phỏng trục khuỷu và piston động cơ V8 xe đua cơ bắp chuyển động tịnh tiến khi vặn núm xoay.',
+                    name_vi: this.tt('Móc Khoá Động Cơ V8 Piston Chuyển Động'),
+                    description_vi: this.tt('Mô phỏng trục khuỷu và piston động cơ V8 xe đua cơ bắp chuyển động tịnh tiến khi vặn núm xoay.'),
                     name_en: 'Moving Piston V8 Engine Keychain',
                     description_en: 'Simulates crankshaft and reciprocating pistons of a muscle car V8 engine when rotating the dial.',
                 },
@@ -357,8 +357,8 @@ export default {
                     purposeKey: 'space_decor',
                     isBestChoice: false,
                     image: '/assets/images/products/figma-product-9.png',
-                    name_vi: 'Đèn Ngủ Mặt Trăng 3D Lithophane Kèm Đế Gỗ',
-                    description_vi: 'Quả cầu địa hình bề mặt mặt trăng với công nghệ thấu quang Lithophane, phát sáng dịu nhẹ ấm áp.',
+                    name_vi: this.tt('Đèn Ngủ Mặt Trăng 3D Lithophane Kèm Đế Gỗ'),
+                    description_vi: this.tt('Quả cầu địa hình bề mặt mặt trăng với công nghệ thấu quang Lithophane, phát sáng dịu nhẹ ấm áp.'),
                     name_en: '3D Lithophane Moon Night Lamp with Wooden Base',
                     description_en: 'Moon surface topography sphere with Lithophane light-transmitting technology, emitting soft warm ambient glow.',
                 },
@@ -369,8 +369,8 @@ export default {
                     purposeKey: 'daily_essentials',
                     isBestChoice: false,
                     image: '/assets/images/products/figma-product-10.png',
-                    name_vi: 'Khớp Nối Cầu Đa Hướng Ball-Joint Bionic',
-                    description_vi: 'Khớp nối linh hoạt in nguyên khối không cần support, độ bền cơ học và chịu mài mòn chuẩn công nghiệp.',
+                    name_vi: this.tt('Khớp Nối Cầu Đa Hướng Ball-Joint Bionic'),
+                    description_vi: this.tt('Khớp nối linh hoạt in nguyên khối không cần support, độ bền cơ học và chịu mài mòn chuẩn công nghiệp.'),
                     name_en: 'Bionic Multi-Directional Ball-Joint',
                     description_en: 'Monolithic print-in-place flexible joint with zero support material, offering industrial-grade wear resistance.',
                 },
@@ -381,8 +381,8 @@ export default {
                     purposeKey: 'space_decor',
                     isBestChoice: true,
                     image: '/assets/images/products/figma-product-11.png',
-                    name_vi: 'Mô Hình Tàu Vũ Trụ Discovery 3D Kèm Chân Đế Led',
-                    description_vi: 'Mô hình phi thuyền không gian viễn tưởng tỉ mỉ tới từng tấm khiên nhiệt, buồng lái hoàn thiện trong suốt.',
+                    name_vi: this.tt('Mô Hình Tàu Vũ Trụ Discovery 3D Kèm Chân Đế Led'),
+                    description_vi: this.tt('Mô hình phi thuyền không gian viễn tưởng tỉ mỉ tới từng tấm khiên nhiệt, buồng lái hoàn thiện trong suốt.'),
                     name_en: 'Discovery 3D Spacecraft Model with LED Base',
                     description_en: 'Sci-fi spaceship model meticulously crafted down to heat shields and transparent cockpit canopy.',
                 },
@@ -393,8 +393,8 @@ export default {
                     purposeKey: 'daily_essentials',
                     isBestChoice: false,
                     image: '/assets/images/products/figma-product-12.png',
-                    name_vi: 'Khay Tổ Chức Dây Cáp & Phụ Kiện Nam Châm Modular',
-                    description_vi: 'Khay cáp bàn làm việc ghép nối nam châm Neodymium linh hoạt, gom gọn mọi loại dây sạc gọn gàng.',
+                    name_vi: this.tt('Khay Tổ Chức Dây Cáp & Phụ Kiện Nam Châm Modular'),
+                    description_vi: this.tt('Khay cáp bàn làm việc ghép nối nam châm Neodymium linh hoạt, gom gọn mọi loại dây sạc gọn gàng.'),
                     name_en: 'Modular Magnetic Cable & Accessories Organizer',
                     description_en: 'Flexible desktop cable tray connected with Neodymium magnets, organizing all charging cables neatly.',
                 },
@@ -405,8 +405,8 @@ export default {
                     purposeKey: 'personal_gifts',
                     isBestChoice: false,
                     image: '/assets/images/products/figma-product-13.png',
-                    name_vi: 'Móc Khoá Vô Lăng F1 Quick Release Thể Thao',
-                    description_vi: 'Mô phỏng vô lăng xe đua F1 với cơ chế tháo lắp khớp bi cực kỳ chân thực, kim loại phối nhựa dẻo cao cấp.',
+                    name_vi: this.tt('Móc Khoá Vô Lăng F1 Quick Release Thể Thao'),
+                    description_vi: this.tt('Mô phỏng vô lăng xe đua F1 với cơ chế tháo lắp khớp bi cực kỳ chân thực, kim loại phối nhựa dẻo cao cấp.'),
                     name_en: 'F1 Quick Release Racing Steering Wheel Keychain',
                     description_en: 'Replicates F1 race car steering wheel with authentic ball-lock quick-release mechanism.',
                 },
@@ -417,8 +417,8 @@ export default {
                     purposeKey: 'space_decor',
                     isBestChoice: false,
                     image: '/assets/images/products/figma-product-14.png',
-                    name_vi: 'Đèn Bàn LED Hexagon Tổ Ong Chạm Cảm Ứng',
-                    description_vi: 'Các mô-đun đèn lục giác ghép nối tự do theo sở thích, điều khiển ánh sáng bằng cảm ứng bề mặt.',
+                    name_vi: this.tt('Đèn Bàn LED Hexagon Tổ Ong Chạm Cảm Ứng'),
+                    description_vi: this.tt('Các mô-đun đèn lục giác ghép nối tự do theo sở thích, điều khiển ánh sáng bằng cảm ứng bề mặt.'),
                     name_en: 'Touch-Sensitive Hexagonal Honeycomb LED Lamp',
                     description_en: 'Modular hexagon light modules freely assembled and operated via capacitive surface touch controls.',
                 },
@@ -429,8 +429,8 @@ export default {
                     purposeKey: 'daily_essentials',
                     isBestChoice: false,
                     image: '/assets/images/products/figma-product-15.png',
-                    name_vi: 'Vỏ Case Bàn Phím Cơ Custom In 3D Đa Sắc',
-                    description_vi: 'Vỏ phím cơ layout 75% cấu trúc gasket mount tối ưu âm gõ, chịu nhiệt và chống biến dạng xuất sắc.',
+                    name_vi: this.tt('Vỏ Case Bàn Phím Cơ Custom In 3D Đa Sắc'),
+                    description_vi: this.tt('Vỏ phím cơ layout 75% cấu trúc gasket mount tối ưu âm gõ, chịu nhiệt và chống biến dạng xuất sắc.'),
                     name_en: 'Custom 3D Printed Multi-Color Mechanical Keyboard Case',
                     description_en: '75% layout keyboard case with gasket-mount structure for acoustic optimization and thermal resistance.',
                 },
@@ -441,8 +441,8 @@ export default {
                     purposeKey: 'personal_gifts',
                     isBestChoice: true,
                     image: '/assets/images/products/figma-product-16.png',
-                    name_vi: 'Móc Khoá Trái Tim Cơ Khí Bánh Răng Lồng Nhau',
-                    description_vi: 'Trái tim cơ khí độc đáo với cụm bánh răng lồng ghép chuyển động ăn khớp nhịp nhàng khi xoay chốt.',
+                    name_vi: this.tt('Móc Khoá Trái Tim Cơ Khí Bánh Răng Lồng Nhau'),
+                    description_vi: this.tt('Trái tim cơ khí độc đáo với cụm bánh răng lồng ghép chuyển động ăn khớp nhịp nhàng khi xoay chốt.'),
                     name_en: 'Interlocking Gear Mechanical Heart Keychain',
                     description_en: 'Unique mechanical heart with interlocking gears that mesh smoothly as the pin turns.',
                 },
@@ -456,12 +456,12 @@ export default {
         pageTitle() {
             return this.currentLocale === 'en'
                 ? '3D Printed Products Catalog - HH Maker | Ideas Brought To Life'
-                : 'Danh mục Sản phẩm in 3D - HH Maker | Bộ sưu tập ý tưởng thành hình'
+                : this.tt('Danh mục Sản phẩm in 3D - HH Maker | Bộ sưu tập ý tưởng thành hình')
         },
         pageDescription() {
             return this.currentLocale === 'en'
                 ? 'Explore exquisite 3D printed products by HH Maker. Keychains, stationery, models, and custom manufacturing.'
-                : 'Khám phá bộ sưu tập sản phẩm in 3D tinh xảo từ HH Maker. Móc khoá, văn phòng phẩm, mô hình và gia công theo yêu cầu.'
+                : this.tt('Khám phá bộ sưu tập sản phẩm in 3D tinh xảo từ HH Maker. Móc khoá, văn phòng phẩm, mô hình và gia công theo yêu cầu.')
         },
         sortOptions() {
             return [
@@ -477,17 +477,17 @@ export default {
         activeMockProducts() {
             const isEn = this.currentLocale === 'en';
             return this.rawMockProducts.map(p => {
-                const name = isEn ? p.name_en : p.name_vi;
-                const desc = isEn ? p.description_en : p.description_vi;
-                let category = 'Gia công theo yêu cầu';
-                if (p.categoryId === 'keychains') category = isEn ? 'Keychains' : 'Móc khoá';
-                else if (p.categoryId === 'stationery') category = isEn ? 'Stationery' : 'Văn phòng phẩm';
-                else if (p.categoryId === 'custom') category = isEn ? 'Custom Manufacturing' : 'Gia công theo yêu cầu';
+                const name = isEn ? p.name_en : this.tt(p.name_vi);
+                const desc = isEn ? p.description_en : this.tt(p.description_vi);
+                let category = this.tt('Gia công theo yêu cầu');
+                if (p.categoryId === 'keychains') category = isEn ? 'Keychains' : this.tt('Móc khoá');
+                else if (p.categoryId === 'stationery') category = isEn ? 'Stationery' : this.tt('Văn phòng phẩm');
+                else if (p.categoryId === 'custom') category = isEn ? 'Custom Manufacturing' : this.tt('Gia công theo yêu cầu');
 
-                let purpose = 'Trang trí không gian';
-                if (p.purposeKey === 'space_decor') purpose = isEn ? 'Space Decor' : 'Trang trí không gian';
-                else if (p.purposeKey === 'daily_essentials') purpose = isEn ? 'Daily Essentials' : 'Đồ dùng hằng ngày';
-                else if (p.purposeKey === 'personal_gifts') purpose = isEn ? 'Personal Gifts' : 'Quà tặng cá nhân';
+                let purpose = this.tt('Trang trí không gian');
+                if (p.purposeKey === 'space_decor') purpose = isEn ? 'Space Decor' : this.tt('Trang trí không gian');
+                else if (p.purposeKey === 'daily_essentials') purpose = isEn ? 'Daily Essentials' : this.tt('Đồ dùng hằng ngày');
+                else if (p.purposeKey === 'personal_gifts') purpose = isEn ? 'Personal Gifts' : this.tt('Quà tặng cá nhân');
 
                 return {
                     id: p.id,
@@ -517,9 +517,9 @@ export default {
                         ...matchedMock,
                         ...p,
                         image: p.image?.url ? p.image : (matchedMock?.image || '/assets/images/products/figma-sample-1.png'),
-                        category: p.category || matchedMock?.category || (isEn ? 'Custom Manufacturing' : 'Gia công theo yêu cầu'),
+                        category: p.category || matchedMock?.category || (isEn ? 'Custom Manufacturing' : this.tt('Gia công theo yêu cầu')),
                         categoryId: p.categoryId || matchedMock?.categoryId || 'custom',
-                        purpose: p.purpose || matchedMock?.purpose || (isEn ? 'Space Decor' : 'Trang trí không gian'),
+                        purpose: p.purpose || matchedMock?.purpose || (isEn ? 'Space Decor' : this.tt('Trang trí không gian')),
                         isBestChoice: p.isBestChoice !== undefined ? p.isBestChoice : (matchedMock?.isBestChoice ?? true),
                     };
                 });
@@ -566,9 +566,9 @@ export default {
             if (this.filters.category && this.filters.category !== 'all') {
                 const targetCat = this.filters.category;
                 result = result.filter((p) => {
-                    if (targetCat === 'keychains') return p.categoryId === 'keychains' || p.category?.includes('Móc khoá') || p.category?.includes('Keychain');
-                    if (targetCat === 'stationery') return p.categoryId === 'stationery' || p.category?.includes('Văn phòng') || p.category?.includes('Stationery') || p.category?.includes('Đồ dùng') || p.category?.includes('Decor');
-                    if (targetCat === 'custom') return p.categoryId === 'custom' || p.category?.includes('Gia công') || p.category?.includes('Custom');
+                    if (targetCat === 'keychains') return p.categoryId === 'keychains' || p.category?.includes(this.tt('Móc khoá')) || p.category?.includes('Keychain');
+                    if (targetCat === 'stationery') return p.categoryId === 'stationery' || p.category?.includes(this.tt('Văn phòng')) || p.category?.includes('Stationery') || p.category?.includes(this.tt('Đồ dùng')) || p.category?.includes('Decor');
+                    if (targetCat === 'custom') return p.categoryId === 'custom' || p.category?.includes(this.tt('Gia công')) || p.category?.includes('Custom');
                     return p.categoryId === targetCat || p.category === targetCat || (p.categories && p.categories.some(c => c.id == targetCat || c.slug == targetCat));
                 });
             }
@@ -578,9 +578,9 @@ export default {
                 result = result.filter((p) => {
                     return this.filters.purposes.some(sel => {
                         if (sel === p.purpose) return true;
-                        if (p.purposeKey === 'space_decor' && (sel === 'Trang trí không gian' || sel === 'Space Decor')) return true;
-                        if (p.purposeKey === 'daily_essentials' && (sel === 'Đồ dùng hằng ngày' || sel === 'Daily Essentials')) return true;
-                        if (p.purposeKey === 'personal_gifts' && (sel === 'Quà tặng cá nhân' || sel === 'Personal Gifts')) return true;
+                        if (p.purposeKey === 'space_decor' && (sel === this.tt('Trang trí không gian') || sel === 'Space Decor')) return true;
+                        if (p.purposeKey === 'daily_essentials' && (sel === this.tt('Đồ dùng hằng ngày') || sel === 'Daily Essentials')) return true;
+                        if (p.purposeKey === 'personal_gifts' && (sel === this.tt('Quà tặng cá nhân') || sel === 'Personal Gifts')) return true;
                         return false;
                     });
                 });

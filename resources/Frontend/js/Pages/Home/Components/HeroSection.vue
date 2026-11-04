@@ -109,6 +109,8 @@
 </template>
 
 <script>
+const tt = (s) => s;
+
 export default {
     name: 'HeroSection',
     props: {
@@ -118,20 +120,19 @@ export default {
         },
         subtitle: {
             type: String,
-            default: 'Về chúng tôi',
+            default: tt('Về chúng tôi'),
         },
         title: {
             type: String,
-            default: 'HIỆN THỰC HÓA MỌI Ý TƯỞNG VỚI CÔNG NGHỆ IN 3D',
+            default: tt('HIỆN THỰC HÓA MỌI Ý TƯỞNG VỚI CÔNG NGHỆ IN 3D'),
         },
         description: {
             type: String,
-            default:
-                'Không giới hạn không gian sáng tạo, HH Maker thổi hồn vào từng sản phẩm thông qua công nghệ in và gia công 3D hiện đại',
+            default: tt('Không giới hạn không gian sáng tạo, HH Maker thổi hồn vào từng sản phẩm thông qua công nghệ in và gia công 3D hiện đại'),
         },
         primaryCtaText: {
             type: String,
-            default: 'Khám phá ngay',
+            default: tt('Khám phá ngay'),
         },
         primaryCtaLink: {
             type: String,
@@ -139,7 +140,7 @@ export default {
         },
         secondaryCtaText: {
             type: String,
-            default: 'Nhận tư vấn thiết kế',
+            default: tt('Nhận tư vấn thiết kế'),
         },
         secondaryCtaLink: {
             type: String,

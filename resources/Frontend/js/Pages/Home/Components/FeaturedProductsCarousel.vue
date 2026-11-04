@@ -111,12 +111,14 @@
 </template>
 
 <script>
+const tt = (s) => s;
+
 export default {
     name: 'FeaturedProductsCarousel',
     props: {
         title: {
             type: String,
-            default: 'SẢN PHẨM NỔI BẬT',
+            default: tt('SẢN PHẨM NỔI BẬT'),
         },
         items: {
             type: Array,
@@ -131,32 +133,32 @@ export default {
             touchStartX: 0,
             defaultItems: [
                 {
-                    name: 'Tên sản phẩm',
+                    name: this.tt('Tên sản phẩm'),
                     description: 'This awesome element has more variants and fully',
                     image: '/assets/images/homepage/product-sample-warm.png',
                 },
                 {
-                    name: 'Tên sản phẩm',
+                    name: this.tt('Tên sản phẩm'),
                     description: 'This awesome element has more variants and fully',
                     image: '/assets/images/homepage/product-sample-cool.png',
                 },
                 {
-                    name: 'Tên sản phẩm',
+                    name: this.tt('Tên sản phẩm'),
                     description: 'This awesome element has more variants and fully',
                     image: '/assets/images/homepage/product-sample-warm.png',
                 },
                 {
-                    name: 'Tên sản phẩm',
+                    name: this.tt('Tên sản phẩm'),
                     description: 'This awesome element has more variants and fully',
                     image: '/assets/images/homepage/product-sample-cool.png',
                 },
                 {
-                    name: 'Tên sản phẩm',
+                    name: this.tt('Tên sản phẩm'),
                     description: 'This awesome element has more variants and fully',
                     image: '/assets/images/homepage/product-sample-warm.png',
                 },
                 {
-                    name: 'Tên sản phẩm',
+                    name: this.tt('Tên sản phẩm'),
                     description: 'This awesome element has more variants and fully',
                     image: '/assets/images/homepage/product-sample-cool.png',
                 },
@@ -167,7 +169,7 @@ export default {
         displayItems() {
             if (this.items && this.items.length > 0) {
                 const mapped = this.items.map((it, idx) => ({
-                    name: it.name || it.title || 'Tên sản phẩm',
+                    name: it.name || it.title || this.tt('Tên sản phẩm'),
                     description: it.description || 'This awesome element has more variants and fully',
                     image: it.image || it.thumbnail || (idx % 2 === 0 ? '/assets/images/homepage/product-sample-warm.png' : '/assets/images/homepage/product-sample-cool.png'),
                 }));

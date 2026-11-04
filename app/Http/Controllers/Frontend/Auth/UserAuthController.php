@@ -753,7 +753,7 @@ class UserAuthController extends Controller
         $otp = rand(100000, 999999);
 
         // Cache OTP trong 3 phút
-        Cache::put('otp_' . $phone, $otp, now()->addMinutes(3));
+        Cache::put('otp_' . $phone . '_' . app()->getLocale(), $otp, now()->addMinutes(3));
 
         // Gửi OTP qua SMS
         $smsService->sendOtp($phone, $otp);
@@ -771,7 +771,7 @@ class UserAuthController extends Controller
         $otp = rand(100000, 999999);
 
         // Cache OTP trong 3 phút
-        Cache::put('otp_' . $phone, $otp, now()->addMinutes(3));
+        Cache::put('otp_' . $phone . '_' . app()->getLocale(), $otp, now()->addMinutes(3));
 
         // Gửi OTP qua SMS
         $zaloZNSService->sendOtp($phone, $otp);
@@ -789,9 +789,12 @@ class UserAuthController extends Controller
 
             $phone = $validated['phone'];
             $otp = $validated['otp'];
-            $cachedOtp = Cache::get('otp_' . $phone);
+            $cachedOtp = Cache::get('otp_' . $phone . '_' . app()->getLocale()) ?? Cache::get('otp_' . $phone);
 
             if ($cachedOtp && $otp == $cachedOtp) {
+                foreach (config('app.locales', ['vi', 'en']) as $locale) {
+                    Cache::forget('otp_' . $phone . '_' . $locale);
+                }
                 Cache::forget('otp_' . $phone);
 
                 session(['otp_verified_phone' => $phone]);

@@ -157,7 +157,7 @@ export default {
     },
     computed: {
         displayAddress() {
-            const raw = this.address || this.$page.props.global?.general_address || 'Số 65 đường số 9, khu dân cư Hương Lộ 5, Phường An Lạc, Thành phố Hồ Chí Minh'
+            const raw = this.address || this.$page.props.global?.general_address || this.tt('Số 65 đường số 9, khu dân cư Hương Lộ 5, Phường An Lạc, Thành phố Hồ Chí Minh')
             return this.tt(raw)
         },
         displayHotline() {

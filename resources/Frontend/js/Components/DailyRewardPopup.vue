@@ -9,7 +9,7 @@
                 type="button"
                 @click="openPopup"
                 class="group flex items-center gap-2 bg-white/95 hover:bg-white text-gray-800 hover:text-red-fks py-2 px-3 sm:px-3.5 rounded-full shadow-[0_8px_25px_rgba(0,0,0,0.12)] border border-red-fks/20 hover:border-red-fks transition-all duration-300 transform hover:scale-105 active:scale-95"
-                title="Xem lịch sử hoạt động và ghi chú của Admin"
+                :title="tt('Xem lịch sử hoạt động và ghi chú của Admin')"
             >
                 <div class="relative flex items-center justify-center w-7 h-7 bg-red-50 text-red-fks rounded-full group-hover:bg-red-fks group-hover:text-white transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -25,7 +25,7 @@
                         class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-fks rounded-full ring-2 ring-white"
                     ></span>
                 </div>
-                <span class="text-xs font-bold font-display hidden sm:inline-block">Hoạt động &amp; Ghi chú</span>
+                <span class="text-xs font-bold font-display hidden sm:inline-block">{{ tt('Hoạt động & Ghi chú') }}</span>
             </button>
         </div>
 
@@ -41,13 +41,13 @@
                         <div class="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center">
                             <span class="text-xs">🔔</span>
                         </div>
-                        <span class="text-xs font-black uppercase tracking-wider font-display">Thông báo &amp; Hoạt động</span>
+                        <span class="text-xs font-black uppercase tracking-wider font-display">{{ tt('Thông báo & Hoạt động') }}</span>
                     </div>
                     <button
                         type="button"
                         @click="dismiss"
                         class="w-6 h-6 rounded-lg bg-white/10 hover:bg-white/30 flex items-center justify-center text-white/90 hover:text-white transition-colors cursor-pointer"
-                        title="Tạm ẩn popup (vẫn lưu lại để xem lại bất cứ lúc nào)"
+                        :title="tt('Tạm ẩn popup (vẫn lưu lại để xem lại bất cứ lúc nào)')"
                     >
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
@@ -65,7 +65,7 @@
                     >
                         <div class="flex items-center gap-1.5 text-amber-800 font-bold text-xs">
                             <span>📌</span>
-                            <span>Ghi chú từ Ban Quản trị:</span>
+                            <span>{{ tt('Ghi chú từ Ban Quản trị:') }}</span>
                         </div>
                         <p class="text-xs text-amber-900 leading-relaxed whitespace-pre-line pl-5 font-medium">
                             {{ adminNote }}
@@ -76,7 +76,7 @@
                                 @click="dismiss"
                                 class="w-full py-1.5 px-3 bg-amber-600 hover:bg-amber-700 active:scale-[0.99] text-white font-bold text-[11px] rounded-lg transition shadow-2xs cursor-pointer flex items-center justify-center gap-1"
                             >
-                                <span>✓ Đã hiểu và đóng thông báo</span>
+                                <span>✓ {{ tt('Đã hiểu và đóng thông báo') }}</span>
                             </button>
                         </div>
                     </div>
@@ -89,16 +89,16 @@
                         <div class="flex items-center justify-between gap-2">
                             <div class="space-y-0.5 flex-1">
                                 <p class="text-xs font-bold text-gray-800 leading-tight">
-                                    Bạn được <span class="text-amber-600 font-black">+{{ rewardPoints }}</span> quả thưởng
+                                    {{ tt('Bạn được') }} <span class="text-amber-600 font-black">+{{ rewardPoints }}</span> {{ tt('quả thưởng') }}
                                 </p>
                                 <p class="text-[11px] text-gray-500 font-medium">
-                                    đăng nhập ngày hôm nay
+                                    {{ tt('đăng nhập ngày hôm nay') }}
                                 </p>
                             </div>
                             <!-- Badge +10 Quả thưởng -->
                             <div class="flex items-center gap-1.5 bg-white text-amber-700 px-2 py-1 rounded-lg border border-amber-200 font-black text-xs shrink-0 shadow-2xs">
                                 <span>+{{ rewardPoints }}</span>
-                                <img src="/assets/images/qua_thuong.png" class="w-4 h-4 object-contain shrink-0" alt="Quả thưởng" />
+                                <img src="/assets/images/qua_thuong.png" class="w-4 h-4 object-contain shrink-0" :alt="tt('Quả thưởng')" />
                             </div>
                         </div>
 
@@ -108,7 +108,7 @@
                             @click="dismiss"
                             class="w-full py-2 px-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 active:scale-[0.99] text-white font-black text-[11px] uppercase tracking-wider flex items-center justify-center gap-1.5 rounded-lg transition-all duration-200 cursor-pointer group shadow-xs"
                         >
-                            <span>MÌNH CẢM ƠN FUNKY!</span>
+                            <span>{{ tt('MÌNH CẢM ƠN FUNKY!') }}</span>
                             <span class="text-[9px] transform group-hover:translate-x-1 transition-transform">▶</span>
                         </button>
                     </div>
@@ -118,7 +118,7 @@
                         <div class="flex items-center justify-between px-0.5">
                             <span class="text-[11px] font-bold uppercase tracking-wider text-gray-500 font-display flex items-center gap-1">
                                 <span>🕒</span>
-                                <span>Hoạt động gần đây</span>
+                                <span>{{ tt('Hoạt động gần đây') }}</span>
                             </span>
                             <Link
                                 v-if="hasPointHistoryRoute"
@@ -126,7 +126,7 @@
                                 @click="visible = false"
                                 class="text-[11px] text-red-fks font-bold hover:underline"
                             >
-                                Xem tất cả →
+                                {{ tt('Xem tất cả') }} →
                             </Link>
                         </div>
 
@@ -158,7 +158,7 @@
                                         {{ act.is_positive ? '+' : '' }}{{ act.amount }}
                                     </span>
                                     <span class="text-[9px] text-gray-400 font-medium">
-                                        dư: {{ act.balance_after }}
+                                        {{ tt('dư:') }} {{ act.balance_after }}
                                     </span>
                                 </div>
                             </div>
@@ -166,7 +166,7 @@
 
                         <!-- Empty State -->
                         <div v-else class="py-6 text-center text-gray-400 space-y-1">
-                            <p class="text-xs font-medium">Chưa có hoạt động nào được ghi nhận</p>
+                            <p class="text-xs font-medium">{{ tt('Chưa có hoạt động nào được ghi nhận') }}</p>
                         </div>
                     </div>
                 </div>
@@ -178,15 +178,15 @@
                         @click="visible = false"
                         class="flex-1 py-2 px-3 bg-white border border-gray-200 hover:border-green-600 text-gray-700 hover:text-green-700 font-bold text-xs rounded-xl text-center transition-colors flex items-center justify-center gap-1.5"
                     >
-                        <img src="/assets/images/qua_nap.png" class="w-4 h-4 object-contain shrink-0" alt="Quả nạp" />
-                        <span>Nạp thêm Quả</span>
+                        <img src="/assets/images/qua_nap.png" class="w-4 h-4 object-contain shrink-0" :alt="tt('Quả nạp')" />
+                        <span>{{ tt('Nạp thêm Quả') }}</span>
                     </Link>
                     <button
                         type="button"
                         @click="dismiss"
                         class="py-2 px-3.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-xs rounded-xl transition-colors cursor-pointer"
                     >
-                        Tạm ẩn
+                        {{ tt('Tạm ẩn') }}
                     </button>
                 </div>
             </div>

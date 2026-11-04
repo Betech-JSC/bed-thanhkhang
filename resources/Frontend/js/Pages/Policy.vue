@@ -159,13 +159,13 @@ export default {
             const itemTitle = this.content ? this.tt(this.content.title) : this.tt('Chính sách & Điều khoản')
             return this.currentLocale === 'en'
                 ? `${itemTitle} - HH Maker | 3D Printing Workshop`
-                : `${itemTitle} - HH Maker | Xưởng in 3D`
+                : `${itemTitle} - ${this.tt('HH Maker | Xưởng in 3D')}`
         },
         pageDescription() {
             if (this.seo?.description) return this.seo.description
             return this.currentLocale === 'en'
                 ? 'Official service policies, warranty terms, and privacy commitments for 3D printing and custom modeling at HH Maker.'
-                : 'Thông tin chính sách dịch vụ, cam kết bảo mật và quy định bảo hành in 3D chuyên nghiệp tại HH Maker.'
+                : this.tt('Thông tin chính sách dịch vụ, cam kết bảo mật và quy định bảo hành in 3D chuyên nghiệp tại HH Maker.')
         },
     },
     methods: {

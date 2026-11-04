@@ -14,7 +14,7 @@
                             <div>
                                 <h1 class="display-2 text-[#18191E] font-bold font-display">Funky Blog</h1>
                                 <p class="body-1 font-sans font-normal text-[#18191E]">
-                                    Nơi chia sẻ các tin tức, thông tin mới nhất từ Funky
+                                    {{ tt('Nơi chia sẻ các tin tức, thông tin mới nhất từ Funky') }}
                                 </p>
                             </div>
                         </div>
@@ -28,7 +28,7 @@
                                     @keyup.enter="handleSearch"
                                     type="text"
                                     class="outline-none ring-0"
-                                    placeholder="Tìm kiếm"
+                                    :placeholder="tt('Tìm kiếm')"
                                 />
                                 <div>
                                     <svg

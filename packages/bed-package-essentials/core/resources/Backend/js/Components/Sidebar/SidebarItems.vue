@@ -9,8 +9,7 @@
         </Link>
     </div>
     <nav class="flex-1 px-2 pb-4 space-y-1 navs">
-        <!-- Chức năng đa ngôn ngữ trang Admin tạm ẩn theo yêu cầu người dùng -->
-        <!-- <ul
+        <ul
             class="flex px-4 py-5 space-x-2 !uppercase overflow-y-auto btn-group"
             v-if="$page.props.locale.list.length > 1"
         >
@@ -23,7 +22,7 @@
                 @click="switchLocale(locale)"
                 :class="currentLocale === locale ? 'btn-primary' : 'btn-outline-primary'"
             />
-        </ul> -->
+        </ul>
         <SidebarMain />
     </nav>
 </template>

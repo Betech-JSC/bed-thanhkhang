@@ -7,7 +7,7 @@
             </h3>
             <nav class="flex flex-col font-sans" aria-label="Table of contents">
                 <button
-                    v-for="item in items"
+                    v-for="item in displayItems"
                     :key="item.id"
                     type="button"
                     @click="onItemClick(item.id)"
@@ -37,7 +37,7 @@
         <div class="lg:hidden sticky top-20 z-20 mb-8 py-2.5 bg-[#111322]/95 backdrop-blur-md border-y border-[#404968]/70">
             <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 px-1">
                 <button
-                    v-for="item in items"
+                    v-for="item in displayItems"
                     :key="item.id"
                     type="button"
                     @click="onItemClick(item.id)"
@@ -57,21 +57,34 @@
 </template>
 
 <script setup>
+import { computed, getCurrentInstance } from 'vue'
+
 const props = defineProps({
     items: {
         type: Array,
-        default: () => [
-            { id: 'section-01', number: '01', title: 'Khi nào cần thiết kế 3D?', shortTitle: 'Khi nào cần 3D?' },
-            { id: 'section-02', number: '02', title: 'Từ ý tưởng tới mô hình', shortTitle: 'Quy trình' },
-            { id: 'section-03', number: '03', title: 'Bạn cần chuẩn bị gì?', shortTitle: 'Chuẩn bị gì?' },
-            { id: 'section-04', number: '04', title: 'Kết quả cùng hoàn thiện', shortTitle: 'Hoàn thiện' },
-        ],
+        default: () => [],
     },
     activeId: {
         type: String,
         default: 'section-01',
     },
 })
+
+const instance = getCurrentInstance()
+const i18n = {
+    tt: (text) => (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(text) : text),
+}
+
+const defaultTocItems = [
+    { id: 'section-01', number: '01', title: i18n.tt('Khi nào cần thiết kế 3D?'), shortTitle: i18n.tt('Khi nào cần 3D?') },
+    { id: 'section-02', number: '02', title: i18n.tt('Từ ý tưởng tới mô hình'), shortTitle: i18n.tt('Quy trình') },
+    { id: 'section-03', number: '03', title: i18n.tt('Bạn cần chuẩn bị gì?'), shortTitle: i18n.tt('Chuẩn bị gì?') },
+    { id: 'section-04', number: '04', title: i18n.tt('Kết quả cùng hoàn thiện'), shortTitle: i18n.tt('Hoàn thiện') },
+]
+
+const displayItems = computed(() =>
+    props.items && props.items.length > 0 ? props.items : defaultTocItems
+)
 
 const emit = defineEmits(['select'])
 

@@ -4,7 +4,7 @@
             <div class="container pt-[120px]">
                 <div class="space-y-[12px]">
                     <h1 class="text-gray-900 text-[24px]">
-                        kết quả cho
+                        {{ tt('kết quả cho') }}
                         <span class="headline_3">“{{ keyword }}”</span>
                     </h1>
                     <JBreadcrumb :items="breadcrumbs" />

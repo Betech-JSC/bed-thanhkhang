@@ -118,10 +118,9 @@ export default {
     data() {
         return {
             heroBanner: '/assets/images/homepage/hero-banner.png',
-            heroSubtitle: 'VỀ CHÚNG TÔI',
-            heroTitle: 'HIỆN THỰC HÓA MỌI Ý TƯỞNG VỚI CÔNG NGHỆ IN 3D',
-            heroDescription:
-                'Không giới hạn không gian sáng tạo, HH Maker thổi hồn vào từng sản phẩm thông qua công nghệ in và gia công 3D hiện đại',
+            heroSubtitle: this.tt('VỀ CHÚNG TÔI'),
+            heroTitle: this.tt('HIỆN THỰC HÓA MỌI Ý TƯỞNG VỚI CÔNG NGHỆ IN 3D'),
+            heroDescription: this.tt('Không giới hạn không gian sáng tạo, HH Maker thổi hồn vào từng sản phẩm thông qua công nghệ in và gia công 3D hiện đại'),
         };
     },
     computed: {
@@ -162,13 +161,13 @@ export default {
             return this.tt(this.activeSlider?.description || this.heroDescription);
         },
         dynamicPrimaryCtaText() {
-            return this.tt(this.activeSlider?.primary_cta_text || 'Khám phá ngay');
+            return this.activeSlider?.primary_cta_text ? this.tt(this.activeSlider.primary_cta_text) : this.tt('Khám phá ngay');
         },
         dynamicPrimaryCtaLink() {
             return this.activeSlider?.primary_cta_link || '#featured-carousel';
         },
         dynamicSecondaryCtaText() {
-            return this.tt(this.activeSlider?.secondary_cta_text || 'Nhận tư vấn thiết kế');
+            return this.activeSlider?.secondary_cta_text ? this.tt(this.activeSlider.secondary_cta_text) : this.tt('Nhận tư vấn thiết kế');
         },
         dynamicSecondaryCtaLink() {
             return this.activeSlider?.secondary_cta_link || '#contact-section';

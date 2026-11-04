@@ -451,7 +451,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, getCurrentInstance } from 'vue'
 import { usePage } from '@inertiajs/inertia-vue3'
 import { Head, useForm } from '@inertiajs/inertia-vue3'
 import BaseModal from '@/Components/Base/BaseModal.vue'
@@ -471,6 +471,11 @@ const props = defineProps({
     },
 })
 
+const instance = getCurrentInstance()
+const i18n = {
+    tt: (text) => (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(text) : text),
+}
+const key = { tt: (s) => s }
 const page = usePage()
 const isEn = computed(() => (page.props.value?.locale?.current || 'vi') === 'en')
 
@@ -479,7 +484,7 @@ const pageTitle = computed(() => {
         props.seo?.title ||
         (isEn.value
             ? 'Contact & Consultation - HH Maker | Turning Creativity Beyond the Screen'
-            : 'Liên hệ tư vấn - HH Maker | Đưa sáng tạo vượt ra khỏi màn hình')
+            : i18n.tt('Liên hệ tư vấn - HH Maker | Đưa sáng tạo vượt ra khỏi màn hình'))
     )
 })
 
@@ -488,7 +493,7 @@ const pageDescription = computed(() => {
         props.seo?.description ||
         (isEn.value
             ? 'Get in touch with HH Maker to discuss 3D design concepts, industrial 3D printing services, or bespoke custom fabrication.'
-            : 'Liên hệ ngay với HH Maker để trao đổi ý tưởng thiết kế 3D, gia công in 3D công nghiệp hoặc chế tác sản phẩm custom theo yêu cầu.')
+            : i18n.tt('Liên hệ ngay với HH Maker để trao đổi ý tưởng thiết kế 3D, gia công in 3D công nghiệp hoặc chế tác sản phẩm custom theo yêu cầu.'))
     )
 })
 
@@ -509,7 +514,7 @@ const displayEmail = computed(() => {
 })
 
 // Dịch vụ lựa chọn
-const availableServices = ['Thiết kế 3D', 'Gia công 3D', 'Làm đồ custom']
+const availableServices = [key.tt('Thiết kế 3D'), key.tt('Gia công 3D'), key.tt('Làm đồ custom')]
 
 // FAQ Accordion State & Data
 const activeFaq = ref(null)
@@ -547,7 +552,7 @@ const form = useForm({
     name: '',
     phone: '',
     email: '',
-    service: 'Thiết kế 3D',
+    service: key.tt('Thiết kế 3D'),
     content: '',
 })
 
@@ -570,7 +575,7 @@ const validate = () => {
     if (!form.name || form.name.trim().length < 2) {
         clientErrors.name = isEn.value
             ? 'Please enter your full name (minimum 2 characters).'
-            : 'Vui lòng nhập họ và tên (tối thiểu 2 ký tự).'
+            : i18n.tt('Vui lòng nhập họ và tên (tối thiểu 2 ký tự).')
         isValid = false
     }
 
@@ -579,12 +584,12 @@ const validate = () => {
     if (!phoneTrimmed) {
         clientErrors.phone = isEn.value
             ? 'Please enter your phone number.'
-            : 'Vui lòng nhập số điện thoại.'
+            : i18n.tt('Vui lòng nhập số điện thoại.')
         isValid = false
     } else if (!phoneRegex.test(phoneTrimmed) && phoneTrimmed.length < 10) {
         clientErrors.phone = isEn.value
             ? 'Invalid phone number (e.g. 0906636425).'
-            : 'Số điện thoại không hợp lệ (ví dụ: 0906636425).'
+            : i18n.tt('Số điện thoại không hợp lệ (ví dụ: 0906636425).')
         isValid = false
     }
 
@@ -593,7 +598,7 @@ const validate = () => {
         if (!emailRegex.test(form.email.trim())) {
             clientErrors.email = isEn.value
                 ? 'Invalid email format.'
-                : 'Địa chỉ email không đúng định dạng.'
+                : i18n.tt('Địa chỉ email không đúng định dạng.')
             isValid = false
         }
     }
@@ -601,7 +606,7 @@ const validate = () => {
     if (!form.content || form.content.trim().length < 5) {
         clientErrors.content = isEn.value
             ? 'Please describe your idea or requirements (minimum 5 characters).'
-            : 'Vui lòng mô tả ý tưởng hoặc yêu cầu của bạn (tối thiểu 5 ký tự).'
+            : i18n.tt('Vui lòng mô tả ý tưởng hoặc yêu cầu của bạn (tối thiểu 5 ký tự).')
         isValid = false
     }
 
@@ -623,14 +628,14 @@ const submitContact = () => {
         contact: {
             type: 'CONTACT_FORM',
             data: {
-                'Họ và tên': data.name,
-                'Số điện thoại': data.phone,
-                'Email': data.email,
-                'Dịch vụ quan tâm': data.service,
-                'Service': {
+                [key.tt('Họ và tên')]: data.name,
+                [key.tt('Số điện thoại')]: data.phone,
+                Email: data.email,
+                [key.tt('Dịch vụ quan tâm')]: data.service,
+                Service: {
                     title: data.service,
                 },
-                'Nội dung cần hỗ trợ': data.content,
+                [key.tt('Nội dung cần hỗ trợ')]: data.content,
             },
         },
     }))
@@ -645,7 +650,7 @@ const submitContact = () => {
         onSuccess: () => {
             showSuccessModal.value = true
             form.reset()
-            form.service = 'Thiết kế 3D'
+            form.service = key.tt('Thiết kế 3D')
         },
         onError: (errs) => {
             console.error('Lỗi khi gửi yêu cầu liên hệ:', errs)

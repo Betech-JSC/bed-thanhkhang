@@ -99,7 +99,7 @@
                                     @click="selectTag(tag.keyword)"
                                     class="px-3 py-1.5 rounded-lg text-xs font-medium text-[#B9C0D4] bg-[#16192B] border border-[#23273F] hover:border-[#2970FF] hover:text-[#FAFAFA] hover:bg-[#1E233D] transition-all duration-200 cursor-pointer"
                                 >
-                                    {{ tag.label }}
+                                    {{ tt(tag.label) }}
                                 </button>
                             </div>
                         </div>
@@ -309,15 +309,15 @@ export default {
             results: [],
             debounceTimer: null,
             popularTags: [
-                { label: 'In 3D SLA', keyword: 'SLA' },
-                { label: 'Nhựa PLA+', keyword: 'PLA' },
-                { label: 'In Resin 8K', keyword: 'Resin' },
+                { label: this.tt('In 3D SLA'), keyword: 'SLA' },
+                { label: this.tt('Nhựa PLA+'), keyword: 'PLA' },
+                { label: this.tt('In Resin 8K'), keyword: 'Resin' },
                 { label: 'Carbon Fiber', keyword: 'Carbon Fiber' },
-                { label: 'Móc khoá F1', keyword: 'Móc khoá' },
-                { label: 'Khung robot', keyword: 'Robot' },
+                { label: this.tt('Móc khoá F1'), keyword: this.tt('Móc khoá') },
+                { label: this.tt('Khung robot'), keyword: 'Robot' },
                 { label: 'Voronoi', keyword: 'Voronoi' },
-                { label: 'Thiết kế 3D', keyword: 'Thiết kế' },
-                { label: 'Quà tặng lưu niệm', keyword: 'Quà tặng' },
+                { label: this.tt('Thiết kế 3D'), keyword: this.tt('Thiết kế') },
+                { label: this.tt('Quà tặng lưu niệm'), keyword: this.tt('Quà tặng') },
             ],
         }
     },
@@ -405,7 +405,7 @@ export default {
         },
         formatPrice(val) {
             if (!val || isNaN(val) || Number(val) <= 0) return ''
-            return new Intl.NumberFormat('vi-VN').format(val) + ' đ'
+            return new Intl.NumberFormat('vi-VN').format(val) + ' ' + this.tt('đ')
         },
         getProductUrl(product) {
             if (product.slug) {

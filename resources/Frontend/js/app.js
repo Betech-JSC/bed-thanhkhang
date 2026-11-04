@@ -4,6 +4,8 @@ import { Inertia } from '@inertiajs/inertia'
 import { InertiaProgress } from '@inertiajs/progress'
 import messages from '@intlify/unplugin-vue-i18n/messages'
 import i18nMessages from '../../../public/build/locales/i18n.js'
+import viJson from '../lang/vi.json'
+import enJson from '../lang/en.json'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
@@ -42,7 +44,26 @@ axios.defaults.xsrfHeaderName = 'X-XSRF-TOKEN'
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || import.meta.env.VITE_APP_NAME
-const mergedMessages = { ...messages, ...i18nMessages }
+const rawMerged = { ...messages, ...i18nMessages }
+const mergedMessages = {
+    ...rawMerged,
+    vi: {
+        ...(rawMerged.vi || {}),
+        ...viJson,
+        ui: {
+            ...(rawMerged.vi?.ui || {}),
+            ...viJson,
+        },
+    },
+    en: {
+        ...(rawMerged.en || {}),
+        ...enJson,
+        ui: {
+            ...(rawMerged.en?.ui || {}),
+            ...enJson,
+        },
+    },
+}
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,

@@ -26,7 +26,7 @@
                 </Link>
                 <span class="text-[14px] leading-[17px] text-[#84ADFF]">/</span>
                 <span class="text-[14px] leading-[17px] font-normal text-[#84ADFF] truncate max-w-[240px] sm:max-w-none">
-                    {{ tt(title) }}
+                    {{ title ? tt(title) : tt('Thiết kế 3D') }}
                 </span>
             </nav>
 
@@ -53,7 +53,7 @@
                         <div class="relative w-[220px] h-[220px] sm:w-[260px] sm:h-[260px] lg:w-[280px] lg:h-[280px] flex items-center justify-center shrink-0">
                             <img
                                 :src="imageSrc"
-                                :alt="title"
+                                :alt="title ? tt(title) : tt('Thiết kế 3D')"
                                 class="w-full h-full object-contain drop-shadow-[0_16px_32px_rgba(0,0,0,0.6)] transition-transform duration-500 hover:scale-105"
                                 loading="eager"
                             />
@@ -104,7 +104,7 @@ import { Link, usePage } from '@inertiajs/inertia-vue3'
 const props = defineProps({
     title: {
         type: String,
-        default: 'Thiết kế 3D',
+        default: '',
     },
     description: {
         type: String,
@@ -117,6 +117,9 @@ const props = defineProps({
 })
 
 const instance = getCurrentInstance()
+const i18n = {
+    tt: (text) => (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(text) : text),
+}
 const page = usePage()
 const isEn = computed(() => page.props.value?.locale?.current === 'en')
 
@@ -135,36 +138,37 @@ const servicesUrl = computed(() => {
 const defaultDescription = computed(() =>
     isEn.value
         ? 'An idea does not need to be complete to begin. Together with HH Maker, clarify proportions, structure, and details, ensuring the 3D model is not only easy to visualize but also ready for real-world manufacturing.'
-        : 'Một ý tưởng chưa cần hoàn chỉnh để bắt đầu. Cùng HH Maker làm rõ tỉ lệ, cấu trúc và chi tiết, để mô hình 3D không chỉ dễ hình dung mà còn hướng đến khả năng chế tác thực tế.'
+        : i18n.tt('Một ý tưởng chưa cần hoàn chỉnh để bắt đầu. Cùng HH Maker làm rõ tỉ lệ, cấu trúc và chi tiết, để mô hình 3D không chỉ dễ hình dung mà còn hướng đến khả năng chế tác thực tế.')
 )
 
 const displayHeadline = computed(() => {
+    const baseTitle = props.title || i18n.tt('Thiết kế 3D')
     const rawTitle = (
-        (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(props.title) : props.title) || ''
+        (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(baseTitle) : baseTitle) || ''
     ).trim()
     if (isEn.value) {
         if (!rawTitle) return '3D Design: From sketch to concrete geometry'
         if (rawTitle.includes(':')) return rawTitle
         return `${rawTitle}: From sketch to concrete geometry`
     }
-    if (!rawTitle) return 'Thiết kế 3D: Từ phác thảo đến hình khối rõ ràng'
+    if (!rawTitle) return i18n.tt('Thiết kế 3D: Từ phác thảo đến hình khối rõ ràng')
     if (rawTitle.includes(':')) return rawTitle
-    return `${rawTitle}: Từ phác thảo đến hình khối rõ ràng`
+    return `${rawTitle}: ${i18n.tt('Từ phác thảo đến hình khối rõ ràng')}`
 })
 
 const imageSrc = computed(() => {
     return props.image || '/assets/images/services/hero-3d-illustration.png'
 })
 
-const inputItems = [
-    'Ý tưởng',
-    'Ảnh tham khảo',
-    'Bản phác thảo',
-]
+const inputItems = computed(() => [
+    i18n.tt('Ý tưởng'),
+    i18n.tt('Ảnh tham khảo'),
+    i18n.tt('Bản phác thảo'),
+])
 
-const processItems = [
-    'Tỉ lệ & hình khối',
-    'Cấu trúc & chi tiết',
-    'Khả năng chế tác',
-]
+const processItems = computed(() => [
+    i18n.tt('Tỉ lệ & hình khối'),
+    i18n.tt('Cấu trúc & chi tiết'),
+    i18n.tt('Khả năng chế tác'),
+])
 </script>

@@ -59,9 +59,7 @@ class ProductController extends Controller
     public function show($slug)
     {
         try {
-            $cacheKey = 'product_show_' . $slug . '_' . current_locale();
-
-            $data = Cache::remember($cacheKey, 3600, function () use ($slug) {
+            $data = Cache::remember('product_show_' . $slug . '_' . current_locale(), 3600, function () use ($slug) {
                 // 1. Search in Database first
                 $product = Product::query()
                     ->active()
@@ -86,7 +84,7 @@ class ProductController extends Controller
             });
 
             if (!$data) {
-                Cache::forget($cacheKey);
+                Cache::forget('product_show_' . $slug . '_' . current_locale());
                 return abort(404);
             }
 

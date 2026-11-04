@@ -16,14 +16,18 @@ class Setting extends Model
         return [
             'general' => [
                 'general_business_name' => 'required',
+                'general_business_name_en' => 'nullable',
                 'general_site_name' => 'nullable',
+                'general_site_name_en' => 'nullable',
 
 
                 'general_email' => 'nullable',
                 'general_address' => 'nullable',
+                'general_address_en' => 'nullable',
                 'general_phone' => 'nullable',
                 'general_zalo' => 'nullable',
                 'general_working_hours' => 'nullable',
+                'general_working_hours_en' => 'nullable',
                 'general_facebook' => 'nullable',
                 'general_tiktok' => 'nullable',
                 'map_iframe' => 'nullable',

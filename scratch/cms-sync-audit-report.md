@@ -1,9 +1,9 @@
 # Báo Cáo Kiểm Toán Hệ Thống CMS, Độ Phủ Kết Nối UI & Điều Hướng Toàn Diện (`/opsx-cms-sync`)
 
 - **Thư mục dự án**: `/Users/macbookpro2020/bed-hhmaker`
-- **Thời gian quét**: `2026-11-04 19:14:00`
+- **Thời gian quét**: `2026-11-04 21:47:35`
 - **Cơ chế ánh xạ**: `100% Dynamic AST Route-to-Model Discovery` (Không dùng từ khóa fix cứng)
-- **Phạm vi các nhóm Trang Figma Active**: `About, Contact, Error, Histories, History, Home, Policy, Posts, Process, Product, Products, Search, Services` (`63` files `.vue` active, đã tự động lọc bỏ `154` files boilerplate không dùng tới)
+- **Phạm vi các nhóm Trang Figma Active**: `About, Contact, Error, Histories, History, Home, Policy, Posts, Process, Product, Products, Search, Services` (`65` files `.vue` active, đã tự động lọc bỏ `154` files boilerplate không dùng tới)
 - **Tổng số Hệ thống CMS đã có**: `20` Models
 - **Số vị trí UI Active chưa connect CMS**: `0` vị trí
 - **Số lỗi Điều hướng trên UI Active**: `0` vị trí
@@ -61,7 +61,7 @@
 | **Trụ cột 4: Chuẩn hóa Leads `Contact::normalizeLeadData`** | Kiểm toán tự động | `✅ PASS` | `Contact::normalizeLeadData()` đã hoạt động |
 | **Trụ cột 5: Global Brand Settings (`props.global` & `map_iframe`)** | Kiểm toán tự động | `✅ PASS` | `Config.php` đã đồng bộ cấu hình thương hiệu & `map_iframe`; `HandleInertiaFrontendRequests.php` đã chia sẻ `props.global` |
 | **Trụ cột 6: Độ phủ UI-to-CMS & Idempotent Auto-Seeder** | Kiểm toán tự động | `✅ PASS` | CI/CD an toàn (không chứa `migrate:fresh`); 16 Frontend Controllers kết nối DB động |
-| **Trụ cột 7: Hợp đồng Khóa Cache & Instant Invalidation** | Kiểm toán tự động | `✅ PASS` | Đã khớp 20/20 tiền tố khóa Cache |
+| **Trụ cột 7: Hợp đồng Khóa Cache & Instant Invalidation** | Kiểm toán tự động | `✅ PASS` | Đã khớp 19/19 tiền tố khóa Cache |
 | **Trụ cột 8: PHPUnit CMS-to-Frontend Integration Tests** | Kiểm toán tự động | `✅ PASS` | Đã có 1 file test tích hợp CMS (CmsSyncIntegrationTest.php) |
 
 ---
@@ -92,7 +92,7 @@
 | `KEEP-10` | Trụ cột 5 (Inertia Shared Props) | `app/Http/Middleware/HandleInertiaFrontendRequests.php:179` | Chia sẻ `props.global` toàn cục qua `HandleInertiaFrontendRequests.php` | Giúp Header, Footer, Modal Tư vấn và mọi trang Frontend tự động nhận thông tin thương hiệu từ CMS. |
 | `KEEP-11` | Trụ cột 6 (CI/CD & Auto-Seeder) | `.github/workflows/ci-cd.yml:1` | Pipeline CI/CD chạy `migrate --force` và `RoleSeeder` an toàn (Idempotent, không mất dữ liệu) | Tuân thủ tuyệt đối nguyên tắc an toàn Database trên Production. |
 | `KEEP-12` | Trụ cột 6 (Dynamic Controllers & Legacy Guard) | `app/Http/Controllers/Frontend/` | 16 Frontend Controllers đã ưu tiên truy vấn Eloquent DB | Đảm bảo dữ liệu CMS luôn được ưu tiên số 1. |
-| `KEEP-13` | Trụ cột 7 (Cache Key Contract) | `app/Models/ & app/Http/Controllers/Frontend/` | Hợp đồng Invalidation cho 20/20 nhóm khóa Cache | Đảm bảo khi Admin bấm Lưu trong CMS, dữ liệu ngoài Frontend cập nhật tức thì (0 giây độ trễ). |
+| `KEEP-13` | Trụ cột 7 (Cache Key Contract) | `app/Models/ & app/Http/Controllers/Frontend/` | Hợp đồng Invalidation cho 19/19 nhóm khóa Cache | Đảm bảo khi Admin bấm Lưu trong CMS, dữ liệu ngoài Frontend cập nhật tức thì (0 giây độ trễ). |
 | `KEEP-14` | Trụ cột 8 (PHPUnit E2E CMS Tests) | `tests/Feature/ (1 files)` | Bộ 1 bài test tích hợp CMS-to-Frontend (`CmsSyncIntegrationTest.php`) | Kiểm chứng tự động chu trình `Admin POST -> DB Assert -> Cache Invalidation -> Frontend GET Assert`. |
 
 ---

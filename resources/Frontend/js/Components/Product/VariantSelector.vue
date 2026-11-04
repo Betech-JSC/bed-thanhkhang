@@ -22,31 +22,33 @@
 </template>
 
 <script>
+const tt = (s) => s
+
 export default {
     name: 'VariantSelector',
     props: {
         material: {
             type: String,
-            default: 'Nhựa PLA · Công nghệ FDM',
+            default: tt('Nhựa PLA · Công nghệ FDM'),
         },
         color: {
             type: String,
-            default: 'Cam',
+            default: tt('Cam'),
         },
         customization: {
             type: String,
-            default: 'Màu sắc · Kích thước · Số lượng',
+            default: tt('Màu sắc · Kích thước · Số lượng'),
         },
     },
     computed: {
         currentMaterial() {
-            return this.material || 'Nhựa PLA · Công nghệ FDM'
+            return this.material || this.tt('Nhựa PLA · Công nghệ FDM')
         },
         currentColor() {
-            return this.color || 'Cam'
+            return this.color || this.tt('Cam')
         },
         currentCustomization() {
-            return this.customization || 'Màu sắc · Kích thước · Số lượng'
+            return this.customization || this.tt('Màu sắc · Kích thước · Số lượng')
         },
     },
 }

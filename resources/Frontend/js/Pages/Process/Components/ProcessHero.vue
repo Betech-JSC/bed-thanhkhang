@@ -95,7 +95,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, getCurrentInstance } from 'vue'
 
 const props = defineProps({
     banner: {
@@ -104,19 +104,24 @@ const props = defineProps({
     },
 })
 
-const categoryText = computed(() => props.banner?.subtitle || 'QUY TRÌNH LÀM VIỆC')
+const instance = getCurrentInstance()
+const i18n = {
+    tt: (text) => (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(text) : text),
+}
+
+const categoryText = computed(() => props.banner?.subtitle || i18n.tt('QUY TRÌNH LÀM VIỆC'))
 const headlineText = computed(
-    () => props.banner?.title || 'RÕ RÀNG TỪNG BƯỚC\nCHỈN CHU TỪNG SẢN PHẨM'
+    () => props.banner?.title || i18n.tt('RÕ RÀNG TỪNG BƯỚC\nCHỈN CHU TỪNG SẢN PHẨM')
 )
 const descriptionText = computed(() => {
     return (
         props.banner?.description ||
-        'Từ ý tưởng ban đầu đến thành phẩm hoàn thiện, HH Maker cùng bạn làm rõ nhu cầu, thống nhất thiết kế và chi phí trước khi gia công. Mỗi giai đoạn đều được trao đổi cụ thể để bạn dễ theo dõi và chủ động trong quá trình đặt làm.'
+        i18n.tt('Từ ý tưởng ban đầu đến thành phẩm hoàn thiện, HH Maker cùng bạn làm rõ nhu cầu, thống nhất thiết kế và chi phí trước khi gia công. Mỗi giai đoạn đều được trao đổi cụ thể để bạn dễ theo dõi và chủ động trong quá trình đặt làm.')
     )
 })
 const bgImage = computed(() => props.banner?.image?.url || '/images/process/process_hero_bg.png')
-const bgImageAlt = computed(() => props.banner?.image?.alt || 'HH Maker Quy trình làm việc')
-const ctaText = computed(() => props.banner?.primary_cta_text || 'Khám phá 5 bước')
+const bgImageAlt = computed(() => props.banner?.image?.alt || i18n.tt('HH Maker Quy trình làm việc'))
+const ctaText = computed(() => props.banner?.primary_cta_text || i18n.tt('Khám phá 5 bước'))
 const ctaLink = computed(() => props.banner?.primary_cta_link || props.banner?.link || null)
 
 const scrollToSteps = () => {

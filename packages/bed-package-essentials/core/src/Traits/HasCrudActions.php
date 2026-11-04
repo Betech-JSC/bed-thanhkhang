@@ -159,6 +159,7 @@ trait HasCrudActions
 
     public function store(Request $request, $id = null)
     {
+        $id = $id ?? $request->input('id');
         $request['locale'] = current_locale();
         $this->checkAuthorize();
 
@@ -182,6 +183,37 @@ trait HasCrudActions
         }
 
         $rules = $this->beforeStore($request, $rules);
+
+        $defaultLocale = config('app.locale', 'vi');
+        if ($id && current_locale() != $defaultLocale) {
+            $modelInstance = $this->model();
+            $translatedAttributes = $modelInstance->translatedAttributes ?? [];
+            if (!empty($translatedAttributes)) {
+                $existingQuery = $this->model::query();
+                if (!is_null($existingQuery->getMacro('withTrashed'))) {
+                    $existingQuery = $existingQuery->withTrashed();
+                }
+                $existing = $existingQuery->find($id);
+                if ($existing && method_exists($existing, 'translate')) {
+                    $fallbackTranslation = $existing->translate($defaultLocale, false);
+                    if ($fallbackTranslation) {
+                        foreach ($translatedAttributes as $attr) {
+                            if (in_array($attr, ['locale', 'slug'], true)) {
+                                continue;
+                            }
+                            $currentVal = $request->input($attr);
+                            if (empty($currentVal) && $currentVal !== '0' && $currentVal !== 0) {
+                                $fallbackVal = $fallbackTranslation->getAttribute($attr);
+                                if (!empty($fallbackVal)) {
+                                    $request->merge([$attr => $fallbackVal]);
+                                    $request[$attr] = $fallbackVal;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         $validated = $request->validate($rules);
 

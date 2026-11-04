@@ -204,8 +204,35 @@ class Service extends BaseModel
         ];
     }
 
-    public static function getDefaultSteps(): array
+    public static function getDefaultSteps(?string $locale = null): array
     {
+        $locale = $locale ?: (function_exists('current_locale') ? current_locale() : app()->getLocale());
+
+        if ($locale === 'en') {
+            return [
+                [
+                    'number' => '01',
+                    'title' => 'Discuss Ideas and Intended Use',
+                    'description' => 'Share the product you want to create, reference images, and what matters most to you. HH Maker works with you to define functionality, target dimensions, and priority details.',
+                ],
+                [
+                    'number' => '02',
+                    'title' => 'Block Out 3D Form and Proportions',
+                    'description' => 'Based on our discussion, your concept is translated into a 3D form. At this stage, focus on overall silhouette, dimensional proportions, and part placement before diving into fine details.',
+                ],
+                [
+                    'number' => '03',
+                    'title' => 'Refine Structure and Fine Details',
+                    'description' => 'Review wall thickness, surface texture, assembly joints, or embossed text together. Small details are balanced against actual physical dimensions and fabrication methods rather than just looking good on screen.',
+                ],
+                [
+                    'number' => '04',
+                    'title' => 'Finalize Plan Before Fabrication',
+                    'description' => 'Both sides review the 3D model, dimensions, and adjusted details. When moving to fabrication, materials, surface finish, and assembly requirements are aligned to choose the best production method.',
+                ],
+            ];
+        }
+
         return [
             [
                 'number' => '01',
@@ -230,8 +257,31 @@ class Service extends BaseModel
         ];
     }
 
-    public static function getDefaultChecklistItems(): array
+    public static function getDefaultChecklistItems(?string $locale = null): array
     {
+        $locale = $locale ?: (function_exists('current_locale') ? current_locale() : app()->getLocale());
+
+        if ($locale === 'en') {
+            return [
+                [
+                    'title' => 'Concept & Intended Use',
+                    'description' => 'What is the item used for and who is it for? Are there specific requirements for grip, display, or fitting into another assembly?',
+                ],
+                [
+                    'title' => 'Reference Images or Sketches',
+                    'description' => 'Send any angles you have and highlight details to keep or modify. Even a hand-drawn sketch with notes is a helpful starting point.',
+                ],
+                [
+                    'title' => 'Estimated Dimensions',
+                    'description' => 'Length, width, height, and measurement units. If parts need to mate together, include dimensions or photos of the connecting interface.',
+                ],
+                [
+                    'title' => 'Priority Details',
+                    'description' => 'Specify any text, geometry, surface finish, or fixed constraints that cannot be changed so we can account for them from the start.',
+                ],
+            ];
+        }
+
         return [
             [
                 'title' => 'Ý tưởng & mục đích sử dụng',
@@ -254,77 +304,113 @@ class Service extends BaseModel
 
     public function resolveSteps(): array
     {
-        $raw = $this->content_by_tab;
-        if (is_string($raw) && !empty($raw)) {
-            $decoded = json_decode($raw, true);
-            if (is_array($decoded)) {
-                $raw = $decoded;
+        $locale = function_exists('current_locale') ? current_locale() : app()->getLocale();
+        $isEn = $locale === 'en';
+
+        $decodeJson = static function ($value): ?array {
+            if (is_string($value) && trim($value) !== '') {
+                $decoded = json_decode($value, true);
+                return is_array($decoded) ? $decoded : null;
+            }
+            return is_array($value) ? $value : null;
+        };
+
+        $raw = $decodeJson($this->content_by_tab);
+        $viRaw = method_exists($this, 'translate')
+            ? $decodeJson($this->translate('vi', false)?->content_by_tab)
+            : null;
+
+        $candidate = is_array($raw) && !empty($raw)
+            ? ($raw['steps'] ?? (array_is_list($raw) ? $raw : null))
+            : null;
+        $viCandidate = is_array($viRaw) && !empty($viRaw)
+            ? ($viRaw['steps'] ?? (array_is_list($viRaw) ? $viRaw : null))
+            : null;
+
+        if ((!is_array($candidate) || empty($candidate)) && is_array($viCandidate) && !empty($viCandidate)) {
+            $candidate = $viCandidate;
+        }
+
+        if (is_array($candidate) && !empty($candidate)) {
+            $mapped = [];
+            $viList = is_array($viCandidate) ? array_values($viCandidate) : [];
+            foreach (array_values($candidate) as $index => $item) {
+                if (!is_array($item)) {
+                    continue;
+                }
+                $viItem = is_array($viList[$index] ?? null) ? $viList[$index] : [];
+                $title = trim((string) (($isEn ? ($item['title_en'] ?? null) : null) ?? $item['title'] ?? ($viItem['title'] ?? '')));
+                $desc = trim((string) (($isEn ? ($item['description_en'] ?? $item['content_en'] ?? null) : null) ?? $item['description'] ?? $item['content'] ?? ($viItem['description'] ?? $viItem['content'] ?? '')));
+                if ($title === '' && $desc === '') {
+                    continue;
+                }
+                $mapped[] = [
+                    'number' => $item['number'] ?? ($viItem['number'] ?? str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT)),
+                    'title' => $title,
+                    'description' => $desc,
+                ];
+            }
+            if (!empty($mapped)) {
+                return $mapped;
             }
         }
 
-        if (is_array($raw) && !empty($raw)) {
-            $candidate = $raw['steps'] ?? (array_is_list($raw) ? $raw : null);
-            if (is_array($candidate) && !empty($candidate)) {
-                $mapped = [];
-                foreach (array_values($candidate) as $index => $item) {
-                    if (!is_array($item)) {
-                        continue;
-                    }
-                    $title = trim((string) ($item['title'] ?? ''));
-                    $desc = trim((string) ($item['description'] ?? $item['content'] ?? ''));
-                    if ($title === '' && $desc === '') {
-                        continue;
-                    }
-                    $mapped[] = [
-                        'number' => $item['number'] ?? str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT),
-                        'title' => $title,
-                        'description' => $desc,
-                    ];
-                }
-                if (!empty($mapped)) {
-                    return $mapped;
-                }
-            }
-        }
-
-        return self::getDefaultSteps();
+        return self::getDefaultSteps($locale);
     }
 
     public function resolveChecklistItems(): array
     {
-        $raw = $this->benefits;
-        if (is_string($raw) && !empty($raw)) {
-            $decoded = json_decode($raw, true);
-            if (is_array($decoded)) {
-                $raw = $decoded;
+        $locale = function_exists('current_locale') ? current_locale() : app()->getLocale();
+        $isEn = $locale === 'en';
+
+        $decodeJson = static function ($value): ?array {
+            if (is_string($value) && trim($value) !== '') {
+                $decoded = json_decode($value, true);
+                return is_array($decoded) ? $decoded : null;
+            }
+            return is_array($value) ? $value : null;
+        };
+
+        $raw = $decodeJson($this->benefits);
+        $viRaw = method_exists($this, 'translate')
+            ? $decodeJson($this->translate('vi', false)?->benefits)
+            : null;
+
+        $candidate = is_array($raw) && !empty($raw)
+            ? ($raw['checklist_items'] ?? $raw['checklistItems'] ?? (array_is_list($raw) ? $raw : null))
+            : null;
+        $viCandidate = is_array($viRaw) && !empty($viRaw)
+            ? ($viRaw['checklist_items'] ?? $viRaw['checklistItems'] ?? (array_is_list($viRaw) ? $viRaw : null))
+            : null;
+
+        if ((!is_array($candidate) || empty($candidate)) && is_array($viCandidate) && !empty($viCandidate)) {
+            $candidate = $viCandidate;
+        }
+
+        if (is_array($candidate) && !empty($candidate)) {
+            $mapped = [];
+            $viList = is_array($viCandidate) ? array_values($viCandidate) : [];
+            foreach (array_values($candidate) as $index => $item) {
+                if (!is_array($item)) {
+                    continue;
+                }
+                $viItem = is_array($viList[$index] ?? null) ? $viList[$index] : [];
+                $title = trim((string) (($isEn ? ($item['title_en'] ?? null) : null) ?? $item['title'] ?? ($viItem['title'] ?? '')));
+                $desc = trim((string) (($isEn ? ($item['description_en'] ?? $item['content_en'] ?? null) : null) ?? $item['description'] ?? $item['content'] ?? ($viItem['description'] ?? $viItem['content'] ?? '')));
+                if ($title === '' && $desc === '') {
+                    continue;
+                }
+                $mapped[] = [
+                    'title' => $title,
+                    'description' => $desc,
+                ];
+            }
+            if (!empty($mapped)) {
+                return $mapped;
             }
         }
 
-        if (is_array($raw) && !empty($raw)) {
-            $candidate = $raw['checklist_items'] ?? $raw['checklistItems'] ?? (array_is_list($raw) ? $raw : null);
-            if (is_array($candidate) && !empty($candidate)) {
-                $mapped = [];
-                foreach (array_values($candidate) as $item) {
-                    if (!is_array($item)) {
-                        continue;
-                    }
-                    $title = trim((string) ($item['title'] ?? ''));
-                    $desc = trim((string) ($item['description'] ?? $item['content'] ?? ''));
-                    if ($title === '' && $desc === '') {
-                        continue;
-                    }
-                    $mapped[] = [
-                        'title' => $title,
-                        'description' => $desc,
-                    ];
-                }
-                if (!empty($mapped)) {
-                    return $mapped;
-                }
-            }
-        }
-
-        return self::getDefaultChecklistItems();
+        return self::getDefaultChecklistItems($locale);
     }
 
     public function transformSeo()

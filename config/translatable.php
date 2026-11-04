@@ -51,6 +51,8 @@ return [
     |
     */
     'use_fallback' => true,
+    'use_fallback_frontend' => true,
+    'use_fallback_backend' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -78,7 +80,7 @@ return [
     | is used first. So "es" will be checked before "es_MX".
     |
     */
-    'fallback_locale' => config('app.fallback_locale'),
+    'fallback_locale' => 'vi',
 
     /*
     |--------------------------------------------------------------------------

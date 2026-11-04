@@ -553,23 +553,29 @@ class Post extends BaseModel
 
     public function transformFaqs()
     {
-        $rawAnswer = $this->content ?: $this->description ?: '';
+        $viTranslation = method_exists($this, 'translate') ? $this->translate('vi', false) : null;
+        $title = $this->title ?: ($viTranslation?->title ?? '');
+        $rawAnswer = $this->content
+            ?: $this->description
+            ?: ($viTranslation?->content ?: ($viTranslation?->description ?: ''));
         $cleanAnswer = trim(strip_tags((string) $rawAnswer));
 
         $data = [
             'id' => $this->id,
-            'title' => $this->title,
-            'question' => $this->title,
-            'content' => $this->content ?: $this->description,
+            'title' => $title,
+            'question' => $title,
+            'content' => $rawAnswer,
             'answer' => $cleanAnswer !== '' ? $cleanAnswer : (string) $rawAnswer,
         ];
 
         return $data;
     }
 
-    public static function getFrontendFaqs(): array
+    public static function getFrontendFaqs(?string $locale = null): array
     {
-        $defaultFaqs = [
+        $locale = $locale ?: (function_exists('current_locale') ? current_locale() : app()->getLocale());
+
+        $defaultFaqsVi = [
             [
                 'id' => 1,
                 'title' => 'Tôi chưa có sẵn file thiết kế 3D, bên mình có hỗ trợ dựng file không?',
@@ -592,6 +598,32 @@ class Post extends BaseModel
                 'answer' => 'Hoàn toàn được! Dịch vụ làm đồ Custom và chế tác theo yêu cầu là thế mạnh hàng đầu tại HH Maker. Chúng tôi sẵn sàng tinh chỉnh kích thước, tỷ lệ, phối màu hoặc thiết kế riêng biệt hoàn toàn theo concept của bạn.',
             ],
         ];
+
+        $defaultFaqsEn = [
+            [
+                'id' => 1,
+                'title' => 'I do not have a 3D design file yet. Do you support 3D modeling?',
+                'question' => 'I do not have a 3D design file yet. Do you support 3D modeling?',
+                'content' => 'Yes. HH MAKER supports 3D modeling from your ideas, sketches, or reference images. Simply provide the desired dimensions, functionality, and requirements; our team will advise on the design approach, quote the modeling cost, and send a 3D preview for your approval before production.',
+                'answer' => 'Yes. HH MAKER supports 3D modeling from your ideas, sketches, or reference images. Simply provide the desired dimensions, functionality, and requirements; our team will advise on the design approach, quote the modeling cost, and send a 3D preview for your approval before production.',
+            ],
+            [
+                'id' => 2,
+                'title' => 'What information do I need to provide to get the fastest and most accurate quote for my project?',
+                'question' => 'What information do I need to provide to get the fastest and most accurate quote for my project?',
+                'content' => 'Simply send your 3D design file (in .STL, .OBJ, .STEP format if available), desired dimensions, resolution/surface finish requirements, material preference, or reference photos describing your idea. HH Maker\'s engineering team will respond with a detailed quote within 2–4 business hours.',
+                'answer' => 'Simply send your 3D design file (in .STL, .OBJ, .STEP format if available), desired dimensions, resolution/surface finish requirements, material preference, or reference photos describing your idea. HH Maker\'s engineering team will respond with a detailed quote within 2–4 business hours.',
+            ],
+            [
+                'id' => 3,
+                'title' => 'Can I order a custom product based on my own concept or modify existing designs?',
+                'question' => 'Can I order a custom product based on my own concept or modify existing designs?',
+                'content' => 'Absolutely! Custom fabrication and bespoke 3D manufacturing are HH Maker\'s core strengths. We are ready to customize dimensions, proportions, color schemes, or create an entirely new design tailored to your concept.',
+                'answer' => 'Absolutely! Custom fabrication and bespoke 3D manufacturing are HH Maker\'s core strengths. We are ready to customize dimensions, proportions, color schemes, or create an entirely new design tailored to your concept.',
+            ],
+        ];
+
+        $defaultFaqs = $locale === 'en' ? $defaultFaqsEn : $defaultFaqsVi;
 
         try {
             if (\Illuminate\Support\Facades\Schema::hasTable('posts')) {

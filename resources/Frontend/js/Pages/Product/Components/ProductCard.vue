@@ -64,7 +64,7 @@
                         {{ tt(product.name || product.title) }}
                     </h3>
                     <p class="text-xs text-[#B9C0D4] line-clamp-2 h-[34px] leading-[17px] font-normal">
-                        {{ tt(product.description || 'Mô hình trưng bày · In theo yêu cầu') }}
+                        {{ product.description ? tt(product.description) : tt('Mô hình trưng bày · In theo yêu cầu') }}
                     </p>
                 </div>
             </Transition>
@@ -136,7 +136,7 @@ export default {
             if (this.product.image && typeof this.product.image === 'object' && this.product.image.alt) {
                 return this.product.image.alt;
             }
-            return this.product.name || this.product.title || 'Mẫu in 3D HH Maker';
+            return this.product.name || this.product.title || this.tt('Mẫu in 3D HH Maker');
         },
     },
     methods: {

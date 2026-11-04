@@ -53,6 +53,8 @@
 <script>
 import { Link } from '@inertiajs/inertia-vue3'
 
+const tt = (s) => s
+
 export default {
     name: 'ServicesSection',
     components: {
@@ -61,7 +63,7 @@ export default {
     props: {
         heading: {
             type: String,
-            default: 'TỔNG QUAN VỀ DỊCH VỤ',
+            default: tt('TỔNG QUAN VỀ DỊCH VỤ'),
         },
         services: {
             type: Array,
@@ -72,29 +74,26 @@ export default {
         return {
             defaultServices: [
                 {
-                    title: 'Thiết kế 3D',
+                    title: this.tt('Thiết kế 3D'),
                     slug: 'thiet-ke-3d',
                     image: '/assets/images/homepage/service-thietke-3d.png',
-                    description:
-                        'Một ý tưởng chưa cần hoàn chỉnh để bắt đầu.',
+                    description: this.tt('Một ý tưởng chưa cần hoàn chỉnh để bắt đầu.'),
                     gradient: 'linear-gradient(180deg, #111322 20%, #2970FF 94%)',
                     hoverShadow: 'hover:shadow-[#2970FF]/30',
                 },
                 {
-                    title: 'Gia công 3D',
+                    title: this.tt('Gia công 3D'),
                     slug: 'gia-cong-3d',
                     image: '/assets/images/homepage/service-giacong-3d.png',
-                    description:
-                        'Đưa bản thiết kế ra ngoài màn hình.',
+                    description: this.tt('Đưa bản thiết kế ra ngoài màn hình.'),
                     gradient: 'linear-gradient(180deg, #111322 20%, #30374F 100%)',
                     hoverShadow: 'hover:shadow-[#30374F]/50',
                 },
                 {
-                    title: 'Làm đồ custom',
+                    title: this.tt('Làm đồ custom'),
                     slug: 'lam-do-custom',
                     image: '/assets/images/homepage/service-custom-3d.png',
-                    description:
-                        'Không chỉ khác biệt. Là của riêng bạn.',
+                    description: this.tt('Không chỉ khác biệt. Là của riêng bạn.'),
                     gradient: 'linear-gradient(180deg, #111322 20%, #2970FF 94%)',
                     hoverShadow: 'hover:shadow-[#2970FF]/30',
                 },
@@ -123,10 +122,10 @@ export default {
             const slug = (service?.slug || '').toLowerCase();
             const title = (service?.title || '').toLowerCase();
 
-            if (slug.includes('thiet-ke') || title.includes('thiết kế') || slug.includes('design')) {
+            if (slug.includes('thiet-ke') || title.includes(this.tt('thiết kế')) || slug.includes('design')) {
                 return '/assets/images/homepage/service-thietke-3d.png';
             }
-            if (slug.includes('gia-cong') || title.includes('gia công') || slug.includes('print')) {
+            if (slug.includes('gia-cong') || title.includes(this.tt('gia công')) || slug.includes('print')) {
                 return '/assets/images/homepage/service-giacong-3d.png';
             }
             if (slug.includes('custom') || title.includes('custom')) {
@@ -137,7 +136,7 @@ export default {
         handleImageError(event, service) {
             const slug = (service?.slug || '').toLowerCase();
             const title = (service?.title || '').toLowerCase();
-            if (slug.includes('gia-cong') || title.includes('gia công') || slug.includes('print')) {
+            if (slug.includes('gia-cong') || title.includes(this.tt('gia công')) || slug.includes('print')) {
                 event.target.src = '/assets/images/homepage/service-giacong-3d.png';
             } else if (slug.includes('custom') || title.includes('custom')) {
                 event.target.src = '/assets/images/homepage/service-custom-3d.png';
@@ -166,11 +165,11 @@ export default {
         },
         getServiceUrl(service) {
             const slugMap = {
-                'Gia công 3D': 'gia-cong-3d',
-                'Thiết kế 3D': 'thiet-ke-3d',
+                [this.tt('Gia công 3D')]: 'gia-cong-3d',
+                [this.tt('Thiết kế 3D')]: 'thiet-ke-3d',
                 'Custom': 'lam-do-custom',
-                'Làm đồ custom': 'lam-do-custom',
-                'Làm đồ Custom': 'lam-do-custom',
+                [this.tt('Làm đồ custom')]: 'lam-do-custom',
+                [this.tt('Làm đồ Custom')]: 'lam-do-custom',
             };
             const slug = service.slug || slugMap[service.title] || 'thiet-ke-3d';
             try {

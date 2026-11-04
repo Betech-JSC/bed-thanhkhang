@@ -7,7 +7,7 @@
                     <div class="relative w-full max-w-[520px]">
                         <img
                             :src="founderImage"
-                            alt="Lâm Hồng Hải - Founder HH Maker"
+                            :alt="tt('Lâm Hồng Hải - Founder HH Maker')"
                             class="w-full h-auto object-contain select-none drop-shadow-2xl"
                             loading="lazy"
                         />
@@ -61,6 +61,8 @@
 </template>
 
 <script>
+const tt = (s) => s;
+
 export default {
     name: 'BrandStorySection',
     computed: {
@@ -92,11 +94,11 @@ export default {
         },
         subtitle: {
             type: String,
-            default: 'CHIA SẺ TỪ NHÀ SÁNG LẬP HH MAKER',
+            default: tt('CHIA SẺ TỪ NHÀ SÁNG LẬP HH MAKER'),
         },
         title: {
             type: String,
-            default: 'HÀNH TRÌNH ĐƯA SÁNG TẠO VƯỢT RA KHỎI MÀN HÌNH',
+            default: tt('HÀNH TRÌNH ĐƯA SÁNG TẠO VƯỢT RA KHỎI MÀN HÌNH'),
         },
     },
     data() {
@@ -104,15 +106,15 @@ export default {
             storyStats: [
                 {
                     number: '10+',
-                    label: 'Năm hoạt động<br />trong lĩnh vực',
+                    label: this.tt('Năm hoạt động<br />trong lĩnh vực'),
                 },
                 {
                     number: '500+',
-                    label: 'Mẫu mã và sản<br />phẩm hoàn thiện',
+                    label: this.tt('Mẫu mã và sản<br />phẩm hoàn thiện'),
                 },
                 {
                     number: '95%',
-                    label: 'Khách hàng hài<br />lòng với dịch vụ',
+                    label: this.tt('Khách hàng hài<br />lòng với dịch vụ'),
                 },
             ],
         };

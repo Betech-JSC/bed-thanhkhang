@@ -288,21 +288,19 @@ export default {
         pageDescription() {
             return (
                 this.seo?.description ||
-                this.tt(
-                    'HH Maker kết nối nghệ thuật 3D với công nghệ chế tác hiện đại, để một ý tưởng sơ khai có thể trở thành sản phẩm vật lý bạn cầm trên tay.'
-                )
+                this.tt('HH Maker kết nối nghệ thuật 3D với công nghệ chế tác hiện đại, để một ý tưởng sơ khai có thể trở thành sản phẩm vật lý bạn cầm trên tay.')
             )
         },
         bannerSubtitle() {
-            return this.heroBanner?.subtitle || 'Giới thiệu về HH Maker'
+            return this.heroBanner?.subtitle || this.tt('Giới thiệu về HH Maker')
         },
         bannerTitle() {
-            return this.heroBanner?.title || 'ĐƯA SÁNG TẠO VƯỢT RA KHỎI MÀN HÌNH'
+            return this.heroBanner?.title || this.tt('ĐƯA SÁNG TẠO VƯỢT RA KHỎI MÀN HÌNH')
         },
         bannerDescription() {
             return (
                 this.heroBanner?.description ||
-                'Chúng tôi kết nối nghệ thuật 3D với công nghệ chế tác hiện đại, để một ý tưởng sơ khai có thể trở thành sản phẩm bạn cầm trên tay.'
+                this.tt('Chúng tôi kết nối nghệ thuật 3D với công nghệ chế tác hiện đại, để một ý tưởng sơ khai có thể trở thành sản phẩm bạn cầm trên tay.')
             )
         },
         bannerImage() {
@@ -324,9 +322,7 @@ export default {
         ctaDescription() {
             return (
                 this.globalCta?.description ||
-                this.tt(
-                    'Chia sẻ mong muốn của bạn. HH Maker sẽ cùng bạn tìm hướng thiết kế và gia công phù hợp.'
-                )
+                this.tt('Chia sẻ mong muốn của bạn. HH Maker sẽ cùng bạn tìm hướng thiết kế và gia công phù hợp.')
             )
         },
         ctaButtonText() {

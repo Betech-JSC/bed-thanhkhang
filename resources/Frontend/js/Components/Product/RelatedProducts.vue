@@ -159,7 +159,7 @@ export default {
             if (this.products && this.products.length > 0) {
                 return this.products.map((p, idx) => ({
                     id: p.id || idx,
-                    title: p.title || p.name || (this.isEn ? '3D Printed Product' : 'Sản phẩm in 3D'),
+                    title: p.title || p.name || (this.isEn ? '3D Printed Product' : this.tt('Sản phẩm in 3D')),
                     slug: p.slug || '',
                     image: p.image?.url || p.thumbnail || p.cover || `/images/pdp/related_${(idx % 4) + 1}.png`,
                     description: p.subtitle || p.short_description || p.description || p.excerpt || defaultSubtitles[idx % 4],
@@ -203,31 +203,31 @@ export default {
             return [
                 {
                     id: 1,
-                    title: 'Phi hành gia',
+                    title: this.tt('Phi hành gia'),
                     slug: 'mo-hinh-phi-hanh-gia',
                     image: '/images/pdp/related_1.png',
-                    description: 'Mô hình trưng bày · In theo yêu cầu',
+                    description: this.tt('Mô hình trưng bày · In theo yêu cầu'),
                 },
                 {
                     id: 2,
-                    title: 'Cáo hình học',
+                    title: this.tt('Cáo hình học'),
                     slug: 'chau-cay-da-giac-mini',
                     image: '/images/pdp/related_2.png',
-                    description: 'Trang trí góc làm việc · Tuỳ chọn màu',
+                    description: this.tt('Trang trí góc làm việc · Tuỳ chọn màu'),
                 },
                 {
                     id: 3,
-                    title: 'Rô-bốt mini',
+                    title: this.tt('Rô-bốt mini'),
                     slug: 'de-do-dien-thoai-mecha',
                     image: '/images/pdp/related_3.png',
-                    description: 'Mô hình sưu tầm · In theo yêu cầu',
+                    description: this.tt('Mô hình sưu tầm · In theo yêu cầu'),
                 },
                 {
                     id: 4,
-                    title: 'Voi hình học',
+                    title: this.tt('Voi hình học'),
                     slug: 'robot-khop-cu-dong',
                     image: '/images/pdp/related_4.png',
-                    description: 'Mô hình trang trí · Tuỳ chọn màu',
+                    description: this.tt('Mô hình trang trí · Tuỳ chọn màu'),
                 },
             ]
         },

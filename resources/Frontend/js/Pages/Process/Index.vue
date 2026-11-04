@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, getCurrentInstance } from 'vue'
 import { Head, usePage } from '@inertiajs/inertia-vue3'
 import ProcessHero from './Components/ProcessHero.vue'
 import ProcessStepper from './Components/ProcessStepper.vue'
@@ -62,6 +62,10 @@ const props = defineProps({
     },
 })
 
+const instance = getCurrentInstance()
+const i18n = {
+    tt: (text) => (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(text) : text),
+}
 const page = usePage()
 const currentLocale = computed(() => page.props.value?.locale?.current || 'vi')
 
@@ -70,7 +74,7 @@ const pageTitle = computed(() => {
         props.seo?.title ||
         (currentLocale.value === 'en'
             ? 'Professional 3D Printing & Manufacturing Process - HH Maker'
-            : 'Quy Trình Gia Công & Chế Tác 3D Chuyên Nghiệp - HH Maker')
+            : i18n.tt('Quy Trình Gia Công & Chế Tác 3D Chuyên Nghiệp - HH Maker'))
     )
 })
 
@@ -79,7 +83,7 @@ const pageDescription = computed(() => {
         props.seo?.description ||
         (currentLocale.value === 'en'
             ? 'Explore HH Maker\'s 5-step professional 3D printing and design process: From contact, detailed quotation, precise fabrication, careful packaging to safe delivery.'
-            : 'Khám phá quy trình 5 bước in 3D và thiết kế chuyên nghiệp tại HH Maker: Từ liên hệ, báo giá chi tiết, gia công chuẩn xác, đóng gói cẩn thận đến giao hàng an toàn.')
+            : i18n.tt('Khám phá quy trình 5 bước in 3D và thiết kế chuyên nghiệp tại HH Maker: Từ liên hệ, báo giá chi tiết, gia công chuẩn xác, đóng gói cẩn thận đến giao hàng an toàn.'))
     )
 })
 

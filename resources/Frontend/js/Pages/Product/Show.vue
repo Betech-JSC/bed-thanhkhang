@@ -350,14 +350,14 @@ export default {
             if (this.product?.title || this.product?.name) {
                 return this.product.title || this.product.name
             }
-            return this.isEn ? 'Decorative Fox Model' : 'Mô hình Cáo trang trí'
+            return this.isEn ? 'Decorative Fox Model' : this.tt('Mô hình Cáo trang trí')
         },
         currentCategory() {
             const rawCat = this.product?.category?.title || this.product?.category_name;
             if (rawCat) {
                 return this.tt(rawCat)
             }
-            return this.isEn ? 'Space Decor' : 'Trang trí không gian'
+            return this.isEn ? 'Space Decor' : this.tt('Trang trí không gian')
         },
         currentDescription() {
             if (this.product?.description && this.product.description.trim()) {
@@ -366,11 +366,11 @@ export default {
             if (this.currentTitle.includes('Iron')) {
                 return this.isEn
                     ? 'High-detail Iron Man Mark 85 model, sharply reproducing the pinnacle nano-tech armor with accurate mechanical seams, produced with advanced 3D printing technology.'
-                    : 'Mô hình Iron Man Mark 85 chi tiết cao, tái hiện sắc nét bộ giáp công nghệ nano đỉnh cao với các đường nét cơ khí chuẩn xác, sản xuất bằng công nghệ in 3D tiên tiến.'
+                    : this.tt('Mô hình Iron Man Mark 85 chi tiết cao, tái hiện sắc nét bộ giáp công nghệ nano đỉnh cao với các đường nét cơ khí chuẩn xác, sản xuất bằng công nghệ in 3D tiên tiến.')
             }
             return this.isEn
                 ? 'Add a touch of agility and smart elegance to your space. Featuring an iconic bushy tail and meticulous 3D printed layers, this companion inspires creativity every day.'
-                : 'Thêm một chút linh hoạt và thông minh vào góc nhỏ của bạn. Chú cáo nhỏ với chiếc đuôi xù đặc trưng và những lớp in tỉ mỉ không chỉ là một món đồ trang trí, mà còn là người bạn đồng hành truyền cảm hứng mỗi ngày.'
+                : this.tt('Thêm một chút linh hoạt và thông minh vào góc nhỏ của bạn. Chú cáo nhỏ với chiếc đuôi xù đặc trưng và những lớp in tỉ mỉ không chỉ là một món đồ trang trí, mà còn là người bạn đồng hành truyền cảm hứng mỗi ngày.')
         },
         productMaterial() {
             return this.product?.material || this.tt('Nhựa PLA · Công nghệ FDM')
@@ -394,45 +394,45 @@ export default {
             if (this.currentTitle.includes('Iron')) {
                 return this.isEn
                     ? 'Technological Legend. Sharp Down to Every Detail.'
-                    : 'Huyền thoại công nghệ. Sắc nét đến từng chi tiết.'
+                    : this.tt('Huyền thoại công nghệ. Sắc nét đến từng chi tiết.')
             }
             return this.isEn
                 ? 'Compact. Full of Wonders to Explore.'
-                : 'Nhỏ gọn. Nhiều điều để khám phá.'
+                : this.tt('Nhỏ gọn. Nhiều điều để khám phá.')
         },
         storyIntro() {
             if (this.currentTitle.includes('Iron')) {
                 return this.isEn
                     ? 'The Iron Man Mark 85 model is a collector masterpiece for superhero enthusiasts and tech model hobbyists. Every armor plate and joint is sharply reproduced using advanced 3D printing.'
-                    : 'Mô hình Iron Man Mark 85 là tuyệt phẩm trưng bày dành cho người hâm mộ siêu anh hùng và người đam mê mô hình công nghệ cao. Từng chi tiết giáp và khớp nối được tái hiện sắc sảo qua công nghệ in 3D.'
+                    : this.tt('Mô hình Iron Man Mark 85 là tuyệt phẩm trưng bày dành cho người hâm mộ siêu anh hùng và người đam mê mô hình công nghệ cao. Từng chi tiết giáp và khớp nối được tái hiện sắc sảo qua công nghệ in 3D.')
             }
             return this.isEn
                 ? 'The low-poly fox model brings a modern accent to living and workspaces. Designed with sharp polygonal facets paired with warm orange tones, creating an inspiring, creative ambiance.'
-                : 'Mô hình chú cáo low-poly là điểm nhấn hiện đại cho không gian sống và làm việc. Thiết kế tạo hình từ các mặt cắt đa giác sắc sảo, kết hợp cùng gam màu cam ấm áp mang đến cảm giác tinh tế, sáng tạo và đầy năng lượng'
+                : this.tt('Mô hình chú cáo low-poly là điểm nhấn hiện đại cho không gian sống và làm việc. Thiết kế tạo hình từ các mặt cắt đa giác sắc sảo, kết hợp cùng gam màu cam ấm áp mang đến cảm giác tinh tế, sáng tạo và đầy năng lượng')
         },
         feature1Title() {
             if (this.currentTitle.includes('Iron')) {
-                return this.isEn ? 'Sharp Mechanical Details' : 'Chi tiết cơ khí sắc sảo'
+                return this.isEn ? 'Sharp Mechanical Details' : this.tt('Chi tiết cơ khí sắc sảo')
             }
-            return this.isEn ? 'Sharp Low-Poly Contours' : 'Tạo hình Low-Poly sắc nét'
+            return this.isEn ? 'Sharp Low-Poly Contours' : this.tt('Tạo hình Low-Poly sắc nét')
         },
         feature1Desc() {
             if (this.currentTitle.includes('Iron')) {
                 return this.isEn
                     ? 'Every armor seam and joint is finished with precision, showcasing the technological prowess of the Mark 85 armor.'
-                    : 'Mọi đường rãnh giáp và khớp nối được hoàn thiện chuẩn xác, tôn lên uy lực công nghệ của bộ giáp Mark 85.'
+                    : this.tt('Mọi đường rãnh giáp và khớp nối được hoàn thiện chuẩn xác, tôn lên uy lực công nghệ của bộ giáp Mark 85.')
             }
             return this.isEn
                 ? 'Smooth polygonal facets reflect light uniquely from every angle, demonstrating the precision strength of FDM 3D printing technology.'
-                : 'Các góc cạnh đa giác được hoàn thiện mượt mà, phản chiếu ánh sáng độc đáo ở từng góc nhìn, thể hiện rõ thế mạnh độ chính xác của công nghệ in 3D FDM.'
+                : this.tt('Các góc cạnh đa giác được hoàn thiện mượt mà, phản chiếu ánh sáng độc đáo ở từng góc nhìn, thể hiện rõ thế mạnh độ chính xác của công nghệ in 3D FDM.')
         },
         feature2Title() {
-            return this.isEn ? 'Customizable on Request' : 'Tùy chỉnh theo yêu cầu'
+            return this.isEn ? 'Customizable on Request' : this.tt('Tùy chỉnh theo yêu cầu')
         },
         feature2Desc() {
             return this.isEn
                 ? 'You can discuss with HH Maker to adjust colors, scale dimensions, or order in bulk for corporate gifting and event decor.'
-                : 'Bạn có thể trao đổi với HH Maker để thay đổi màu sắc, điều chỉnh kích thước (tỉ lệ scale) hoặc đặt số lượng lớn làm quà tặng, decor sự kiện.'
+                : this.tt('Bạn có thể trao đổi với HH Maker để thay đổi màu sắc, điều chỉnh kích thước (tỉ lệ scale) hoặc đặt số lượng lớn làm quà tặng, decor sự kiện.')
         },
     },
     methods: {
@@ -446,7 +446,7 @@ export default {
         handleRequestQuote() {
             const redirectToast = this.isEn
                 ? `Redirecting to consultation page for "${this.currentTitle}"...`
-                : `Đang chuyển hướng đến trang liên hệ tư vấn sản phẩm "${this.currentTitle}"...`
+                : `${this.tt('Đang chuyển hướng đến trang liên hệ tư vấn sản phẩm')} "${this.currentTitle}"...`
             this.showToast(redirectToast)
 
             if (typeof window !== 'undefined') {

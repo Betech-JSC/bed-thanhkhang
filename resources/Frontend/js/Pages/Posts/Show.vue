@@ -40,7 +40,7 @@
         <section class="bg-[#F4EFE2]" v-if="related_posts && related_posts.length > 0">
             <div class="container py-12 grid grid-cols-12 max-md:pt-5 relative">
                 <div class="col-span-full flex justify-between">
-                    <p class="display-3 text-black-fks font-display font-bold">Các bài viết liên quan</p>
+                    <p class="display-3 text-black-fks font-display font-bold">{{ tt('Các bài viết liên quan') }}</p>
                 </div>
                 <div class="col-span-full mt-8 max-md:mt-4">
                     <div class="grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1 gap-y-4 md:gap-[28px]">
@@ -63,7 +63,7 @@ export default {
     props: ['related_posts', 'post'],
     components: {},
     data() {
-        const homeBreadcrumb = { name: 'Trang chủ', url: '/' }
+        const homeBreadcrumb = { name: this.tt('Trang chủ'), url: '/' }
         let breadcrumbs = [homeBreadcrumb]
 
         if (this.post.type === 'POST') {
@@ -84,12 +84,12 @@ export default {
         renderTitle(item) {
             switch (item.type) {
                 case 'SERVICE':
-                    return 'Dịch vụ'
+                    return this.tt('Dịch vụ')
 
                 case 'POST':
                     return item.category?.title
                 case 'ADVISER':
-                    return 'Cố vấn'
+                    return this.tt('Cố vấn')
                 default:
                     break
             }

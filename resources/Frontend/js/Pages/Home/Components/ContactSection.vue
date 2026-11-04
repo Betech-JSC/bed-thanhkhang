@@ -162,17 +162,18 @@
 </template>
 
 <script>
+const tt = (s) => s;
+
 export default {
     name: 'ContactSection',
     props: {
         title: {
             type: String,
-            default: 'KẾT NỐI VỚI HH MAKER',
+            default: tt('KẾT NỐI VỚI HH MAKER'),
         },
         description: {
             type: String,
-            default:
-                'Bạn cần tư vấn về in 3D? Hãy chia sẻ nhu cầu & ý tưởng của bạn với HH MAKER qua các kênh bên dưới',
+            default: tt('Bạn cần tư vấn về in 3D? Hãy chia sẻ nhu cầu & ý tưởng của bạn với HH MAKER qua các kênh bên dưới'),
         },
     },
     data() {
@@ -221,11 +222,11 @@ export default {
                     email: this.form.email,
                     phone: this.form.phone,
                     data: {
-                        'Họ và tên': this.form.name,
-                        'Số điện thoại': this.form.phone,
+                        [this.tt('Họ và tên')]: this.form.name,
+                        [this.tt('Số điện thoại')]: this.form.phone,
                         'Email': this.form.email,
-                        'Nội dung cần hỗ trợ': this.form.note,
-                        'Dịch vụ quan tâm': 'Tư vấn in 3D',
+                        [this.tt('Nội dung cần hỗ trợ')]: this.form.note,
+                        [this.tt('Dịch vụ quan tâm')]: this.tt('Tư vấn in 3D'),
                     },
                 };
                 if (window.axios) {

@@ -64,6 +64,29 @@ class Slider extends BaseModel
         ];
     }
 
+    protected static function booted()
+    {
+        static::saved(function () {
+            static::clearSliderCaches();
+        });
+
+        static::deleted(function () {
+            static::clearSliderCaches();
+        });
+    }
+
+    public static function clearSliderCaches(): void
+    {
+        $locales = config('app.locales', ['vi', 'en']);
+        foreach ($locales as $locale) {
+            \Illuminate\Support\Facades\Cache::forget('home_page_data_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('inertia_layout_shared_data_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('history_index_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('process_index_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('galleries_index_' . $locale);
+        }
+    }
+
     public function getFormattedPositionDisplayAttribute()
     {
         return config('slider.positions.' . $this->position_display . '.title');

@@ -78,23 +78,32 @@ class Config extends Model
             ],
             'general' => [
                 'general_business_name' => 'nullable',
+                'general_business_name_en' => 'nullable',
                 'general_site_name' => 'nullable',
+                'general_site_name_en' => 'nullable',
                 'general_email' => 'nullable',
                 'general_address' => 'nullable',
+                'general_address_en' => 'nullable',
                 'general_phone' => 'nullable',
                 'general_zalo' => 'nullable',
                 'general_working_hours' => 'nullable',
+                'general_working_hours_en' => 'nullable',
                 'general_facebook' => 'nullable',
                 'general_tiktok' => 'nullable',
                 'map_iframe' => 'nullable',
                 'general_map_iframe' => 'nullable',
                 'company_name' => 'nullable',
+                'company_name_en' => 'nullable',
                 'site_name' => 'nullable',
+                'site_name_en' => 'nullable',
                 'hotline' => 'nullable',
                 'phone' => 'nullable',
                 'email' => 'nullable',
                 'address' => 'nullable',
+                'address_en' => 'nullable',
                 'showroom_address' => 'nullable',
+                'working_hours' => 'nullable',
+                'working_hours_en' => 'nullable',
                 'zalo' => 'nullable',
                 'facebook' => 'nullable',
                 'tiktok' => 'nullable',
@@ -138,6 +147,7 @@ class Config extends Model
 
         $locales = config('app.locales', ['vi', 'en']);
         foreach ($locales as $locale) {
+            \Illuminate\Support\Facades\Cache::forget('global_settings_' . $locale);
             \Illuminate\Support\Facades\Cache::forget('inertia_layout_shared_data_' . $locale);
             \Illuminate\Support\Facades\Cache::forget('home_page_data_' . $locale);
             \Illuminate\Support\Facades\Cache::forget('history_index_' . $locale);
@@ -279,15 +289,41 @@ class Config extends Model
         return $trimmed;
     }
 
-    public static function normalizeGeneralSettings(array $raw = []): array
+    public static function normalizeGeneralSettings(array $raw = [], ?string $locale = null): array
     {
-        $businessName = $raw['general_business_name']
-            ?? $raw['company_name']
-            ?? 'HH Maker';
+        $locale = $locale ?: (function_exists('current_locale') ? current_locale() : app()->getLocale());
+        $isEn = $locale === 'en';
 
-        $siteName = $raw['general_site_name']
-            ?? $raw['site_name']
-            ?? 'HH Maker - Dịch vụ Thiết kế & Gia công In 3D';
+        $pickNonEmpty = static function (array $candidates, string $fallback = ''): string {
+            foreach ($candidates as $candidate) {
+                if (is_string($candidate) && trim($candidate) !== '') {
+                    return trim($candidate);
+                }
+            }
+            return $fallback;
+        };
+
+        $viBusinessName = $pickNonEmpty([
+            $raw['general_business_name_vi'] ?? null,
+            $raw['general_business_name'] ?? null,
+            $raw['company_name'] ?? null,
+        ], 'HH Maker');
+        $enBusinessName = $pickNonEmpty([
+            $raw['general_business_name_en'] ?? null,
+            $raw['company_name_en'] ?? null,
+        ]);
+        $businessName = ($isEn && $enBusinessName !== '') ? $enBusinessName : $viBusinessName;
+
+        $viSiteName = $pickNonEmpty([
+            $raw['general_site_name_vi'] ?? null,
+            $raw['general_site_name'] ?? null,
+            $raw['site_name'] ?? null,
+        ], 'HH Maker - Dịch vụ Thiết kế & Gia công In 3D');
+        $enSiteName = $pickNonEmpty([
+            $raw['general_site_name_en'] ?? null,
+            $raw['site_name_en'] ?? null,
+        ]);
+        $siteName = ($isEn && $enSiteName !== '') ? $enSiteName : $viSiteName;
 
         $phone = $raw['general_phone']
             ?? $raw['phone']
@@ -303,10 +339,29 @@ class Config extends Model
             ?? $raw['social_zalo']
             ?? 'https://zalo.me/0906636425';
 
-        $address = $raw['general_address']
-            ?? $raw['address']
-            ?? $raw['showroom_address']
-            ?? 'Số 65 đường số 9, khu dân cư Hương Lộ 5, Phường An Lạc, Thành phố Hồ Chí Minh';
+        $viAddress = $pickNonEmpty([
+            $raw['general_address_vi'] ?? null,
+            $raw['general_address'] ?? null,
+            $raw['address'] ?? null,
+            $raw['showroom_address'] ?? null,
+        ], 'Số 65 đường số 9, khu dân cư Hương Lộ 5, Phường An Lạc, Thành phố Hồ Chí Minh');
+        $enAddress = $pickNonEmpty([
+            $raw['general_address_en'] ?? null,
+            $raw['address_en'] ?? null,
+            $raw['showroom_address_en'] ?? null,
+        ]);
+        $address = ($isEn && $enAddress !== '') ? $enAddress : $viAddress;
+
+        $viWorkingHours = $pickNonEmpty([
+            $raw['general_working_hours_vi'] ?? null,
+            $raw['general_working_hours'] ?? null,
+            $raw['working_hours'] ?? null,
+        ], 'Thứ 2 - Thứ 7: 08:00 - 18:00');
+        $enWorkingHours = $pickNonEmpty([
+            $raw['general_working_hours_en'] ?? null,
+            $raw['working_hours_en'] ?? null,
+        ]);
+        $workingHours = ($isEn && $enWorkingHours !== '') ? $enWorkingHours : $viWorkingHours;
 
         $facebook = $raw['facebook']
             ?? $raw['social_facebook']
@@ -336,6 +391,10 @@ class Config extends Model
         $mapIframe = self::extractIframeSrc($raw['map_iframe'] ?? $raw['general_map_iframe'] ?? '');
 
         return array_merge($raw, [
+            'general_business_name_vi' => $viBusinessName,
+            'general_site_name_vi' => $viSiteName,
+            'general_address_vi' => $viAddress,
+            'general_working_hours_vi' => $viWorkingHours,
             'general_business_name' => $businessName,
             'company_name' => $businessName,
             'general_site_name' => $siteName,
@@ -350,7 +409,9 @@ class Config extends Model
             'social_zalo' => $zalo,
             'general_address' => $address,
             'address' => $address,
-            'showroom_address' => $raw['showroom_address'] ?? $address,
+            'showroom_address' => ($isEn && $enAddress !== '') ? $enAddress : ($raw['showroom_address'] ?? $address),
+            'general_working_hours' => $workingHours,
+            'working_hours' => $workingHours,
             'general_facebook' => $facebook,
             'facebook' => $facebook,
             'social_facebook' => $facebook,
@@ -368,7 +429,7 @@ class Config extends Model
         ]);
     }
 
-    public static function getGeneralSettings(): array
+    public static function getGeneralSettings(?string $locale = null): array
     {
         $raw = [];
 
@@ -383,7 +444,7 @@ class Config extends Model
             report($e);
         }
 
-        return self::normalizeGeneralSettings($raw);
+        return self::normalizeGeneralSettings($raw, $locale);
     }
 
     public static function getBrandSettings(): array
@@ -396,76 +457,204 @@ class Config extends Model
         return self::getGeneralSettings();
     }
 
-    public static function getProcessSteps(): array
+    public static function getProcessSteps(?array $rawSettings = null): array
     {
-        $defaultSteps = [
+        $locale = function_exists('current_locale') ? current_locale() : app()->getLocale();
+        $isEn = $locale === 'en';
+
+        $defaultStepsVi = [
             [
                 'number' => '01',
                 'title' => 'Liên hệ',
+                'subtitle' => 'Tiếp nhận & làm rõ nhu cầu',
                 'description' => 'Mọi sản phẩm bắt đầu bằng một cuộc trao đổi. HH Maker tiếp nhận ý tưởng và làm rõ nhu cầu trước khi đề xuất hướng thực hiện.',
                 'clientPrep' => 'Gửi ý tưởng, ảnh tham khảo hoặc file 3D; nêu mục đích sử dụng, kích thước và số lượng dự kiến.',
                 'makerAction' => 'Xem xét tính khả thi, đặt câu hỏi để hiểu yêu cầu và tư vấn hướng thiết kế, vật liệu, cách gia công.',
+                'deliverables' => 'Tư vấn giải pháp kỹ thuật & định hướng vật liệu',
+                'quality_standard' => 'Phản hồi nhanh chóng, nắm bắt đúng trọng tâm ý tưởng',
                 'isLast' => false,
             ],
             [
                 'number' => '02',
                 'title' => 'Báo giá',
+                'subtitle' => 'Phương án & chi phí minh bạch',
                 'description' => 'Thống nhất những điều quan trọng trước khi bắt tay vào chế tác: phạm vi công việc, yêu cầu sản phẩm và phương án thực hiện.',
                 'clientPrep' => 'Xác nhận thiết kế, kích thước, số lượng và các yêu cầu hoàn thiện; phản hồi những điểm cần điều chỉnh.',
                 'makerAction' => 'Tổng hợp phương án và báo giá theo yêu cầu thực tế. Trao đổi các hạng mục trước khi khách hàng xác nhận triển khai.',
+                'deliverables' => 'Bảng báo giá chi tiết & tiến độ dự kiến',
+                'quality_standard' => 'Minh bạch hạng mục, tối ưu chi phí theo nhu cầu thực tế',
                 'isLast' => false,
             ],
             [
                 'number' => '03',
                 'title' => 'Gia công 3D',
+                'subtitle' => 'Chế tác & hoàn thiện chi tiết',
                 'description' => 'Từ mô hình số đến sản phẩm vật lý. Thiết kế, vật liệu và quy trình in được kết nối trong từng chi tiết.',
                 'clientPrep' => 'Xác nhận các điều chỉnh kỹ thuật nếu có để phương án gia công phù hợp với nhu cầu đã trao đổi.',
                 'makerAction' => 'Chuẩn bị mô hình, thực hiện in 3D và hoàn thiện theo phương án đã chốt; kiểm tra hình dáng, bề mặt và chi tiết sản phẩm.',
+                'deliverables' => 'Sản phẩm hoàn thiện theo đúng thông số đã duyệt',
+                'quality_standard' => 'Chuẩn xác kích thước, bề mặt mịn và kết cấu vững chắc',
                 'isLast' => false,
             ],
             [
                 'number' => '04',
                 'title' => 'Đóng gói',
+                'subtitle' => 'Kiểm định & bảo vệ an toàn',
                 'description' => 'Sản phẩm sau gia công được kiểm tra và chuẩn bị cho hành trình vận chuyển.',
                 'clientPrep' => 'Cung cấp thông tin người nhận và lưu ý về việc giao nhận hoặc cách đóng gói nếu có yêu cầu riêng.',
                 'makerAction' => 'Kiểm tra sản phẩm, sắp xếp các chi tiết và lựa chọn cách bảo vệ, đóng gói phù hợp với hình dáng của từng món đồ.',
+                'deliverables' => 'Kiện hàng đóng gói chống sốc tiêu chuẩn',
+                'quality_standard' => 'Bảo vệ tối đa các chi tiết mảnh và bề mặt hoàn thiện',
                 'isLast' => false,
             ],
             [
                 'number' => '05',
                 'title' => 'Gửi hàng',
+                'subtitle' => 'Bàn giao & đồng hành sau nhận hàng',
                 'description' => 'Khép lại quá trình chế tác, mở đầu trải nghiệm sử dụng sản phẩm của bạn.',
                 'clientPrep' => 'Xác nhận địa chỉ, số điện thoại nhận hàng; kiểm tra sản phẩm khi nhận và trao đổi nếu cần hỗ trợ.',
                 'makerAction' => 'Bàn giao kiện hàng để vận chuyển, cung cấp thông tin gửi hàng và tiếp nhận phản hồi sau khi khách hàng nhận sản phẩm.',
+                'deliverables' => 'Bàn giao sản phẩm & mã vận đơn theo dõi',
+                'quality_standard' => 'Giao hàng đúng hẹn, hỗ trợ tận tâm sau bàn giao',
                 'isLast' => true,
             ],
         ];
 
-        try {
-            $general = settings()->group('general')->all();
-            $rawSteps = $general['process_steps'] ?? $general['steps'] ?? null;
+        $defaultStepsEn = [
+            [
+                'number' => '01',
+                'title' => 'Contact',
+                'subtitle' => 'Initial Consultation & Requirement Clarification',
+                'description' => 'Every product begins with a conversation. HH Maker receives your idea and clarifies requirements before proposing an execution direction.',
+                'clientPrep' => 'Send your idea, reference images or 3D files; state intended use, dimensions, and estimated quantity.',
+                'makerAction' => 'Evaluate feasibility, ask clarifying questions, and advise on design direction, materials, and fabrication methods.',
+                'deliverables' => 'Technical consultation & material direction',
+                'quality_standard' => 'Prompt response & accurate understanding of your concept',
+                'isLast' => false,
+            ],
+            [
+                'number' => '02',
+                'title' => 'Quotation',
+                'subtitle' => 'Transparent Plan & Pricing',
+                'description' => 'Align on key details before crafting begins: scope of work, product specifications, and execution plan.',
+                'clientPrep' => 'Confirm design, dimensions, quantity, and finishing requirements; provide feedback on any needed adjustments.',
+                'makerAction' => 'Compile the execution plan and quotation based on actual requirements. Discuss all items before confirming production.',
+                'deliverables' => 'Detailed quotation & estimated timeline',
+                'quality_standard' => 'Transparent breakdown, cost-optimized for actual needs',
+                'isLast' => false,
+            ],
+            [
+                'number' => '03',
+                'title' => '3D Fabrication',
+                'subtitle' => 'Precision Printing & Finishing',
+                'description' => 'From digital model to physical product. Design, materials, and printing processes come together in every detail.',
+                'clientPrep' => 'Confirm any technical adjustments so the fabrication plan matches the agreed requirements.',
+                'makerAction' => 'Prepare the model, execute 3D printing and post-processing per the approved plan; inspect shape, surface, and fine details.',
+                'deliverables' => 'Finished product matching approved specifications',
+                'quality_standard' => 'Dimensional accuracy, smooth surface, and structural integrity',
+                'isLast' => false,
+            ],
+            [
+                'number' => '04',
+                'title' => 'Packaging',
+                'subtitle' => 'Inspection & Protective Packaging',
+                'description' => 'Fabricated products are carefully inspected and prepared for safe transit.',
+                'clientPrep' => 'Provide recipient details and any special delivery or packaging notes if needed.',
+                'makerAction' => 'Inspect the product, arrange components, and select protective packaging tailored to each item\'s geometry.',
+                'deliverables' => 'Shock-resistant packaged parcel',
+                'quality_standard' => 'Maximum protection for delicate parts and finished surfaces',
+                'isLast' => false,
+            ],
+            [
+                'number' => '05',
+                'title' => 'Delivery',
+                'subtitle' => 'Handover & Post-Delivery Support',
+                'description' => 'Completing the crafting journey and beginning your experience with the product.',
+                'clientPrep' => 'Confirm shipping address and phone number; inspect the product upon arrival and reach out if support is needed.',
+                'makerAction' => 'Hand over the parcel for shipping, provide tracking details, and follow up after you receive the product.',
+                'deliverables' => 'Product handover & tracking information',
+                'quality_standard' => 'On-time delivery & dedicated post-handover support',
+                'isLast' => true,
+            ],
+        ];
 
-            if (is_string($rawSteps) && !empty($rawSteps)) {
-                $decoded = json_decode($rawSteps, true);
-                if (is_array($decoded)) {
-                    $rawSteps = $decoded;
+        $defaultSteps = $isEn ? $defaultStepsEn : $defaultStepsVi;
+
+        try {
+            $general = $rawSettings;
+            if ($general === null) {
+                $settings = settings()->group('general')->all();
+                if ($settings instanceof \Illuminate\Support\Collection) {
+                    $general = $settings->toArray();
+                } elseif (is_array($settings)) {
+                    $general = $settings;
+                } else {
+                    $general = [];
                 }
             }
 
-            if (is_array($rawSteps) && count($rawSteps) > 0) {
-                $total = count($rawSteps);
-                return array_values(array_map(function ($item, $index) use ($total, $defaultSteps) {
-                    $fallback = $defaultSteps[$index] ?? [];
-                    $number = $item['number'] ?? ($fallback['number'] ?? str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT));
+            $decodeSteps = static function ($value): ?array {
+                if (is_string($value) && trim($value) !== '') {
+                    $decoded = json_decode($value, true);
+                    return is_array($decoded) ? $decoded : null;
+                }
+                return is_array($value) ? $value : null;
+            };
+
+            $rawStepsVi = $decodeSteps($general['process_steps'] ?? $general['steps'] ?? null);
+            $rawStepsEn = $decodeSteps($general['process_steps_en'] ?? $general['steps_en'] ?? null);
+
+            $baseSteps = (is_array($rawStepsVi) && count($rawStepsVi) > 0)
+                ? $rawStepsVi
+                : ((is_array($rawStepsEn) && count($rawStepsEn) > 0) ? $rawStepsEn : null);
+
+            if (is_array($baseSteps) && count($baseSteps) > 0) {
+                $total = count($baseSteps);
+                return array_values(array_map(function ($item, $index) use ($total, $defaultSteps, $defaultStepsVi, $rawStepsVi, $rawStepsEn, $isEn) {
+                    $itemVi = is_array($rawStepsVi[$index] ?? null) ? $rawStepsVi[$index] : (is_array($item) ? $item : []);
+                    $itemEn = is_array($rawStepsEn[$index] ?? null) ? $rawStepsEn[$index] : [];
+                    $fallback = $defaultSteps[$index] ?? ($defaultStepsVi[$index] ?? []);
+                    $fallbackVi = $defaultStepsVi[$index] ?? [];
+
+                    $resolveField = static function (string $key, ?string $snakeKey = null) use ($itemVi, $itemEn, $fallback, $fallbackVi, $isEn): string {
+                        $viVal = trim((string) ($itemVi[$key] ?? ($snakeKey ? ($itemVi[$snakeKey] ?? '') : '')));
+                        $enVal = trim((string) (
+                            $itemEn[$key]
+                            ?? ($snakeKey ? ($itemEn[$snakeKey] ?? null) : null)
+                            ?? $itemVi[$key . '_en']
+                            ?? ($snakeKey ? ($itemVi[$snakeKey . '_en'] ?? '') : '')
+                        ));
+
+                        if ($isEn) {
+                            if ($enVal !== '') {
+                                return $enVal;
+                            }
+                            if ($viVal !== '') {
+                                return $viVal;
+                            }
+                            return (string) ($fallback[$key] ?? ($fallbackVi[$key] ?? ''));
+                        }
+
+                        if ($viVal !== '') {
+                            return $viVal;
+                        }
+                        return (string) ($fallbackVi[$key] ?? ($fallback[$key] ?? ''));
+                    };
+
+                    $number = $itemVi['number'] ?? $itemEn['number'] ?? ($fallback['number'] ?? str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT));
+
                     return [
                         'number' => $number,
-                        'title' => $item['title'] ?? ($fallback['title'] ?? ''),
-                        'description' => $item['description'] ?? ($fallback['description'] ?? ''),
-                        'clientPrep' => $item['clientPrep'] ?? $item['client_prep'] ?? ($fallback['clientPrep'] ?? ''),
-                        'makerAction' => $item['makerAction'] ?? $item['maker_action'] ?? ($fallback['makerAction'] ?? ''),
-                        'isLast' => isset($item['isLast']) ? (bool) $item['isLast'] : ($index === $total - 1),
+                        'title' => $resolveField('title'),
+                        'subtitle' => $resolveField('subtitle'),
+                        'description' => $resolveField('description'),
+                        'clientPrep' => $resolveField('clientPrep', 'client_prep'),
+                        'makerAction' => $resolveField('makerAction', 'maker_action'),
+                        'deliverables' => $resolveField('deliverables'),
+                        'quality_standard' => $resolveField('quality_standard', 'qualityStandard'),
+                        'isLast' => isset($itemVi['isLast']) ? (bool) $itemVi['isLast'] : ($index === $total - 1),
                     ];
-                }, $rawSteps, array_keys($rawSteps)));
+                }, $baseSteps, array_keys($baseSteps)));
             }
         } catch (\Throwable $e) {
             report($e);

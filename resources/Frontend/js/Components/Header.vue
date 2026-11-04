@@ -83,12 +83,12 @@
                         type="button"
                         @click="isSearchOpen = true"
                         class="w-6 h-6 flex items-center justify-center hover:opacity-80 transition-opacity shrink-0 cursor-pointer"
-                        title="Tìm kiếm (Ctrl+K)"
-                        aria-label="Tìm kiếm"
+                        :title="tt('Tìm kiếm (Ctrl+K)')"
+                        :aria-label="tt('Tìm kiếm')"
                     >
                         <img
                             src="/assets/images/header/figma-search-icon.svg"
-                            alt="Tìm kiếm"
+                            :alt="tt('Tìm kiếm')"
                             class="w-6 h-6 object-contain"
                         />
                     </button>
@@ -100,7 +100,7 @@
                                 type="button"
                                 @click="switchLocale('vi')"
                                 class="bg-[#FAFAFA] text-[#111322] w-[36px] h-[24px] rounded-[4px] text-xs font-semibold flex items-center justify-center shadow-xs cursor-default"
-                                title="Tiếng Việt"
+                                :title="tt('Tiếng Việt')"
                             >
                                 VIE
                             </button>
@@ -118,7 +118,7 @@
                                 type="button"
                                 @click="switchLocale('vi')"
                                 class="text-white text-sm font-semibold pl-2 flex items-center justify-center hover:text-[#FAFAFA]/80 transition-colors"
-                                title="Tiếng Việt"
+                                :title="tt('Tiếng Việt')"
                             >
                                 VIE
                             </button>
@@ -150,12 +150,12 @@
                     type="button"
                     @click="isSearchOpen = true"
                     class="w-6 h-6 flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
-                    title="Tìm kiếm"
-                    aria-label="Tìm kiếm"
+                    :title="tt('Tìm kiếm')"
+                    :aria-label="tt('Tìm kiếm')"
                 >
                     <img
                         src="/assets/images/header/figma-search-icon.svg"
-                        alt="Tìm kiếm"
+                        :alt="tt('Tìm kiếm')"
                         class="w-5 h-5 object-contain"
                     />
                 </button>
@@ -164,7 +164,7 @@
                     type="button"
                     @click="openDrawer"
                     class="p-2 rounded-xl text-secondary hover:text-white hover:bg-dark-surface transition-colors focus:outline-none"
-                    aria-label="Mở danh mục điều hướng"
+                    :aria-label="tt('Mở danh mục điều hướng')"
                 >
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -191,7 +191,7 @@
                     class="fixed top-0 right-0 bottom-0 z-[1050] w-[85%] max-w-[360px] bg-dark-bg border-l border-dark-border p-6 flex flex-col justify-between overflow-y-auto shadow-2xl"
                     role="dialog"
                     aria-modal="true"
-                    aria-label="Menu di động"
+                    :aria-label="tt('Menu di động')"
                 >
                     <div class="space-y-6">
                         <!-- Drawer Top Header: Logo + Close X Button -->
@@ -207,7 +207,7 @@
                                 type="button"
                                 @click="closeDrawer"
                                 class="p-2 rounded-xl text-secondary hover:text-white hover:bg-dark-surface transition-colors"
-                                aria-label="Đóng menu"
+                                :aria-label="tt('Đóng menu')"
                             >
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -242,7 +242,7 @@
                                         type="button"
                                         @click="switchLocale('vi')"
                                         class="bg-[#FAFAFA] text-[#111322] w-[36px] h-[24px] rounded-[4px] text-xs font-semibold flex items-center justify-center shadow-xs cursor-default"
-                                        title="Tiếng Việt"
+                                        :title="tt('Tiếng Việt')"
                                     >
                                         VIE
                                     </button>
@@ -260,7 +260,7 @@
                                         type="button"
                                         @click="switchLocale('vi')"
                                         class="text-white text-sm font-semibold pl-2 flex items-center justify-center hover:text-[#FAFAFA]/80 transition-colors"
-                                        title="Tiếng Việt"
+                                        :title="tt('Tiếng Việt')"
                                     >
                                         VIE
                                     </button>
@@ -278,7 +278,7 @@
 
                         <!-- Cart link in Mobile Drawer -->
                         <div class="flex items-center justify-between">
-                            <span class="text-xs text-muted font-medium">Giỏ hàng:</span>
+                            <span class="text-xs text-muted font-medium">{{ tt('Giỏ hàng:') }}</span>
                             <Link
                                 :href="route('products.index')"
                                 @click="closeDrawer"
@@ -287,7 +287,7 @@
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                 </svg>
-                                <span>{{ cartCount }} sản phẩm</span>
+                                <span>{{ cartCount }} {{ tt('sản phẩm') }}</span>
                             </Link>
                         </div>
 
@@ -308,7 +308,7 @@
                                             @click="logout(); closeDrawer();"
                                             class="text-xs text-red-400 hover:text-red-300 font-medium ml-2"
                                         >
-                                            Đăng xuất
+                                            {{ tt('Đăng xuất') }}
                                         </button>
                                     </div>
                                     <button
@@ -316,7 +316,7 @@
                                         class="w-full text-left text-xs text-secondary hover:text-white flex items-center justify-between pt-2 border-t border-dark-border/60"
                                         @click="openActivityPopup(); closeDrawer();"
                                     >
-                                        <span>🔔 Thông báo &amp; Ghi chú</span>
+                                        <span>🔔 {{ tt('Thông báo & Ghi chú') }}</span>
                                         <span v-if="hasUnreadNotification" class="w-2 h-2 rounded-full bg-primary"></span>
                                     </button>
                                 </div>
@@ -327,7 +327,7 @@
                                     @click="closeDrawer"
                                     class="w-full min-h-[44px] flex items-center justify-center rounded-xl bg-primary hover:bg-primary-hover text-white font-semibold text-sm transition-colors shadow-xs"
                                 >
-                                    Đăng nhập
+                                    {{ tt('Đăng nhập') }}
                                 </Link>
                             </template>
                         </div>
@@ -687,7 +687,7 @@ export default {
                 {},
                 {
                     onSuccess: () => {
-                        this.$toast?.success('Đăng xuất thành công')
+                        this.$toast?.success(this.tt('Đăng xuất thành công'))
                     },
                 }
             )

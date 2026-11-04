@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
 import { Head, usePage } from '@inertiajs/inertia-vue3'
 
 import ServiceHero from './Components/ServiceHero.vue'
@@ -77,6 +77,10 @@ const props = defineProps({
     },
 })
 
+const instance = getCurrentInstance()
+const i18n = {
+    tt: (text) => (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(text) : text),
+}
 const page = usePage()
 const currentLocale = computed(() => page.props.value?.locale?.current || 'vi')
 
@@ -94,10 +98,9 @@ const defaultService = computed(() => {
     }
     return {
         id: 1,
-        title: 'Thiết kế 3D',
+        title: i18n.tt('Thiết kế 3D'),
         slug: 'thiet-ke-3d',
-        description:
-            'Một ý tưởng chưa cần hoàn chỉnh để bắt đầu. Cùng HH Maker làm rõ tỉ lệ, cấu trúc và chi tiết, để mô hình 3D không chỉ dễ hình dung mà còn hướng đến khả năng chế tác thực tế.',
+        description: i18n.tt('Một ý tưởng chưa cần hoàn chỉnh để bắt đầu. Cùng HH Maker làm rõ tỉ lệ, cấu trúc và chi tiết, để mô hình 3D không chỉ dễ hình dung mà còn hướng đến khả năng chế tác thực tế.'),
         content: '',
     }
 })
@@ -116,7 +119,7 @@ const serviceData = computed(() => {
 
 const pageTitle = computed(() => {
     if (props.seo?.title) return props.seo.title
-    const suffix = currentLocale.value === 'en' ? 'HH Maker Services' : 'Dịch Vụ HH Maker'
+    const suffix = currentLocale.value === 'en' ? 'HH Maker Services' : i18n.tt('Dịch Vụ HH Maker')
     return `${serviceData.value.title} - ${suffix}`
 })
 
@@ -167,26 +170,26 @@ const tocItems = computed(() => {
         {
             id: 'section-01',
             number: '01',
-            title: 'Khi nào cần thiết kế 3D?',
-            shortTitle: 'Khi nào cần 3D?',
+            title: i18n.tt('Khi nào cần thiết kế 3D?'),
+            shortTitle: i18n.tt('Khi nào cần 3D?'),
         },
         {
             id: 'section-02',
             number: '02',
-            title: 'Từ ý tưởng tới mô hình',
-            shortTitle: 'Quy trình',
+            title: i18n.tt('Từ ý tưởng tới mô hình'),
+            shortTitle: i18n.tt('Quy trình'),
         },
         {
             id: 'section-03',
             number: '03',
-            title: 'Bạn cần chuẩn bị gì?',
-            shortTitle: 'Chuẩn bị gì?',
+            title: i18n.tt('Bạn cần chuẩn bị gì?'),
+            shortTitle: i18n.tt('Chuẩn bị gì?'),
         },
         {
             id: 'section-04',
             number: '04',
-            title: 'Kết quả cùng hoàn thiện',
-            shortTitle: 'Hoàn thiện',
+            title: i18n.tt('Kết quả cùng hoàn thiện'),
+            shortTitle: i18n.tt('Hoàn thiện'),
         },
     ]
 })

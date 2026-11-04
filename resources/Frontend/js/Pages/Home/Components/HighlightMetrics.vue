@@ -21,7 +21,7 @@
                         </span>
                     </div>
                     <p class="text-xs sm:text-sm text-secondary font-medium leading-snug">
-                        {{ metric.label }}
+                        {{ tt(metric.label) }}
                     </p>
                 </div>
             </div>
@@ -47,22 +47,22 @@ export default {
                 {
                     value: '10',
                     suffix: '+',
-                    label: 'Năm hoạt động trong lĩnh vực in & chế tác 3D',
+                    label: this.tt('Năm hoạt động trong lĩnh vực in & chế tác 3D'),
                 },
                 {
                     value: '500',
                     suffix: '+',
-                    label: 'Mẫu mã và sản phẩm hoàn thiện thực tế',
+                    label: this.tt('Mẫu mã và sản phẩm hoàn thiện thực tế'),
                 },
                 {
                     value: '95',
                     suffix: '%',
-                    label: 'Khách hàng và đối tác hài lòng với dịch vụ',
+                    label: this.tt('Khách hàng và đối tác hài lòng với dịch vụ'),
                 },
                 {
                     value: '0.05',
                     suffix: 'mm',
-                    label: 'Độ chính xác gia công đạt chuẩn công nghiệp',
+                    label: this.tt('Độ chính xác gia công đạt chuẩn công nghiệp'),
                 },
             ]
         },

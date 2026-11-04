@@ -33,7 +33,7 @@
                             v-if="showCloseButton"
                             type="button"
                             @click="close"
-                            aria-label="Đóng"
+                            :aria-label="tt('Đóng')"
                             class="p-1.5 rounded-lg text-text-muted hover:text-white hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50"
                         >
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

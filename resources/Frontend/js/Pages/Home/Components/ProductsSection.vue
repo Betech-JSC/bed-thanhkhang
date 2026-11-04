@@ -170,12 +170,14 @@
 </template>
 
 <script>
+const tt = (s) => s;
+
 export default {
     name: 'ProductsSection',
     props: {
         title: {
             type: String,
-            default: 'SẢN PHẨM NỔI BẬT',
+            default: tt('SẢN PHẨM NỔI BẬT'),
         },
         products: {
             type: Array,
@@ -194,14 +196,14 @@ export default {
             categoryRows: [
                 {
                     id: 'keychains',
-                    name: 'Móc khoá',
+                    name: this.tt('Móc khoá'),
                     keywords: ['khoa', 'keychain', 'moc'],
                     hasBestChoice: true,
                     url: '/san-pham?category=moc-khoa',
                     defaultItems: [
                         {
                             id: 'kc-1',
-                            title: 'Tên sản phẩm',
+                            title: this.tt('Tên sản phẩm'),
                             description: 'This awesome element has more variants and fully',
                             image: '/assets/images/homepage/products/mockhoa-toho.png',
                             isBestChoice: true,
@@ -209,7 +211,7 @@ export default {
                         },
                         {
                             id: 'kc-2',
-                            title: 'Tên sản phẩm',
+                            title: this.tt('Tên sản phẩm'),
                             description: 'This awesome element has more variants and fully',
                             image: '/assets/images/homepage/products/mockhoa-co4la.png',
                             isBestChoice: false,
@@ -217,7 +219,7 @@ export default {
                         },
                         {
                             id: 'kc-3',
-                            title: 'Tên sản phẩm',
+                            title: this.tt('Tên sản phẩm'),
                             description: 'This awesome element has more variants and fully',
                             image: '/assets/images/homepage/products/mockhoa-melacung.png',
                             isBestChoice: false,
@@ -225,7 +227,7 @@ export default {
                         },
                         {
                             id: 'kc-4',
-                            title: 'Tên sản phẩm',
+                            title: this.tt('Tên sản phẩm'),
                             description: 'This awesome element has more variants and fully',
                             image: '/assets/images/homepage/products/mockhoa-cavang.png',
                             isBestChoice: false,
@@ -233,7 +235,7 @@ export default {
                         },
                         {
                             id: 'kc-5',
-                            title: 'Tên sản phẩm',
+                            title: this.tt('Tên sản phẩm'),
                             description: 'This awesome element has more variants and fully',
                             image: '/assets/images/homepage/products/mockhoa-toho.png',
                             isBestChoice: false,
@@ -243,14 +245,14 @@ export default {
                 },
                 {
                     id: 'office',
-                    name: 'Đồ dùng/ Đồ trang trí văn phòng',
+                    name: this.tt('Đồ dùng/ Đồ trang trí văn phòng'),
                     keywords: ['decor', 'van-phong', 'office', 'trang-tri'],
                     hasBestChoice: true,
                     url: '/san-pham?category=van-phong',
                     defaultItems: [
                         {
                             id: 'of-1',
-                            title: 'Tên sản phẩm',
+                            title: this.tt('Tên sản phẩm'),
                             description: 'This awesome element has more variants and fully',
                             image: '/assets/images/homepage/products/decor-denngu.png',
                             isBestChoice: true,
@@ -258,7 +260,7 @@ export default {
                         },
                         {
                             id: 'of-2',
-                            title: 'Tên sản phẩm',
+                            title: this.tt('Tên sản phẩm'),
                             description: 'This awesome element has more variants and fully',
                             image: '/assets/images/homepage/products/decor-ongpudding.png',
                             isBestChoice: false,
@@ -266,7 +268,7 @@ export default {
                         },
                         {
                             id: 'of-3',
-                            title: 'Tên sản phẩm',
+                            title: this.tt('Tên sản phẩm'),
                             description: 'This awesome element has more variants and fully',
                             image: '/assets/images/homepage/products/decor-giane.png',
                             isBestChoice: false,
@@ -274,7 +276,7 @@ export default {
                         },
                         {
                             id: 'of-4',
-                            title: 'Tên sản phẩm',
+                            title: this.tt('Tên sản phẩm'),
                             description: 'This awesome element has more variants and fully',
                             image: '/assets/images/homepage/products/decor-giatainghe.png',
                             isBestChoice: false,
@@ -282,7 +284,7 @@ export default {
                         },
                         {
                             id: 'of-5',
-                            title: 'Tên sản phẩm',
+                            title: this.tt('Tên sản phẩm'),
                             description: 'This awesome element has more variants and fully',
                             image: '/assets/images/homepage/products/decor-denngu.png',
                             isBestChoice: false,
@@ -292,14 +294,14 @@ export default {
                 },
                 {
                     id: 'custom',
-                    name: 'Gia công theo yêu cầu',
+                    name: this.tt('Gia công theo yêu cầu'),
                     keywords: ['custom', 'gia-cong', 'yeu-cau'],
                     hasBestChoice: false,
                     url: '/san-pham?category=gia-cong',
                     defaultItems: [
                         {
                             id: 'cs-1',
-                            title: 'Tên sản phẩm',
+                            title: this.tt('Tên sản phẩm'),
                             description: 'This awesome element has more variants and fully',
                             image: '/assets/images/homepage/products/giacong-emily.png',
                             isBestChoice: false,
@@ -307,7 +309,7 @@ export default {
                         },
                         {
                             id: 'cs-2',
-                            title: 'Tên sản phẩm',
+                            title: this.tt('Tên sản phẩm'),
                             description: 'This awesome element has more variants and fully',
                             image: '/assets/images/homepage/products/giacong-tuongmat.png',
                             isBestChoice: false,
@@ -315,7 +317,7 @@ export default {
                         },
                         {
                             id: 'cs-3',
-                            title: 'Tên sản phẩm',
+                            title: this.tt('Tên sản phẩm'),
                             description: 'This awesome element has more variants and fully',
                             image: '/assets/images/homepage/products/giacong-hopuno.png',
                             isBestChoice: false,
@@ -323,7 +325,7 @@ export default {
                         },
                         {
                             id: 'cs-4',
-                            title: 'Tên sản phẩm',
+                            title: this.tt('Tên sản phẩm'),
                             description: 'This awesome element has more variants and fully',
                             image: '/assets/images/homepage/products/giacong-opbatlua.png',
                             isBestChoice: false,
@@ -331,7 +333,7 @@ export default {
                         },
                         {
                             id: 'cs-5',
-                            title: 'Tên sản phẩm',
+                            title: this.tt('Tên sản phẩm'),
                             description: 'This awesome element has more variants and fully',
                             image: '/assets/images/homepage/products/giacong-emily.png',
                             isBestChoice: false,
@@ -359,7 +361,7 @@ export default {
                     if (matched.length > 0) {
                         items = matched.map((p, idx) => ({
                             id: p.id || `p-${rIdx}-${idx}`,
-                            title: p.title || p.name || 'Tên sản phẩm',
+                            title: p.title || p.name || this.tt('Tên sản phẩm'),
                             description:
                                 p.description ||
                                 p.short_description ||

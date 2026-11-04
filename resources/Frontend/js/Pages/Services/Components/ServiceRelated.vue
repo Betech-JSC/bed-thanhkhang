@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, getCurrentInstance } from 'vue'
 import { Link, usePage } from '@inertiajs/inertia-vue3'
 
 const props = defineProps({
@@ -66,6 +66,10 @@ const props = defineProps({
     },
 })
 
+const instance = getCurrentInstance()
+const i18n = {
+    tt: (text) => (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(text) : text),
+}
 const page = usePage()
 const isEn = computed(() => page.props.value?.locale?.current === 'en')
 
@@ -99,14 +103,14 @@ const defaultCards = computed(() => {
     return [
         {
             slug: 'gia-cong-3d',
-            title: 'Gia công 3D',
-            description: 'Đưa bản thiết kế ra ngoài màn hình. Cùng xem xét vật liệu, cách in và yêu cầu hoàn thiện',
+            title: i18n.tt('Gia công 3D'),
+            description: i18n.tt('Đưa bản thiết kế ra ngoài màn hình. Cùng xem xét vật liệu, cách in và yêu cầu hoàn thiện'),
             image: '/assets/images/services/service-gia-cong-3d.png',
         },
         {
             slug: 'lam-do-custom',
-            title: 'Làm đồ Custom',
-            description: 'Phụ kiện, quà tặng và đồ trang trí mang dấu ấn riêng, từ ý tưởng đến phương án chế tác',
+            title: i18n.tt('Làm đồ Custom'),
+            description: i18n.tt('Phụ kiện, quà tặng và đồ trang trí mang dấu ấn riêng, từ ý tưởng đến phương án chế tác'),
             image: '/assets/images/services/service-lam-do-custom.png',
         },
     ]

@@ -102,6 +102,8 @@
 </template>
 
 <script>
+const tt = (s) => s
+
 export default {
     name: 'ProductGallery',
     props: {
@@ -111,7 +113,7 @@ export default {
         },
         productTitle: {
             type: String,
-            default: 'Mô hình Cáo trang trí',
+            default: tt('Mô hình Cáo trang trí'),
         },
     },
     data() {
@@ -148,20 +150,20 @@ export default {
                 {
                     url: '/images/pdp/product_main.png',
                     thumb: '/images/pdp/thumb_1.png',
-                    alt: 'Mô hình Cáo trang trí - Góc chính diện',
-                    tag: 'Góc chính diện',
+                    alt: this.tt('Mô hình Cáo trang trí - Góc chính diện'),
+                    tag: this.tt('Góc chính diện'),
                 },
                 {
                     url: '/images/pdp/thumb_2.png',
                     thumb: '/images/pdp/thumb_2.png',
-                    alt: 'Mô hình Cáo trang trí - Chi tiết bề mặt in FDM',
-                    tag: 'Chi tiết lớp in',
+                    alt: this.tt('Mô hình Cáo trang trí - Chi tiết bề mặt in FDM'),
+                    tag: this.tt('Chi tiết lớp in'),
                 },
                 {
                     url: '/images/pdp/thumb_3.png',
                     thumb: '/images/pdp/thumb_3.png',
-                    alt: 'Mô hình Cáo trang trí - Tỉ lệ kích thước thực tế',
-                    tag: 'Tỉ lệ thực tế',
+                    alt: this.tt('Mô hình Cáo trang trí - Tỉ lệ kích thước thực tế'),
+                    tag: this.tt('Tỉ lệ thực tế'),
                 },
             ]
         },

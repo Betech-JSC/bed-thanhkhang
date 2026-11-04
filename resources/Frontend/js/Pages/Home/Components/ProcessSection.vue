@@ -105,6 +105,8 @@
 </template>
 
 <script>
+const tt = (s) => s;
+
 export default {
     name: 'ProcessSection',
     props: {
@@ -118,13 +120,11 @@ export default {
         },
         title: {
             type: String,
-            default:
-                'BƯỚC TRONG QUY TRÌNH LÀM VIỆC CHUYÊN NGHIỆP & MINH BẠCH TẠI HH MAKER',
+            default: tt('BƯỚC TRONG QUY TRÌNH LÀM VIỆC CHUYÊN NGHIỆP & MINH BẠCH TẠI HH MAKER'),
         },
         description: {
             type: String,
-            default:
-                'Khách hàng gửi file 3D hoặc chia sẻ ý tưởng, đội ngũ kỹ thuật của HH Maker sẽ tiến hành phân tích độ khả thi, tư vấn công nghệ in tối ưu, cũng như lựa chọn loại vật liệu phù hợp nhất để đảm bảo sản phẩm đạt độ bền, tính thẩm mỹ và công năng sử dụng đúng như kỳ vọng của bạn.',
+            default: tt('Khách hàng gửi file 3D hoặc chia sẻ ý tưởng, đội ngũ kỹ thuật của HH Maker sẽ tiến hành phân tích độ khả thi, tư vấn công nghệ in tối ưu, cũng như lựa chọn loại vật liệu phù hợp nhất để đảm bảo sản phẩm đạt độ bền, tính thẩm mỹ và công năng sử dụng đúng như kỳ vọng của bạn.'),
         },
         customSteps: {
             type: Array,
@@ -137,33 +137,28 @@ export default {
             defaultSteps: [
                 {
                     number: '01',
-                    title: 'Tiếp nhận & Tư vấn',
-                    detail:
-                        'Tiếp nhận file mô hình 3D (STL, OBJ, STEP, 3MF) hoặc bản vẽ 2D phác thảo từ khách hàng; tư vấn công nghệ in và vật liệu phù hợp nhất.',
+                    title: this.tt('Tiếp nhận & Tư vấn'),
+                    detail: this.tt('Tiếp nhận file mô hình 3D (STL, OBJ, STEP, 3MF) hoặc bản vẽ 2D phác thảo từ khách hàng; tư vấn công nghệ in và vật liệu phù hợp nhất.'),
                 },
                 {
                     number: '02',
-                    title: 'Phân tích & Báo giá',
-                    detail:
-                        'Kỹ sư kiểm tra tính toàn vẹn cấu trúc lưới mesh, slice mô hình, tính toán thời gian in, chi phí tối ưu và gửi bảng báo giá chi tiết.',
+                    title: this.tt('Phân tích & Báo giá'),
+                    detail: this.tt('Kỹ sư kiểm tra tính toàn vẹn cấu trúc lưới mesh, slice mô hình, tính toán thời gian in, chi phí tối ưu và gửi bảng báo giá chi tiết.'),
                 },
                 {
                     number: '03',
-                    title: 'Gia công In 3D',
-                    detail:
-                        'Vận hành dây chuyền in 3D công nghiệp với thông số cài đặt chuẩn xác, kiểm soát nhiệt độ buồng và độ phân giải từng lớp in 0.05mm.',
+                    title: this.tt('Gia công In 3D'),
+                    detail: this.tt('Vận hành dây chuyền in 3D công nghiệp với thông số cài đặt chuẩn xác, kiểm soát nhiệt độ buồng và độ phân giải từng lớp in 0.05mm.'),
                 },
                 {
                     number: '04',
-                    title: 'Đóng gói chuẩn quy cách',
-                    detail:
-                        'Gọt bỏ support, làm sạch siêu âm, xử lý bề mặt hoàn thiện mịn đẹp, kiểm tra kích thước dung sai và đóng gói chống sốc an toàn.',
+                    title: this.tt('Đóng gói chuẩn quy cách'),
+                    detail: this.tt('Gọt bỏ support, làm sạch siêu âm, xử lý bề mặt hoàn thiện mịn đẹp, kiểm tra kích thước dung sai và đóng gói chống sốc an toàn.'),
                 },
                 {
                     number: '05',
-                    title: 'Giao hàng tận nơi',
-                    detail:
-                        'Bàn giao tận tay khách hàng qua mạng lưới vận chuyển hỏa tốc toàn quốc, kèm chính sách bảo hành và hướng dẫn sử dụng chu đáo.',
+                    title: this.tt('Giao hàng tận nơi'),
+                    detail: this.tt('Bàn giao tận tay khách hàng qua mạng lưới vận chuyển hỏa tốc toàn quốc, kèm chính sách bảo hành và hướng dẫn sử dụng chu đáo.'),
                 },
             ],
         };

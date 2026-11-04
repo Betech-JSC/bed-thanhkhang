@@ -35,12 +35,14 @@
 </template>
 
 <script>
+const tt = (s) => s
+
 export default {
     name: 'SpecTable',
     props: {
         title: {
             type: String,
-            default: 'Thông số in tham khảo',
+            default: tt('Thông số in tham khảo'),
         },
         specs: {
             type: Array,
@@ -48,7 +50,7 @@ export default {
         },
         note: {
             type: String,
-            default: 'Thông số, thời gian hoàn thiện và chi phí sẽ được xác nhận theo kích thước, vật liệu và số lượng thực tế.',
+            default: tt('Thông số, thời gian hoàn thiện và chi phí sẽ được xác nhận theo kích thước, vật liệu và số lượng thực tế.'),
         },
     },
     computed: {

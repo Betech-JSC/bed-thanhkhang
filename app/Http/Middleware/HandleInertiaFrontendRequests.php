@@ -120,10 +120,10 @@ class HandleInertiaFrontendRequests extends Middleware
 
         try {
             $global = cache_response(
-                'global_settings',
-                function () {
+                'global_settings_' . $locale,
+                function () use ($locale) {
                     if (method_exists(Config::class, 'getGeneralSettings')) {
-                        return Config::getGeneralSettings();
+                        return Config::getGeneralSettings($locale);
                     }
 
                     return \Illuminate\Support\Facades\Schema::hasTable('settings')
@@ -135,7 +135,7 @@ class HandleInertiaFrontendRequests extends Middleware
                 'settings',
             );
             if (method_exists(Config::class, 'normalizeGeneralSettings')) {
-                $global = Config::normalizeGeneralSettings(is_array($global) ? $global : []);
+                $global = Config::normalizeGeneralSettings(is_array($global) ? $global : [], $locale);
             } else {
                 $global = is_array($global) ? $global : [];
             }

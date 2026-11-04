@@ -49,7 +49,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, getCurrentInstance } from 'vue'
 import { Head, usePage } from '@inertiajs/inertia-vue3'
 import ServiceBlock from './Components/ServiceBlock.vue'
 
@@ -60,19 +60,23 @@ const props = defineProps({
     },
 })
 
+const instance = getCurrentInstance()
+const i18n = {
+    tt: (text) => (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(text) : text),
+}
 const page = usePage()
 const currentLocale = computed(() => page.props.value?.locale?.current || 'vi')
 
 const pageTitle = computed(() =>
     currentLocale.value === 'en'
         ? 'On-Demand 3D Printing & Design Services - HH Maker'
-        : 'Dịch Vụ In Ấn & Thiết Kế 3D Theo Yêu Cầu - HH Maker'
+        : i18n.tt('Dịch Vụ In Ấn & Thiết Kế 3D Theo Yêu Cầu - HH Maker')
 )
 
 const pageDescription = computed(() =>
     currentLocale.value === 'en'
         ? 'HH Maker accompanies you from clarifying concepts to choosing fabrication methods: 3D Design, 3D Machining, and Custom Creations with the highest finishing standards.'
-        : 'HH Maker đồng hành từ làm rõ ý tưởng đến lựa chọn cách tạo ra sản phẩm: Thiết kế 3D, Gia công 3D, và Làm đồ custom với tiêu chuẩn hoàn thiện cao nhất.'
+        : i18n.tt('HH Maker đồng hành từ làm rõ ý tưởng đến lựa chọn cách tạo ra sản phẩm: Thiết kế 3D, Gia công 3D, và Làm đồ custom với tiêu chuẩn hoàn thiện cao nhất.')
 )
 
 const defaultServicesVi = [

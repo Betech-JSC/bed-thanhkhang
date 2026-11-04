@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, getCurrentInstance } from 'vue'
 import { Link, usePage } from '@inertiajs/inertia-vue3'
 
 const props = defineProps({
@@ -47,6 +47,10 @@ const props = defineProps({
     },
 })
 
+const instance = getCurrentInstance()
+const i18n = {
+    tt: (text) => (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(text) : text),
+}
 const page = usePage()
 const isEn = computed(() => page.props.value?.locale?.current === 'en')
 
@@ -59,14 +63,14 @@ const ctaData = computed(() => {
     )
 })
 
-const title = computed(() => ctaData.value?.title || 'Tạo nên phiên bản mang dấu ấn riêng')
+const title = computed(() => ctaData.value?.title || i18n.tt('Tạo nên phiên bản mang dấu ấn riêng'))
 const description = computed(() => {
     return (
         ctaData.value?.description ||
-        'Gửi hình ảnh tham khảo hoặc chia sẻ ý tưởng để HH Maker cùng bạn định hình sản phẩm mong muốn. Chúng tôi sẽ tư vấn giải pháp phù hợp với phong cách, nhu cầu và ngân sách của bạn.'
+        i18n.tt('Gửi hình ảnh tham khảo hoặc chia sẻ ý tưởng để HH Maker cùng bạn định hình sản phẩm mong muốn. Chúng tôi sẽ tư vấn giải pháp phù hợp với phong cách, nhu cầu và ngân sách của bạn.')
     )
 })
-const ctaText = computed(() => ctaData.value?.primary_cta_text || 'Nhận tư vấn ngay')
+const ctaText = computed(() => ctaData.value?.primary_cta_text || i18n.tt('Nhận tư vấn ngay'))
 
 const contactHref = computed(() => {
     if (ctaData.value?.primary_cta_link) return ctaData.value.primary_cta_link

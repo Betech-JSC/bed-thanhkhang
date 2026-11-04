@@ -20,10 +20,10 @@
                         />
                     </Link>
                     <p class="text-sm text-secondary/90 leading-relaxed max-w-sm">
-                        Hiện thực hóa mọi ý tưởng với công nghệ in 3D hiện đại. Rút ngắn khoảng cách giữa thiết kế số và sản phẩm vật lý chuẩn xác.
+                        {{ tt('Hiện thực hóa mọi ý tưởng với công nghệ in 3D hiện đại. Rút ngắn khoảng cách giữa thiết kế số và sản phẩm vật lý chuẩn xác.') }}
                     </p>
                     <div class="space-y-1.5 text-xs text-secondary/80 pt-2">
-                        <p><strong class="text-white">Xưởng sản xuất:</strong> Hà Nội & TP. Hồ Chí Minh</p>
+                        <p><strong class="text-white">{{ tt('Xưởng sản xuất:') }}</strong> {{ tt('Hà Nội & TP. Hồ Chí Minh') }}</p>
                         <p><strong class="text-white">Hotline:</strong> 0968 000 000</p>
                         <p><strong class="text-white">Email:</strong> contact@hhmaker.vn</p>
                     </div>
@@ -32,22 +32,22 @@
                 <!-- Column 2: Dịch vụ (2 cols) -->
                 <div class="lg:col-span-2 space-y-3">
                     <h4 class="text-sm font-bold text-white uppercase tracking-wider font-sans">
-                        Dịch vụ
+                        {{ tt('Dịch vụ') }}
                     </h4>
                     <ul class="space-y-2 text-sm">
                         <li>
                             <Link href="/dich-vu" class="hover:text-primary transition-colors">
-                                Gia công in 3D
+                                {{ tt('Gia công in 3D') }}
                             </Link>
                         </li>
                         <li>
                             <Link href="/dich-vu" class="hover:text-primary transition-colors">
-                                Thiết kế mô hình CAD
+                                {{ tt('Thiết kế mô hình CAD') }}
                             </Link>
                         </li>
                         <li>
                             <Link href="/dich-vu" class="hover:text-primary transition-colors">
-                                Quét 3D Scanning
+                                {{ tt('Quét 3D Scanning') }}
                             </Link>
                         </li>
                         <li>
@@ -57,7 +57,7 @@
                         </li>
                         <li>
                             <Link href="/dich-vu" class="hover:text-primary transition-colors">
-                                Sơn & Xử lý bề mặt
+                                {{ tt('Sơn & Xử lý bề mặt') }}
                             </Link>
                         </li>
                     </ul>
@@ -66,32 +66,32 @@
                 <!-- Column 3: Sản phẩm (2 cols) -->
                 <div class="lg:col-span-2 space-y-3">
                     <h4 class="text-sm font-bold text-white uppercase tracking-wider font-sans">
-                        Sản phẩm
+                        {{ tt('Sản phẩm') }}
                     </h4>
                     <ul class="space-y-2 text-sm">
                         <li>
                             <Link href="/san-pham" class="hover:text-primary transition-colors">
-                                Móc khoá custom
+                                {{ tt('Móc khoá custom') }}
                             </Link>
                         </li>
                         <li>
                             <Link href="/san-pham" class="hover:text-primary transition-colors">
-                                Decor văn phòng
+                                {{ tt('Decor văn phòng') }}
                             </Link>
                         </li>
                         <li>
                             <Link href="/san-pham" class="hover:text-primary transition-colors">
-                                Nguyên mẫu cơ khí
+                                {{ tt('Nguyên mẫu cơ khí') }}
                             </Link>
                         </li>
                         <li>
                             <Link href="/san-pham" class="hover:text-primary transition-colors">
-                                Quà tặng doanh nghiệp
+                                {{ tt('Quà tặng doanh nghiệp') }}
                             </Link>
                         </li>
                         <li>
                             <Link href="/san-pham" class="hover:text-primary transition-colors">
-                                Đồ chơi chuyển động
+                                {{ tt('Đồ chơi chuyển động') }}
                             </Link>
                         </li>
                     </ul>
@@ -100,27 +100,27 @@
                 <!-- Column 4: Hỗ trợ & Chính sách (3 cols) -->
                 <div class="lg:col-span-3 space-y-3">
                     <h4 class="text-sm font-bold text-white uppercase tracking-wider font-sans">
-                        Hỗ trợ khách hàng
+                        {{ tt('Hỗ trợ khách hàng') }}
                     </h4>
                     <ul class="space-y-2 text-sm">
                         <li>
                             <a href="#process-section" class="hover:text-primary transition-colors">
-                                Quy trình đặt hàng & in 3D
+                                {{ tt('Quy trình đặt hàng & in 3D') }}
                             </a>
                         </li>
                         <li>
                             <a href="#contact-section" class="hover:text-primary transition-colors">
-                                Hướng dẫn gửi file 3D (STL/STEP)
+                                {{ tt('Hướng dẫn gửi file 3D (STL/STEP)') }}
                             </a>
                         </li>
                         <li>
                             <Link href="/chinh-sach" class="hover:text-primary transition-colors">
-                                Chính sách bảo hành & Đổi trả
+                                {{ tt('Chính sách bảo hành & Đổi trả') }}
                             </Link>
                         </li>
                         <li>
                             <Link href="/chinh-sach" class="hover:text-primary transition-colors">
-                                Chính sách bảo mật dữ liệu file
+                                {{ tt('Chính sách bảo mật dữ liệu file') }}
                             </Link>
                         </li>
                     </ul>
@@ -134,10 +134,10 @@
                 <p>© {{ currentYear }} HH Maker. All rights reserved.</p>
                 <div class="flex items-center gap-6">
                     <Link href="/chinh-sach" class="hover:text-white transition-colors">
-                        Điều khoản dịch vụ
+                        {{ tt('Điều khoản dịch vụ') }}
                     </Link>
                     <Link href="/chinh-sach" class="hover:text-white transition-colors">
-                        Chính sách bảo mật
+                        {{ tt('Chính sách bảo mật') }}
                     </Link>
                 </div>
             </div>
