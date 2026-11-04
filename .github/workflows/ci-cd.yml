@@ -38,6 +38,8 @@ jobs:
           sed -i 's/DB_CONNECTION=mysql/DB_CONNECTION=sqlite/' .env
           sed -i '/^DB_DATABASE=/d' .env
           sed -i 's/^OPCACHE_SECRET=.*/OPCACHE_SECRET=ci-test-secret/' .env || true
+          sed -i 's|^APP_URL=.*|APP_URL=https://hhmaker.betech-digital.com|' .env
+          grep -q '^FRONTEND_URL=' .env && sed -i 's|^FRONTEND_URL=.*|FRONTEND_URL=https://hhmaker.betech-digital.com|' .env || echo "FRONTEND_URL=https://hhmaker.betech-digital.com" >> .env
           composer install --no-interaction --prefer-dist
           composer dump-autoload --optimize
           php artisan key:generate

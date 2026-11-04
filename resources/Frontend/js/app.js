@@ -11,6 +11,17 @@ import { createI18n } from 'vue-i18n'
 import { ObserveVisibility } from 'vue3-observe-visibility'
 import route from 'ziggy-js'
 import { Ziggy } from '../../../public/build/ziggy.frontend.js'
+
+if (typeof window !== 'undefined') {
+    Ziggy.url = window.location.origin
+    Ziggy.port = window.location.port ? Number(window.location.port) : null
+    Ziggy.location = window.location
+    if (Ziggy.routes) {
+        for (const name in Ziggy.routes) {
+            delete Ziggy.routes[name].domain
+        }
+    }
+}
 import VuePlyr from 'vue-plyr'
 import 'vue-plyr/dist/vue-plyr.css'
 
@@ -72,14 +83,12 @@ createInertiaApp({
                     route(
                         name,
                         params,
-                        absolute,
-                        config = {
-                            ...Ziggy,
-                            location: new URL(Ziggy.url),
-                        }
+                        absolute = false,
+                        config = { ...Ziggy }
                     ) {
                         try {
-                            return route(this.routeLocaleName(name), params, absolute, config)
+                            const res = route(this.routeLocaleName(name), params, absolute, config)
+                            return res === '' ? '/' : res
                         } catch (e) {
                             console.error('Ziggy route error for: ' + name, e)
                             return '#'
