@@ -6,13 +6,63 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Contact;
 use App\Models\File;
+use App\Models\Post\Post;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Schema;
 use App\Http\Notifications\CommonNotification;
 use App\Models\EmailTemplate;
+use Inertia\Inertia;
 
 class ContactController extends Controller
 {
     public $model = Contact::class;
+
+    public function index()
+    {
+        $faqs = [];
+
+        try {
+            if (Schema::hasTable('posts')) {
+                $faqs = Post::query()
+                    ->active()
+                    ->where('type', Post::TYPE_FAQ)
+                    ->orderByPosition()
+                    ->orderBy('id', 'desc')
+                    ->get()
+                    ->map(function (Post $post) {
+                        $rawAnswer = $post->content ?: $post->description ?: '';
+                        $cleanAnswer = trim(strip_tags((string) $rawAnswer));
+
+                        return [
+                            'id' => $post->id,
+                            'title' => $post->title,
+                            'question' => $post->title,
+                            'content' => $post->content ?: $post->description,
+                            'answer' => $cleanAnswer !== '' ? $cleanAnswer : (string) $rawAnswer,
+                        ];
+                    })
+                    ->values()
+                    ->toArray();
+            }
+        } catch (\Throwable $e) {
+            report($e);
+        }
+
+        if (empty($faqs)) {
+            $faqs = Post::getFrontendFaqs();
+        }
+
+        $data = [
+            'faqs' => $faqs,
+            'faqList' => $faqs,
+        ];
+
+        if (request()->wantsJson()) {
+            return response()->json($data);
+        }
+
+        return Inertia::render('Contact', $data);
+    }
 
     public function store(Request $request)
     {

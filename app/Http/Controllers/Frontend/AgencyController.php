@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Models\Post\Post;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Routing\Controller;
 use JamstackVietnam\Agency\Models\Agency;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 
 class AgencyController extends Controller
 {
@@ -41,10 +43,22 @@ class AgencyController extends Controller
                     })
                     ->values();
 
+                $faqs = Post::getFrontendFaqs();
+
                 return [
-                    'agencies' => $agencies
+                    'agencies' => $agencies,
+                    'faqs' => $faqs,
+                    'faqList' => $faqs,
                 ];
             });
+
+            if (empty($data['faqs'])) {
+                $faqs = Post::getFrontendFaqs();
+                $data['faqs'] = $faqs;
+                $data['faqList'] = $faqs;
+            } elseif (empty($data['faqList'])) {
+                $data['faqList'] = $data['faqs'];
+            }
 
             $locale = current_locale();
             $seo = [

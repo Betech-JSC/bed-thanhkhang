@@ -7,58 +7,55 @@
         <meta property="og:type" content="website" />
     </Head>
 
-    <div class="bg-[#111322] text-white min-h-screen overflow-x-hidden selection:bg-primary selection:text-white">
+    <div class="bg-[#111322] text-white min-h-screen selection:bg-primary selection:text-white">
         <!-- ======================================================== -->
         <!-- SECTION 1: HERO BANNER & ARTWORK (Figma Node 2308:8195)  -->
         <!-- ======================================================== -->
         <section
-            class="relative w-full overflow-hidden pt-12 md:pt-16 pb-20 md:pb-28"
+            class="relative w-full overflow-hidden pt-12 md:pt-16 pb-20 md:pb-28 lg:py-0 lg:h-[545px]"
             style="background: linear-gradient(0deg, #111322 20%, #2970FF 94%);"
         >
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1152px] relative">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
-                    <!-- Left Hero Content (Figma Node 2283:6728) -->
-                    <div class="lg:col-span-7 space-y-4 md:space-y-6 pt-4 sm:pt-6">
-                        <div class="inline-block text-[#D1E0FF] text-sm md:text-base font-semibold tracking-wider uppercase">
-                            {{ tt('KẾT NỐI VỚI HH MAKER') }}
-                        </div>
-
-                        <h1 class="text-white text-3xl sm:text-4xl lg:text-[38px] lg:leading-[46px] font-bold uppercase tracking-tight max-w-[740px]">
-                            {{ tt('KỂ CHÚNG TÔI NGHE Ý TƯỞNG CỦA BẠN') }}
-                        </h1>
-
-                        <p class="text-[#D1E0FF] text-base md:text-lg leading-[26px] max-w-[519px] font-normal">
-                            {{ tt('Một bản phác thảo, một file 3D hay một ý tưởng chưa thành hình. Hãy bắt đầu cuộc trao đổi qua kênh thuận tiện nhất với bạn.') }}
-                        </p>
+            <div class="max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-0 relative">
+                <!-- Left Hero Content (Figma Node 2283:6728) -->
+                <div class="relative z-10 flex flex-col gap-4 max-w-[740px] pt-4 sm:pt-6 lg:pt-[197px]">
+                    <div class="text-[16px] leading-[22px] font-normal text-[#D1E0FF] uppercase">
+                        {{ tt('KẾT NỐI VỚI HH MAKER') }}
                     </div>
 
-                    <!-- Right Hero Logo 3D HH Maker (Figma Node 2308:8196) -->
-                    <div class="hidden lg:flex lg:col-span-5 items-center justify-end relative">
-                        <img
-                            src="/images/contact/hh_maker-01_2.png"
-                            :alt="tt('HH Maker Logo 3D - From Ideas To Reality')"
-                            class="w-[260px] xl:w-[310px] max-w-full h-auto object-contain pointer-events-none select-none drop-shadow-[0_12px_28px_rgba(0,0,0,0.35)] transition-transform duration-500 hover:scale-[1.02]"
-                            loading="eager"
-                        />
-                    </div>
+                    <h1 class="text-3xl sm:text-4xl lg:text-[38px] lg:leading-[46px] lg:whitespace-nowrap font-bold text-[#FAFAFA] uppercase max-w-[740px]">
+                        {{ tt('KỂ CHÚNG TÔI NGHE Ý TƯỞNG CỦA BẠN') }}
+                    </h1>
+
+                    <p class="text-[16px] leading-[26px] font-normal text-[#D1E0FF] max-w-[519px]">
+                        {{ tt('Một bản phác thảo, một file 3D hay một ý tưởng chưa thành hình. Hãy bắt đầu cuộc trao đổi qua kênh thuận tiện nhất với bạn.') }}
+                    </p>
                 </div>
+
+                <!-- Right Hero Logo 3D HH Maker (Figma Node 2308:8196) -->
+                <img
+                    src="/images/contact/hh_maker-01_2.png"
+                    :alt="tt('HH Maker Logo 3D - From Ideas To Reality')"
+                    class="w-[200px] sm:w-[240px] max-h-[220px] mx-auto mt-6 lg:mt-0 lg:mx-0 lg:max-h-none lg:absolute lg:w-[469px] lg:h-[889px] lg:top-[-172px] lg:left-[877px] object-contain pointer-events-none select-none"
+                    loading="eager"
+                />
             </div>
         </section>
 
         <!-- ======================================================== -->
         <!-- SECTION 2: 3 THẺ KÍNH KÊNH LIÊN HỆ (Figma Node 2308:8241)-->
         <!-- ======================================================== -->
-        <section class="relative z-20 -mt-10 sm:-mt-14 mb-12 sm:mb-16">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1152px]">
+        <section v-scroll-reveal class="relative z-20 -mt-10 sm:-mt-14 lg:-mt-[165px] py-6 sm:py-8 lg:py-[40px]">
+            <div class="max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-0">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <!-- 1. Card Zalo (Node 2308:8242) -->
                     <a
                         :href="displayZaloUrl"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] rounded-[12px] p-7 transition-all duration-300 hover:border-primary hover:bg-white/[0.28] hover:shadow-glow-primary-subtle group flex flex-col justify-between min-h-[193px]"
+                        class="lg:w-[368px] lg:h-[193px] p-7 rounded-[12px] bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] flex flex-col justify-between gap-5 transition-all duration-300 hover:border-primary hover:bg-white/[0.28] hover:shadow-glow-primary-subtle group"
                     >
-                        <div class="w-10 h-10 rounded-lg flex items-center justify-center text-white group-hover:text-primary transition-colors">
+                        <div class="w-7 h-7 flex items-center text-white group-hover:text-primary transition-colors">
+                            <!-- Lucide MessageCircle (28x28) -->
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="28"
@@ -73,11 +70,11 @@
                                 <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
                             </svg>
                         </div>
-                        <div class="space-y-2 mt-4">
-                            <h3 class="text-2xl font-semibold text-[#FAFAFA] group-hover:text-primary transition-colors leading-[29px]">
+                        <div class="flex flex-col gap-2">
+                            <h3 class="text-[24px] leading-[29px] font-semibold text-[#FAFAFA] group-hover:text-primary transition-colors">
                                 {{ tt('Tư vấn qua Zalo') }}
                             </h3>
-                            <p class="text-base text-[#B9C0D4] leading-[26px]">
+                            <p class="text-[16px] leading-[26px] font-normal text-[#B9C0D4]">
                                 {{ tt('Trao đổi ý tưởng, hình ảnh và yêu cầu sản phẩm') }}
                             </p>
                         </div>
@@ -86,9 +83,10 @@
                     <!-- 2. Card Hotline (Node 2308:8252) -->
                     <a
                         :href="'tel:' + displayPhone.replace(/\s+/g, '')"
-                        class="bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] rounded-[12px] p-7 transition-all duration-300 hover:border-primary hover:bg-white/[0.28] hover:shadow-glow-primary-subtle group flex flex-col justify-between min-h-[193px]"
+                        class="lg:w-[368px] lg:h-[193px] p-7 rounded-[12px] bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] flex flex-col justify-between gap-5 transition-all duration-300 hover:border-primary hover:bg-white/[0.28] hover:shadow-glow-primary-subtle group"
                     >
-                        <div class="w-10 h-10 rounded-lg flex items-center justify-center text-white group-hover:text-primary transition-colors">
+                        <div class="w-7 h-7 flex items-center text-white group-hover:text-primary transition-colors">
+                            <!-- Lucide Phone (28x28) -->
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="28"
@@ -105,11 +103,11 @@
                                 />
                             </svg>
                         </div>
-                        <div class="space-y-2 mt-4">
-                            <h3 class="text-2xl font-semibold text-[#FAFAFA] group-hover:text-primary transition-colors leading-[29px]">
+                        <div class="flex flex-col gap-2">
+                            <h3 class="text-[24px] leading-[29px] font-semibold text-[#FAFAFA] group-hover:text-primary transition-colors">
                                 {{ displayPhone }}
                             </h3>
-                            <p class="text-base text-[#B9C0D4] leading-[26px]">
+                            <p class="text-[16px] leading-[26px] font-normal text-[#B9C0D4]">
                                 {{ tt('Gọi HH Maker để trao đổi trực tiếp về dự án của bạn') }}
                             </p>
                         </div>
@@ -118,9 +116,10 @@
                     <!-- 3. Card Email (Node 2308:8262) -->
                     <a
                         :href="'mailto:' + displayEmail"
-                        class="bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] rounded-[12px] p-7 transition-all duration-300 hover:border-primary hover:bg-white/[0.28] hover:shadow-glow-primary-subtle group flex flex-col justify-between min-h-[193px]"
+                        class="lg:w-[368px] lg:h-[193px] p-7 rounded-[12px] bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] flex flex-col justify-between gap-5 transition-all duration-300 hover:border-primary hover:bg-white/[0.28] hover:shadow-glow-primary-subtle group"
                     >
-                        <div class="w-10 h-10 rounded-lg flex items-center justify-center text-white group-hover:text-primary transition-colors">
+                        <div class="w-7 h-7 flex items-center text-white group-hover:text-primary transition-colors">
+                            <!-- Lucide Mail (28x28) -->
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="28"
@@ -136,11 +135,11 @@
                                 <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                             </svg>
                         </div>
-                        <div class="space-y-2 mt-4">
-                            <h3 class="text-2xl font-semibold text-[#FAFAFA] group-hover:text-primary transition-colors leading-[29px]">
+                        <div class="flex flex-col gap-2">
+                            <h3 class="text-[24px] leading-[29px] font-semibold text-[#FAFAFA] group-hover:text-primary transition-colors">
                                 {{ displayEmail }}
                             </h3>
-                            <p class="text-base text-[#B9C0D4] leading-[26px]">
+                            <p class="text-[16px] leading-[26px] font-normal text-[#B9C0D4]">
                                 {{ tt('Gửi mô tả chi tiết và tài liệu tham khảo của bạn') }}
                             </p>
                         </div>
@@ -152,123 +151,127 @@
         <!-- ======================================================== -->
         <!-- SECTION 3: GỬI YÊU CẦU TƯ VẤN (Figma Node 2283:6767)     -->
         <!-- ======================================================== -->
-        <section class="py-12 sm:py-16 md:py-20 bg-[#111322]">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1152px]">
-                <div class="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start">
+        <section v-scroll-reveal class="py-12 sm:py-16 lg:pt-[112px] lg:pb-[64px] bg-[#111322]">
+            <div class="max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-0">
+                <div class="flex flex-col lg:flex-row items-start gap-10 lg:gap-16">
                     <!-- Cột Trái: Lời Mời & Artwork Điêu khắc xanh (Node 2283:6768) - Width 380px -->
-                    <div class="w-full lg:w-[380px] shrink-0 flex flex-col justify-between space-y-6">
-                        <div class="space-y-3">
-                            <div class="text-[#84ADFF] text-sm md:text-base font-semibold tracking-wider uppercase">
-                                {{ tt('TỪ Ý TƯỞNG ĐẾN HIỆN THỰC') }}
-                            </div>
-                            <h2 class="text-white text-2xl sm:text-3xl lg:text-[36px] font-bold leading-tight lg:leading-[42px]">
+                    <div class="w-full lg:w-[380px] lg:h-[598px] shrink-0 flex flex-col gap-6">
+                        <div class="text-[16px] leading-[22px] font-normal text-[#84ADFF] uppercase">
+                            {{ tt('TỪ Ý TƯỞNG ĐẾN HIỆN THỰC') }}
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <h2 class="text-3xl sm:text-[36px] sm:leading-[42px] font-bold text-[#FAFAFA]">
                                 {{ tt('CÙNG BẮT ĐẦU MỘT SẢN PHẨM MỚI.') }}
                             </h2>
-                            <p class="text-[#B9C0D4] text-sm sm:text-base leading-[26px]">
+                            <p class="text-[16px] leading-[26px] font-normal text-[#B9C0D4]">
                                 {{ tt('Điền thông tin để HH Maker hiểu thêm về nhu cầu của bạn và có cơ sở trao đổi phương án phù hợp.') }}
                             </p>
                         </div>
 
                         <!-- Khung Artwork Hình ảnh điêu khắc xanh (Node 2283:6772 & 2283:6773: 380px x 384px) -->
-                        <div class="w-full max-w-[380px] mx-auto lg:mx-0 rounded-[12px] overflow-hidden border border-[#5D6B98]/40 shadow-2xl bg-dark-surface/40 group">
+                        <div class="w-full lg:w-[380px] h-[300px] sm:h-[360px] lg:h-[384px] rounded-[12px] overflow-hidden">
                             <img
                                 src="/images/contact/dieu_khac_xanh.png"
                                 :alt="tt('HH Maker tác phẩm điêu khắc 3D xanh')"
-                                class="w-full h-auto aspect-[380/384] object-cover transition-transform duration-500 group-hover:scale-105 select-none"
+                                class="w-full h-full object-cover select-none"
                                 loading="lazy"
                             />
                         </div>
                     </div>
 
                     <!-- Cột Phải: Biểu mẫu Form (Node 2283:6775) - Width 708px -->
-                    <div class="w-full lg:w-[708px] shrink-0">
-                        <h3 class="text-white text-2xl sm:text-[28px] font-bold leading-[33px] mb-6">
+                    <div class="w-full lg:w-[708px] lg:min-h-[598px] shrink-0 flex flex-col gap-6">
+                        <h3 class="text-2xl sm:text-[28px] sm:leading-[33px] font-bold text-[#FAFAFA]">
                             {{ tt('Thông tin yêu cầu') }}
                         </h3>
 
-                        <form @submit.prevent="submitContact" novalidate class="space-y-5">
-                            <!-- Hàng 1: Họ tên & Số điện thoại (Node 2283:6777) -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-                                <!-- Họ và tên (Node 2283:6778) -->
+                        <form @submit.prevent="submitContact" novalidate class="flex flex-col gap-6">
+                            <!-- Cụm 1 (Node 2308:8386): Họ tên, Số điện thoại & Email -->
+                            <div class="flex flex-col gap-3">
+                                <!-- Hàng 1: Họ tên & Số điện thoại (Node 2283:6777) -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                    <!-- Họ và tên (Node 2283:6778) -->
+                                    <div>
+                                        <label class="block text-[14px] leading-[20px] font-normal text-[#FAFAFA] mb-[10px]">
+                                            {{ tt('Họ và tên *') }}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            v-model="form.name"
+                                            :placeholder="tt('Nhập họ và tên')"
+                                            :class="[
+                                                'w-full h-[52px] px-4 rounded-[8px] bg-white/20 border text-[14px] leading-[20px] text-white placeholder-[#B9C0D4] transition-all focus:outline-none',
+                                                clientErrors.name || form.errors.name
+                                                    ? 'border-red-500 focus:border-red-500'
+                                                    : 'border-[#5D6B98] focus:border-primary focus:ring-1 focus:ring-primary focus:bg-white/[0.25]'
+                                            ]"
+                                        />
+                                        <p v-if="clientErrors.name || form.errors.name" class="text-xs text-red-400 mt-1.5">
+                                            {{ clientErrors.name || form.errors.name }}
+                                        </p>
+                                    </div>
+
+                                    <!-- Số điện thoại (Node 2283:6782) -->
+                                    <div>
+                                        <label class="block text-[14px] leading-[20px] font-normal text-[#FAFAFA] mb-[10px]">
+                                            {{ tt('Số điện thoại *') }}
+                                        </label>
+                                        <input
+                                            type="tel"
+                                            v-model="form.phone"
+                                            :placeholder="tt('Nhập số điện thoại')"
+                                            :class="[
+                                                'w-full h-[52px] px-4 rounded-[8px] bg-white/20 border text-[14px] leading-[20px] text-white placeholder-[#B9C0D4] transition-all focus:outline-none',
+                                                clientErrors.phone || form.errors.phone
+                                                    ? 'border-red-500 focus:border-red-500'
+                                                    : 'border-[#5D6B98] focus:border-primary focus:ring-1 focus:ring-primary focus:bg-white/[0.25]'
+                                            ]"
+                                        />
+                                        <p v-if="clientErrors.phone || form.errors.phone" class="text-xs text-red-400 mt-1.5">
+                                            {{ clientErrors.phone || form.errors.phone }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- Hàng 2: Email (Node 2283:6786) -->
                                 <div>
-                                    <label class="block text-sm font-medium text-[#FAFAFA] mb-2">
-                                        {{ tt('Họ và tên') }} <span class="text-red-400">*</span>
+                                    <label class="block text-[14px] leading-[20px] font-normal text-[#FAFAFA] mb-[10px]">
+                                        {{ tt('Email') }}
                                     </label>
                                     <input
-                                        type="text"
-                                        v-model="form.name"
-                                        :placeholder="tt('Nhập họ và tên')"
+                                        type="email"
+                                        v-model="form.email"
+                                        :placeholder="tt('Nhập địa chỉ email')"
                                         :class="[
-                                            'w-full h-[52px] bg-white/20 border rounded-[8px] px-4 text-[#FAFAFA] placeholder-[#B9C0D4] text-sm transition-all focus:outline-none',
-                                            clientErrors.name || form.errors.name
+                                            'w-full h-[52px] px-4 rounded-[8px] bg-white/20 border text-[14px] leading-[20px] text-white placeholder-[#B9C0D4] transition-all focus:outline-none',
+                                            clientErrors.email || form.errors.email
                                                 ? 'border-red-500 focus:border-red-500'
                                                 : 'border-[#5D6B98] focus:border-primary focus:ring-1 focus:ring-primary focus:bg-white/[0.25]'
                                         ]"
                                     />
-                                    <p v-if="clientErrors.name || form.errors.name" class="text-xs text-red-400 mt-1.5">
-                                        {{ clientErrors.name || form.errors.name }}
-                                    </p>
-                                </div>
-
-                                <!-- Số điện thoại (Node 2283:6782) -->
-                                <div>
-                                    <label class="block text-sm font-medium text-[#FAFAFA] mb-2">
-                                        {{ tt('Số điện thoại') }} <span class="text-red-400">*</span>
-                                    </label>
-                                    <input
-                                        type="tel"
-                                        v-model="form.phone"
-                                        :placeholder="tt('Nhập số điện thoại')"
-                                        :class="[
-                                            'w-full h-[52px] bg-white/20 border rounded-[8px] px-4 text-[#FAFAFA] placeholder-[#B9C0D4] text-sm transition-all focus:outline-none',
-                                            clientErrors.phone || form.errors.phone
-                                                ? 'border-red-500 focus:border-red-500'
-                                                : 'border-[#5D6B98] focus:border-primary focus:ring-1 focus:ring-primary focus:bg-white/[0.25]'
-                                        ]"
-                                    />
-                                    <p v-if="clientErrors.phone || form.errors.phone" class="text-xs text-red-400 mt-1.5">
-                                        {{ clientErrors.phone || form.errors.phone }}
+                                    <p v-if="clientErrors.email || form.errors.email" class="text-xs text-red-400 mt-1.5">
+                                        {{ clientErrors.email || form.errors.email }}
                                     </p>
                                 </div>
                             </div>
 
-                            <!-- Hàng 2: Email (Node 2283:6786) -->
+                            <!-- Cụm 2: Dịch vụ quan tâm (Node 2283:6790 - Pill buttons) -->
                             <div>
-                                <label class="block text-sm font-medium text-[#FAFAFA] mb-2">
-                                    {{ tt('Email') }}
-                                </label>
-                                <input
-                                    type="email"
-                                    v-model="form.email"
-                                    :placeholder="tt('Nhập địa chỉ email')"
-                                    :class="[
-                                        'w-full h-[52px] bg-white/20 border rounded-[8px] px-4 text-[#FAFAFA] placeholder-[#B9C0D4] text-sm transition-all focus:outline-none',
-                                        clientErrors.email || form.errors.email
-                                            ? 'border-red-500 focus:border-red-500'
-                                             : 'border-[#5D6B98] focus:border-primary focus:ring-1 focus:ring-primary focus:bg-white/[0.25]'
-                                    ]"
-                                />
-                                <p v-if="clientErrors.email || form.errors.email" class="text-xs text-red-400 mt-1.5">
-                                    {{ clientErrors.email || form.errors.email }}
-                                </p>
-                            </div>
-
-                            <!-- Hàng 3: Dịch vụ quan tâm (Node 2283:6790 - Pill buttons) -->
-                            <div>
-                                <label class="block text-sm font-medium text-[#FAFAFA] mb-2.5">
+                                <label class="block text-[14px] leading-[20px] font-normal text-[#FAFAFA] mb-3">
                                     {{ tt('Bạn cần hỗ trợ điều gì?') }}
                                 </label>
-                                <div class="flex flex-wrap gap-2.5 sm:gap-3">
+                                <div class="flex flex-wrap gap-[10px]">
                                     <button
                                         type="button"
                                         v-for="service in availableServices"
                                         :key="service"
                                         @click="form.service = service"
                                         :class="[
-                                            'h-[39px] px-4 rounded-[8px] text-xs sm:text-xs font-medium transition-all duration-200 cursor-pointer flex items-center justify-center',
+                                            'h-[39px] px-[14px] py-[12px] rounded-[8px] text-[12px] leading-[15px] font-normal inline-flex items-center justify-center border transition-all duration-200 cursor-pointer',
                                             form.service === service
-                                                ? 'bg-[#243971] border border-[#528BFF] text-[#FAFAFA] shadow-[0_0_12px_rgba(82,139,255,0.35)]'
-                                                : 'bg-[#1A1C32] border border-[#2C3049] text-[#FAFAFA] hover:border-[#5D6B98] hover:text-white'
+                                                ? 'bg-[#243971] border-[#528BFF] text-[#FAFAFA]'
+                                                : 'bg-[#1A1C32] border-[#2C3049] text-[#FAFAFA] hover:border-[#5D6B98]'
                                         ]"
                                     >
                                         {{ tt(service) }}
@@ -276,17 +279,17 @@
                                 </div>
                             </div>
 
-                            <!-- Hàng 4: Mô tả ý tưởng (Node 2283:6802) -->
+                            <!-- Cụm 3: Mô tả ý tưởng (Node 2308:8387) -->
                             <div>
-                                <label class="block text-sm font-medium text-[#FAFAFA] mb-2">
-                                    {{ tt('Mô tả ý tưởng') }} <span class="text-red-400">*</span>
+                                <label class="block text-[14px] leading-[20px] font-normal text-[#FAFAFA] mb-[10px]">
+                                    {{ tt('Mô tả ý tưởng *') }}
                                 </label>
                                 <textarea
                                     v-model="form.content"
                                     rows="4"
                                     :placeholder="tt('Chia sẻ ý tưởng, hình ảnh hoặc bản phác thảo của bạn...')"
                                     :class="[
-                                        'w-full h-[136px] bg-white/20 border rounded-[8px] p-4 text-[#FAFAFA] placeholder-[#B9C0D4] text-sm transition-all focus:outline-none resize-none',
+                                        'block w-full h-[136px] p-4 rounded-[8px] bg-white/20 border text-[14px] leading-[20px] text-white placeholder-[#B9C0D4] resize-none transition-all focus:outline-none',
                                         clientErrors.content || form.errors.content
                                             ? 'border-red-500 focus:border-red-500'
                                             : 'border-[#5D6B98] focus:border-primary focus:ring-1 focus:ring-primary focus:bg-white/[0.25]'
@@ -297,11 +300,11 @@
                                 </p>
                             </div>
 
-                            <!-- Hàng 5: Nút Submit (Node 2308:8396) -->
+                            <!-- Cụm 4: Nút Submit (Node 2308:8396) -->
                             <button
                                 type="submit"
                                 :disabled="form.processing"
-                                class="w-full h-[56px] rounded-[8px] text-[#FAFAFA] font-semibold text-base transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:brightness-110 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed mt-2"
+                                class="w-full h-[56px] rounded-[8px] text-[16px] leading-[24px] font-semibold text-[#FAFAFA] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:brightness-110 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed"
                                 style="background: linear-gradient(90deg, #2970FF 0%, #00359E 89%);"
                             >
                                 <svg
@@ -325,13 +328,13 @@
         <!-- ======================================================== -->
         <!-- SECTION 4: FAQ ACCORDION (Figma Node 2330:8413)          -->
         <!-- ======================================================== -->
-        <section class="py-16 sm:py-20 lg:py-24 bg-[#111322] border-t border-dark-border/40">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1152px]">
-                <div class="space-y-3 mb-8 sm:mb-10">
-                    <div class="text-[#84ADFF] text-sm font-semibold tracking-wider uppercase">
+        <section v-scroll-reveal class="py-14 sm:py-20 lg:pt-[80px] lg:pb-[120px] bg-[#111322]">
+            <div class="max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-0">
+                <div class="flex flex-col gap-4 mb-8">
+                    <div class="text-[14px] leading-[20px] font-normal text-[#84ADFF] uppercase">
                         {{ tt('CÂU HỎI THƯỜNG GẶP') }}
                     </div>
-                    <h2 class="text-white text-2xl sm:text-3xl lg:text-[32px] lg:leading-[37px] font-bold">
+                    <h2 class="text-2xl sm:text-[32px] sm:leading-[37px] font-bold text-[#FAFAFA]">
                         {{ tt('Giải đáp trước khi liên hệ') }}
                     </h2>
                 </div>
@@ -340,25 +343,39 @@
                     <div
                         v-for="(faq, index) in faqList"
                         :key="index"
-                        class="bg-white/20 border border-[#5D6B98] rounded-[12px] overflow-hidden transition-all duration-200 backdrop-blur-[10px]"
+                        class="rounded-[12px] bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] p-6 transition-all duration-200"
                     >
                         <button
                             type="button"
                             @click="toggleFaq(index)"
-                            class="w-full min-h-[72px] px-6 py-4 flex items-center justify-between text-left cursor-pointer transition-colors hover:bg-white/[0.04]"
+                            class="w-full flex items-center justify-between gap-4 text-left cursor-pointer"
                             :aria-expanded="activeFaq === index"
                         >
-                            <span class="text-base sm:text-[18px] sm:leading-[22px] font-medium text-[#FAFAFA] pr-4">
+                            <span class="text-[18px] leading-[22px] font-medium text-[#FAFAFA]">
                                 {{ tt(faq.question) }}
                             </span>
-                            <span
-                                class="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-[#FAFAFA] bg-white/10 transition-transform duration-300"
-                                :class="{ 'rotate-45': activeFaq === index }"
-                            >
+                            <span class="w-6 h-[22px] shrink-0 flex items-center justify-center text-[#FCFCFC]">
                                 <svg
+                                    v-if="activeFaq === index"
+                                    class="shrink-0"
                                     xmlns="http://www.w3.org/2000/svg"
-                                    width="20"
-                                    height="20"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                <svg
+                                    v-else
+                                    class="shrink-0"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
                                     viewBox="0 0 24 24"
                                     fill="none"
                                     stroke="currentColor"
@@ -371,21 +388,21 @@
                                 </svg>
                             </span>
                         </button>
-                        <transition
-                            enter-active-class="transition duration-200 ease-out"
-                            enter-from-class="opacity-0 -translate-y-1"
-                            enter-to-class="opacity-100 translate-y-0"
-                            leave-active-class="transition duration-150 ease-in"
-                            leave-from-class="opacity-100 translate-y-0"
-                            leave-to-class="opacity-0 -translate-y-1"
+                        <Transition
+                            enter-active-class="transition-transform duration-200 ease-out"
+                            enter-from-class="translate-y-1"
+                            enter-to-class="translate-y-0"
+                            leave-active-class="transition-transform duration-150 ease-in"
+                            leave-from-class="translate-y-0"
+                            leave-to-class="translate-y-1"
                         >
                             <div
-                                v-show="activeFaq === index"
-                                class="px-6 pb-6 pt-2 text-[#B9C0D4] text-base leading-[26px] border-t border-white/10"
+                                v-if="activeFaq === index"
+                                class="mt-4 text-[16px] leading-[26px] font-normal text-[#FCFCFC]"
                             >
                                 {{ tt(faq.answer) }}
                             </div>
-                        </transition>
+                        </Transition>
                     </div>
                 </div>
             </div>
@@ -444,6 +461,10 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    faqs: {
+        type: Array,
+        default: () => [],
+    },
     seo: {
         type: Object,
         default: () => null,
@@ -497,10 +518,10 @@ const toggleFaq = (index) => {
     activeFaq.value = activeFaq.value === index ? null : index
 }
 
-const faqList = [
+const fallbackFaqList = [
     {
         question: 'Tôi chưa có sẵn file thiết kế 3D, bên mình có hỗ trợ dựng file không?',
-        answer: 'Có, HH Maker hỗ trợ trọn gói từ khâu phác thảo ý tưởng, lên bản vẽ 2D/3D kỹ thuật số (CAD/CAM hoặc Digital Sculpting) đến khi hoàn thiện file in sẵn sàng sản xuất.',
+        answer: 'Có. HH MAKER hỗ trợ dựng file 3D từ ý tưởng, bản phác thảo hoặc hình ảnh tham khảo của bạn. Bạn chỉ cần cung cấp kích thước, công năng và yêu cầu mong muốn; đội ngũ sẽ tư vấn phương án thiết kế, báo chi phí dựng file và gửi bản 3D để bạn duyệt trước khi sản xuất.',
     },
     {
         question: 'Để nhận được bảng báo giá chính xác và nhanh chóng nhất cho dự án của mình, tôi cần cung cấp những gì?',
@@ -511,6 +532,15 @@ const faqList = [
         answer: 'Hoàn toàn được! Dịch vụ làm đồ Custom và chế tác theo yêu cầu là thế mạnh hàng đầu tại HH Maker. Chúng tôi sẵn sàng tinh chỉnh kích thước, tỷ lệ, phối màu hoặc thiết kế riêng biệt hoàn toàn theo concept của bạn.',
     },
 ]
+
+const faqList = computed(() =>
+    Array.isArray(props.faqs) && props.faqs.length
+        ? props.faqs.map((item) => ({
+              question: item.question || item.title || '',
+              answer: item.answer || item.content || item.description || '',
+          }))
+        : fallbackFaqList
+)
 
 // Form state using Inertia useForm
 const form = useForm({

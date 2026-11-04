@@ -74,10 +74,18 @@ class SettingController extends Controller
         foreach($validated as $key => $data) {
             if (is_array($data)) {
                 $validated[$key] = json_encode($data);
+            } elseif (in_array($key, ['map_iframe', 'general_map_iframe'], true) && is_string($data)) {
+                if (str_contains(mb_strtolower($data), '<iframe') && preg_match('/src=["\']([^"\']+)["\']/i', $data, $matches)) {
+                    $validated[$key] = trim($matches[1]);
+                }
             }
         }
 
         settings()->group($id)->set($validated);
+
+        if (class_exists(\App\Models\Config::class) && method_exists(\App\Models\Config::class, 'clearBrandCaches')) {
+            \App\Models\Config::clearBrandCaches();
+        }
 
         if (in_array($id, ['smtp', 'notification'])) {
             Artisan::call('queue:restart');

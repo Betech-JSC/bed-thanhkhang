@@ -1044,6 +1044,10 @@ module.exports = {
                 '90vw': '90vw',
             },
 
+            aspectRatio: {
+                square: '1 / 1',
+            },
+
 
 
             container: {
@@ -1073,8 +1077,6 @@ module.exports = {
     plugins: [
 
         require('@tailwindcss/typography'),
-
-        require('@tailwindcss/aspect-ratio'),
 
         require('@tailwindcss/line-clamp'),
 

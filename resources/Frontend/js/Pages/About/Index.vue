@@ -6,74 +6,69 @@
         <meta property="og:description" :content="pageDescription" />
     </Head>
 
-    <div class="bg-dark-bg text-white overflow-x-hidden">
+    <div class="bg-dark-bg text-white">
         <!-- 1. HERO BANNER (FIGMA 2283:7100) -->
-        <section class="relative pt-6 md:pt-10 pb-12 md:pb-16">
-            <div class="container mx-auto px-4 md:px-8 max-w-7xl">
-                <!-- Hero Outer Container (1279px x 616px Mask Group) -->
-                <div class="relative w-full rounded-2xl md:rounded-3xl overflow-hidden border border-dark-border min-h-[500px] md:min-h-[616px] flex flex-col justify-end p-6 sm:p-10 md:p-16 shadow-2xl">
-                    <!-- Background Image from Figma with Dark Tech Overlays -->
+        <section class="relative pt-4 lg:pt-0 pb-12 lg:pb-[64px]">
+            <div class="w-full max-w-[1279px] mx-auto px-4 sm:px-6 lg:px-0">
+                <!-- Hero Outer Container (1279px x 616px Mask Group - Figma 2283:7573) -->
+                <div class="relative rounded-[16px] overflow-hidden min-h-[500px] lg:h-[616px] flex items-center p-6 sm:p-10 lg:px-[80px] lg:py-0">
+                    <!-- Background Image from Figma (Figma 2283:7576) -->
                     <div class="absolute inset-0 z-0">
                         <img
                             :src="bannerImage"
                             :alt="bannerImageAlt"
                             class="w-full h-full object-cover object-center"
                         />
-                        <!-- Dark gradient overlay for text readability -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-dark-bg via-dark-bg/80 to-dark-bg/40"></div>
-                        <div class="absolute inset-0 bg-gradient-to-r from-dark-bg/90 via-dark-bg/60 to-transparent"></div>
+                        <!-- Dark gradient overlay only on mobile for text readability; desktop keeps original sharp image -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark-bg via-dark-bg/80 to-dark-bg/40 lg:hidden"></div>
+                        <div class="absolute inset-0 bg-gradient-to-r from-dark-bg/90 via-dark-bg/60 to-transparent lg:hidden"></div>
                     </div>
 
-                    <!-- Hero Content Grid -->
-                    <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+                    <!-- Hero Content -->
+                    <div class="z-10 w-full flex flex-col gap-8">
                         <!-- Left: Main Headline & Intro (Figma 2283:7579) -->
-                        <div class="lg:col-span-8 space-y-4 md:space-y-6 max-w-2xl">
-                            <p class="text-[#D1E0FF] text-base font-medium leading-[22px]">
+                        <div class="w-full max-w-[565px] flex flex-col gap-4">
+                            <p class="text-[#D1E0FF] font-normal text-[16px] leading-[22px] font-sans">
                                 {{ tt(bannerSubtitle) }}
                             </p>
 
-                            <h1 class="text-3xl sm:text-4xl lg:text-display-hero font-bold font-display uppercase tracking-tight text-[#FAFAFA] leading-[1.18]">
+                            <h1 class="text-2xl sm:text-3xl lg:text-[38px] lg:leading-[46px] font-bold text-[#FAFAFA] uppercase font-sans tracking-normal">
                                 {{ tt(bannerTitle) }}
                             </h1>
 
-                            <p class="text-[#D1E0FF] text-base md:text-lg leading-relaxed font-normal max-w-xl">
+                            <p class="text-[#D1E0FF] font-normal text-[16px] leading-[26px] font-sans max-w-[565px]">
                                 {{ tt(bannerDescription) }}
                             </p>
                         </div>
 
                         <!-- Right: Interactive Circular Rotating Stamp Badge (Figma Frame 237 - 2283:7597) -->
-                        <div class="lg:col-span-4 flex lg:justify-end">
-                            <div class="relative w-28 h-28 md:w-32 md:h-32 flex items-center justify-center shrink-0">
-                                <svg class="w-full h-full animate-[spin_15s_linear_infinite]" viewBox="0 0 120 120">
-                                    <defs>
-                                        <path
-                                            id="aboutCirclePath"
-                                            d="M 60, 60 m -45, 0 a 45,45 0 1,1 90,0 a 45,45 0 1,1 -90,0"
-                                            fill="transparent"
-                                        />
-                                    </defs>
-                                    <text class="text-[9.5px] font-mono tracking-[2px] uppercase fill-white/90 font-medium">
-                                        <textPath href="#aboutCirclePath" startOffset="0%">
-                                            FROM IDEAS TO REALITY - FROM IDEAS TO REALITY -
-                                        </textPath>
-                                    </text>
+                        <div class="relative lg:absolute lg:right-[33px] lg:bottom-[35px] w-[114px] h-[114px] shrink-0 flex items-center justify-center select-none">
+                            <svg class="w-[114px] h-[114px] animate-[spin_15s_linear_infinite]" viewBox="0 0 114 114">
+                                <path
+                                    id="circlePath"
+                                    d="M 57, 57 m -43, 0 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0"
+                                    fill="transparent"
+                                />
+                                <text class="text-[9.5px] font-sans tracking-[1.8px] uppercase fill-[#FAFAFA] font-medium">
+                                    <textPath href="#circlePath" startOffset="0%">
+                                        FROM IDEAS TO REALITY - FROM IDEAS TO REALITY -
+                                    </textPath>
+                                </text>
+                            </svg>
+                            <div class="absolute w-[40px] h-[40px] flex items-center justify-center">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="w-[17px] h-[17px] text-[#FAFAFA]"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                                    <polyline points="7 7 17 7 17 17"></polyline>
                                 </svg>
-                                <!-- Centered Transparent Arrow Icon without inner circle (matching Figma design) -->
-                                <div class="absolute inset-0 m-auto w-10 h-10 flex items-center justify-center text-[#FAFAFA] pointer-events-none">
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        class="w-5 h-5"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    >
-                                        <line x1="7" y1="17" x2="17" y2="7"></line>
-                                        <polyline points="7 7 17 7 17 17"></polyline>
-                                    </svg>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -82,21 +77,21 @@
         </section>
 
         <!-- 2. LÝ DO KHỞI ĐẦU (FIGMA 2283:7109) -->
-        <section class="py-12 md:py-16 bg-dark-bg border-t border-dark-border/40">
-            <div class="container mx-auto px-4 md:px-8 max-w-7xl">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start">
+        <section v-scroll-reveal class="py-10 lg:py-[40px] bg-dark-bg">
+            <div class="w-full max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-0">
+                <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 lg:gap-[120px]">
                     <!-- Left Column: Chuyên mục & Tiêu đề (Figma 2283:7110) -->
-                    <div class="lg:col-span-5 space-y-3">
-                        <p class="text-[#84ADFF] font-medium text-base leading-[19px]">
+                    <div class="lg:w-[360px] shrink-0 flex flex-col gap-4">
+                        <p class="text-[#84ADFF] font-normal text-[16px] leading-[19px] font-sans">
                             {{ tt('Vì sao HH Maker ra đời?') }}
                         </p>
-                        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold font-display uppercase text-[#FAFAFA] leading-tight tracking-tight">
+                        <h2 class="text-2xl sm:text-3xl lg:text-[38px] lg:leading-[46px] font-bold text-[#FAFAFA] uppercase font-sans tracking-normal">
                             {{ tt('TỪ ĐAM MÊ ĐẾN MỘT SỨ MỆNH') }}
                         </h2>
                     </div>
 
                     <!-- Right Column: Câu chuyện sứ mệnh (Figma 2283:7113) -->
-                    <div class="lg:col-span-7 space-y-6 text-[#B9C0D4] text-base md:text-lg leading-relaxed">
+                    <div class="lg:w-[672px] flex flex-col gap-6 text-[#B9C0D4] font-normal text-[16px] leading-[26px] font-sans">
                         <p>
                             {{ tt('HH Maker được thành lập từ niềm đam mê với nghệ thuật 3D và công nghệ chế tác hiện đại của Lâm Hồng Hải. Điểm khởi đầu là một mong muốn giản dị: rút ngắn khoảng cách giữa ý tưởng và sản phẩm vật lý.') }}
                         </p>
@@ -109,34 +104,31 @@
         </section>
 
         <!-- 3. NHÀ SÁNG LẬP (FIGMA 2283:7116) -->
-        <section class="py-14 md:py-20 bg-dark-bg-alt/50 border-t border-dark-border/40">
-            <div class="container mx-auto px-4 md:px-8 max-w-7xl">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+        <section v-scroll-reveal class="py-10 lg:py-[40px] bg-dark-bg">
+            <div class="w-full max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-0">
+                <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 lg:gap-[72px]">
                     <!-- Left: Khung chân dung Founder Lâm Hồng Hải vát góc công nghệ (Figma 2283:7602) -->
-                    <div class="lg:col-span-6 flex justify-center">
-                        <div class="relative w-full max-w-[500px] lg:max-w-[560px] select-none group">
-                            <!-- Khung hình công nghệ chuẩn Figma 2283:7602 với góc vát (chamfered) trên phải & dưới trái, đầu nhô vượt khung nền -->
-                            <img
-                                src="/assets/images/about/founder-composite.png"
-                                :alt="tt('Lâm Hồng Hải - Founder HH Maker')"
-                                class="w-full h-auto object-contain drop-shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]"
-                                loading="lazy"
-                            />
-                        </div>
+                    <div class="w-full max-w-[561px] lg:w-[561px] lg:h-[666px] mx-auto lg:mx-0 shrink-0 select-none">
+                        <img
+                            src="/assets/images/about/founder-composite.png"
+                            :alt="tt('Lâm Hồng Hải - Founder HH Maker')"
+                            class="w-full h-full object-contain"
+                            loading="lazy"
+                        />
                     </div>
 
                     <!-- Right: Chia sẻ từ Nhà sáng lập (Figma 2283:7122) -->
-                    <div class="lg:col-span-6 space-y-6">
-                        <div class="space-y-2">
-                            <p class="text-[#84ADFF] font-medium text-base leading-[26px]">
+                    <div class="w-full lg:w-[519px] flex flex-col gap-8 lg:gap-[40px]">
+                        <div class="flex flex-col gap-4">
+                            <p class="text-[#84ADFF] font-normal text-[16px] leading-[26px] font-sans">
                                 {{ tt('Chia sẻ từ Nhà sáng lập HH Maker') }}
                             </p>
-                            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold font-display text-[#FAFAFA] leading-tight tracking-tight">
+                            <h2 class="text-2xl sm:text-3xl lg:text-[32px] lg:leading-[38px] font-bold text-[#FAFAFA] font-sans tracking-normal">
                                 {{ tt('Mỗi ý tưởng đều xứng đáng có một hình hài') }}
                             </h2>
                         </div>
 
-                        <div class="space-y-4 text-[#B9C0D4] text-base leading-relaxed">
+                        <div class="flex flex-col gap-6 text-[#B9C0D4] font-normal text-[16px] leading-[26px] font-sans">
                             <p>
                                 {{ tt('Xuất phát từ niềm đam mê với nghệ thuật 3D và công nghệ chế tác hiện đại, tôi thành lập HH Maker với sứ mệnh rút ngắn khoảng cách giữa ý tưởng sơ khai và sản phẩm vật lý.') }}
                             </p>
@@ -149,85 +141,81 @@
                         </div>
 
                         <!-- Chữ ký triết lý (Figma 2283:7128) -->
-                        <div class="pt-4 border-t border-dark-border/60">
-                            <p class="text-[#FAFAFA] font-semibold text-base md:text-lg italic font-display flex items-center gap-2">
-                                <span class="text-primary text-xl">“</span>
-                                {{ tt('Trân trọng từng ý tưởng - Tận tâm với từng thành phẩm.') }}
-                                <span class="text-primary text-xl">”</span>
-                            </p>
-                        </div>
+                        <p class="text-[#FAFAFA] font-semibold text-[16px] leading-[26px] font-sans">
+                            {{ tt('Trân trọng từng ý tưởng - Tận tâm với từng thành phẩm.') }}
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- 4. TRIẾT LÝ CHẾ TÁC (FIGMA 2283:7129) -->
-        <section class="py-14 md:py-20 bg-dark-bg border-t border-dark-border/40">
-            <div class="container mx-auto px-4 md:px-8 max-w-7xl">
+        <section v-scroll-reveal class="py-14 lg:py-[80px] bg-dark-bg">
+            <div class="w-full max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-0 flex flex-col gap-8 lg:gap-[40px]">
                 <!-- Section Header (Figma 2283:7647) -->
-                <div class="space-y-3 mb-10 md:mb-12">
-                    <p class="text-[#84ADFF] font-medium text-base leading-[19px]">
+                <div class="flex flex-col gap-3">
+                    <p class="text-[#84ADFF] font-normal text-[16px] leading-[19px] font-sans">
                         {{ tt('Cách HH Maker thực hiện trong từng dự án') }}
                     </p>
-                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold font-display uppercase text-[#FAFAFA] tracking-tight">
+                    <h2 class="text-2xl sm:text-3xl lg:text-[38px] lg:leading-[53px] font-bold text-[#FAFAFA] uppercase font-sans tracking-normal">
                         {{ tt('CÔNG NGHỆ TẠO HÌNH - SỰ TỈ MỈ TẠO DẤU ẤN') }}
                     </h2>
                 </div>
 
                 <!-- 3 Value Cards Grid (Figma 2283:7132) -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-                    <!-- Card 1: Thấu hiểu từng ý tưởng -->
-                    <div class="border border-[#5D6B98] rounded-xl p-7 flex flex-col justify-between min-h-[290px] bg-dark-card/40 hover:border-primary/80 transition-colors duration-300">
-                        <div class="w-12 h-12 flex items-center justify-center shrink-0 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Card 1: Thấu hiểu từng ý tưởng (Figma 2283:7133) -->
+                    <div class="w-full lg:w-[368px] lg:h-[310px] border border-[#5D6B98] rounded-[12px] p-[28px] flex flex-col justify-start gap-[32px] transition-colors duration-300 hover:border-[#84ADFF]">
+                        <div class="w-12 h-12 shrink-0">
                             <img
                                 src="/assets/images/about/lightbulb.svg"
                                 :alt="tt('Thấu hiểu từng ý tưởng')"
                                 class="w-12 h-12 object-contain"
                             />
                         </div>
-                        <div class="space-y-3">
-                            <h3 class="text-xl md:text-2xl font-bold font-display text-[#FAFAFA]">
+                        <div class="flex flex-col gap-4">
+                            <h3 class="text-[24px] leading-[28px] font-bold text-[#FAFAFA] font-sans">
                                 {{ tt('Thấu hiểu từng ý tưởng') }}
                             </h3>
-                            <p class="text-[#B9C0D4] text-base leading-relaxed">
+                            <p class="text-[#B9C0D4] font-normal text-[16px] leading-[26px] font-sans">
                                 {{ tt('Chúng tôi lắng nghe câu chuyện, nhu cầu sử dụng và mong muốn của bạn để tìm ra hướng thiết kế phù hợp, trước khi bắt đầu những nét phác thảo đầu tiên.') }}
                             </p>
                         </div>
                     </div>
 
-                    <!-- Card 2: Chăm chút từng chi tiết -->
-                    <div class="border border-[#5D6B98] rounded-xl p-7 flex flex-col justify-between min-h-[290px] bg-dark-card/40 hover:border-primary/80 transition-colors duration-300">
-                        <div class="w-12 h-12 flex items-center justify-center shrink-0 mb-6">
+                    <!-- Card 2: Chăm chút từng chi tiết (Figma 2283:7138) -->
+                    <div class="w-full lg:w-[368px] lg:h-[310px] border border-[#5D6B98] rounded-[12px] p-[28px] flex flex-col justify-start gap-[32px] transition-colors duration-300 hover:border-[#84ADFF]">
+                        <div class="w-12 h-12 shrink-0">
                             <img
                                 src="/assets/images/about/scan-line.svg"
                                 :alt="tt('Chăm chút từng chi tiết')"
                                 class="w-12 h-12 object-contain"
                             />
                         </div>
-                        <div class="space-y-3">
-                            <h3 class="text-xl md:text-2xl font-bold font-display text-[#FAFAFA]">
+                        <div class="flex flex-col gap-4">
+                            <h3 class="text-[24px] leading-[28px] font-bold text-[#FAFAFA] font-sans">
                                 {{ tt('Chăm chút từng chi tiết') }}
                             </h3>
-                            <p class="text-[#B9C0D4] text-base leading-relaxed">
+                            <p class="text-[#B9C0D4] font-normal text-[16px] leading-[26px] font-sans">
                                 {{ tt('Từ hình khối, tỉ lệ, vật liệu đến quá trình in và hoàn thiện, sản phẩm đều được chăm chút để hài hòa về hình thức và phù hợp với cách sử dụng thực tế.') }}
                             </p>
                         </div>
                     </div>
 
-                    <!-- Card 3: Giữ trọn dấu ấn riêng -->
-                    <div class="border border-[#5D6B98] rounded-xl p-7 flex flex-col justify-between min-h-[290px] bg-dark-card/40 hover:border-primary/80 transition-colors duration-300">
-                        <div class="w-12 h-12 flex items-center justify-center shrink-0 mb-6">
+                    <!-- Card 3: Giữ trọn dấu ấn riêng (Figma 2283:7143) -->
+                    <div class="w-full lg:w-[368px] lg:h-[310px] border border-[#5D6B98] rounded-[12px] p-[28px] flex flex-col justify-start gap-[32px] transition-colors duration-300 hover:border-[#84ADFF]">
+                        <div class="w-12 h-12 shrink-0">
                             <img
                                 src="/assets/images/about/fingerprint.svg"
                                 :alt="tt('Giữ trọn dấu ấn riêng')"
                                 class="w-12 h-12 object-contain"
                             />
                         </div>
-                        <div class="space-y-3">
-                            <h3 class="text-xl md:text-2xl font-bold font-display text-[#FAFAFA]">
+                        <div class="flex flex-col gap-4">
+                            <h3 class="text-[24px] leading-[28px] font-bold text-[#FAFAFA] font-sans">
                                 {{ tt('Giữ trọn dấu ấn riêng') }}
                             </h3>
-                            <p class="text-[#B9C0D4] text-base leading-relaxed">
+                            <p class="text-[#B9C0D4] font-normal text-[16px] leading-[26px] font-sans">
                                 {{ tt('Phong cách của bạn được thể hiện qua màu sắc, đường nét và những chi tiết cá nhân hóa. HH Maker kết nối những yếu tố ấy để truyền tải đúng tinh thần bạn muốn gửi gắm.') }}
                             </p>
                         </div>
@@ -237,18 +225,18 @@
         </section>
 
         <!-- 5. KẾT NỐI DỰ ÁN CTA (FIGMA 2283:7633) -->
-        <section class="py-12 md:py-16 bg-dark-bg border-t border-dark-border/40">
-            <div class="container mx-auto px-4 md:px-8 max-w-7xl">
+        <section v-scroll-reveal class="pt-10 pb-14 lg:pt-[40px] lg:pb-[80px] bg-dark-bg">
+            <div class="w-full max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-0">
                 <!-- Banner gradient #2970FF -> #00359E (Figma 2283:7634) -->
                 <div
-                    class="rounded-2xl p-8 sm:p-10 md:p-12 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 shadow-2xl relative overflow-hidden"
-                    style="background: linear-gradient(90deg, #2970FF 0%, #00359E 89%);"
+                    class="relative rounded-[16px] overflow-hidden p-6 sm:p-8 lg:p-[40px] lg:h-[157px] flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6"
+                    style="background: linear-gradient(90deg, #2970FF 0%, #00359E 89%)"
                 >
-                    <div class="space-y-3 max-w-3xl">
-                        <h2 class="text-2xl sm:text-3xl lg:text-[32px] font-bold font-display text-[#FAFAFA] leading-tight lg:leading-[37px]">
+                    <div class="lg:w-[817px] flex flex-col gap-3">
+                        <h2 class="text-2xl sm:text-3xl lg:text-[32px] lg:leading-[37px] font-bold text-[#FAFAFA] font-sans">
                             {{ tt(ctaTitle) }}
                         </h2>
-                        <p class="text-[#FAFAFA] text-base leading-relaxed lg:leading-[26px]">
+                        <p class="text-[#FAFAFA] font-normal text-[16px] leading-[26px] font-sans">
                             {{ tt(ctaDescription) }}
                         </p>
                     </div>
@@ -256,7 +244,7 @@
                     <div class="shrink-0">
                         <Link
                             :href="ctaButtonLink"
-                            class="inline-flex items-center justify-center px-6 py-2.5 bg-[#F5F8FF] hover:bg-white text-[#111322] font-medium text-base rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-[1.02]"
+                            class="inline-flex items-center justify-center min-w-[175px] h-[40px] px-[20px] py-[8px] bg-[#F5F8FF] hover:bg-white text-[#111322] font-medium text-[16px] leading-[24px] rounded-[8px] transition-all duration-200 whitespace-nowrap font-sans"
                         >
                             {{ tt(ctaButtonText) }}
                         </Link>

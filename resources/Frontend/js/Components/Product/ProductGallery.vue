@@ -15,11 +15,11 @@
                         ? 'border-[#2970FF] ring-2 ring-[#2970FF]/30 shadow-lg shadow-blue-500/20'
                         : 'border-[#30374F] hover:border-slate-500 opacity-70 hover:opacity-100',
                 ]"
-                :aria-label="'Xem góc ảnh ' + (index + 1)"
+                :aria-label="tt('Xem góc ảnh ') + (index + 1)"
             >
                 <img
                     :src="item.thumb || item.url"
-                    :alt="item.alt || ('Góc nhìn ' + (index + 1))"
+                    :alt="item.alt ? tt(item.alt) : (tt('Góc nhìn ') + (index + 1))"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
                 />
@@ -30,51 +30,20 @@
             </button>
         </div>
 
-        <!-- Main Product Image Frame (Figma 2390:5344: 464x600 px, bg-[#F1F5F9]) -->
-        <div class="relative flex-1 w-full rounded-xl overflow-hidden border border-[#30374F] bg-[#F1F5F9] shadow-xl group">
-            <!-- 3D Badge / Real Photo Indicator -->
-            <div class="absolute top-4 left-4 z-10 flex items-center gap-2">
-                <span
-                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#111322]/85 text-white backdrop-blur-md border border-white/10 shadow-sm"
-                >
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    Mô hình in 3D thực tế
-                </span>
-                <span
-                    v-if="currentImage.tag"
-                    class="hidden sm:inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-900/70 text-slate-200 backdrop-blur-sm"
-                >
-                    {{ currentImage.tag }}
-                </span>
-            </div>
-
-            <!-- Zoom trigger hint -->
-            <div class="absolute top-4 right-4 z-10">
-                <button
-                    type="button"
-                    @click="toggleFullscreen"
-                    class="w-9 h-9 rounded-lg bg-black/60 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md transition-colors border border-white/10"
-                    title="Phóng to hình ảnh"
-                    aria-label="Phóng to hình ảnh"
-                >
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-                    </svg>
-                </button>
-            </div>
-
+        <!-- Main Product Image Frame (Figma 2390:5344: 464x600 px, rounded-[12px], bg-[#D1D2D2]) -->
+        <div class="relative flex-1 w-full lg:w-[464px] h-[360px] sm:h-[460px] md:h-[520px] lg:h-[600px] rounded-[12px] overflow-hidden bg-[#D1D2D2] group">
             <!-- Image Container with Zoom effect on hover -->
             <div
-                class="relative w-full h-[360px] sm:h-[460px] md:h-[520px] lg:h-[600px] flex items-center justify-center p-4 sm:p-6 overflow-hidden cursor-zoom-in"
+                class="relative w-full h-full flex items-center justify-center overflow-hidden cursor-zoom-in"
                 @mousemove="handleMouseMove"
                 @mouseleave="handleMouseLeave"
                 @click="toggleFullscreen"
             >
                 <img
                     :src="currentImage.url"
-                    :alt="currentImage.alt || 'Ảnh sản phẩm chi tiết'"
+                    :alt="currentImage.alt ? tt(currentImage.alt) : tt('Ảnh sản phẩm chi tiết')"
                     :style="zoomStyle"
-                    class="w-full h-full object-contain transition-transform duration-200 select-none will-change-transform"
+                    class="w-full h-full object-cover transition-transform duration-200 select-none will-change-transform"
                 />
             </div>
 
@@ -84,7 +53,7 @@
                 type="button"
                 @click.stop="prevImage"
                 class="md:hidden absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 text-white flex items-center justify-center backdrop-blur-md"
-                aria-label="Ảnh trước"
+                :aria-label="tt('Ảnh trước')"
             >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -95,7 +64,7 @@
                 type="button"
                 @click.stop="nextImage"
                 class="md:hidden absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 text-white flex items-center justify-center backdrop-blur-md"
-                aria-label="Ảnh tiếp theo"
+                :aria-label="tt('Ảnh tiếp theo')"
             >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -114,7 +83,7 @@
                     type="button"
                     class="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
                     @click.stop="toggleFullscreen"
-                    aria-label="Đóng phóng to"
+                    :aria-label="tt('Đóng phóng to')"
                 >
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -123,7 +92,7 @@
                 <div class="max-w-4xl max-h-[85vh] flex items-center justify-center" @click.stop>
                     <img
                         :src="currentImage.url"
-                        :alt="currentImage.alt || 'Ảnh lớn'"
+                        :alt="currentImage.alt ? tt(currentImage.alt) : tt('Ảnh lớn')"
                         class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
                     />
                 </div>
@@ -162,13 +131,13 @@ export default {
                         return {
                             url: item,
                             thumb: item,
-                            alt: `${this.productTitle} - Góc nhìn ${idx + 1}`,
+                            alt: `${this.tt(this.productTitle)} - ${this.tt('Góc nhìn ')}${idx + 1}`,
                         }
                     }
                     return {
                         url: item.url || item.path || '/images/pdp/product_main.png',
                         thumb: item.thumb || item.url || '/images/pdp/thumb_1.png',
-                        alt: item.alt || item.title || `${this.productTitle} - Góc nhìn ${idx + 1}`,
+                        alt: item.alt || item.title || `${this.tt(this.productTitle)} - ${this.tt('Góc nhìn ')}${idx + 1}`,
                         tag: item.tag || null,
                     }
                 })

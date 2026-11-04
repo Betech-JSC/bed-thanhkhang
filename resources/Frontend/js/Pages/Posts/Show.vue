@@ -70,8 +70,8 @@ export default {
             breadcrumbs.push(
                 {
                     name: this.post.category.title,
-                    url: this.route('posts.categories', {
-                        categorySlug: this.post.category.slug,
+                    url: this.route('posts.show', {
+                        slug: this.post.category.slug,
                     }),
                 },
                 { name: this.post.title }

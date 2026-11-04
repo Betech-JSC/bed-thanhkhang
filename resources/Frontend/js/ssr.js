@@ -107,6 +107,29 @@ createServer(
                                     if (currentMsgs?.[text]) {
                                         return currentMsgs[text]
                                     }
+
+                                    // Robust newline handling: literal \n, normal space, or trimmed
+                                    if (typeof text === 'string') {
+                                        if (text.includes('\n')) {
+                                            const literalSlashN = text.replace(/\r?\n/g, '\\n')
+                                            if (currentMsgs?.ui?.[literalSlashN]) {
+                                                return currentMsgs.ui[literalSlashN]
+                                            }
+                                            const singleSpaced = text.replace(/\r?\n/g, ' ')
+                                            if (currentMsgs?.ui?.[singleSpaced]) {
+                                                return currentMsgs.ui[singleSpaced]
+                                            }
+                                        }
+                                        const trimmed = text.trim()
+                                        if (trimmed !== text) {
+                                            if (currentMsgs?.ui?.[trimmed]) {
+                                                return currentMsgs.ui[trimmed]
+                                            }
+                                            if (currentMsgs?.[trimmed]) {
+                                                return currentMsgs[trimmed]
+                                            }
+                                        }
+                                    }
                                 } catch (e) {}
 
                                 if (typeof this.$te === 'function' && this.$te(`ui.${text}`)) {

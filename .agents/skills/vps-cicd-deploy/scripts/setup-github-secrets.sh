@@ -7,7 +7,7 @@ set -euo pipefail
 # ==============================================================================
 
 REPO=""
-VPS_HOST="${VPS_HOST:-103.48.84.51}"
+VPS_HOST="${VPS_HOST:-45.119.213.183}"
 VPS_PORT="${VPS_PORT:-22}"
 VPS_USER="${VPS_USER:-root}"
 SSH_KEY_FILE="${SSH_KEY_FILE:-${HOME}/.ssh/id_ed25519}"
@@ -17,7 +17,7 @@ print_usage() {
 Cách dùng:
   ./.agents/skills/vps-cicd-deploy/scripts/setup-github-secrets.sh \
     [--repo Betech-JSC/bed-azurenetwork] \
-    [--vps-host 103.48.84.51] \
+    [--vps-host 45.119.213.183] \
     [--vps-port 22] \
     [--vps-user root] \
     [--ssh-key-file ~/.ssh/id_ed25519]
@@ -64,8 +64,13 @@ if ! command -v gh >/dev/null 2>&1; then
 fi
 
 if ! gh auth status >/dev/null 2>&1; then
-  echo "[LỖI] GitHub CLI chưa đăng nhập. Vui lòng chạy 'gh auth login' trước." >&2
-  exit 1
+  CRED_TOKEN="$(printf "protocol=https\nhost=github.com\n\n" | GIT_TERMINAL_PROMPT=0 git credential-osxkeychain get 2>/dev/null | sed -n 's/^password=//p' | head -n 1 || true)"
+  if [ -n "${CRED_TOKEN}" ]; then
+    export GH_TOKEN="${CRED_TOKEN}"
+  else
+    echo "[LỖI] GitHub CLI chưa đăng nhập. Vui lòng chạy 'gh auth login' trước." >&2
+    exit 1
+  fi
 fi
 
 if [ -z "${REPO}" ]; then

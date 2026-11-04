@@ -35,22 +35,28 @@ Khi nhận bất kỳ yêu cầu nào có từ 2 bước trở lên, hoặc yêu
 
 ---
 
-## 📋 4. QUY TRÌNH OPENSPEC (`OPSX`) & ARCHIVE SAFE GUARD
+## 📋 4. QUY TRÌNH OPENSPEC (`OPSX`), ARCHIVE SAFE GUARD & MÔ HÌNH HUB-AND-SPOKE
 
-1. **Spec-Driven Development**: Mọi tính năng mới, chỉnh sửa đa file hoặc nâng cấp giao diện đều vận hành qua chu trình OpenSpec (`/opsx-propose` tạo đủ `proposal.md`, `specs/`, `design.md`, `tasks.md` -> `/opsx-apply` thực thi -> `/opsx-archive` đồng bộ spec). Khi khởi tạo dự án mới hoặc nhân bản bộ skill của team, sử dụng `.agents/skills/opsx-bootstrap/SKILL.md`.
-2. **OpenSpec Archive Safe Guard**: Chỉ chạy `openspec archive` sau khi 100% task trong `tasks.md` đã hoàn tất `[x]`, có đầy đủ bằng chứng build/test/Playwright QA thật và được người dùng nghiệm thu. Tuyệt đối không dùng `rm` xóa thủ công thư mục change.
+1. **Spec-Driven Development**: Mọi tính năng mới, chỉnh sửa đa file hoặc nâng cấp giao diện lớn đều thực hiện theo chu trình `/opsx-propose` (`proposal.md` -> `specs/` -> `design.md` -> `tasks.md`) -> `/opsx-apply` -> `/opsx-archive`.
+2. **OpenSpec Archive Safe Guard**: Chỉ chạy `openspec archive` sau khi toàn bộ task trong `tasks.md` đã hoàn thành `[x]`, có đủ bằng chứng build/test/Playwright QA thật và được người dùng xác nhận nghiệm thu. Tuyệt đối không xóa thủ công thư mục change bằng `rm`.
+3. **Hệ Sinh Thái 4 Bộ Skill Cốt Lõi Vận Hành Theo Đoạn Hội Thoại Trung Tâm (`4-Step Hub-and-Spoke`)**:
+   - **`/opsx-bootstrap`** (`.agents/skills/opsx-bootstrap/SKILL.md`): Pure Lightweight Installer — chỉ cài đặt và đồng bộ file trong 1–2 giây, không chạy gộp các tác vụ quét nặng gây tràn bộ nhớ.
+   - **`/opsx-cms-sync`** (`.agents/skills/opsx-cms-sync/SKILL.md`): Hub điều phối Hệ thống CMS Dynamic A–Z đối chiếu Figma (Kiểm toán 8 trụ cột CMS qua `audit-cms-sync.py` -> Trình bày Bảng Quyết Định `[+] Thêm gì / [-] Bỏ gì / [=] Giữ lại gì` chờ người dùng Confirm -> Xuất bộ Handoff Prompts cho các hội thoại con -> Quay về Hub nghiệm thu E2E).
+   - **`/opsx-pixel-perfect`** (`.agents/skills/opsx-pixel-perfect-ui/SKILL.md`): Hub điều phối Giao diện 100% Pixel-Perfect đối chiếu Figma MCP (-> Bảng Confirm `[+] Thêm / [-] Bỏ / [=] Giữ` -> Xuất Handoff Prompts -> Nghiệm thu đa khung nhìn).
+   - **`/opsx-animation` / `/ui-skill`** (`.agents/skills/opsx-animation/SKILL.md` & `.agents/skills/ui-skill/SKILL.md`): Hub điều phối Hệ thống Animation với **4 Quy Tắc Vàng** (1 phần tử tối đa 1 animation, cấm `opacity: 0` trắng màn hình, nút qua lại `< / >` bắt buộc trượt ngang `translate-x`, giữ nguyên 100% `ProductGallery.vue` có hàng preview dưới).
 
 ---
 
 ## 🎨 5. QUY TRÌNH DỰNG & KIỂM TOÁN UI TỪ FIGMA MCP THEO PHASE
 
-1. **Dựng UI theo Phase**: Bắt buộc tuân thủ `.agents/skills/opsx-figma-workflow/SKILL.md` (chọn đúng kịch bản `greenfield-6-phases`, `home-first-incremental`, hoặc `batch-pages-sequential-qa`). Khi đọc thiết kế từ Figma MCP, luôn quét nông `depth: 2` trước rồi tách truy vấn theo từng `nodeId` section để chống tràn token và dùng `download_figma_images` tải đúng SVG/ảnh gốc.
-2. **Kiểm toán giao diện 2 Phase chỉ đọc**: Trước khi dọn tàn dư giao diện cũ hoặc chuẩn hóa font chữ, chạy `.agents/skills/opsx-ui-audit/SKILL.md` ở chế độ Strict Read-Only (Phase 1 quét 5 nhóm tàn dư UI cũ + Phase 2 đối chiếu 4 nhóm Typography Figma) để xuất bảng tọa độ `File:Dòng` chính xác trước khi mở change sửa code.
-3. **Tiêu chuẩn thẩm mỹ & nghiệm thu thật**: Tuân thủ `.agents/skills/anti-ui-slop/SKILL.md` (*Quiet & High-Trust UI* — cấm spam icon trang trí hay emoji vô nghĩa) và `.agents/skills/web-design-guidelines/SKILL.md`. Mọi màn hình phải build xanh (`yarn frontend:build`) và được `QA Verifier` kiểm chứng qua Playwright MCP trên cả Desktop lẫn Mobile.
+1. **Điều phối dựng giao diện**: Bắt buộc tuân thủ `.agents/skills/opsx-figma-workflow/SKILL.md` (chọn đúng 1 trong 3 kịch bản: `greenfield-6-phases`, `home-first-incremental`, hoặc `batch-pages-sequential-qa`). Tách nhỏ truy vấn `get_figma_data` theo `nodeId` từng section khi trang dài để chống nổ token.
+2. **Kiểm toán giao diện & dữ liệu Hardcode CMS (`opsx-cms-sync`, `opsx-ui-audit` & `opsx-audit-handoff`)**: Trước khi dọn tàn dư giao diện cũ hoặc bàn giao hệ thống, chạy `.agents/skills/opsx-cms-sync/SKILL.md`, `.agents/skills/opsx-ui-audit/SKILL.md` và `.agents/skills/opsx-audit-handoff/SKILL.md` (kèm `audit-cms-sync.py` & `scan-cms-hardcoded.py`) để kiểm tra toàn bộ CMS (Backend & Frontend) có đang hardcode và return các giá trị cố định hay lệch khóa Cache không -> liệt kê đầy đủ tọa độ `File:Dòng` và tiến hành remove để kết nối đúng dữ liệu động của CMS.
+3. **Chất lượng thẩm mỹ & chuẩn Web**: Tuân thủ nghiêm ngặt `.agents/skills/anti-ui-slop/SKILL.md` (*Quiet & High-Trust UI*, cấm spam icon trang trí hoặc emoji vô nghĩa) và `.agents/skills/web-design-guidelines/SKILL.md`. Mọi màn hình hoàn thiện phải được `QA Verifier` kiểm chứng trên trình duyệt thật qua Playwright MCP (Desktop & Mobile).
 
 ---
 
-## 🧭 6. ĐIỀU HƯỚNG KIẾN TRÚC GRAPHIFY & BỘ 24+1 SKILLS SEO
+## 🧭 6. ĐIỀU HƯỚNG KIẾN TRÚC GRAPHIFY, BỘ SKILLS SEO & TRIỂN KHAI VPS CI/CD
 
-1. **Graphify AST First**: Trước khi tạo mới component/class/service hoặc grep diện rộng, bắt buộc đọc `graphify-out/graph.json` (và `GRAPH_REPORT.md` nếu có) theo `.agents/skills/graphify/SKILL.md` để tái sử dụng hoặc mở rộng tài nguyên sẵn có. Sau mỗi Phase thay đổi cấu trúc UI/file/route, chạy lại `graphify . --code-only` để cập nhật bản đồ AST (luôn giữ `/graphify-out` trong `.gitignore`).
-2. **Bộ 24+1 Skills SEO & 18 Specialist Sub-Agents**: Khi triển khai hoặc kiểm toán Technical SEO, Schema JSON-LD, Sitemap, Core Web Vitals, E-commerce SEO, Content Brief hay Local/GEO SEO, kích hoạt orchestrator `.agents/skills/seo/SKILL.md` cùng 24 sub-skills `.agents/skills/seo-*` và 18 specialist sub-agents trong `.agents/agents/seo-*.md`.
+1. **Graphify AST First**: Trước khi tạo mới component/service hoặc tìm kiếm diện rộng, bắt buộc đọc `graphify-out/graph.json` (và `GRAPH_REPORT.md` nếu có) theo `.agents/skills/graphify/SKILL.md` để tái sử dụng tài nguyên sẵn có. Sau mỗi Phase thay đổi cấu trúc file/route/component, chạy lại `graphify . --code-only` để đồng bộ bản đồ AST (đảm bảo `/graphify-out` luôn nằm trong `.gitignore`).
+2. **SEO Suite (24+1 Skills & 18 Sub-Agents)**: Khi triển khai hoặc kiểm toán Technical SEO, Schema JSON-LD, Sitemap, Core Web Vitals, Content Brief hay E-commerce/Local SEO, sử dụng bộ `.agents/skills/seo` (cùng 24 skills `seo-*` và 18 specialist agents trong `.agents/agents/seo-*.md`).
+3. **VPS & GitHub Actions CI/CD Deployment**: Khi đưa dự án lên VPS Production, cấu hình Nginx Subdomain + SSL Certbot và thiết lập GitHub Actions 2-Job (`ci-test-and-build` + `cd-deploy`), tuân thủ `.agents/skills/vps-cicd-deploy/SKILL.md` (hoặc gọi `/opsx-deploy`).

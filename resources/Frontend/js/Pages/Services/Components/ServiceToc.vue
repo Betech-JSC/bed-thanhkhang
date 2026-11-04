@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <div class="sticky top-20 lg:top-28 z-20 lg:z-auto lg:self-start shrink-0">
         <!-- Desktop Sticky Sidebar (Figma Node 2367:2178 - 248px) -->
-        <aside class="hidden lg:block w-[248px] shrink-0 sticky top-28 self-start select-none">
-            <h3 class="text-[13px] font-semibold text-[#B9C0D4] uppercase tracking-wider mb-4 font-sans leading-4">
+        <aside class="hidden lg:block w-[248px] shrink-0 sticky top-28 self-start select-none pt-2">
+            <h3 class="text-[13px] font-semibold text-[#B9C0D4] uppercase tracking-wider mb-6 font-sans leading-4">
                 {{ tt('TRONG BÀI VIẾT NÀY') }}
             </h3>
             <nav class="flex flex-col font-sans" aria-label="Table of contents">
@@ -12,21 +12,21 @@
                     type="button"
                     @click="onItemClick(item.id)"
                     :class="[
-                        'w-full text-left py-3 pl-4 pr-2 flex items-start gap-3 transition-colors duration-200 text-sm focus:outline-none',
+                        'w-full text-left py-[13px] pl-4 pr-2 flex items-start gap-3 transition-colors duration-200 text-[14px] leading-[21px] font-normal focus:outline-none',
                         activeId === item.id
-                            ? 'border-l-2 border-[#2970FF] text-[#84ADFF] font-medium'
+                            ? 'border-l-2 border-[#2970FF] text-[#84ADFF]'
                             : 'border-l border-[#404968] text-[#B9C0D4] hover:text-[#FAFAFA] hover:border-[#84ADFF]'
                     ]"
                 >
                     <span
                         :class="[
-                            'text-[13px] leading-5 shrink-0 select-none',
-                            activeId === item.id ? 'text-[#84ADFF] font-semibold' : 'text-[#B9C0D4]'
+                            'text-[14px] leading-[21px] font-normal shrink-0 select-none',
+                            activeId === item.id ? 'text-[#84ADFF]' : 'text-[#B9C0D4]'
                         ]"
                     >
                         {{ item.number }}
                     </span>
-                    <span class="text-[14px] leading-[21px] truncate">
+                    <span class="text-[14px] leading-[21px] font-normal truncate">
                         {{ tt(item.title) }}
                     </span>
                 </button>

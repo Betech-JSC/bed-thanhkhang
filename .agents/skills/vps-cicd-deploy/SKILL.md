@@ -16,8 +16,8 @@ Các dự án BED CMS sử dụng kiến trúc Dual Vite Build:
 - `yarn frontend:build`: Chạy `vite build && vite build --ssr` với `--max-old-space-size=4096` (tạo `public/build/frontend` và `bootstrap/ssr/`).
 - `yarn backend:build`: Chạy `vite build --config vite.backend.config.ts` với `--max-old-space-size=4096` (tạo `public/build/backend`).
 
-Do VPS Production (`103.48.84.51`) chạy chia sẻ nhiều dự án và cài Node v22 global trong khi bộ Vite của dự án yêu cầu Node 18 và ngốn tới 4GB RAM khi đóng gói, **tuyệt đối không chạy `yarn build` trực tiếp trên VPS**. Thay đó, áp dụng kiến trúc **2-Job GitHub Actions**:
-1. **Job 1 (`ci-test-and-build`)**: Chạy trên GitHub Runner (`ubuntu-latest`), cài PHP 8.3 + Node 18, chạy toàn bộ PHPUnit test trên SQLite, biên dịch `public/build/` + `bootstrap/ssr/` và đóng gói thành artifact `compiled-assets`.
+Do VPS Production (`103.48.84.51`) chạy chia sẻ nhiều dự án và cài Node v22 global trong khi bộ Vite của dự án yêu cầu Node 18 và ngốn tới 4GB RAM khi đóng gói, **tuyệt đối không chạy `yarn build` trực tiếp trên VPS**. Thay vào đó, áp dụng kiến trúc **2-Job GitHub Actions**:
+1. **Job 1 (`ci-test-and-build`)**: Chạy trên GitHub Runner (`ubuntu-latest`), cài PHP 8.3 + Node 18, biên dịch `public/build/` + `bootstrap/ssr/` trước (`yarn route`, `yarn frontend:build`, `yarn backend:build`) để có sẵn Vite `manifest.json` cho các Blade view `@vite(...)`, sau đó chạy toàn bộ PHPUnit test trên SQLite (`php artisan test`) và đóng gói thành artifact `compiled-assets`.
 2. **Job 2 (`cd-deploy`)**: Chỉ chạy khi push lên nhánh `main` và Job 1 đã PASS. Tải `compiled-assets`, SSH vào VPS kéo code PHP mới nhất (`git reset --hard origin/main` với `core.fileMode false`), chạy `composer install --no-dev --ignore-platform-req=php`, dùng `rsync -avz --delete` đẩy `public/build/` và `bootstrap/ssr/` lên VPS, chạy `php artisan migrate --force`, `php artisan optimize:clear` và reload `php8.2-fpm` / `php8.3-fpm`.
 
 ---

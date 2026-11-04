@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -35,30 +36,39 @@ class DashboardController extends Controller
         $year = (int) ($request->get('year') ?? now()->year);
 
         // 1. Thống kê Báo giá In 3D (CONTACT_FORM)
-        $todayQuotes = Contact::where('type', 'CONTACT_FORM')
-            ->whereDate('created_at', $today)
-            ->count();
+        $todayQuotes = 0;
+        $thisMonthQuotes = 0;
+        $lastMonthQuotes = 0;
+        try {
+            if (Schema::hasTable('contacts')) {
+                $todayQuotes = Contact::where('type', 'CONTACT_FORM')
+                    ->whereDate('created_at', $today)
+                    ->count();
 
-        $thisMonthQuotes = Contact::where('type', 'CONTACT_FORM')
-            ->where('created_at', '>=', $thisMonth)
-            ->count();
+                $thisMonthQuotes = Contact::where('type', 'CONTACT_FORM')
+                    ->where('created_at', '>=', $thisMonth)
+                    ->count();
 
-        $lastMonthQuotes = Contact::where('type', 'CONTACT_FORM')
-            ->whereBetween('created_at', [$lastMonth, $thisMonth])
-            ->count();
+                $lastMonthQuotes = Contact::where('type', 'CONTACT_FORM')
+                    ->whereBetween('created_at', [$lastMonth, $thisMonth])
+                    ->count();
+            }
+        } catch (\Throwable $e) {
+            report($e);
+        }
 
         // 2. Thống kê Đơn hàng (Order nếu có)
         $todayOrders = 0;
         $thisMonthOrders = 0;
         $lastMonthOrders = 0;
         try {
-            if (class_exists(Order::class)) {
+            if (class_exists(Order::class) && Schema::hasTable('orders')) {
                 $todayOrders = Order::whereDate('created_at', $today)->count();
                 $thisMonthOrders = Order::where('created_at', '>=', $thisMonth)->count();
                 $lastMonthOrders = Order::whereBetween('created_at', [$lastMonth, $thisMonth])->count();
             }
         } catch (\Throwable $e) {
-            // Safe fallback if order table not available
+            report($e);
         }
 
         // 3. Tính toán Hiệu suất & Dự báo
@@ -77,37 +87,44 @@ class DashboardController extends Controller
         $quoteStats = $this->getQuoteStats($year);
 
         // 6. Danh sách Báo giá in 3D gần đây
-        $recentQuotes = Contact::where('type', 'CONTACT_FORM')
-            ->latest('id')
-            ->take(8)
-            ->get()
-            ->map(function ($c) {
-                $d = $c->data ?? [];
-                if (!is_array($d)) {
-                    $d = [];
-                }
-                $name = $d['Họ và tên'] ?? $d['Họ tên'] ?? $d['name'] ?? $d['full_name'] ?? 'Khách hàng';
-                $phone = $d['Số điện thoại'] ?? $d['Số ĐT'] ?? $d['phone'] ?? $d['telephone'] ?? '-';
-                $email = $d['Email'] ?? $d['email'] ?? ($c->data_contact->email ?? '-');
-                $service = $d['Dịch vụ quan tâm'] ?? $d['Dịch vụ'] ?? ($d['Service']['title'] ?? null) ?? $d['service'] ?? 'Tư vấn in 3D';
-                if (is_array($service)) {
-                    $service = $service['title'] ?? 'Tư vấn in 3D';
-                }
+        $recentQuotes = collect();
+        try {
+            if (Schema::hasTable('contacts')) {
+                $recentQuotes = Contact::where('type', 'CONTACT_FORM')
+                    ->latest('id')
+                    ->take(8)
+                    ->get()
+                    ->map(function ($c) {
+                        $d = $c->data ?? [];
+                        if (!is_array($d)) {
+                            $d = [];
+                        }
+                        $name = $d['Họ và tên'] ?? $d['Họ tên'] ?? $d['name'] ?? $d['full_name'] ?? 'Khách hàng';
+                        $phone = $d['Số điện thoại'] ?? $d['Số ĐT'] ?? $d['phone'] ?? $d['telephone'] ?? '-';
+                        $email = $d['Email'] ?? $d['email'] ?? ($c->data_contact->email ?? '-');
+                        $service = $d['Dịch vụ quan tâm'] ?? $d['Dịch vụ'] ?? ($d['Service']['title'] ?? null) ?? $d['service'] ?? 'Tư vấn in 3D';
+                        if (is_array($service)) {
+                            $service = $service['title'] ?? 'Tư vấn in 3D';
+                        }
 
-                $hasCad = !empty($c->images) || !empty($d['File đính kèm']) || !empty($d['files']);
+                        $hasCad = !empty($c->images) || !empty($d['File đính kèm']) || !empty($d['files']);
 
-                return [
-                    'id' => $c->id,
-                    'name' => $name,
-                    'phone' => $phone,
-                    'email' => $email,
-                    'service' => $service,
-                    'status' => $c->status,
-                    'formatted_status' => $c->formatted_status ?: 'Mới',
-                    'has_cad' => $hasCad,
-                    'created_at' => $c->created_at ? $c->created_at->format('d/m/Y H:i') : '-',
-                ];
-            });
+                        return [
+                            'id' => $c->id,
+                            'name' => $name,
+                            'phone' => $phone,
+                            'email' => $email,
+                            'service' => $service,
+                            'status' => $c->status,
+                            'formatted_status' => $c->formatted_status ?: 'Mới',
+                            'has_cad' => $hasCad,
+                            'created_at' => $c->created_at ? $c->created_at->format('d/m/Y H:i') : '-',
+                        ];
+                    });
+            }
+        } catch (\Throwable $e) {
+            report($e);
+        }
 
         $dashboard = [
             'today_quote_count' => $todayQuotes,
@@ -136,10 +153,17 @@ class DashboardController extends Controller
      */
     private function getQuoteStats(int $year): array
     {
-        $base = Contact::where('type', 'CONTACT_FORM')
-            ->whereYear('created_at', $year)
-            ->orderBy('created_at')
-            ->get();
+        $base = collect();
+        try {
+            if (Schema::hasTable('contacts')) {
+                $base = Contact::where('type', 'CONTACT_FORM')
+                    ->whereYear('created_at', $year)
+                    ->orderBy('created_at')
+                    ->get();
+            }
+        } catch (\Throwable $e) {
+            report($e);
+        }
 
         $labels = array_map(fn($m) => sprintf('T%02d', $m), range(1, 12));
         $fullLabels = array_map(fn($m) => sprintf('Tháng %d', $m), range(1, 12));
@@ -164,9 +188,16 @@ class DashboardController extends Controller
      */
     private function getServiceDistribution(int $year): array
     {
-        $contacts = Contact::where('type', 'CONTACT_FORM')
-            ->whereYear('created_at', $year)
-            ->get();
+        $contacts = collect();
+        try {
+            if (Schema::hasTable('contacts')) {
+                $contacts = Contact::where('type', 'CONTACT_FORM')
+                    ->whereYear('created_at', $year)
+                    ->get();
+            }
+        } catch (\Throwable $e) {
+            report($e);
+        }
 
         $distribution = [
             'Gia công in 3D' => 0,

@@ -11,6 +11,7 @@ import { createPinia } from 'pinia'
 import { createApp, h } from 'vue'
 import { createI18n } from 'vue-i18n'
 import { ObserveVisibility } from 'vue3-observe-visibility'
+import { vScrollReveal } from '@/Composables/useScrollReveal'
 import route from 'ziggy-js'
 import { Ziggy } from '../../../public/build/ziggy.frontend.js'
 
@@ -87,6 +88,7 @@ createInertiaApp({
             .component('Link', Link)
             .component('Head', Head)
             .directive('observe-visibility', ObserveVisibility)
+            .directive('scroll-reveal', vScrollReveal)
             .mixin({
                 methods: {
                     routeLocaleName(name) {

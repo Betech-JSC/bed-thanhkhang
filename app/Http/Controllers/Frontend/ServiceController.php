@@ -56,12 +56,39 @@ class ServiceController extends Controller
                     ->get()
                     ->map(fn($item) => $item->transform());
 
+                $serviceDetails = $service->transformDetails();
+
                 return [
-                    'service' => $service->transformDetails(),
+                    'service' => $serviceDetails,
                     'services' => $services,
+                    'steps' => $serviceDetails['steps'] ?? Service::getDefaultSteps(),
+                    'checklist_items' => $serviceDetails['checklist_items'] ?? Service::getDefaultChecklistItems(),
+                    'checklistItems' => $serviceDetails['checklistItems'] ?? Service::getDefaultChecklistItems(),
                     'seo' => $service->transformSeo(),
                 ];
             });
+
+            if (is_array($data['service'] ?? null)) {
+                if (empty($data['service']['steps'])) {
+                    $data['service']['steps'] = Service::getDefaultSteps();
+                }
+                if (empty($data['service']['checklist_items'])) {
+                    $data['service']['checklist_items'] = Service::getDefaultChecklistItems();
+                }
+                if (empty($data['service']['checklistItems'])) {
+                    $data['service']['checklistItems'] = $data['service']['checklist_items'];
+                }
+            }
+
+            if (empty($data['steps'])) {
+                $data['steps'] = $data['service']['steps'] ?? Service::getDefaultSteps();
+            }
+            if (empty($data['checklist_items'])) {
+                $data['checklist_items'] = $data['service']['checklist_items'] ?? Service::getDefaultChecklistItems();
+            }
+            if (empty($data['checklistItems'])) {
+                $data['checklistItems'] = $data['checklist_items'];
+            }
 
             if (request()->wantsJson()) {
                 return response()->json($data);

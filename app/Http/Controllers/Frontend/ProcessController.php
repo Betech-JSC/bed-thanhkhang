@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Models\Config;
+use App\Models\Post\Post;
 use Inertia\Inertia;
 use Illuminate\Routing\Controller;
 use JamstackVietnam\Slider\Models\Slider;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 
 class ProcessController extends Controller
 {
@@ -14,11 +17,48 @@ class ProcessController extends Controller
         try {
             $data = Cache::remember('process_index_' . current_locale(), 3600, function () {
                 $heroBanner = Slider::getByPosition('BANNER_PROCESS_HERO');
+                $steps = Config::getProcessSteps();
+                $faqs = [];
+
+                try {
+                    if (Schema::hasTable('posts')) {
+                        $faqs = Post::query()
+                            ->active()
+                            ->where('type', Post::TYPE_FAQ)
+                            ->orderByPosition()
+                            ->orderBy('id', 'desc')
+                            ->get()
+                            ->map(fn(Post $post) => $post->transformFaqs())
+                            ->values()
+                            ->toArray();
+                    }
+                } catch (\Throwable $e) {
+                    report($e);
+                }
+
+                if (empty($faqs)) {
+                    $faqs = Post::getFrontendFaqs();
+                }
 
                 return [
                     'heroBanner' => $heroBanner,
+                    'steps' => $steps,
+                    'processSteps' => $steps,
+                    'faqs' => $faqs,
                 ];
             });
+
+            if (empty($data['steps'])) {
+                $steps = Config::getProcessSteps();
+                $data['steps'] = $steps;
+                $data['processSteps'] = $steps;
+            } elseif (empty($data['processSteps'])) {
+                $data['processSteps'] = $data['steps'];
+            }
+
+            if (empty($data['faqs'])) {
+                $data['faqs'] = Post::getFrontendFaqs();
+            }
 
             $locale = current_locale();
             $seo = [

@@ -1,6 +1,6 @@
 <template>
     <div class="w-full lg:w-[240px] space-y-3">
-        <!-- Main Filter Card (Figma 2346:996 - Cao ~464px) -->
+        <!-- Main Filter Card (Figma 2346:996 - Cao 464px) -->
         <div class="bg-[#30374F] rounded-[12px] p-4 flex flex-col gap-4 shadow-lg min-h-[464px]">
             <!-- Header on mobile with close button -->
             <div class="flex items-center justify-between pb-2 border-b border-[#404968] lg:hidden">
@@ -17,18 +17,18 @@
             </div>
 
             <!-- Title: Danh mục sản phẩm (Figma 2346:997) -->
-            <h4 class="text-sm font-semibold text-[#B9C0D4] uppercase tracking-wide leading-[21px]">
+            <h4 class="text-sm font-semibold text-[#B9C0D4] uppercase leading-[21px]">
                 {{ tt('DANH MỤC SẢN PHẨM') }}
             </h4>
 
             <!-- 1. Search Box (Figma 2380:1524) -->
-            <div class="relative w-full h-[46px] bg-[#111322] border border-[#5D6B98] rounded-lg px-3.5 flex items-center justify-between focus-within:border-[#84ADFF] transition-colors">
+            <div class="relative w-full h-[46px] bg-[#111322] border border-[#5D6B98] rounded-lg px-[13px] flex items-center justify-between gap-2 focus-within:border-[#84ADFF] transition-colors">
                 <input
                     type="text"
                     :value="filters.search"
                     @input="updateFilter('search', $event.target.value)"
                     :placeholder="tt('Tìm kiếm sản phẩm…')"
-                    class="w-full bg-transparent text-sm text-[#FAFAFA] placeholder-[#B9C0D4] focus:outline-none pr-2"
+                    class="w-full bg-transparent text-sm leading-5 text-[#FAFAFA] placeholder-[#B9C0D4] focus:outline-none pr-2"
                 />
                 <!-- Search Icon on the RIGHT -->
                 <button
@@ -52,14 +52,14 @@
                 </svg>
             </div>
 
-            <!-- 2. Danh mục sản phẩm (Động từ Backend + fallback Figma 2346:708) -->
+            <!-- 2. Danh mục sản phẩm (Động từ Backend + fallback Figma 2346:708 - 4 mục chuẩn, h 188px) -->
             <div class="flex flex-col gap-1">
                 <button
                     v-for="cat in displayCategories"
                     :key="cat.id"
                     type="button"
                     @click="selectCategory(cat.id)"
-                    class="w-full h-[44px] px-3 rounded-lg text-sm flex items-center justify-between transition-colors duration-150 text-left"
+                    class="w-full h-[44px] px-3 rounded-lg text-sm leading-5 font-normal flex items-center justify-between transition-colors duration-150 text-left"
                     :class="
                         (filters.category === cat.id || (cat.slug && filters.category === cat.slug))
                             ? 'bg-[#404968] text-[#FAFAFA] font-medium'
@@ -78,22 +78,22 @@
                 </button>
             </div>
 
-            <!-- 3. Lọc theo nhu cầu (Figma 2390:1536 - Text bên trái, Checkbox bên phải justify-between) -->
-            <div class="pt-2 flex flex-col gap-2.5">
-                <h4 class="text-sm font-semibold text-[#B9C0D4] uppercase tracking-wide leading-[21px]">
+            <!-- 3. Lọc theo nhu cầu (Figma 2390:1536 - gap 16px, h 121px) -->
+            <div class="pt-2 flex flex-col gap-4">
+                <h4 class="text-sm font-semibold text-[#B9C0D4] uppercase leading-[21px]">
                     {{ tt('LỌC THEO NHU CẦU') }}
                 </h4>
-                <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-3">
                     <button
                         v-for="purpose in purposes"
                         :key="purpose"
                         type="button"
                         @click="togglePurpose(purpose)"
-                        class="w-full flex items-center justify-between py-1 text-left group cursor-pointer focus:outline-none select-none"
+                        class="w-full h-[20px] px-3 flex items-center justify-between gap-3 text-left group cursor-pointer focus:outline-none select-none"
                     >
                         <!-- Label text bên TRÁI (Figma 2390:1538) -->
                         <span
-                            class="text-sm transition-colors"
+                            class="text-sm leading-5 transition-colors"
                             :class="
                                 isPurposeSelected(purpose)
                                     ? 'text-[#FAFAFA] font-medium'
@@ -144,10 +144,10 @@
             </div>
         </div>
 
-        <!-- Consultation Banner (Figma 2346:1004) -->
-        <div class="bg-[#30374F] rounded-[12px] p-4 flex flex-col gap-3 shadow-lg">
-            <div class="space-y-1">
-                <h4 class="text-sm font-semibold text-[#FAFAFA] leading-[21px]">
+        <!-- Custom Request Box (Figma 2346:998 - Cao 156px) -->
+        <div class="bg-[#30374F] rounded-[12px] p-4 flex flex-col justify-between h-[156px] shadow-lg">
+            <div class="flex flex-col gap-3">
+                <h4 class="text-sm font-medium text-[#FAFAFA] leading-[20px]">
                     {{ tt('Tuỳ chỉnh sản phẩm') }}
                 </h4>
                 <p class="text-[13px] text-[#B9C0D4] leading-[18px]">

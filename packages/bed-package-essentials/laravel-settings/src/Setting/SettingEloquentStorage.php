@@ -27,11 +27,19 @@ class SettingEloquentStorage implements SettingStorage
     public function all($fresh = false)
     {
         if ($fresh) {
-            return $this->modelQuery()->pluck('val', 'name');
+            try {
+                return $this->modelQuery()->pluck('val', 'name');
+            } catch (\Throwable $e) {
+                return collect();
+            }
         }
 
         return Cache::rememberForever($this->getSettingsCacheKey(), function () {
-            return $this->modelQuery()->pluck('val', 'name');
+            try {
+                return $this->modelQuery()->pluck('val', 'name');
+            } catch (\Throwable $e) {
+                return collect();
+            }
         });
     }
 

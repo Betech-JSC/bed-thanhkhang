@@ -19,8 +19,8 @@
             />
 
             <!-- Section 2: Layout Kỹ Thuật 2 Cột Bất Đối Xứng (Figma Node 2367:2177) -->
-            <div class="py-8 sm:py-12 lg:py-16">
-                <div class="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-14 xl:gap-16">
+            <div class="pt-4 pb-8 sm:pb-12 lg:pt-0 lg:pb-16">
+                <div class="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-[64px]">
                     <!-- Cột Trái - Sticky Sidebar Mục Lục (TOC - Node 2367:2178 - 248px) -->
                     <ServiceToc
                         :items="tocItems"
@@ -30,6 +30,9 @@
 
                     <!-- Cột Phải - Nội Dung Bài Viết Kỹ Thuật (Node 2367:2196 - 840px) -->
                     <ServiceArticleContent
+                        :service="serviceData"
+                        :steps="serviceData.steps"
+                        :checklist-items="serviceData.checklist_items || serviceData.checklistItems"
                         :dynamic-html="serviceData.content"
                     />
                 </div>

@@ -122,7 +122,7 @@
                             </span>
                             <Link
                                 v-if="hasPointHistoryRoute"
-                                :href="route('users.points.history')"
+                                :href="route('home')"
                                 @click="visible = false"
                                 class="text-[11px] text-red-fks font-bold hover:underline"
                             >
@@ -174,7 +174,7 @@
                 <!-- Popup Footer Actions -->
                 <div class="p-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between gap-2 shrink-0">
                     <Link
-                        :href="route('users.points.index')"
+                        :href="route('home')"
                         @click="visible = false"
                         class="flex-1 py-2 px-3 bg-white border border-gray-200 hover:border-green-600 text-gray-700 hover:text-green-700 font-bold text-xs rounded-xl text-center transition-colors flex items-center justify-center gap-1.5"
                     >
@@ -224,7 +224,7 @@ export default {
         },
         hasPointHistoryRoute() {
             try {
-                return !!this.route('users.points.history')
+                return !!this.route('home')
             } catch (e) {
                 return false
             }

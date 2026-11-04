@@ -86,9 +86,54 @@ class History extends BaseModel
     protected static function booted()
     {
         static::saved(function (self $model) {
-            if (request()->route() === null) return;
-            $model->saveAgencies($model);
+            if (request()->route() !== null && request()->has('agencies')) {
+                $model->saveAgencies($model);
+            }
+            static::clearHistoryCaches($model);
         });
+
+        static::deleted(function (self $model) {
+            static::clearHistoryCaches($model);
+        });
+    }
+
+    public static function clearHistoryCaches(?self $model = null): void
+    {
+        $locales = config('app.locales', ['vi', 'en']);
+        $slugs = [];
+
+        if ($model) {
+            if (!empty($model->slug)) {
+                $slugs[] = $model->slug;
+            }
+            if (!empty($model->seo_slug)) {
+                $slugs[] = $model->seo_slug;
+            }
+            if ($model->relationLoaded('translations') || method_exists($model, 'translations')) {
+                try {
+                    foreach ($model->translations()->get() as $translation) {
+                        if (!empty($translation->slug)) {
+                            $slugs[] = $translation->slug;
+                        }
+                        if (!empty($translation->seo_slug)) {
+                            $slugs[] = $translation->seo_slug;
+                        }
+                    }
+                } catch (\Throwable $e) {
+                    // Ignore if table not ready
+                }
+            }
+        }
+        $slugs = array_values(array_unique(array_filter($slugs)));
+
+        foreach ($locales as $locale) {
+            \Illuminate\Support\Facades\Cache::forget('history_index_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('agencies_index_' . $locale);
+
+            foreach ($slugs as $slug) {
+                \Illuminate\Support\Facades\Cache::forget('history_show_' . $slug . '_' . $locale);
+            }
+        }
     }
 
     public function saveAgencies($model)

@@ -2,33 +2,40 @@
     <section class="pt-8 pb-10 sm:pb-12 lg:pb-14">
         <!-- Breadcrumb & Title Section (Figma Node 2352:11827) -->
         <div class="space-y-6 max-w-[1152px]">
-            <!-- Breadcrumbs -->
-            <nav class="flex items-center gap-2.5 text-sm select-none" aria-label="Breadcrumb">
-                <Link
-                    :href="homeUrl"
-                    class="text-[#B9C0D4] hover:text-white transition-colors"
-                >
-                    {{ tt('Trang chủ') }}
-                </Link>
-                <span class="text-[#404968]">/</span>
+            <!-- Breadcrumbs (Figma Node 2367:2157) -->
+            <nav class="flex items-center gap-[10px] select-none font-sans" aria-label="Breadcrumb">
                 <Link
                     :href="servicesUrl"
-                    class="text-[#B9C0D4] hover:text-white transition-colors"
+                    class="text-[16px] leading-[24px] font-normal text-[#B9C0D4] hover:text-[#FAFAFA] transition-colors inline-flex items-center gap-[10px]"
                 >
-                    {{ tt('Dịch vụ') }}
+                    <svg
+                        class="w-[18px] h-[18px] shrink-0"
+                        viewBox="0 0 18 18"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            d="M14.25 9H3.75M3.75 9L9 14.25M3.75 9L9 3.75"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
+                    <span>{{ tt('Dịch vụ') }}</span>
                 </Link>
-                <span class="text-[#84ADFF]">/</span>
-                <span class="text-[#84ADFF] font-medium truncate max-w-[240px] sm:max-w-none">
+                <span class="text-[14px] leading-[17px] text-[#84ADFF]">/</span>
+                <span class="text-[14px] leading-[17px] font-normal text-[#84ADFF] truncate max-w-[240px] sm:max-w-none">
                     {{ tt(title) }}
                 </span>
             </nav>
 
             <!-- Main Heading H1 & Subtitle (Figma Node 2367:2162) -->
-            <div class="space-y-3 max-w-[840px]">
+            <div class="space-y-2 max-w-[838px]">
                 <h1 class="text-2xl sm:text-3xl lg:text-[38px] font-bold text-[#FAFAFA] leading-tight lg:leading-[46px] font-sans">
                     {{ displayHeadline }}
                 </h1>
-                <p class="text-base sm:text-lg text-[#B9C0D4] leading-relaxed lg:leading-[26px] font-sans">
+                <p class="text-[16px] leading-[22px] text-[#B9C0D4] font-sans">
                     {{ tt(description || defaultDescription) }}
                 </p>
             </div>
@@ -37,10 +44,10 @@
         <!-- Khung Minh Họa Bài Viết Nổi Bật (Figma Node 2352:11858 - 1152x310px) -->
         <div class="mt-8 sm:mt-10 max-w-[1152px]">
             <div
-                class="relative w-full rounded-2xl overflow-hidden p-6 sm:p-8 lg:p-10 transition-shadow duration-300 hover:shadow-[0_8px_32px_rgba(45,75,226,0.35)]"
+                class="relative w-full rounded-2xl overflow-hidden p-6 sm:p-8 lg:h-[310px] lg:py-[15px] lg:px-[64px] flex items-center transition-shadow duration-300 hover:shadow-[0_8px_32px_rgba(45,75,226,0.35)]"
                 style="background: linear-gradient(180deg, #101121 0%, #2D4BE2 100%)"
             >
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center">
+                <div class="w-full grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center">
                     <!-- 3D Render Image (Node 2352:11860 - 280x280px) -->
                     <div class="md:col-span-4 flex items-center justify-center">
                         <div class="relative w-[220px] h-[220px] sm:w-[260px] sm:h-[260px] lg:w-[280px] lg:h-[280px] flex items-center justify-center shrink-0">
@@ -54,7 +61,7 @@
                     </div>
 
                     <!-- Column 1: BẮT ĐẦU TỪ (Node 2352:11861) -->
-                    <div class="md:col-span-4 flex flex-col justify-center space-y-4 md:pl-2">
+                    <div class="md:col-span-4 flex flex-col justify-center space-y-4 lg:space-y-8 md:pl-2">
                         <span class="text-xs sm:text-[12px] font-semibold text-[#D1E0FF] tracking-wider uppercase select-none font-sans leading-[15px]">
                             {{ tt('BẮT ĐẦU TỪ') }}
                         </span>
@@ -70,7 +77,7 @@
                     </div>
 
                     <!-- Column 2: CÙNG LÀM RÕ (Node 2352:11867) -->
-                    <div class="md:col-span-4 flex flex-col justify-center space-y-4 md:pl-2">
+                    <div class="md:col-span-4 flex flex-col justify-center space-y-4 lg:space-y-8 md:pl-2">
                         <span class="text-xs sm:text-[12px] font-semibold text-[#D1E0FF] tracking-wider uppercase select-none font-sans leading-[15px]">
                             {{ tt('CÙNG LÀM RÕ') }}
                         </span>
@@ -91,7 +98,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, getCurrentInstance } from 'vue'
 import { Link, usePage } from '@inertiajs/inertia-vue3'
 
 const props = defineProps({
@@ -109,6 +116,7 @@ const props = defineProps({
     },
 })
 
+const instance = getCurrentInstance()
 const page = usePage()
 const isEn = computed(() => page.props.value?.locale?.current === 'en')
 
@@ -131,14 +139,17 @@ const defaultDescription = computed(() =>
 )
 
 const displayHeadline = computed(() => {
+    const rawTitle = (
+        (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(props.title) : props.title) || ''
+    ).trim()
     if (isEn.value) {
-        if (!props.title) return '3D Design: From sketch to concrete geometry'
-        if (props.title.includes(':')) return props.title
-        return `${props.title}: From sketch to concrete geometry`
+        if (!rawTitle) return '3D Design: From sketch to concrete geometry'
+        if (rawTitle.includes(':')) return rawTitle
+        return `${rawTitle}: From sketch to concrete geometry`
     }
-    if (!props.title) return 'Thiết kế 3D: Từ phác thảo đến hình khối rõ ràng'
-    if (props.title.includes(':')) return props.title
-    return `${props.title}: Từ phác thảo đến hình khối rõ ràng`
+    if (!rawTitle) return 'Thiết kế 3D: Từ phác thảo đến hình khối rõ ràng'
+    if (rawTitle.includes(':')) return rawTitle
+    return `${rawTitle}: Từ phác thảo đến hình khối rõ ràng`
 })
 
 const imageSrc = computed(() => {

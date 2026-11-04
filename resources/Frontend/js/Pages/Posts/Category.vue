@@ -37,8 +37,7 @@
                                 <div class="overflow-y-auto lg:max-h-[346px] md:max-h-[288px] max-h-[256px]">
                                     <Link
                                         :href="
-                                            route('nested_posts.show', {
-                                                nested: searchPost.category.slug,
+                                            route('posts.show', {
                                                 slug: searchPost.slug,
                                             })
                                         "
@@ -194,13 +193,13 @@ export default {
         async getInstantSearch() {
             if (this.isLoading) return
             this.isLoading = true
-            const { data } = await axios.get(this.route('posts.instant_search', { keyword: this.textSearch }))
+            const { data } = await axios.get(this.route('posts', { keyword: this.textSearch }))
             this.searchPosts = data.data.posts
             this.isLoading = false
         },
 
         handleSearch() {
-            const BASE_URL = this.route('posts.category', { slug: this.category.slug })
+            const BASE_URL = this.route('posts.show', { slug: this.category.slug })
             if (this.textSearch.trim() === '') {
                 this.$inertia.visit(BASE_URL, {
                     preserveScroll: true,

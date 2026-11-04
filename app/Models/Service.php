@@ -84,6 +84,59 @@ class Service extends BaseModel
 
     protected $appends = ['url'];
 
+    protected static function booted()
+    {
+        static::saved(function (self $model) {
+            static::clearServiceCaches($model);
+        });
+
+        static::deleted(function (self $model) {
+            static::clearServiceCaches($model);
+        });
+    }
+
+    public static function clearServiceCaches(?self $model = null): void
+    {
+        $locales = config('app.locales', ['vi', 'en']);
+        $slugs = [];
+
+        if ($model) {
+            if (!empty($model->slug)) {
+                $slugs[] = $model->slug;
+            }
+            if (!empty($model->seo_slug)) {
+                $slugs[] = $model->seo_slug;
+            }
+            if ($model->relationLoaded('translations') || method_exists($model, 'translations')) {
+                try {
+                    foreach ($model->translations()->get() as $translation) {
+                        if (!empty($translation->slug)) {
+                            $slugs[] = $translation->slug;
+                        }
+                        if (!empty($translation->seo_slug)) {
+                            $slugs[] = $translation->seo_slug;
+                        }
+                    }
+                } catch (\Throwable $e) {
+                    // Ignore if table not ready
+                }
+            }
+        }
+        $slugs = array_values(array_unique(array_filter($slugs)));
+
+        foreach ($locales as $locale) {
+            \Illuminate\Support\Facades\Cache::forget('services_index_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('process_index_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('home_page_data_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('inertia_layout_shared_data_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('search_page_data_' . $locale . '_');
+
+            foreach ($slugs as $slug) {
+                \Illuminate\Support\Facades\Cache::forget('service_show_' . $slug . '_' . $locale);
+            }
+        }
+    }
+
     public function getUrlAttribute(): array
     {
         $urls = [];
@@ -128,6 +181,9 @@ class Service extends BaseModel
 
     public function transformDetails()
     {
+        $steps = $this->resolveSteps();
+        $checklistItems = $this->resolveChecklistItems();
+
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -139,9 +195,136 @@ class Service extends BaseModel
             'content_by_tab' => $this->content_by_tab,
             'benefits' => $this->benefits,
             'benefit_title' => $this->benefit_title,
+            'image' => $this->getImageDetail($this->image),
             'benefit_image' => $this->getImageDetail($this->benefit_image),
             'sliders' => collect($this->sliders)->map(fn($item) => $this->getImageDetail($item))->toArray(),
+            'steps' => $steps,
+            'checklist_items' => $checklistItems,
+            'checklistItems' => $checklistItems,
         ];
+    }
+
+    public static function getDefaultSteps(): array
+    {
+        return [
+            [
+                'number' => '01',
+                'title' => 'Trao đổi ý tưởng và mục đích sử dụng',
+                'description' => 'Bạn chia sẻ sản phẩm muốn làm, hình ảnh tham khảo và điều quan trọng nhất với mình. HH Maker cùng bạn xác định công năng, kích thước dự kiến và những chi tiết cần ưu tiên.',
+            ],
+            [
+                'number' => '02',
+                'title' => 'Dựng hình khối và xác định tỉ lệ',
+                'description' => 'Từ thông tin đã trao đổi, ý tưởng được chuyển thành hình khối 3D. Ở bước này, hãy tập trung vào dáng tổng thể, tương quan kích thước và vị trí các bộ phận trước khi đi sâu vào chi tiết.',
+            ],
+            [
+                'number' => '03',
+                'title' => 'Hoàn thiện cấu trúc và chi tiết',
+                'description' => 'Cùng xem lại độ dày, bề mặt, vị trí lắp ghép hoặc phần chữ cần thể hiện. Những chi tiết nhỏ cần được cân nhắc với kích thước thực tế và hướng gia công, thay vì chỉ đẹp trên màn hình.',
+            ],
+            [
+                'number' => '04',
+                'title' => 'Thống nhất phương án trước khi gia công',
+                'description' => 'Hai bên rà soát mô hình, kích thước và các chi tiết đã điều chỉnh. Nếu chuyển sang gia công, vật liệu, bề mặt và yêu cầu lắp ghép cần được trao đổi thêm để chọn cách thực hiện phù hợp.',
+            ],
+        ];
+    }
+
+    public static function getDefaultChecklistItems(): array
+    {
+        return [
+            [
+                'title' => 'Ý tưởng & mục đích sử dụng',
+                'description' => 'Món đồ dùng để làm gì, dành cho ai? Có yêu cầu về cầm nắm, trưng bày hay lắp vào một bộ phận khác không?',
+            ],
+            [
+                'title' => 'Ảnh tham khảo hoặc phác thảo',
+                'description' => 'Gửi các góc nhìn bạn có và đánh dấu chi tiết muốn giữ hoặc thay đổi. Một bản vẽ tay có ghi chú cũng là điểm bắt đầu hữu ích.',
+            ],
+            [
+                'title' => 'Kích thước dự kiến',
+                'description' => 'Chiều dài, rộng, cao và đơn vị đo. Nếu cần lắp ghép, bổ sung kích thước hoặc ảnh của phần tiếp xúc liên quan.',
+            ],
+            [
+                'title' => 'Chi tiết cần ưu tiên',
+                'description' => 'Ghi rõ phần chữ, hình dáng, bề mặt hoặc giới hạn không thể thay đổi để cùng cân nhắc ngay từ đầu.',
+            ],
+        ];
+    }
+
+    public function resolveSteps(): array
+    {
+        $raw = $this->content_by_tab;
+        if (is_string($raw) && !empty($raw)) {
+            $decoded = json_decode($raw, true);
+            if (is_array($decoded)) {
+                $raw = $decoded;
+            }
+        }
+
+        if (is_array($raw) && !empty($raw)) {
+            $candidate = $raw['steps'] ?? (array_is_list($raw) ? $raw : null);
+            if (is_array($candidate) && !empty($candidate)) {
+                $mapped = [];
+                foreach (array_values($candidate) as $index => $item) {
+                    if (!is_array($item)) {
+                        continue;
+                    }
+                    $title = trim((string) ($item['title'] ?? ''));
+                    $desc = trim((string) ($item['description'] ?? $item['content'] ?? ''));
+                    if ($title === '' && $desc === '') {
+                        continue;
+                    }
+                    $mapped[] = [
+                        'number' => $item['number'] ?? str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT),
+                        'title' => $title,
+                        'description' => $desc,
+                    ];
+                }
+                if (!empty($mapped)) {
+                    return $mapped;
+                }
+            }
+        }
+
+        return self::getDefaultSteps();
+    }
+
+    public function resolveChecklistItems(): array
+    {
+        $raw = $this->benefits;
+        if (is_string($raw) && !empty($raw)) {
+            $decoded = json_decode($raw, true);
+            if (is_array($decoded)) {
+                $raw = $decoded;
+            }
+        }
+
+        if (is_array($raw) && !empty($raw)) {
+            $candidate = $raw['checklist_items'] ?? $raw['checklistItems'] ?? (array_is_list($raw) ? $raw : null);
+            if (is_array($candidate) && !empty($candidate)) {
+                $mapped = [];
+                foreach (array_values($candidate) as $item) {
+                    if (!is_array($item)) {
+                        continue;
+                    }
+                    $title = trim((string) ($item['title'] ?? ''));
+                    $desc = trim((string) ($item['description'] ?? $item['content'] ?? ''));
+                    if ($title === '' && $desc === '') {
+                        continue;
+                    }
+                    $mapped[] = [
+                        'title' => $title,
+                        'description' => $desc,
+                    ];
+                }
+                if (!empty($mapped)) {
+                    return $mapped;
+                }
+            }
+        }
+
+        return self::getDefaultChecklistItems();
     }
 
     public function transformSeo()

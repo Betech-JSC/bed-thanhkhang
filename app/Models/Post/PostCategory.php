@@ -95,23 +95,31 @@ class PostCategory extends BaseModel
         });
 
         static::saved(function (self $model) {
-            if (request()->route() === null) return;
-            // Clear frontend caches
-            $locales = config('app.locales', ['vi', 'en']);
-            foreach ($locales as $locale) {
-                Cache::forget('resources_index_' . $locale);
-                Cache::forget('courses_index_' . $locale);
-                Cache::forget('projects_index_' . $locale);
-                Cache::forget('prizes_index_' . $locale);
-                Cache::forget('home_page_data_' . $locale);
-                Cache::forget('inertia_layout_shared_data_' . $locale);
-
-                for ($i = 1; $i <= 5; $i++) {
-                    Cache::forget('projects_index_' . $locale . '_page_' . $i);
-                    Cache::forget('prizes_index_' . $locale . '_page_' . $i);
-                }
-            }
+            static::clearPostCategoryCaches();
         });
+
+        static::deleted(function (self $model) {
+            static::clearPostCategoryCaches();
+        });
+    }
+
+    public static function clearPostCategoryCaches(): void
+    {
+        $locales = config('app.locales', ['vi', 'en']);
+        foreach ($locales as $locale) {
+            Cache::forget('resources_index_' . $locale);
+            Cache::forget('courses_index_' . $locale);
+            Cache::forget('posts_index_' . $locale);
+            Cache::forget('projects_index_' . $locale);
+            Cache::forget('prizes_index_' . $locale);
+            Cache::forget('home_page_data_' . $locale);
+            Cache::forget('inertia_layout_shared_data_' . $locale);
+
+            for ($i = 1; $i <= 5; $i++) {
+                Cache::forget('projects_index_' . $locale . '_page_' . $i);
+                Cache::forget('prizes_index_' . $locale . '_page_' . $i);
+            }
+        }
     }
 
     public function parent()

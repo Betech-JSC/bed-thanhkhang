@@ -1,42 +1,35 @@
 <template>
-    <section class="relative w-full pt-4 sm:pt-6 lg:pt-8 pb-6 lg:pb-10 overflow-hidden">
+    <section class="relative w-full pt-4 sm:pt-6 lg:pt-0 pb-6 lg:pb-16 overflow-hidden">
         <!-- Hero Card Container (Figma 1279x616px) -->
-        <div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-0">
+        <div class="max-w-[1279px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-0">
             <div
-                class="relative w-full rounded-2xl overflow-hidden min-h-[500px] sm:min-h-[560px] lg:min-h-[616px] flex flex-col justify-between p-6 sm:p-10 lg:p-16 border border-[#2970FF]/20 shadow-[0_20px_60px_-15px_rgba(41,112,255,0.25)]"
+                class="relative w-full rounded-2xl overflow-hidden min-h-[500px] sm:min-h-[560px] lg:h-[616px] lg:min-h-[616px] flex flex-col justify-between lg:justify-end p-6 sm:p-10 lg:p-16"
                 style="background: linear-gradient(0deg, #111322 10%, #1D4290 57%, #2970FF 94%);"
             >
-                <!-- Background Artwork Image with Mask -->
-                <div class="absolute inset-0 pointer-events-none select-none overflow-hidden">
+                <!-- Background Artwork Image with Mask (Figma Node 2283:7949 / 2283:7991: 1279x1330px, left: 1px, top: -403px) -->
+                <div class="absolute inset-0 pointer-events-none select-none overflow-hidden rounded-2xl">
                     <img
                         :src="bgImage"
                         :alt="bgImageAlt"
-                        class="absolute inset-0 w-full h-full object-cover object-center mix-blend-screen opacity-50 sm:opacity-60 scale-105"
+                        class="absolute inset-0 w-full h-full object-cover object-center lg:inset-auto lg:left-[1px] lg:-top-[403px] lg:w-[1279px] lg:h-[1330px] lg:max-w-none"
                         loading="eager"
                     />
-                    <!-- Subtle vignette to ensure high text contrast -->
-                    <div
-                        class="absolute inset-0 bg-gradient-to-t from-[#111322] via-[#111322]/40 to-transparent opacity-90 sm:opacity-80"
-                    ></div>
-                    <div
-                        class="absolute inset-0 bg-gradient-to-r from-[#111322]/80 via-transparent to-transparent opacity-75"
-                    ></div>
                 </div>
 
-                <!-- Text Header Content (Figma Node 2283:7952) -->
-                <div class="relative z-10 max-w-[599px] space-y-4 sm:space-y-4 pt-4 sm:pt-6">
-                    <!-- Category (Figma Node 2283:7953: 16px / 22px / #D1E0FF) -->
-                    <p class="text-[#D1E0FF] text-sm sm:text-base font-medium tracking-wider uppercase select-none">
+                <!-- Text Header Content (Figma Node 2283:7952: 599x224px, left: 64px, bottom: 64px, gap: 16px) -->
+                <div class="relative z-10 w-full max-w-[599px] space-y-4">
+                    <!-- Category (Figma Node 2283:7953: 16px / 22px / Regular / #D1E0FF) -->
+                    <p class="text-[#D1E0FF] text-sm sm:text-[16px] font-normal leading-[22px] uppercase select-none">
                         {{ tt(categoryText) }}
                     </p>
 
                     <!-- Main Headline (Figma Node 2283:7954: 38px / 46px / #FAFAFA / Bold) -->
-                    <h1 class="text-[#FAFAFA] text-2xl sm:text-3xl lg:text-[38px] lg:leading-[46px] font-bold uppercase tracking-tight whitespace-pre-line">
+                    <h1 class="text-[#FAFAFA] text-2xl sm:text-3xl lg:text-[38px] lg:leading-[46px] font-bold uppercase whitespace-pre-line">
                         {{ tt(headlineText) }}
                     </h1>
 
                     <!-- Description (Figma Node 2283:7955: 16px / 26px / #D1E0FF) -->
-                    <p class="text-[#D1E0FF] text-sm sm:text-base leading-relaxed lg:leading-[26px] font-normal max-w-[599px]">
+                    <p class="text-[#D1E0FF] text-sm sm:text-[16px] leading-relaxed lg:leading-[26px] font-normal max-w-[599px]">
                         {{ tt(descriptionText) }}
                     </p>
 
@@ -55,7 +48,7 @@
                     </div>
                 </div>
 
-                <!-- Rotating Badge 360° & Scroll CTA (Figma Node 2283:7956, 114x114px) -->
+                <!-- Rotating Badge 360° & Scroll CTA (Figma Node 2283:7956, 114x114px, right: 64px, bottom: 64px) -->
                 <div class="relative z-10 self-end sm:self-auto sm:absolute sm:right-8 sm:bottom-8 lg:right-16 lg:bottom-16 mt-6 sm:mt-0">
                     <button
                         type="button"
@@ -64,15 +57,10 @@
                         :title="tt('Cuộn xuống xem 5 bước quy trình')"
                         :aria-label="tt('Cuộn xuống xem 5 bước quy trình')"
                     >
-                        <!-- Circular Backdrop Glow -->
-                        <div
-                            class="absolute inset-0 rounded-full bg-[#111322]/80 backdrop-blur-md border border-[#84ADFF]/40 group-hover:border-[#84ADFF] group-hover:shadow-[0_0_30px_rgba(132,173,255,0.45)] transition-all duration-300"
-                        ></div>
-
-                        <!-- Rotating Outer Circular Text Ring (Figma Node 2283:7958) -->
+                        <!-- Rotating Outer Circular Text Ring (Figma Node 2283:7958: 93x93px, left: 11px, top: 11px) -->
                         <svg
                             viewBox="0 0 229 229"
-                            class="absolute inset-0 w-full h-full pointer-events-none origin-center animate-[spin_20s_linear_infinite] group-hover:animate-[spin_10s_linear_infinite]"
+                            class="w-[78px] h-[78px] sm:w-[90px] sm:h-[90px] lg:w-[93px] lg:h-[93px] pointer-events-none origin-center animate-[spin_20s_linear_infinite] group-hover:animate-[spin_10s_linear_infinite]"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
                         >
@@ -82,10 +70,10 @@
                             />
                         </svg>
 
-                        <!-- Static Center Arrow (Figma Node 2283:7957 - 80x80 viewBox stroke) -->
-                        <div class="relative z-10 text-white transform transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex items-center justify-center">
+                        <!-- Static Center Arrow (Figma Node 2283:7957: 40x40px frame, 17x17px vector #FAFAFA) -->
+                        <div class="absolute inset-0 z-10 text-[#FAFAFA] transform transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex items-center justify-center pointer-events-none">
                             <svg
-                                class="w-7 h-7 sm:w-8 sm:h-8"
+                                class="w-9 h-9 sm:w-10 sm:h-10"
                                 viewBox="0 0 80 80"
                                 fill="none"
                                 xmlns="http://www.w3.org/2000/svg"

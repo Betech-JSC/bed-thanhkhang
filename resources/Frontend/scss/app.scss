@@ -5,6 +5,11 @@
 
 @layer base {
 
+    html,
+    body {
+        overflow-x: clip;
+    }
+
     @font-face {
         font-family: 'VCR_OSD_MONO';
         font-weight: 400;
@@ -13,6 +18,11 @@
         src: url('/public/assets/fonts/VCR_OSD_MONO.ttf');
     }
 
+}
+
+::-webkit-scrollbar:horizontal {
+    display: none;
+    height: 0;
 }
 
 // @import '@core/scss/base';
@@ -42,17 +52,17 @@
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: #155EEF;
-}
-
-/* Hide scrollbar utility */
-.no-scrollbar::-webkit-scrollbar {
-    display: none !important;
-    width: 0 !important;
-    height: 0 !important;
-}
-.no-scrollbar {
-    -ms-overflow-style: none !important;
-    scrollbar-width: none !important;
+}
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+.no-scrollbar {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
 }
 
 .check-control {
@@ -145,5 +155,16 @@
         to {
             transform: rotate(359deg);
         }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
 }

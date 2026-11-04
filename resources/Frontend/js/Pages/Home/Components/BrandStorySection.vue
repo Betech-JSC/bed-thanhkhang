@@ -1,5 +1,5 @@
 <template>
-    <section id="brand-story-section" class="py-12 md:py-20 lg:py-24 overflow-hidden bg-dark-bg">
+    <section v-scroll-reveal id="brand-story-section" class="py-12 md:py-20 lg:py-24 overflow-hidden bg-dark-bg">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1240px]">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
                 <!-- Left: Founder Geometric Graphic (Figma Node 2261:5697) -->

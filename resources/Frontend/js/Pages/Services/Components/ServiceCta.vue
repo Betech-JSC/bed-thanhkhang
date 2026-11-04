@@ -1,12 +1,12 @@
 <template>
-    <section class="py-10 lg:py-14">
+    <section v-scroll-reveal class="py-10 lg:pt-10 lg:pb-20">
         <div class="max-w-[1152px]">
             <!-- Banner Container (Figma Node 2352:11795 - 1152x183px) -->
             <div
-                class="relative w-full rounded-2xl p-6 sm:p-8 lg:px-10 lg:py-10 overflow-hidden shadow-xl"
+                class="relative w-full rounded-2xl p-6 sm:p-8 lg:px-10 lg:py-10 lg:min-h-[183px] flex items-center overflow-hidden shadow-xl"
                 style="background: linear-gradient(90deg, #2970FF 0%, #00359E 89%)"
             >
-                <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-10">
+                <div class="relative z-10 w-full flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-10">
                     <!-- Message Content (Figma Node 2352:11796 - 817px) -->
                     <div class="space-y-3 max-w-[817px]">
                         <h2 class="text-2xl sm:text-3xl lg:text-[32px] font-bold text-[#FAFAFA] leading-tight lg:leading-[37px] font-sans">
