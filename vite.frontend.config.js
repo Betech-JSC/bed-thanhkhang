@@ -63,6 +63,8 @@ export default defineConfig({
     },
     resolve: {
         alias: {
+            '@/Composables': resolve(rootDir, './resources/Frontend/js/composables'),
+            '@/composables': resolve(rootDir, './resources/Frontend/js/composables'),
             '@': resolve(rootDir, './resources/Frontend/js'),
             '@core/scss': resolve(rootDir, `${libraryDir}/src/scss`),
             '@core/components': resolve(rootDir, `${libraryDir}/src/js/components`),

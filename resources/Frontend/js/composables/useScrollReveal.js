@@ -102,6 +102,9 @@ export const vScrollReveal = {
             delete el._scrollRevealObserver
         }
     },
+    getSSRProps() {
+        return {}
+    },
 }
 
 export default vScrollReveal

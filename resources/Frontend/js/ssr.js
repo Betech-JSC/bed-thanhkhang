@@ -7,6 +7,7 @@ import { renderToString } from '@vue/server-renderer'
 import { createPinia } from 'pinia'
 import { createSSRApp, h } from 'vue'
 import { createI18n } from 'vue-i18n'
+import { vScrollReveal } from '@/composables/useScrollReveal.js'
 import route from 'ziggy-js'
 import { Ziggy } from '../../../public/build/ziggy.frontend.js'
 
@@ -57,6 +58,7 @@ createServer(
                     .use(createPinia())
                     .component('Link', Link)
                     .component('Head', Head)
+                    .directive('scroll-reveal', vScrollReveal)
                     .mixin({
                         methods: {
                             routeLocaleName(name) {

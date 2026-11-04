@@ -11,7 +11,7 @@ import { createPinia } from 'pinia'
 import { createApp, h } from 'vue'
 import { createI18n } from 'vue-i18n'
 import { ObserveVisibility } from 'vue3-observe-visibility'
-import { vScrollReveal } from '@/Composables/useScrollReveal'
+import { vScrollReveal } from '@/composables/useScrollReveal.js'
 import route from 'ziggy-js'
 import { Ziggy } from '../../../public/build/ziggy.frontend.js'
 
