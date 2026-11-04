@@ -157,12 +157,6 @@
                             </div>
                         </div>
 
-                        <!-- NỘI DUNG CONTENT TỪ BACKEND NẾU CÓ -->
-                        <div
-                            v-if="product.content"
-                            class="prose prose-invert max-w-none pt-2 text-sm text-[#B9C0D4]"
-                            v-html="product.content"
-                        ></div>
                     </div>
 
                     <!-- BẢNG THÔNG SỐ KỸ THUẬT EMBEDDED BÊN PHẢI -->

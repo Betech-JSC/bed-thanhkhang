@@ -29,3 +29,11 @@
 - [x] 5.1 Khởi động dev server và kiểm tra trực quan giao diện trang chủ trên trình duyệt: xác thực hiển thị thanh thông báo lật 3D ở cả 2 ngôn ngữ (Tiếng Việt `/` và Tiếng Anh `/en`).
 - [x] 5.2 Kiểm tra đa màn hình (Desktop 1920x1080, Laptop 1280x800, Mobile 375x812): xác nhận không bị tràn viền (overflow-x), chữ không bị đè lên badge, và hoạt cảnh lật 60fps mượt mà.
 - [x] 5.3 Chụp ảnh màn hình bằng chứng (evidence screenshot) xác nhận hiệu ứng và báo cáo kết quả hoàn tất theo tiêu chuẩn Evidence-Based 100%.
+
+## 6. Frontend Refinement (Option A: Minimalist Center-Aligned & Frosted Gray)
+
+- [x] 6.1 Tinh chỉnh giao diện `AnnouncementTicker.vue` theo Phương án A: lược bỏ Category Badge bên trái, cụm điều khiển mũi tên/bộ đếm và nút CTA bên phải.
+- [x] 6.2 Cập nhật tông màu kính mờ kim loại Frosted Gray `bg-[#202533]/85 backdrop-blur-md` kết hợp viền mỏng `border-white/10 hover:border-white/20` và đổ bóng `shadow-[0_4px_20px_rgba(0,0,0,0.25)]`.
+- [x] 6.3 Chuẩn hóa typography và căn giữa: cỡ chữ `text-sm sm:text-base md:text-[17px]`, chữ đứng `font-medium`, màu sáng dịu `text-slate-100 group-hover:text-white`, căn giữa toàn dải `text-center mx-auto`.
+- [x] 6.4 Nâng cấp tính năng tương tác toàn khối capsule: click chuyển trang thông minh (Inertia `visit` cho liên kết nội bộ, mở tab mới cho link ngoài), hỗ trợ keyboard accessibility (Enter/Space), giữ trọn chuyển động 3D Split-Flap và Touch swipe.
+- [x] 6.5 Cập nhật bộ test Playwright E2E `tests/e2e/announcement-ticker.spec.ts` và xác nhận 100% test PASS (6/6 tests), chụp ảnh screenshot bằng chứng Desktop và Mobile lưu tại `storage/app/public/evidence/ticker-refined-desktop.png` và `storage/app/public/evidence/ticker-refined-mobile.png`.

@@ -12,6 +12,24 @@ if (!function_exists('static_url')) {
     {
         if (!$path || str_contains($path, 'http')) return $path;
 
+        $cleanPath = ltrim($path, '/');
+        if (
+            str_starts_with($path, '/assets/') ||
+            str_starts_with($path, '/images/') ||
+            str_starts_with($path, 'assets/') ||
+            str_starts_with($path, 'images/') ||
+            (function_exists('public_path') && file_exists(public_path($cleanPath)))
+        ) {
+            $url = asset($cleanPath);
+            if (!empty($parameters)) {
+                $url .= '?' . http_build_query($parameters);
+            }
+            if (!$absolute) {
+                $url = collect(parse_url($url))->only('path', 'query')->join(',');
+            }
+            return $url;
+        }
+
         if (!empty($parameters)) {
             $url = route('files.show') . '/' . $path . '?' . http_build_query($parameters);
         } else {
