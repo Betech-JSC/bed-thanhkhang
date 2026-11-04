@@ -10,10 +10,10 @@
                     <!-- Message Content (Figma Node 2352:11796 - 817px) -->
                     <div class="space-y-3 max-w-[817px]">
                         <h2 class="text-2xl sm:text-3xl lg:text-[32px] font-bold text-[#FAFAFA] leading-tight lg:leading-[37px] font-sans">
-                            Tạo nên phiên bản mang dấu ấn riêng
+                            {{ title }}
                         </h2>
                         <p class="text-base text-[#FAFAFA] leading-[26px] font-sans">
-                            Gửi hình ảnh tham khảo hoặc chia sẻ ý tưởng để HH Maker cùng bạn định hình sản phẩm mong muốn. Chúng tôi sẽ tư vấn giải pháp phù hợp với phong cách, nhu cầu và ngân sách của bạn.
+                            {{ description }}
                         </p>
                     </div>
 
@@ -23,7 +23,7 @@
                             :href="contactHref"
                             class="inline-flex items-center justify-center w-[175px] h-10 rounded-[8px] bg-[#F5F8FF] hover:bg-white text-[#111322] font-medium text-[16px] leading-6 transition-all duration-200 shadow-md hover:shadow-[0_0_16px_rgba(255,255,255,0.4)] active:scale-[0.98] select-none focus:outline-none focus:ring-2 focus:ring-white font-sans"
                         >
-                            Nhận tư vấn ngay
+                            {{ ctaText }}
                         </Link>
                     </div>
                 </div>
@@ -34,16 +34,42 @@
 
 <script setup>
 import { computed } from 'vue'
-import { Link } from '@inertiajs/inertia-vue3'
+import { Link, usePage } from '@inertiajs/inertia-vue3'
 
 const props = defineProps({
     serviceSlug: {
         type: String,
         default: '',
     },
+    banner: {
+        type: Object,
+        default: () => null,
+    },
 })
 
+const page = usePage()
+
+const ctaData = computed(() => {
+    return (
+        props.banner ||
+        page.props.value?.globalCtaBanner ||
+        page.props.value?.data?.banner?.BANNER_GLOBAL_CTA ||
+        null
+    )
+})
+
+const title = computed(() => ctaData.value?.title || 'Tạo nên phiên bản mang dấu ấn riêng')
+const description = computed(() => {
+    return (
+        ctaData.value?.description ||
+        'Gửi hình ảnh tham khảo hoặc chia sẻ ý tưởng để HH Maker cùng bạn định hình sản phẩm mong muốn. Chúng tôi sẽ tư vấn giải pháp phù hợp với phong cách, nhu cầu và ngân sách của bạn.'
+    )
+})
+const ctaText = computed(() => ctaData.value?.primary_cta_text || 'Nhận tư vấn ngay')
+
 const contactHref = computed(() => {
+    if (ctaData.value?.primary_cta_link) return ctaData.value.primary_cta_link
+    if (ctaData.value?.link) return ctaData.value.link
     try {
         if (typeof route === 'function') {
             return route('contact')

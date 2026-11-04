@@ -4,7 +4,7 @@
         <!-- 1. TIÊU ĐỀ THÔNG SỐ (FIGMA 2358:3067: gap 12px) -->
         <div class="flex items-center gap-3">
             <h3 class="text-lg sm:text-xl font-semibold text-[#FAFAFA] leading-6 tracking-tight">
-                {{ title }}
+                {{ tt(title) }}
             </h3>
             <img
                 src="/images/pdp/printer.svg"
@@ -25,10 +25,10 @@
             </div>
         </div>
 
-        <!-- 3. LƯU Ý KỸ THUẬT (FIGMA 2358:3093: text 12px, color #DCDFEA, line-height 19px) -->
+        <!-- 3. LƯU Ý KỸ THUẬT (FIGMA 2358:3093) -->
         <div class="pt-2">
             <p class="text-xs text-[#DCDFEA] leading-[19px]">
-                {{ note }}
+                {{ tt(note) }}
             </p>
         </div>
     </div>
@@ -54,17 +54,20 @@ export default {
     computed: {
         specList() {
             if (this.specs && this.specs.length > 0) {
-                return this.specs
+                return this.specs.map(s => ({
+                    label: this.tt(s.label),
+                    value: this.tt(s.value),
+                }))
             }
             // Standard specifications strictly from Figma node 2358:3071
             return [
-                { label: 'Công nghệ in', value: 'FDM' },
-                { label: 'Vật liệu', value: 'PLA' },
-                { label: 'Kích thước mẫu', value: '60 × 31 × 48 mm' },
-                { label: 'Chiều cao lớp in', value: '0,20 mm' },
-                { label: 'Đầu phun', value: '0,40 mm' },
-                { label: 'Mật độ ruột', value: '15%' },
-                { label: 'Vật liệu hỗ trợ', value: 'Không cần' },
+                { label: this.tt('Công nghệ in'), value: 'FDM' },
+                { label: this.tt('Vật liệu'), value: 'PLA' },
+                { label: this.tt('Kích thước mẫu'), value: '60 × 31 × 48 mm' },
+                { label: this.tt('Chiều cao lớp in'), value: '0,20 mm' },
+                { label: this.tt('Đầu phun'), value: '0,40 mm' },
+                { label: this.tt('Mật độ ruột'), value: '15%' },
+                { label: this.tt('Vật liệu hỗ trợ'), value: this.tt('Không cần') },
             ]
         },
     },

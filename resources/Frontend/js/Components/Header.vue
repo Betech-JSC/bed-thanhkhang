@@ -231,26 +231,46 @@
 
                     <!-- Drawer Bottom Section: Language Capsule, Auth & Contact info -->
                     <div class="pt-6 border-t border-dark-border space-y-5">
-                        <!-- Capsule Language Switcher in Mobile Drawer -->
+                        <!-- Capsule Language Switcher in Mobile Drawer (Node 2380:1477) -->
                         <div class="flex items-center justify-between">
-                            <span class="text-xs text-muted font-medium">Ngôn ngữ / Language:</span>
-                            <div class="inline-flex items-center p-0.5 rounded-full border border-dark-border bg-dark-surface text-xs font-semibold">
-                                <button
-                                    type="button"
-                                    @click="switchLocale('vi')"
-                                    :class="currentLocale === 'vi' ? 'bg-primary text-white shadow-xs' : 'text-secondary hover:text-white'"
-                                    class="px-3 py-1 rounded-full transition-all duration-200"
-                                >
-                                    VIE
-                                </button>
-                                <button
-                                    type="button"
-                                    @click="switchLocale('en')"
-                                    :class="currentLocale === 'en' ? 'bg-primary text-white shadow-xs' : 'text-secondary hover:text-white'"
-                                    class="px-3 py-1 rounded-full transition-all duration-200"
-                                >
-                                    ENG
-                                </button>
+                            <span class="text-xs text-muted font-medium">{{ tt('Ngôn ngữ') }}:</span>
+                            <div class="w-[96px] h-[34px] border border-[#5D6B98] rounded-[8px] flex items-center justify-between p-1 shrink-0 select-none bg-dark-surface">
+                                <template v-if="currentLocale === 'vi'">
+                                    <button
+                                        type="button"
+                                        @click="switchLocale('vi')"
+                                        class="bg-[#FAFAFA] text-[#111322] w-[36px] h-[24px] rounded-[4px] text-xs font-semibold flex items-center justify-center shadow-xs cursor-default"
+                                        title="Tiếng Việt"
+                                    >
+                                        VIE
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="switchLocale('en')"
+                                        class="text-white text-sm font-semibold pr-2 flex items-center justify-center hover:text-[#FAFAFA]/80 transition-colors"
+                                        title="English"
+                                    >
+                                        ENG
+                                    </button>
+                                </template>
+                                <template v-else>
+                                    <button
+                                        type="button"
+                                        @click="switchLocale('vi')"
+                                        class="text-white text-sm font-semibold pl-2 flex items-center justify-center hover:text-[#FAFAFA]/80 transition-colors"
+                                        title="Tiếng Việt"
+                                    >
+                                        VIE
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="switchLocale('en')"
+                                        class="bg-[#FAFAFA] text-[#111322] w-[42px] h-[24px] rounded-[4px] text-xs font-semibold flex items-center justify-center shadow-xs cursor-default"
+                                        title="English"
+                                    >
+                                        ENG
+                                    </button>
+                                </template>
                             </div>
                         </div>
 
@@ -458,10 +478,14 @@ export default {
                     normalizedPath.startsWith('/san-pham/') ||
                     normalizedPath === '/products' ||
                     normalizedPath.startsWith('/products/') ||
+                    normalizedPath === '/en/products' ||
+                    normalizedPath.startsWith('/en/products/') ||
                     inertiaUrl === '/san-pham' ||
                     inertiaUrl.startsWith('/san-pham/') ||
                     inertiaUrl === '/products' ||
-                    inertiaUrl.startsWith('/products/')
+                    inertiaUrl.startsWith('/products/') ||
+                    inertiaUrl === '/en/products' ||
+                    inertiaUrl.startsWith('/en/products/')
                 )
             }
 
@@ -472,10 +496,14 @@ export default {
                     normalizedPath.startsWith('/dich-vu/') ||
                     normalizedPath === '/services' ||
                     normalizedPath.startsWith('/services/') ||
+                    normalizedPath === '/en/services' ||
+                    normalizedPath.startsWith('/en/services/') ||
                     inertiaUrl === '/dich-vu' ||
                     inertiaUrl.startsWith('/dich-vu/') ||
                     inertiaUrl === '/services' ||
-                    inertiaUrl.startsWith('/services/')
+                    inertiaUrl.startsWith('/services/') ||
+                    inertiaUrl === '/en/services' ||
+                    inertiaUrl.startsWith('/en/services/')
                 )
             }
 
@@ -491,6 +519,8 @@ export default {
                     normalizedPath.startsWith('/cot-moc-phat-trien/') ||
                     normalizedPath === '/about-us' ||
                     normalizedPath.startsWith('/about') ||
+                    normalizedPath === '/en/about-us' ||
+                    normalizedPath.startsWith('/en/about') ||
                     inertiaUrl === '/gioi-thieu' ||
                     inertiaUrl.startsWith('/gioi-thieu/') ||
                     inertiaUrl === '/ve-chung-toi' ||
@@ -498,7 +528,9 @@ export default {
                     inertiaUrl === '/cot-moc-phat-trien' ||
                     inertiaUrl.startsWith('/cot-moc-phat-trien/') ||
                     inertiaUrl === '/about-us' ||
-                    inertiaUrl.startsWith('/about')
+                    inertiaUrl.startsWith('/about') ||
+                    inertiaUrl === '/en/about-us' ||
+                    inertiaUrl.startsWith('/en/about')
                 )
             }
 
@@ -509,10 +541,14 @@ export default {
                     normalizedPath.startsWith('/quy-trinh/') ||
                     normalizedPath === '/process' ||
                     normalizedPath.startsWith('/process/') ||
+                    normalizedPath === '/en/process' ||
+                    normalizedPath.startsWith('/en/process/') ||
                     inertiaUrl === '/quy-trinh' ||
                     inertiaUrl.startsWith('/quy-trinh/') ||
                     inertiaUrl === '/process' ||
-                    inertiaUrl.startsWith('/process/')
+                    inertiaUrl.startsWith('/process/') ||
+                    inertiaUrl === '/en/process' ||
+                    inertiaUrl.startsWith('/en/process/')
                 )
             }
 
@@ -559,18 +595,79 @@ export default {
         },
         switchLocale(lang) {
             if (this.currentLocale === lang) return
-            let currentPath = typeof window !== 'undefined' ? window.location.pathname : '/'
-            let newPath = ''
-            if (lang === 'en') {
-                newPath = currentPath.startsWith('/en')
-                    ? currentPath
-                    : '/en' + (currentPath === '/' ? '' : currentPath)
-            } else {
-                newPath = currentPath.startsWith('/en')
-                    ? currentPath.replace(/^\/en/, '') || '/'
-                    : currentPath
+
+            // 1. Try resolving using current route name and Ziggy
+            const currentRouteName = this.$page?.props?.route?.name || ''
+            if (currentRouteName) {
+                const baseRouteName = currentRouteName.replace(/^(vi|en)\./, '')
+                const targetRouteName = `${lang}.${baseRouteName}`
+                if (this.routes && this.routes()[targetRouteName]) {
+                    const params = this.$page?.props?.route?.query || {}
+                    try {
+                        const targetUrl = this.route(targetRouteName, params)
+                        if (targetUrl && targetUrl !== '#') {
+                            if (this.$inertia) {
+                                this.$inertia.visit(targetUrl)
+                            } else if (typeof window !== 'undefined') {
+                                window.location.href = targetUrl
+                            }
+                            return
+                        }
+                    } catch (e) {
+                        // fallback to path replacement
+                    }
+                }
             }
-            if (typeof window !== 'undefined') {
+
+            // 2. Intelligent path translation mapping
+            let currentPath = typeof window !== 'undefined' ? window.location.pathname : (this.$page?.url || '/')
+            const cleanPath = currentPath.split('?')[0].split('#')[0]
+
+            const viToEn = {
+                '/san-pham': '/products',
+                '/dich-vu': '/services',
+                '/gioi-thieu': '/about-us',
+                '/ve-chung-toi': '/about-us',
+                '/cot-moc-phat-trien': '/about-us',
+                '/quy-trinh': '/process',
+                '/lien-he': '/contact',
+                '/tim-kiem': '/search',
+                '/tin-tuc': '/posts',
+                '/chinh-sach': '/policies',
+            }
+
+            const enToVi = {
+                '/products': '/san-pham',
+                '/services': '/dich-vu',
+                '/about-us': '/gioi-thieu',
+                '/about': '/gioi-thieu',
+                '/histories': '/gioi-thieu',
+                '/process': '/quy-trinh',
+                '/contact': '/lien-he',
+                '/search': '/tim-kiem',
+                '/posts': '/tin-tuc',
+                '/policies': '/chinh-sach',
+            }
+
+            let newPath = '/'
+            if (lang === 'en') {
+                if (cleanPath === '/' || cleanPath === '/vi') {
+                    newPath = '/en'
+                } else {
+                    const stripped = cleanPath.replace(/^\/vi/, '')
+                    const translated = viToEn[stripped] || stripped
+                    newPath = '/en' + (translated.startsWith('/') ? translated : '/' + translated)
+                }
+            } else {
+                // Switching to 'vi'
+                const stripped = cleanPath.replace(/^\/en/, '') || '/'
+                const translated = enToVi[stripped] || stripped
+                newPath = translated
+            }
+
+            if (this.$inertia) {
+                this.$inertia.visit(newPath)
+            } else if (typeof window !== 'undefined') {
                 window.location.href = newPath
             }
         },

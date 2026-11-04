@@ -36,6 +36,81 @@ class ContactController extends Controller
                 }
             }
 
+            // Normalization: Tự động gom các trường vào mảng data cho cả payload phẳng lẫn lồng
+            $data = is_array($contact['data'] ?? null) ? $contact['data'] : [];
+
+            $name = $data['Họ và tên']
+                ?? $data['name']
+                ?? $contact['name']
+                ?? $contact['Họ và tên']
+                ?? $request->input('name')
+                ?? $request->input('Họ và tên')
+                ?? null;
+
+            $phone = $data['Số điện thoại']
+                ?? $data['phone']
+                ?? $contact['phone']
+                ?? $contact['Số điện thoại']
+                ?? $request->input('phone')
+                ?? $request->input('Số điện thoại')
+                ?? null;
+
+            $email = $data['Email']
+                ?? $data['email']
+                ?? $contact['email']
+                ?? $contact['Email']
+                ?? $request->input('email')
+                ?? $request->input('Email')
+                ?? null;
+
+            $service = $data['Dịch vụ quan tâm']
+                ?? $data['service']
+                ?? $contact['service']
+                ?? $contact['Dịch vụ quan tâm']
+                ?? $request->input('service')
+                ?? $request->input('Dịch vụ quan tâm')
+                ?? null;
+
+            $content = $data['Nội dung cần hỗ trợ']
+                ?? $data['content']
+                ?? $data['note']
+                ?? $contact['content']
+                ?? $contact['note']
+                ?? $contact['Nội dung cần hỗ trợ']
+                ?? $request->input('content')
+                ?? $request->input('note')
+                ?? $request->input('Nội dung cần hỗ trợ')
+                ?? null;
+
+            if ($name !== null && !isset($data['Họ và tên'])) {
+                $data['Họ và tên'] = $name;
+            }
+            if ($phone !== null && !isset($data['Số điện thoại'])) {
+                $data['Số điện thoại'] = $phone;
+            }
+            if ($email !== null && !isset($data['Email'])) {
+                $data['Email'] = $email;
+            }
+            if ($service !== null) {
+                $serviceTitle = is_array($service) ? ($service['title'] ?? '') : (string)$service;
+                if (!isset($data['Dịch vụ quan tâm'])) {
+                    $data['Dịch vụ quan tâm'] = $serviceTitle;
+                }
+                if (!isset($data['Service'])) {
+                    $data['Service'] = is_array($service) ? $service : ['title' => $serviceTitle];
+                }
+            }
+            if ($content !== null && !isset($data['Nội dung cần hỗ trợ'])) {
+                $data['Nội dung cần hỗ trợ'] = $content;
+            }
+
+            // Đảm bảo data luôn là mảng, không bao giờ null
+            $contact['data'] = $data;
+
+            if (empty($contact['type'])) {
+                $contact['type'] = 'CONTACT_FORM';
+            }
+
             if (isset($contact['images']) && !empty($contact['images'])) {
                 $fileObj = new \App\Models\File('Contact');
                 $fileUploaded = $fileObj->store($contact['images']);

@@ -223,6 +223,18 @@ class ProductCategory extends BaseModel
             ->get();
     }
 
+    public function getCategories()
+    {
+        return static::query()
+            ->active()
+            ->orderBy('parent_id')
+            ->get()
+            ->map(fn($item) => [
+                'id' => (string) $item->id,
+                'title' => $item->title,
+            ]);
+    }
+
     public static function getDataDetail()
     {
         if (request()->has('id')) {

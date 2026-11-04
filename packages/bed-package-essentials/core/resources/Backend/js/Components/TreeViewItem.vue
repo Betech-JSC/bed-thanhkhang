@@ -216,14 +216,14 @@ export default {
 .tree-view-item {
     border-left: 3px solid transparent;
     &.is-selected {
-        background-color: rgba(245, 144, 65, 0.08); /* primary 8% */
-        color: #F59041; /* primary DEFAULT */
-        border-left-color: #F59041;
+        background-color: rgba(41, 112, 255, 0.08); /* primary 8% */
+        color: #2970FF; /* primary DEFAULT */
+        border-left-color: #2970FF;
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
         
         label {
-            color: #E56400; /* primary dark */
+            color: #1E56CC; /* primary dark */
             font-weight: 500;
         }
     }

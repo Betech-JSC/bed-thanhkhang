@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Models\Contact;
+use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -33,55 +34,96 @@ class DashboardController extends Controller
         $lastMonth = Carbon::now()->subMonth()->startOfMonth();
         $year = (int) ($request->get('year') ?? now()->year);
 
-        // Current Month Stats
-        $thisMonthContacts = Contact::where('type', 'CONTACT_FORM')
-            ->where('created_at', '>=', $thisMonth)
+        // 1. Thống kê Báo giá In 3D (CONTACT_FORM)
+        $todayQuotes = Contact::where('type', 'CONTACT_FORM')
+            ->whereDate('created_at', $today)
             ->count();
-        $thisMonthOrders = Contact::where('type', 'TYPE_CHECKOUT_COURSE')
+
+        $thisMonthQuotes = Contact::where('type', 'CONTACT_FORM')
             ->where('created_at', '>=', $thisMonth)
             ->count();
 
-        // Last Month Stats
-        $lastMonthContacts = Contact::where('type', 'CONTACT_FORM')
-            ->whereBetween('created_at', [$lastMonth, $thisMonth])
-            ->count();
-        $lastMonthOrders = Contact::where('type', 'TYPE_CHECKOUT_COURSE')
+        $lastMonthQuotes = Contact::where('type', 'CONTACT_FORM')
             ->whereBetween('created_at', [$lastMonth, $thisMonth])
             ->count();
 
-        // Calculations
+        // 2. Thống kê Đơn hàng (Order nếu có)
+        $todayOrders = 0;
+        $thisMonthOrders = 0;
+        $lastMonthOrders = 0;
+        try {
+            if (class_exists(Order::class)) {
+                $todayOrders = Order::whereDate('created_at', $today)->count();
+                $thisMonthOrders = Order::where('created_at', '>=', $thisMonth)->count();
+                $lastMonthOrders = Order::whereBetween('created_at', [$lastMonth, $thisMonth])->count();
+            }
+        } catch (\Throwable $e) {
+            // Safe fallback if order table not available
+        }
+
+        // 3. Tính toán Hiệu suất & Dự báo
         $daysInMonth = Carbon::now()->daysInMonth;
         $dayOfMonth = Carbon::now()->day;
-        
-        // Simple linear forecast
-        $forecastOrders = $dayOfMonth > 0 ? (int)round(($thisMonthOrders / $dayOfMonth) * $daysInMonth) : 0;
-        
-        // Growth (MoM)
-        $contactGrowth = $lastMonthContacts > 0 ? (($thisMonthContacts - $lastMonthContacts) / $lastMonthContacts) * 100 : 0;
-        $orderGrowth = $lastMonthOrders > 0 ? (($thisMonthOrders - $lastMonthOrders) / $lastMonthOrders) * 100 : 0;
 
-        // Conversion Rate
-        $conversionRate = $thisMonthContacts > 0 ? ($thisMonthOrders / $thisMonthContacts) * 100 : 0;
+        $forecastQuotes = $dayOfMonth > 0 ? (int) round(($thisMonthQuotes / $dayOfMonth) * $daysInMonth) : 0;
+        $quoteGrowth = $lastMonthQuotes > 0 ? (($thisMonthQuotes - $lastMonthQuotes) / $lastMonthQuotes) * 100 : 0;
+        $orderGrowth = $lastMonthOrders > 0 ? (($thisMonthOrders - $lastMonthOrders) / $lastMonthOrders) * 100 : 0;
+        $conversionRate = $thisMonthQuotes > 0 ? ($thisMonthOrders / $thisMonthQuotes) * 100 : 0;
+
+        // 4. Cơ cấu Dịch vụ In 3D quan tâm
+        $serviceStats = $this->getServiceDistribution($year);
+
+        // 5. Thống kê Báo giá theo tháng trong năm
+        $quoteStats = $this->getQuoteStats($year);
+
+        // 6. Danh sách Báo giá in 3D gần đây
+        $recentQuotes = Contact::where('type', 'CONTACT_FORM')
+            ->latest('id')
+            ->take(8)
+            ->get()
+            ->map(function ($c) {
+                $d = $c->data ?? [];
+                if (!is_array($d)) {
+                    $d = [];
+                }
+                $name = $d['Họ và tên'] ?? $d['Họ tên'] ?? $d['name'] ?? $d['full_name'] ?? 'Khách hàng';
+                $phone = $d['Số điện thoại'] ?? $d['Số ĐT'] ?? $d['phone'] ?? $d['telephone'] ?? '-';
+                $email = $d['Email'] ?? $d['email'] ?? ($c->data_contact->email ?? '-');
+                $service = $d['Dịch vụ quan tâm'] ?? $d['Dịch vụ'] ?? ($d['Service']['title'] ?? null) ?? $d['service'] ?? 'Tư vấn in 3D';
+                if (is_array($service)) {
+                    $service = $service['title'] ?? 'Tư vấn in 3D';
+                }
+
+                $hasCad = !empty($c->images) || !empty($d['File đính kèm']) || !empty($d['files']);
+
+                return [
+                    'id' => $c->id,
+                    'name' => $name,
+                    'phone' => $phone,
+                    'email' => $email,
+                    'service' => $service,
+                    'status' => $c->status,
+                    'formatted_status' => $c->formatted_status ?: 'Mới',
+                    'has_cad' => $hasCad,
+                    'created_at' => $c->created_at ? $c->created_at->format('d/m/Y H:i') : '-',
+                ];
+            });
 
         $dashboard = [
-            'today_contact_count' => (int) Contact::where('type', 'CONTACT_FORM')
-                ->whereDate('created_at', $today)
-                ->count(),
-            'today_apply_count' => (int) Contact::where('type', 'APPLY_FORM')
-                ->whereDate('created_at', $today)
-                ->count(),
-            'today_course_order_count' => (int) Contact::where('type', 'TYPE_CHECKOUT_COURSE')
-                ->whereDate('created_at', $today)
-                ->count(),
-            'course_order_stats' => $this->getCourseOrderStats('month', $year),
+            'today_quote_count' => $todayQuotes,
+            'today_order_count' => $todayOrders,
+            'quote_stats' => $quoteStats,
+            'service_distribution' => $serviceStats,
+            'recent_quotes' => $recentQuotes,
             'metrics' => [
+                'this_month_quotes' => $thisMonthQuotes,
+                'forecast_quotes' => $forecastQuotes,
+                'quote_growth' => round($quoteGrowth, 1),
                 'this_month_orders' => $thisMonthOrders,
-                'forecast_orders' => $forecastOrders,
                 'order_growth' => round($orderGrowth, 1),
-                'contact_growth' => round($contactGrowth, 1),
                 'conversion_rate' => round($conversionRate, 1),
-                'last_month_orders' => $lastMonthOrders,
-            ]
+                'last_month_quotes' => $lastMonthQuotes,
+            ],
         ];
 
         return Inertia::render('Dashboard', [
@@ -89,137 +131,94 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function courseOrderStats(Request $request)
-    {
-        if (!current_admin()->can('admin.dashboard.course-order-stats')) {
-            return abort(403);
-        }
-
-        $period = $request->get('period', 'month');
-        $year = (int) $request->get('year', now()->year);
-        $quarter = $request->has('quarter') ? (int) $request->get('quarter') : null;
-        $month = $request->has('month') ? (int) $request->get('month') : null;
-
-        return response()->json($this->getCourseOrderStats($period, $year, $quarter, $month));
-    }
-
     /**
-     * @param string $period 'month' | 'quarter' | 'year'
-     * @param int $year
-     * @param int|null $quarter 1-4 khi period=quarter
-     * @param int|null $month 1-12 khi period=month
+     * Thống kê số lượng báo giá theo từng tháng trong năm
      */
-    private function getCourseOrderStats(string $period, int $year, ?int $quarter = null, ?int $month = null): array
+    private function getQuoteStats(int $year): array
     {
-        $base = Contact::where('type', 'TYPE_CHECKOUT_COURSE');
+        $base = Contact::where('type', 'CONTACT_FORM')
+            ->whereYear('created_at', $year)
+            ->orderBy('created_at')
+            ->get();
 
-        if ($period === 'year') {
-            $base->whereYear('created_at', $year);
-            $labels = array_map(fn($m) => sprintf('%d-%02d', $year, $m), range(1, 12));
-            $groupKey = fn($c) => $c->created_at->format('Y-m');
-        } elseif ($period === 'quarter') {
-            if ($quarter) {
-                $start = Carbon::createFromDate($year, ($quarter - 1) * 3 + 1, 1);
-                $end = $start->copy()->endOfQuarter();
-                $base->whereBetween('created_at', [$start, $end]);
-                $labels = ['Q' . $quarter . '/' . $year];
-                $groupKey = fn($c) => 'Q' . $quarter . '/' . $year;
-            } else {
-                $base->whereYear('created_at', $year);
-                $labels = array_map(fn($q) => 'Q' . $q . '/' . $year, range(1, 4));
-                $groupKey = fn($c) => 'Q' . (int) ceil($c->created_at->month / 3) . '/' . $c->created_at->year;
-            }
-        } else {
-            if ($month) {
-                $base->whereMonth('created_at', $month)->whereYear('created_at', $year);
-                $lastDay = Carbon::createFromDate($year, $month, 1)->endOfMonth()->day;
-                $labels = array_map(fn($d) => sprintf('%02d/%02d', $d, $month), range(1, $lastDay));
-                $groupKey = fn($c) => $c->created_at->format('d/m');
-            } else {
-                $base->whereYear('created_at', $year);
-                $labels = array_map(fn($m) => sprintf('%d-%02d', $year, $m), range(1, 12));
-                $groupKey = fn($c) => $c->created_at->format('Y-m');
-            }
-        }
+        $labels = array_map(fn($m) => sprintf('T%02d', $m), range(1, 12));
+        $fullLabels = array_map(fn($m) => sprintf('Tháng %d', $m), range(1, 12));
 
-        $items = $base->orderBy('created_at')->get();
-        $groups = $items->groupBy($groupKey);
+        $groups = $base->groupBy(fn($c) => sprintf('T%02d', $c->created_at->month));
 
         $totalByPeriod = [];
         foreach ($labels as $label) {
             $totalByPeriod[$label] = isset($groups[$label]) ? $groups[$label]->count() : 0;
         }
 
-        $byCourse = $this->aggregateByCourse($items);
-
         return [
+            'labels' => $labels,
+            'fullLabels' => $fullLabels,
             'totalByPeriod' => $totalByPeriod,
-            'byCourse' => $byCourse,
-            'labels' => array_values($labels),
+            'total' => $base->count(),
         ];
     }
 
     /**
-     * @param  Collection<int, Contact>  $items
+     * Phân loại cơ cấu dịch vụ in 3D theo từ khóa
      */
-    private function aggregateByCourse(Collection $items): array
+    private function getServiceDistribution(int $year): array
     {
-        $byCourse = [];
-        foreach ($items as $c) {
-            $name = $this->getCourseTitle($c);
-            $byCourse[$name] = ($byCourse[$name] ?? 0) + 1;
+        $contacts = Contact::where('type', 'CONTACT_FORM')
+            ->whereYear('created_at', $year)
+            ->get();
+
+        $distribution = [
+            'Gia công in 3D' => 0,
+            'Thiết kế 3D & CAD' => 0,
+            'Làm đồ custom & Quà tặng' => 0,
+            'Tư vấn kỹ thuật khác' => 0,
+        ];
+
+        foreach ($contacts as $contact) {
+            $category = $this->classifyService($contact);
+            $distribution[$category] = ($distribution[$category] ?? 0) + 1;
         }
-        arsort($byCourse);
-        return $byCourse;
+
+        $total = array_sum($distribution);
+        $percentages = [];
+        foreach ($distribution as $key => $count) {
+            $percentages[$key] = $total > 0 ? round(($count / $total) * 100, 1) : 0;
+        }
+
+        return [
+            'counts' => $distribution,
+            'percentages' => $percentages,
+            'total' => $total,
+        ];
     }
 
-    private function getCourseTitle(Contact $contact): string
+    private function classifyService(Contact $contact): string
     {
-        $data = $contact->data;
-        if (is_array($data) && isset($data['course']) && is_array($data['course']) && !empty($data['course']['title'])) {
-            return $data['course']['title'];
-        }
-        return 'Không xác định';
-    }
-
-    public function majorYearStats(Request $request)
-    {
-        if (!current_admin()->can('admin.dashboard.major-year-stats')) {
-            return abort(403);
+        $data = $contact->data ?? [];
+        if (!is_array($data)) {
+            return 'Tư vấn kỹ thuật khác';
         }
 
-        $year = (int) $request->get('year', now()->year);
-        $major = $request->get('major');
-        $yearLevel = $request->get('year_level');
+        $text = ($data['Dịch vụ quan tâm'] ?? '') . ' ' .
+                ($data['Dịch vụ'] ?? '') . ' ' .
+                ($data['Service']['title'] ?? '') . ' ' .
+                ($data['service'] ?? '') . ' ' .
+                ($data['Nội dung cần hỗ trợ'] ?? '') . ' ' .
+                ($data['note'] ?? '') . ' ' .
+                ($data['customer_note'] ?? '');
+        $text = mb_strtolower($text);
 
-        $query = Contact::where('type', 'TYPE_CHECKOUT_COURSE')
-            ->whereYear('created_at', $year);
-
-        $items = $query->orderBy('created_at')->get();
-
-        $byMajor = [];
-        $byYearLevel = [];
-
-        foreach ($items as $contact) {
-            $data = $contact->data;
-            if (!is_array($data)) continue;
-
-            $contactMajor = $data['Ngành học hiện tại'] ?? 'Không xác định';
-            $contactYearLevel = $data['Hiện tại bạn đang là'] ?? 'Không xác định';
-
-            if ($major && $contactMajor !== $major) continue;
-            if ($yearLevel && $contactYearLevel !== $yearLevel) continue;
-
-            $byMajor[$contactMajor] = ($byMajor[$contactMajor] ?? 0) + 1;
-            $byYearLevel[$contactYearLevel] = ($byYearLevel[$contactYearLevel] ?? 0) + 1;
+        if (preg_match('/thiết kế|cad|dựng hình|scan 3d|reverse|tạo mẫu 3d/u', $text)) {
+            return 'Thiết kế 3D & CAD';
+        }
+        if (preg_match('/custom|quà tặng|decor|cá nhân|móc khóa|đồ chơi|mô hình/u', $text)) {
+            return 'Làm đồ custom & Quà tặng';
+        }
+        if (preg_match('/gia công|in 3d|fdm|sla|nhựa|resin|in sợi|sls|in mẫu/u', $text)) {
+            return 'Gia công in 3D';
         }
 
-        arsort($byMajor);
-        arsort($byYearLevel);
-
-        return response()->json([
-            'byMajor' => $byMajor,
-            'byYearLevel' => $byYearLevel,
-        ]);
+        return 'Tư vấn kỹ thuật khác';
     }
 }

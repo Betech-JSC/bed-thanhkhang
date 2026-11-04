@@ -212,7 +212,7 @@ export default {
     background: #d1d5db; border-radius: 13px;
     position: relative; transition: background 0.2s; cursor: pointer;
 }
-.toggle-switch.active { background: #f97316; }
+.toggle-switch.active { background: #2970FF; }
 .toggle-knob {
     position: absolute; top: 3px; left: 3px;
     width: 20px; height: 20px;
@@ -231,21 +231,21 @@ export default {
     outline: none; transition: border 0.2s;
     width: 100%;
 }
-.field-input:focus { border-color: #f97316; box-shadow: 0 0 0 3px rgba(249,115,22,0.1); }
+.field-input:focus { border-color: #2970FF; box-shadow: 0 0 0 3px rgba(41,112,255,0.15); }
 .field-textarea {
     padding: 10px 14px; border: 1px solid #d1d5db;
     border-radius: 8px; font-size: 14px; color: #1e293b;
     outline: none; transition: border 0.2s; width: 100%;
     resize: vertical; font-family: inherit; line-height: 1.6;
 }
-.field-textarea:focus { border-color: #f97316; box-shadow: 0 0 0 3px rgba(249,115,22,0.1); }
+.field-textarea:focus { border-color: #2970FF; box-shadow: 0 0 0 3px rgba(41,112,255,0.15); }
 .field-hint { font-size: 12px; color: #94a3b8; margin: 0; }
 
 /* Save */
 .save-row { display: flex; justify-content: flex-end; margin-top: 20px; }
 .btn-save {
     padding: 12px 28px;
-    background: linear-gradient(135deg, #f97316, #ea580c);
+    background: linear-gradient(135deg, #2970FF, #155EEF);
     color: #fff; border: none; border-radius: 10px;
     font-size: 14px; font-weight: 700; cursor: pointer;
     transition: opacity 0.2s, transform 0.2s;
@@ -271,5 +271,5 @@ export default {
     font-size: 13px; color: #374151;
     text-decoration: none; transition: border-color 0.2s;
 }
-.preview-contact-item:hover { border-color: #f97316; color: #ea580c; }
+.preview-contact-item:hover { border-color: #2970FF; color: #155EEF; }
 </style>

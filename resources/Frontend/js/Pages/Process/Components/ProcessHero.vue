@@ -9,8 +9,8 @@
                 <!-- Background Artwork Image with Mask -->
                 <div class="absolute inset-0 pointer-events-none select-none overflow-hidden">
                     <img
-                        src="/images/process/process_hero_bg.png"
-                        alt="HH Maker Quy trình làm việc"
+                        :src="bgImage"
+                        :alt="bgImageAlt"
                         class="absolute inset-0 w-full h-full object-cover object-center mix-blend-screen opacity-50 sm:opacity-60 scale-105"
                         loading="eager"
                     />
@@ -27,28 +27,27 @@
                 <div class="relative z-10 max-w-[599px] space-y-4 sm:space-y-4 pt-4 sm:pt-6">
                     <!-- Category (Figma Node 2283:7953: 16px / 22px / #D1E0FF) -->
                     <p class="text-[#D1E0FF] text-sm sm:text-base font-medium tracking-wider uppercase select-none">
-                        QUY TRÌNH LÀM VIỆC
+                        {{ categoryText }}
                     </p>
 
                     <!-- Main Headline (Figma Node 2283:7954: 38px / 46px / #FAFAFA / Bold) -->
-                    <h1 class="text-[#FAFAFA] text-2xl sm:text-3xl lg:text-[38px] lg:leading-[46px] font-bold uppercase tracking-tight">
-                        RÕ RÀNG TỪNG BƯỚC<br class="hidden sm:inline" />
-                        CHỈN CHU TỪNG SẢN PHẨM
+                    <h1 class="text-[#FAFAFA] text-2xl sm:text-3xl lg:text-[38px] lg:leading-[46px] font-bold uppercase tracking-tight whitespace-pre-line">
+                        {{ headlineText }}
                     </h1>
 
                     <!-- Description (Figma Node 2283:7955: 16px / 26px / #D1E0FF) -->
                     <p class="text-[#D1E0FF] text-sm sm:text-base leading-relaxed lg:leading-[26px] font-normal max-w-[599px]">
-                        Từ ý tưởng ban đầu đến thành phẩm hoàn thiện, HH Maker cùng bạn làm rõ nhu cầu, thống nhất thiết kế và chi phí trước khi gia công. Mỗi giai đoạn đều được trao đổi cụ thể để bạn dễ theo dõi và chủ động trong quá trình đặt làm.
+                        {{ descriptionText }}
                     </p>
 
                     <!-- Mobile Quick CTA Button -->
                     <div class="pt-2 sm:hidden">
                         <button
                             type="button"
-                            @click="scrollToSteps"
+                            @click="handleCtaClick"
                             class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-sm font-medium transition-colors shadow-glow-primary-subtle"
                         >
-                            <span>Khám phá 5 bước</span>
+                            <span>{{ ctaText }}</span>
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                             </svg>
@@ -108,11 +107,43 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+
+const props = defineProps({
+    banner: {
+        type: Object,
+        default: () => null,
+    },
+})
+
+const categoryText = computed(() => props.banner?.subtitle || 'QUY TRÌNH LÀM VIỆC')
+const headlineText = computed(
+    () => props.banner?.title || 'RÕ RÀNG TỪNG BƯỚC\nCHỈN CHU TỪNG SẢN PHẨM'
+)
+const descriptionText = computed(() => {
+    return (
+        props.banner?.description ||
+        'Từ ý tưởng ban đầu đến thành phẩm hoàn thiện, HH Maker cùng bạn làm rõ nhu cầu, thống nhất thiết kế và chi phí trước khi gia công. Mỗi giai đoạn đều được trao đổi cụ thể để bạn dễ theo dõi và chủ động trong quá trình đặt làm.'
+    )
+})
+const bgImage = computed(() => props.banner?.image?.url || '/images/process/process_hero_bg.png')
+const bgImageAlt = computed(() => props.banner?.image?.alt || 'HH Maker Quy trình làm việc')
+const ctaText = computed(() => props.banner?.primary_cta_text || 'Khám phá 5 bước')
+const ctaLink = computed(() => props.banner?.primary_cta_link || props.banner?.link || null)
+
 const scrollToSteps = () => {
     if (typeof document === 'undefined') return
     const target = document.getElementById('process-steps')
     if (target) {
         target.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
+}
+
+const handleCtaClick = () => {
+    if (ctaLink.value && !ctaLink.value.startsWith('#')) {
+        window.location.href = ctaLink.value
+        return
+    }
+    scrollToSteps()
 }
 </script>

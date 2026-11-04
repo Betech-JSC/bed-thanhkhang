@@ -11,12 +11,14 @@
 
         <!-- 1. Hero Section (Figma Node 2261:5475) -->
         <HeroSection
-            :bannerImage="heroBanner"
-            :title="heroTitle"
-            :subtitle="heroSubtitle"
-            :description="heroDescription"
-            :primaryCtaText="'Khám phá ngay'"
-            :secondaryCtaText="'Nhận tư vấn thiết kế'"
+            :bannerImage="dynamicHeroBanner"
+            :title="dynamicHeroTitle"
+            :subtitle="dynamicHeroSubtitle"
+            :description="dynamicHeroDescription"
+            :primaryCtaText="dynamicPrimaryCtaText"
+            :primaryCtaLink="dynamicPrimaryCtaLink"
+            :secondaryCtaText="dynamicSecondaryCtaText"
+            :secondaryCtaLink="dynamicSecondaryCtaLink"
         />
 
         <!-- 2. Featured Products Carousel (Figma Node 2261:5503: Khung tranh chứng chỉ RMIT, nút > điều hướng bên phải) -->
@@ -27,6 +29,7 @@
         <!-- 3. Services Section (Figma Node 2261:5528: 3D glass icons + cobalt gradient) -->
         <ServicesSection
             :heading="'TỔNG QUAN VỀ DỊCH VỤ'"
+            :services="services"
         />
 
         <!-- 4. Category Products Section with 3 Carousel Rows (Figma Node 2261:5563: Móc khoá, Đồ dùng/Decor, Gia công) -->
@@ -80,6 +83,10 @@ export default {
     },
     props: {
         sliders: {
+            type: [Array, Object],
+            default: () => [],
+        },
+        services: {
             type: Array,
             default: () => [],
         },
@@ -108,18 +115,49 @@ export default {
                 'Không giới hạn không gian sáng tạo, HH Maker thổi hồn vào từng sản phẩm thông qua công nghệ in và gia công 3D hiện đại',
         };
     },
-    created() {
-        // Sanitize incoming slider URL from backend if present, stripping localhost or /static/ anomalies
-        if (this.sliders && this.sliders.length > 0 && this.sliders[0]?.image?.url) {
-            const incomingUrl = this.sliders[0].image.url;
-            if (incomingUrl.includes('/static/assets/')) {
-                this.heroBanner = incomingUrl.replace(/^https?:\/\/[^\/]+/, '').replace('/static/', '/');
-            } else if (incomingUrl.startsWith('http://localhost') && !incomingUrl.includes('/public/')) {
-                this.heroBanner = '/assets/images/homepage/hero-banner.png';
-            } else {
-                this.heroBanner = incomingUrl;
+    computed: {
+        activeSlider() {
+            if (Array.isArray(this.sliders) && this.sliders.length > 0) {
+                return this.sliders[0];
             }
-        }
+            if (this.sliders && typeof this.sliders === 'object' && this.sliders.title) {
+                return this.sliders;
+            }
+            return null;
+        },
+        dynamicHeroBanner() {
+            const incomingUrl = this.activeSlider?.image?.url;
+            if (incomingUrl) {
+                if (incomingUrl.includes('/static/assets/')) {
+                    return incomingUrl.replace(/^https?:\/\/[^\/]+/, '').replace('/static/', '/');
+                } else if (incomingUrl.startsWith('http://localhost') && !incomingUrl.includes('/public/')) {
+                    return this.heroBanner;
+                }
+                return incomingUrl;
+            }
+            return this.heroBanner;
+        },
+        dynamicHeroTitle() {
+            return this.activeSlider?.title || this.heroTitle;
+        },
+        dynamicHeroSubtitle() {
+            return this.activeSlider?.subtitle || this.heroSubtitle;
+        },
+        dynamicHeroDescription() {
+            return this.activeSlider?.description || this.heroDescription;
+        },
+        dynamicPrimaryCtaText() {
+            return this.activeSlider?.primary_cta_text || 'Khám phá ngay';
+        },
+        dynamicPrimaryCtaLink() {
+            return this.activeSlider?.primary_cta_link || '#featured-carousel';
+        },
+        dynamicSecondaryCtaText() {
+            return this.activeSlider?.secondary_cta_text || 'Nhận tư vấn thiết kế';
+        },
+        dynamicSecondaryCtaLink() {
+            return this.activeSlider?.secondary_cta_link || '#contact-section';
+        },
     },
 };
 </script>

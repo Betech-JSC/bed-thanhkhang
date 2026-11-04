@@ -53,7 +53,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <!-- 1. Card Zalo (Node 2308:8242) -->
                     <a
-                        href="https://zalo.me/0906636425"
+                        :href="displayZaloUrl"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] rounded-[12px] p-7 transition-all duration-300 hover:border-primary hover:bg-white/[0.28] hover:shadow-glow-primary-subtle group flex flex-col justify-between min-h-[193px]"
@@ -86,7 +86,7 @@
 
                     <!-- 2. Card Hotline (Node 2308:8252) -->
                     <a
-                        href="tel:0906636425"
+                        :href="'tel:' + displayPhone.replace(/\s+/g, '')"
                         class="bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] rounded-[12px] p-7 transition-all duration-300 hover:border-primary hover:bg-white/[0.28] hover:shadow-glow-primary-subtle group flex flex-col justify-between min-h-[193px]"
                     >
                         <div class="w-10 h-10 rounded-lg flex items-center justify-center text-white group-hover:text-primary transition-colors">
@@ -109,7 +109,7 @@
                         </div>
                         <div class="space-y-2 mt-4">
                             <h3 class="text-2xl font-semibold text-[#FAFAFA] group-hover:text-primary transition-colors leading-[29px]">
-                                0906636425
+                                {{ displayPhone }}
                             </h3>
                             <p class="text-base text-[#B9C0D4] leading-[26px]">
                                 Gọi HH Maker để trao đổi trực tiếp về dự án của bạn
@@ -119,7 +119,7 @@
 
                     <!-- 3. Card Email (Node 2308:8262) -->
                     <a
-                        href="mailto:info@hhmaker.vn"
+                        :href="'mailto:' + displayEmail"
                         class="bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] rounded-[12px] p-7 transition-all duration-300 hover:border-primary hover:bg-white/[0.28] hover:shadow-glow-primary-subtle group flex flex-col justify-between min-h-[193px]"
                     >
                         <div class="w-10 h-10 rounded-lg flex items-center justify-center text-white group-hover:text-primary transition-colors">
@@ -141,7 +141,7 @@
                         </div>
                         <div class="space-y-2 mt-4">
                             <h3 class="text-2xl font-semibold text-[#FAFAFA] group-hover:text-primary transition-colors leading-[29px]">
-                                info@hhmaker.vn
+                                {{ displayEmail }}
                             </h3>
                             <p class="text-base text-[#B9C0D4] leading-[26px]">
                                 Gửi mô tả chi tiết và tài liệu tham khảo của bạn
@@ -189,7 +189,7 @@
                             Thông tin yêu cầu
                         </h3>
 
-                        <form @submit.prevent="submitContact" class="space-y-5">
+                        <form @submit.prevent="submitContact" novalidate class="space-y-5">
                             <!-- Hàng 1: Họ tên & Số điện thoại (Node 2283:6777) -->
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                                 <!-- Họ và tên (Node 2283:6778) -->
@@ -437,7 +437,8 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
+import { usePage } from '@inertiajs/inertia-vue3'
 import { Head, useForm } from '@inertiajs/inertia-vue3'
 import BaseModal from '@/Components/Base/BaseModal.vue'
 
@@ -446,6 +447,24 @@ defineProps({
         type: Array,
         default: () => [],
     },
+})
+
+const page = usePage()
+
+const displayZaloUrl = computed(() => {
+    const raw = page.props.value?.global?.general_zalo
+    if (!raw) return 'https://zalo.me/0906636425'
+    if (raw.startsWith('http://') || raw.startsWith('https://')) return raw
+    const digits = raw.replace(/\D/g, '')
+    return digits ? `https://zalo.me/${digits}` : 'https://zalo.me/0906636425'
+})
+
+const displayPhone = computed(() => {
+    return page.props.value?.global?.general_phone || '0906636425'
+})
+
+const displayEmail = computed(() => {
+    return page.props.value?.global?.general_email || 'info@hhmaker.vn'
 })
 
 // Dịch vụ lựa chọn

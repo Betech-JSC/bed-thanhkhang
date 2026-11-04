@@ -442,7 +442,7 @@ export default {
                 value = this.toNumber(value)
             } else if (column.type === 'boolean') {
                 value = `<div class="flex m-auto w-3 h-3 ${
-                    value ? 'bg-green-500' : 'bg-orange-300'
+                    value ? 'bg-green-500' : 'bg-slate-300'
                 } rounded-full"></div>`
             } else if (column.type === 'json' && value && Object.keys(value).length === 0) {
                 return null

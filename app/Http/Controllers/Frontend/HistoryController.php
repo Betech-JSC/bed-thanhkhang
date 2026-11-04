@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use App\Models\Post\Post;
 use Illuminate\Support\Facades\Cache;
 use App\Models\History;
+use JamstackVietnam\Slider\Models\Slider;
 
 class HistoryController extends Controller
 {
@@ -22,8 +23,11 @@ class HistoryController extends Controller
                     ->get()
                     ->map(fn($item) => $item->transform());
 
+                $heroBanner = Slider::getByPosition('BANNER_ABOUT_HERO');
+
                 return [
                     'posts' => $posts,
+                    'heroBanner' => $heroBanner,
                 ];
             });
 

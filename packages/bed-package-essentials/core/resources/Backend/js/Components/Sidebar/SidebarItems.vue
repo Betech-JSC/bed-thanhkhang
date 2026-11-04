@@ -1,11 +1,16 @@
 <template>
     <div class="flex items-center flex-shrink-0 p-5 border-b border-gray-800">
         <Link href="/" class="flex items-center w-full p-2 space-x-2">
-            <img src="/assets/svg/logo-footer.svg" class="max-w-[9rem]" />
+            <img
+                src="/assets/images/header/figma-header-logo.svg"
+                alt="HH MAKER"
+                class="max-h-10 w-auto object-contain"
+            />
         </Link>
     </div>
     <nav class="flex-1 px-2 pb-4 space-y-1 navs">
-        <ul
+        <!-- Chức năng đa ngôn ngữ trang Admin tạm ẩn theo yêu cầu người dùng -->
+        <!-- <ul
             class="flex px-4 py-5 space-x-2 !uppercase overflow-y-auto btn-group"
             v-if="$page.props.locale.list.length > 1"
         >
@@ -18,60 +23,8 @@
                 @click="switchLocale(locale)"
                 :class="currentLocale === locale ? 'btn-primary' : 'btn-outline-primary'"
             />
-        </ul>
-        <hr />
-        <Link v-if="can('admin.dashboard.index')" :href="route('admin.dashboard.index')" :class="{ active: isUrl('admin.dashboard.index') }" class="item">
-            <ph:chart-bar-light />
-            <span>Dashboard</span>
-        </Link>
-        <hr />
+        </ul> -->
         <SidebarMain />
-        <hr />
-        <Link
-            v-if="can('admin.configs.index')"
-            :href="route('admin.configs.index')"
-            :class="{ active: isUrl('admin.configs.*') }"
-            class="item"
-        >
-            <heroicons-outline:user-group />
-            <span>{{ tt('models.table_list.configs') }}</span>
-        </Link>
-        <Link
-            v-if="can('admin.files.index')"
-            :href="route('admin.files.index')"
-            :class="{ active: isUrl('admin.files.*') }"
-            class="item"
-        >
-            <ph:image />
-            <span>{{ tt('models.table_list.files') }}</span>
-        </Link>
-        <Link
-            v-if="can('admin.admins.index')"
-            :href="route('admin.admins.index')"
-            :class="{ active: isUrl('admin.admins.*') }"
-            class="item"
-        >
-            <heroicons-outline:user-circle />
-            <span>{{ tt('models.table_list.admins') }}</span>
-        </Link>
-        <Link
-            v-if="can('admin.roles.index')"
-            :href="route('admin.roles.index')"
-            :class="{ active: isUrl('admin.roles.*') }"
-            class="item"
-        >
-            <heroicons-outline:user-group />
-            <span>{{ tt('models.table_list.roles') }}</span>
-        </Link>
-        <Link
-            v-if="can('admin.settings.index')"
-            :href="route('admin.settings.form', { id: 'general' })"
-            :class="{ active: isUrl('admin.settings.*') }"
-            class="item"
-        >
-            <heroicons-outline:cog-8-tooth />
-            <span>{{ tt('models.table_list.settings') }}</span>
-        </Link>
     </nav>
 </template>
 <script>
