@@ -18,13 +18,19 @@ class MetaSeo
     {
         $relativeUrl = $request->path() != '/' ? '/' . $request->path() : $request->path();
 
-        $metaPage = cache_response(
-            $relativeUrl,
-            function () use ($relativeUrl) {
-                return MetaPage::where('url', $relativeUrl ?: '/')->first();
-            },
-            'meta_pages',
-        );
+        try {
+            $metaPage = \Illuminate\Support\Facades\Schema::hasTable('meta_pages')
+                ? cache_response(
+                    $relativeUrl,
+                    function () use ($relativeUrl) {
+                        return MetaPage::where('url', $relativeUrl ?: '/')->first();
+                    },
+                    'meta_pages',
+                )
+                : null;
+        } catch (\Throwable $e) {
+            $metaPage = null;
+        }
 
         if ($metaPage) {
             $this->viewFactory->share('seo', $metaPage);

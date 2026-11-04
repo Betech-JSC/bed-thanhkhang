@@ -20,51 +20,62 @@ class HomeController extends Controller
         try {
             $locale = current_locale();
             $data = Cache::remember('home_page_data_' . $locale, 3600, function () {
-                // Get Home Slider
-                $sliders = Slider::getByPosition('HOME_SLIDER');
-                $announcements = Slider::getByPosition('HOME_ANNOUNCEMENT_TICKER');
+                try {
+                    // Get Home Slider
+                    $sliders = Slider::getByPosition('HOME_SLIDER');
+                    $announcements = Slider::getByPosition('HOME_ANNOUNCEMENT_TICKER');
 
-                // Fetch Active Services
-                $services = Service::query()
-                    ->active()
-                    ->sortByPosition()
-                    ->get()
-                    ->map(fn($service) => $service->transform());
+                    // Fetch Active Services
+                    $services = Service::query()
+                        ->active()
+                        ->sortByPosition()
+                        ->get()
+                        ->map(fn($service) => $service->transform());
 
-                // Fetch Featured Products
-                $products = Product::query()
-                    ->where('status', Product::STATUS_ACTIVE)
-                    ->orderByDesc('id')
-                    ->take(20)
-                    ->get()
-                    ->map(fn($product) => $product->transform());
+                    // Fetch Featured Products
+                    $products = Product::query()
+                        ->where('status', Product::STATUS_ACTIVE)
+                        ->orderByDesc('id')
+                        ->take(20)
+                        ->get()
+                        ->map(fn($product) => $product->transform());
 
-                // Fetch Featured Posts
-                $featured_posts = Post::query()
-                    ->active()
-                    ->wherePosts()
-                    ->latest('id')
-                    ->take(3)
-                    ->get()
-                    ->map(fn($post) => $post->transform());
+                    // Fetch Featured Posts
+                    $featured_posts = Post::query()
+                        ->active()
+                        ->wherePosts()
+                        ->latest('id')
+                        ->take(3)
+                        ->get()
+                        ->map(fn($post) => $post->transform());
 
-                // Fetch Feedback Posts
-                $feedback = Post::query()
-                    ->active()
-                    ->whereFeedback()
-                    ->latest('id')
-                    ->get()
-                    ->map(fn($post) => $post->transformFeedback());
+                    // Fetch Feedback Posts
+                    $feedback = Post::query()
+                        ->active()
+                        ->whereFeedback()
+                        ->latest('id')
+                        ->get()
+                        ->map(fn($post) => $post->transformFeedback());
 
-                // Prepare Response Data
-                return [
-                    'sliders' => $sliders,
-                    'announcements' => $announcements,
-                    'services' => $services,
-                    'products' => $products,
-                    'featured_posts' => $featured_posts,
-                    'feedback' => $feedback,
-                ];
+                    // Prepare Response Data
+                    return [
+                        'sliders' => $sliders,
+                        'announcements' => $announcements,
+                        'services' => $services,
+                        'products' => $products,
+                        'featured_posts' => $featured_posts,
+                        'feedback' => $feedback,
+                    ];
+                } catch (\Throwable $e) {
+                    return [
+                        'sliders' => [],
+                        'announcements' => [],
+                        'services' => [],
+                        'products' => [],
+                        'featured_posts' => [],
+                        'feedback' => [],
+                    ];
+                }
             });
 
             $seo = [

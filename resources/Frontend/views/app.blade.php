@@ -13,15 +13,21 @@
     <link rel="shortcut icon" href="/favicon.ico?v=1">
 
     @php
-        $global = cache_response(
-            'global_settings',
-            function () {
-                return settings()
-                    ->group('general')
-                    ->all();
-            },
-            'settings',
-        );
+        try {
+            $global = \Illuminate\Support\Facades\Schema::hasTable('settings')
+                ? cache_response(
+                    'global_settings',
+                    function () {
+                        return settings()
+                            ->group('general')
+                            ->all();
+                    },
+                    'settings',
+                )
+                : [];
+        } catch (\Throwable $e) {
+            $global = [];
+        }
     @endphp
 
     <!-- Custom Header Tag -->
@@ -54,7 +60,7 @@
 
         $encodedPath = implode('/', array_map('rawurlencode', explode('/', $parsed['path'] ?? '')));
 
-        $image = $parsed['scheme'] . '://' . $parsed['host'] . $encodedPath;
+        $image = ($parsed['scheme'] ?? 'http') . '://' . ($parsed['host'] ?? 'localhost') . $encodedPath;
 
         if (isset($parsed['query'])) {
             $image .= '?' . $parsed['query'];
