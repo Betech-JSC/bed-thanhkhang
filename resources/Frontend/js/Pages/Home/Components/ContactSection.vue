@@ -1,8 +1,8 @@
 <template>
     <section v-scroll-reveal id="contact-section" class="py-14 sm:py-20 lg:py-24 bg-[#111322] relative">
-        <div class="w-full max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-0">
+        <div class="app-container">
             <!-- Modern Card matching Figma Node 2261:5750 / 2261:5751 (1152x492px) -->
-            <div class="relative text-white p-6 sm:p-10 lg:p-12">
+            <div class="relative text-white max-w-[1152px] lg:h-[492px] p-6 sm:p-8 lg:p-10 mx-auto">
                 <!-- Desktop & Tablet SVG Background with Smooth Chamfered Bottom-Left Corner -->
                 <div class="hidden sm:block absolute inset-0 w-full h-full pointer-events-none -z-0">
                     <svg viewBox="0 0 2304 984" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="w-full h-full drop-shadow-2xl">
@@ -24,12 +24,12 @@
                     class="block sm:hidden absolute inset-0 rounded-[24px] pointer-events-none -z-0 shadow-2xl"
                     style="background: linear-gradient(180deg, #111322 20%, #2970FF 94%);"
                 ></div>
-                <!-- Ambient Subtle Glow -->
-                <div class="absolute -top-24 -right-24 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 relative z-10 items-start">
+
+
+                <div class="flex flex-col lg:flex-row lg:justify-between items-start gap-8 lg:gap-[80px] relative z-10">
                     <!-- Left Column: Headline, Description & 3 Social Buttons (Figma Node 2261:5755) -->
-                    <div class="lg:col-span-5 flex flex-col justify-between h-full space-y-6 lg:space-y-8">
+                    <div class="w-full lg:w-[433px] flex-shrink-0">
                         <div class="space-y-3 sm:space-y-4">
                             <h2
                                 class="text-2xl sm:text-3xl lg:text-[38px] font-bold text-[#F5F8FF] uppercase tracking-tight font-sans leading-tight lg:leading-[46px]"
@@ -42,7 +42,7 @@
                         </div>
 
                         <!-- 3 Social Icon Buttons (Facebook, Instagram, TikTok) (Figma Node 2261:5759) -->
-                        <div class="flex items-center gap-3 pt-2">
+                        <div class="flex items-center gap-3 mt-6">
                             <a
                                 v-for="soc in socialLinks"
                                 :key="soc.id"
@@ -69,11 +69,12 @@
                     </div>
 
                     <!-- Right Column: Form (Figma Node 2261:5767) -->
-                    <div class="lg:col-span-7">
-                        <form @submit.prevent="submitForm" class="space-y-4">
+                    <div class="w-full lg:w-[559px] flex-shrink-0">
+                        <form @submit.prevent="submitForm">
+                            <div class="flex flex-col gap-5">
                             <!-- Dòng 1: Họ và tên* (full width) (Figma Node 2261:5769) -->
                             <div>
-                                <label class="block text-sm sm:text-base font-medium text-[#FAFAFA] mb-1.5">
+                                <label class="block text-[16px] leading-[22px] font-normal text-[#FAFAFA] mb-1">
                                     {{ tt('Họ và tên') }}*
                                 </label>
                                 <input
@@ -88,7 +89,7 @@
                             <!-- Dòng 2: Grid 2 cột: Email* (50%) | Số điện thoại* (50%) (Figma Node 2261:5781) -->
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-sm sm:text-base font-medium text-[#FAFAFA] mb-1.5">
+                                    <label class="block text-[16px] leading-[22px] font-normal text-[#FAFAFA] mb-1">
                                         Email*
                                     </label>
                                     <input
@@ -100,7 +101,7 @@
                                     />
                                 </div>
                                 <div>
-                                    <label class="block text-sm sm:text-base font-medium text-[#FAFAFA] mb-1.5">
+                                    <label class="block text-[16px] leading-[22px] font-normal text-[#FAFAFA] mb-1">
                                         {{ tt('Số điện thoại') }}*
                                     </label>
                                     <input
@@ -115,7 +116,7 @@
 
                             <!-- Dòng 3: Nhập lời nhắn* (textarea) (Figma Node 2261:5806) -->
                             <div>
-                                <label class="block text-sm sm:text-base font-medium text-[#FAFAFA] mb-1.5">
+                                <label class="block text-[16px] leading-[22px] font-normal text-[#FAFAFA] mb-1">
                                     {{ tt('Nhập lời nhắn') }}*
                                 </label>
                                 <textarea
@@ -123,14 +124,16 @@
                                     rows="3"
                                     :placeholder="tt('Chia sẻ ý tưởng của bạn đến với HH Maker')"
                                     required
-                                    class="w-full h-24 p-3.5 rounded-[8px] bg-white/20 border border-[#5D6B98] text-white placeholder-[#B9C0D4] focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white text-sm sm:text-base transition-colors duration-200 resize-none"
+                                    class="w-full h-24 px-4 py-3 rounded-[8px] bg-white/20 border border-[#5D6B98] text-white placeholder-[#B9C0D4] focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white text-sm sm:text-base transition-colors duration-200 resize-none"
                                 ></textarea>
+                            </div>
+
                             </div>
 
                             <!-- Submit Success Notice -->
                             <div
                                 v-if="submitSuccess"
-                                class="p-3 rounded-lg bg-white/20 border border-white/30 text-white text-sm flex items-center gap-2"
+                                class="mt-4 p-3 rounded-lg bg-white/20 border border-white/30 text-white text-sm flex items-center gap-2"
                             >
                                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/>
@@ -142,7 +145,8 @@
                             <button
                                 type="submit"
                                 :disabled="isSubmitting"
-                                class="w-full h-14 rounded-[8px] bg-[#111322] hover:bg-[#1A1F36] text-[#FAFAFA] font-semibold text-base flex items-center justify-center transition-colors duration-200 active:scale-[0.98] shadow-md cursor-pointer disabled:opacity-50 mt-2"
+                                class="w-full h-14 rounded-[8px] bg-[#111322] hover:bg-[#1A1F36] text-[#FAFAFA] font-semibold text-base flex items-center justify-center transition-colors duration-200 active:scale-[0.98] shadow-md cursor-pointer disabled:opacity-50 mt-10"
+                                :class="{ '!mt-4': submitSuccess }"
                             >
                                 <span v-if="!isSubmitting">{{ tt('Gửi yêu cầu') }}</span>
                                 <span v-else class="inline-flex items-center gap-2">

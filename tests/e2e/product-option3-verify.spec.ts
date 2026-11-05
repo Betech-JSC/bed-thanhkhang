@@ -41,7 +41,7 @@ test.describe('HH Maker Product Page Option 3 (Sidebar Layout) Verification', ()
         await expect(searchInput).toBeVisible();
 
         // Verify "LỌC THEO NHU CẦU" text is on LEFT and checkbox is on RIGHT
-        const purposeButtons = card1.locator('button:has-text("Trang trí không gian"), button:has-text("Đồ dùng hằng ngày"), button:has-text("Quà tặng cá nhân")');
+        const purposeButtons = card1.locator('div:has(> h4:has-text("LỌC THEO NHU CẦU")) button');
         const count = await purposeButtons.count();
         expect(count).toBe(3);
 
@@ -73,10 +73,10 @@ test.describe('HH Maker Product Page Option 3 (Sidebar Layout) Verification', ()
         await expect(ctaConsultBtn).toBeVisible();
 
         // 3. Right Column: Toolbar & Grid
-        const breadcrumb = page.locator('span:has-text("Sản phẩm (")').first();
+        const breadcrumb = page.locator('span:text-is("Sản phẩm")').first();
         await expect(breadcrumb).toBeVisible();
 
-        const sortSelect = page.locator('select#sort-select');
+        const sortSelect = page.locator('button[aria-haspopup="listbox"], select#sort-select').first();
         await expect(sortSelect).toBeVisible();
 
         // Products Grid (3 columns on Desktop)
@@ -138,3 +138,4 @@ test.describe('HH Maker Product Page Option 3 (Sidebar Layout) Verification', ()
         await page.screenshot({ path: 'tests/e2e/screenshots/product-option3-mobile.png', fullPage: true });
     });
 });
+

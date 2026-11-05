@@ -113,7 +113,7 @@ export default {
         },
         productTitle: {
             type: String,
-            default: tt('Mô hình Cáo trang trí'),
+            default: '',
         },
     },
     data() {
@@ -127,45 +127,32 @@ export default {
     },
     computed: {
         galleryList() {
-            if (this.images && this.images.length > 1) {
+            if (this.images && Array.isArray(this.images) && this.images.length > 0) {
                 return this.images.map((item, idx) => {
                     if (typeof item === 'string') {
                         return {
                             url: item,
                             thumb: item,
                             alt: `${this.tt(this.productTitle)} - ${this.tt('Góc nhìn ')}${idx + 1}`,
-                        }
+                        };
                     }
                     return {
                         url: item.url || item.path || '/images/pdp/product_main.png',
-                        thumb: item.thumb || item.url || '/images/pdp/thumb_1.png',
+                        thumb: item.thumb || item.url || item.path || '/images/pdp/product_main.png',
                         alt: item.alt || item.title || `${this.tt(this.productTitle)} - ${this.tt('Góc nhìn ')}${idx + 1}`,
                         tag: item.tag || null,
-                    }
-                })
+                    };
+                });
             }
 
-            // Default fallback using 3 high-res Figma angles
             return [
                 {
                     url: '/images/pdp/product_main.png',
                     thumb: '/images/pdp/thumb_1.png',
-                    alt: this.tt('Mô hình Cáo trang trí - Góc chính diện'),
-                    tag: this.tt('Góc chính diện'),
+                    alt: this.tt(this.productTitle),
+                    tag: null,
                 },
-                {
-                    url: '/images/pdp/thumb_2.png',
-                    thumb: '/images/pdp/thumb_2.png',
-                    alt: this.tt('Mô hình Cáo trang trí - Chi tiết bề mặt in FDM'),
-                    tag: this.tt('Chi tiết lớp in'),
-                },
-                {
-                    url: '/images/pdp/thumb_3.png',
-                    thumb: '/images/pdp/thumb_3.png',
-                    alt: this.tt('Mô hình Cáo trang trí - Tỉ lệ kích thước thực tế'),
-                    tag: this.tt('Tỉ lệ thực tế'),
-                },
-            ]
+            ];
         },
         currentImage() {
             return this.galleryList[this.currentIndex] || this.galleryList[0] || {}

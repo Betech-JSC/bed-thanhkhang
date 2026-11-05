@@ -15,13 +15,17 @@
 
         <!-- 2. BẢNG THÔNG SỐ (FIGMA 2358:3071: 7 hàng thông số) -->
         <div class="flex flex-col">
-            <div
-                v-for="(row, idx) in specList"
+            <template v-if="specList.length > 0">
+                <div v-for="(row, idx) in specList"
                 :key="idx"
                 class="flex items-center justify-between py-3 border-b border-[#4A5578] last:border-b-0 h-[41px]"
             >
                 <span class="text-sm font-normal text-[#DCDFEA] leading-[17px]">{{ row.label }}</span>
                 <span class="text-sm font-medium text-[#FAFAFA] leading-[17px] text-right">{{ row.value }}</span>
+            </div>
+            </template>
+            <div v-else class="py-8 text-center text-sm text-[#B9C0D4]">
+                {{ tt('Thông số kỹ thuật đang được cập nhật.') }}
             </div>
         </div>
 
@@ -55,22 +59,13 @@ export default {
     },
     computed: {
         specList() {
-            if (this.specs && this.specs.length > 0) {
+            if (this.specs && Array.isArray(this.specs) && this.specs.length > 0) {
                 return this.specs.map(s => ({
-                    label: this.tt(s.label),
-                    value: this.tt(s.value),
-                }))
+                    label: this.tt(s.label || s.name || s.key || ''),
+                    value: this.tt(s.value || s.val || ''),
+                })).filter(s => s.label);
             }
-            // Standard specifications strictly from Figma node 2358:3071
-            return [
-                { label: this.tt('Công nghệ in'), value: 'FDM' },
-                { label: this.tt('Vật liệu'), value: 'PLA' },
-                { label: this.tt('Kích thước mẫu'), value: '60 × 31 × 48 mm' },
-                { label: this.tt('Chiều cao lớp in'), value: '0,20 mm' },
-                { label: this.tt('Đầu phun'), value: '0,40 mm' },
-                { label: this.tt('Mật độ ruột'), value: '15%' },
-                { label: this.tt('Vật liệu hỗ trợ'), value: this.tt('Không cần') },
-            ]
+            return [];
         },
     },
 }

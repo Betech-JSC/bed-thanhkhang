@@ -15,16 +15,7 @@
                 role="dialog"
                 aria-modal="true"
             >
-                <Transition
-                    enter-active-class="transition duration-200 ease-out"
-                    enter-from-class="opacity-0 scale-95 translate-y-2"
-                    enter-to-class="opacity-100 scale-100 translate-y-0"
-                    leave-active-class="transition duration-150 ease-in"
-                    leave-from-class="opacity-100 scale-100 translate-y-0"
-                    leave-to-class="opacity-0 scale-95 translate-y-2"
-                >
                     <div
-                        v-if="isOpen"
                         @click.stop
                         class="relative w-full max-w-[480px] bg-[#30374F] border border-[#4A5578] rounded-xl p-6 sm:p-7 shadow-2xl flex flex-col gap-5 text-white"
                     >
@@ -105,7 +96,6 @@
                             </button>
                         </div>
                     </div>
-                </Transition>
             </div>
         </Transition>
     </Teleport>

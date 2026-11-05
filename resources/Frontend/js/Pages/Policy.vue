@@ -8,7 +8,7 @@
     </Head>
 
     <div class="bg-[#111322] min-h-screen text-white selection:bg-primary selection:text-white pt-6 sm:pt-10 pb-20">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1152px]">
+        <div class="app-container">
             <!-- Header Section -->
             <div class="space-y-3 mb-8 sm:mb-12 border-b border-[#5D6B98]/30 pb-6 sm:pb-8">
                 <span class="text-sm font-semibold tracking-wider text-[#84ADFF] uppercase select-none leading-[20px] block">
@@ -25,6 +25,7 @@
             <!-- Mobile Category Selector -->
             <div v-if="list_sidebar && list_sidebar.length" class="lg:hidden mb-6">
                 <button
+                    id="policy-mobile-selector-btn"
                     type="button"
                     @click="isOpenMobile = !isOpenMobile"
                     class="w-full bg-white/10 border border-[#5D6B98] backdrop-blur-[10px] rounded-xl px-4 py-3 flex items-center justify-between text-left text-[#FAFAFA] font-medium"
@@ -98,10 +99,6 @@
                             <h2 class="text-2xl sm:text-3xl font-bold text-[#FAFAFA] tracking-tight">
                                 {{ tt(content.title) }}
                             </h2>
-                            <div class="text-xs sm:text-sm text-[#84ADFF] flex items-center gap-2">
-                                <span>{{ tt('Cập nhật lần cuối') }}:</span>
-                                <span class="font-mono text-[#D1E0FF]">{{ content.formatted_updated_at || '11/2026' }}</span>
-                            </div>
                         </header>
 
                         <div
@@ -170,8 +167,11 @@ export default {
     },
     methods: {
         checkActive(slug) {
+            if (!slug) return false
             const currentSlug = this.content?.slug || ''
             if (slug === currentSlug) return true
+            if (this.content?.slug_vi && slug === this.content.slug_vi) return true
+            if (this.content?.slug_en && slug === this.content.slug_en) return true
             const currentPath = (this.$page?.url || '').split('?')[0]
             return currentPath.endsWith(`/${slug}`)
         },

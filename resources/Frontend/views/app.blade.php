@@ -146,8 +146,6 @@
         }
     </style>
 
-    <!-- JS -->
-    <script src="https://unpkg.com/flickity-fade@2/flickity-fade.js"></script>
 
     {{ Vite::useHotFile(public_path('vite.frontend.hot'))->useBuildDirectory('build/frontend')->withEntryPoints(['resources/Frontend/js/app.js']) }}
     @inertiaHead

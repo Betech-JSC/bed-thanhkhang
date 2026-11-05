@@ -95,9 +95,15 @@ class Policy extends BaseModel
 
     public function transform()
     {
+        $transVi = $this->translate('vi');
+        $transEn = $this->translate('en');
+
         return [
+            'id' => $this->id,
             'title' => $this->title,
             'slug' => $this->seo_slug ?? $this->slug,
+            'slug_vi' => $transVi ? ($transVi->seo_slug ?? $transVi->slug) : null,
+            'slug_en' => $transEn ? ($transEn->seo_slug ?? $transEn->slug) : null,
             'content' => transform_richtext($this->content),
             'formatted_updated_at' => $this->formatted_updated_at,
             'icon' => $this->icon,

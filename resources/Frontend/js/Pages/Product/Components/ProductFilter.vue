@@ -59,22 +59,14 @@
                     :key="cat.id"
                     type="button"
                     @click="selectCategory(cat.id)"
-                    class="w-full h-[44px] px-3 rounded-lg text-sm leading-5 font-normal flex items-center justify-between transition-colors duration-150 text-left"
+                    class="w-full h-[44px] px-3.5 rounded-lg text-sm leading-5 font-normal flex items-center transition-colors duration-150 text-left"
                     :class="
-                        (filters.category === cat.id || (cat.slug && filters.category === cat.slug))
+                        isCategorySelected(cat)
                             ? 'bg-[#404968] text-[#FAFAFA] font-medium'
                             : 'text-[#EFF1F5] hover:bg-[#404968]/50 hover:text-white'
                     "
                 >
                     <span>{{ cat.name }}</span>
-                    <svg
-                        v-if="filters.category !== cat.id && (!cat.slug || filters.category !== cat.slug)"
-                        class="w-4 h-4 text-[#B9C0D4]"
-                        viewBox="0 0 16 16"
-                        fill="currentColor"
-                    >
-                        <path fill-rule="evenodd" d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06z" clip-rule="evenodd" />
-                    </svg>
                 </button>
             </div>
 
@@ -187,31 +179,21 @@ export default {
                 this.tt('Quà tặng cá nhân'),
             ]
         },
-        defaultCategories() {
-            return [
-                { id: 'all', name: this.tt('Tất cả sản phẩm'), slug: 'all' },
-                { id: 'keychains', name: this.tt('Móc khoá'), slug: 'keychains' },
-                { id: 'stationery', name: this.tt('Văn phòng phẩm'), slug: 'stationery' },
-                { id: 'custom', name: this.tt('Gia công theo yêu cầu'), slug: 'custom' },
-            ]
-        },
         displayCategories() {
+            const list = [{ id: 'all', name: this.tt('Tất cả sản phẩm'), slug: 'all' }];
             if (this.categories && this.categories.length > 0) {
-                const list = [];
-                const hasAll = this.categories.some(c => c.id === 'all' || c.slug === 'all');
-                if (!hasAll) {
-                    list.push({ id: 'all', name: this.tt('Tất cả sản phẩm'), slug: 'all' });
-                }
                 this.categories.forEach(c => {
-                    list.push({
-                        id: c.slug || c.id,
-                        name: this.tt(c.title || c.name),
-                        slug: c.slug || c.id,
-                    });
+                    const id = c.slug || c.id;
+                    if (id !== 'all') {
+                        list.push({
+                            id: id,
+                            name: this.tt(c.title || c.name),
+                            slug: c.slug || c.id,
+                        });
+                    }
                 });
-                return list;
             }
-            return this.defaultCategories;
+            return list;
         },
         hasActiveFilters() {
             return (
@@ -222,6 +204,11 @@ export default {
         },
     },
     methods: {
+        isCategorySelected(cat) {
+            const current = this.filters.category;
+            if (!current || current === 'all') return cat.id === 'all' || cat.slug === 'all';
+            return current === cat.id || current === cat.slug;
+        },
         isPurposeSelected(purpose) {
             if (!this.filters.purposes) return false;
             return this.filters.purposes.includes(purpose);

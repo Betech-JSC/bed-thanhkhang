@@ -1,7 +1,7 @@
 # Báo Cáo Kiểm Toán 4 Quy Tắc Vàng Animation (`/opsx-animation` & `/ui-skill`)
 
-- **Thư mục dự án**: `/Users/macbookpro2020/bed-hhmaker`
-- **Thời gian quét**: `2026-11-04 17:56:53`
+- **Thư mục dự án**: `D:\bed-hhmaker`
+- **Thời gian quét**: `2026-11-05 14:19:25`
 - **Chế độ**: `Strict Read-Only (Không tự ý sửa/xóa file)`
 - **Kết luận tổng thể**: **PASS 100% (4 QUY TẮC VÀNG ANIMATION)** (`[+] ADD`: 0 | `[-] REMOVE`: 0 | `[=] KEEP`: 2)
 
@@ -23,7 +23,7 @@
 
 | # | Quy tắc | Tọa độ File | Trạng thái (`[=] KEEP AS-IS`) |
 | :--- | :--- | :--- | :--- |
-| 1 | Quy tắc 2 (`Zero White-Out Scroll Reveal`) | `resources/Frontend/js/Composables/useScrollReveal.js` | Chuẩn 100%: Chỉ trượt nhẹ `translate-y-4 -> translate-y-0` với `transition-transform`, không dùng `opacity-0`. |
+| 1 | Quy tắc 2 (`Zero White-Out Scroll Reveal`) | `resources\Frontend\js\Composables\useScrollReveal.js` | Chuẩn 100%: Chỉ trượt nhẹ `translate-y-4 -> translate-y-0` với `transition-transform`, không dùng `opacity-0`. |
 | 2 | Quy tắc 1 (`Single-Animation-Per-Element`) | `resources/Frontend/js/{Layouts,Pages,Components}` | Chuẩn 100%: Mỗi phần tử chỉ có duy nhất 1 animation chủ đạo, không lồng `<TransitionGroup>` kép. |
 
 ---

@@ -23,7 +23,9 @@
                         <div
                             v-if="menu && menu.title"
                             class="relative h-[47px] flex items-center"
+                            @mouseenter="setMenuSelected(menu)"
                             @mouseover="setMenuSelected(menu)"
+                            @mouseleave="setMenuSelected(null)"
                         >
                             <Link
                                 :href="menu.slug || '#'"
@@ -38,7 +40,7 @@
                                 <svg
                                     v-if="menu.type === 'products' || (menu.subMenu && menu.subMenu.length > 0)"
                                     class="w-5 h-5 transition-transform duration-200 shrink-0"
-                                    :class="menuSelected === menu ? 'rotate-180' : ''"
+                                    :class="(menuSelected === menu || (menuSelected && menuSelected.type === menu.type)) ? 'rotate-180' : ''"
                                     viewBox="0 0 20 20"
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
@@ -53,23 +55,43 @@
                                 </svg>
                             </Link>
 
-                            <!-- Submenu Dropdown (if any) -->
-                            <transition name="fade-down">
+                            <!-- Submenu Dropdown Desktop with Hover Bridge (Dark Tech) -->
+                            <transition name="dropdown-fade">
                                 <div
-                                    v-show="menuSelected === menu && menu.subMenu && menu.subMenu.length > 0"
-                                    class="absolute top-full left-0 mt-1 min-w-[200px] bg-dark-surface border border-dark-border rounded-xl shadow-2xl p-2 z-[1010]"
+                                    v-show="(menuSelected === menu || (menuSelected && menuSelected.type === menu.type)) && menu.subMenu && menu.subMenu.length > 0"
+                                    class="absolute top-full left-0 pt-2 z-[1010]"
                                 >
-                                    <ul class="space-y-1">
-                                        <li v-for="(sub, subIdx) in menu.subMenu" :key="subIdx">
+                                    <div class="min-w-[240px] w-[280px] bg-[#1A1F36]/95 backdrop-blur-md border border-[#30374F] rounded-xl shadow-[0_16px_40px_rgba(0,0,0,0.6)] p-2 flex flex-col gap-1">
+                                        <!-- Category Items -->
+                                        <Link
+                                            v-for="(sub, subIdx) in menu.subMenu.filter(s => !s.isAll)"
+                                            :key="subIdx"
+                                            :href="sub.url || sub.slug"
+                                            class="px-3 py-2.5 rounded-lg text-sm font-medium text-[#B9C0D4] hover:text-[#FAFAFA] hover:bg-[#222842] flex items-center justify-between transition-colors group relative border-l-2 border-transparent hover:border-[#2970FF]"
+                                            @click="menuSelected = null"
+                                        >
+                                            <span class="truncate">{{ sub.title }}</span>
+                                            <svg
+                                                class="w-4 h-4 text-[#84ADFF] opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2"
+                                                viewBox="0 0 16 16"
+                                                fill="currentColor"
+                                            >
+                                                <path fill-rule="evenodd" d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06z" clip-rule="evenodd" />
+                                            </svg>
+                                        </Link>
+
+                                        <!-- Divider & View All Link -->
+                                        <div class="pt-1 mt-1 border-t border-[#30374F]">
                                             <Link
-                                                :href="sub.slug"
-                                                class="block px-3 py-2 text-xs font-medium text-secondary hover:text-white hover:bg-dark-card rounded-lg transition-colors"
+                                                :href="route('products.index')"
+                                                class="px-3 py-2 rounded-lg text-xs font-semibold text-[#84ADFF] hover:text-[#FAFAFA] hover:bg-[#222842] flex items-center justify-between transition-colors"
                                                 @click="menuSelected = null"
                                             >
-                                                {{ sub.title }}
+                                                <span>{{ tt('Xem tất cả sản phẩm') }}</span>
+                                                <span class="text-sm font-bold">&rarr;</span>
                                             </Link>
-                                        </li>
-                                    </ul>
+                                        </div>
+                                    </div>
                                 </div>
                             </transition>
                         </div>
@@ -218,7 +240,59 @@
                         <!-- Drawer Navigation Links (touch target >= 44px) -->
                         <nav class="space-y-1">
                             <template v-for="(menu, index) in menus" :key="index">
+                                <!-- Tab Sản phẩm with Accordion -->
+                                <div v-if="menu.type === 'products'" class="space-y-1">
+                                    <button
+                                        type="button"
+                                        @click="isProductAccordionOpen = !isProductAccordionOpen"
+                                        class="w-full min-h-[44px] px-3.5 py-3 rounded-xl flex items-center justify-between text-base font-medium transition-colors text-left cursor-pointer"
+                                        :class="isMenuActive(menu) ? 'bg-primary/10 text-primary font-semibold' : 'text-secondary hover:text-white hover:bg-dark-surface'"
+                                        :aria-expanded="isProductAccordionOpen"
+                                    >
+                                        <span>{{ menu.title }}</span>
+                                        <svg
+                                            class="w-5 h-5 transition-transform duration-200 shrink-0 text-[#B9C0D4]"
+                                            :class="isProductAccordionOpen ? 'rotate-180 text-primary' : ''"
+                                            viewBox="0 0 20 20"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                d="M5 7.5L10 12.5L15 7.5"
+                                                stroke="currentColor"
+                                                stroke-width="1.67"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            />
+                                        </svg>
+                                    </button>
+
+                                    <!-- Accordion Submenu Items -->
+                                    <transition name="accordion">
+                                        <div
+                                            v-show="isProductAccordionOpen"
+                                            class="pl-4 pr-1 py-1 space-y-1 border-l border-[#30374F] ml-3"
+                                        >
+                                            <Link
+                                                v-for="(sub, subIdx) in menu.subMenu"
+                                                :key="subIdx"
+                                                :href="sub.url || sub.slug"
+                                                @click="closeDrawer"
+                                                class="min-h-[44px] px-3 py-2.5 rounded-lg flex items-center justify-between text-sm font-normal transition-colors"
+                                                :class="sub.isAll
+                                                    ? 'text-[#84ADFF] font-semibold hover:text-white hover:bg-dark-surface'
+                                                    : 'text-[#B9C0D4] hover:text-white hover:bg-dark-surface'"
+                                            >
+                                                <span>{{ sub.title }}</span>
+                                                <span v-if="sub.isAll" class="text-xs font-bold">&rarr;</span>
+                                            </Link>
+                                        </div>
+                                    </transition>
+                                </div>
+
+                                <!-- Other Tabs -->
                                 <Link
+                                    v-else
                                     :href="menu.slug || '#'"
                                     @click="closeDrawer"
                                     class="min-h-[44px] px-3.5 py-3 rounded-xl flex items-center justify-between text-base font-medium transition-colors"
@@ -231,7 +305,7 @@
                         </nav>
                     </div>
 
-                    <!-- Drawer Bottom Section: Language Capsule, Auth & Contact info -->
+                    <!-- Drawer Bottom Section: Language Capsule & Contact info -->
                     <div class="pt-6 border-t border-dark-border space-y-5">
                         <!-- Capsule Language Switcher in Mobile Drawer (Node 2380:1477) -->
                         <div class="flex items-center justify-between">
@@ -274,62 +348,6 @@
                                     </button>
                                 </template>
                             </div>
-                        </div>
-
-                        <!-- Cart link in Mobile Drawer -->
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs text-muted font-medium">{{ tt('Giỏ hàng:') }}</span>
-                            <Link
-                                :href="route('products.index')"
-                                @click="closeDrawer"
-                                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-dark-surface border border-dark-border text-xs font-medium text-white hover:text-primary transition-colors"
-                            >
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                </svg>
-                                <span>{{ cartCount }} {{ tt('sản phẩm') }}</span>
-                            </Link>
-                        </div>
-
-                        <!-- Auth Links / User Info in Mobile Drawer -->
-                        <div>
-                            <template v-if="$page.props.auth?.user">
-                                <div class="p-3.5 rounded-xl bg-dark-surface/80 border border-dark-border space-y-3">
-                                    <div class="flex items-center justify-between">
-                                        <Link
-                                            :href="route('user.login')"
-                                            @click="closeDrawer"
-                                            class="text-sm font-semibold text-white hover:text-primary transition-colors truncate"
-                                        >
-                                            {{ $page.props.auth.user.name }}
-                                        </Link>
-                                        <button
-                                            type="button"
-                                            @click="logout(); closeDrawer();"
-                                            class="text-xs text-red-400 hover:text-red-300 font-medium ml-2"
-                                        >
-                                            {{ tt('Đăng xuất') }}
-                                        </button>
-                                    </div>
-                                    <button
-                                        type="button"
-                                        class="w-full text-left text-xs text-secondary hover:text-white flex items-center justify-between pt-2 border-t border-dark-border/60"
-                                        @click="openActivityPopup(); closeDrawer();"
-                                    >
-                                        <span>🔔 {{ tt('Thông báo & Ghi chú') }}</span>
-                                        <span v-if="hasUnreadNotification" class="w-2 h-2 rounded-full bg-primary"></span>
-                                    </button>
-                                </div>
-                            </template>
-                            <template v-else>
-                                <Link
-                                    :href="route('user.login')"
-                                    @click="closeDrawer"
-                                    class="w-full min-h-[44px] flex items-center justify-center rounded-xl bg-primary hover:bg-primary-hover text-white font-semibold text-sm transition-colors shadow-xs"
-                                >
-                                    {{ tt('Đăng nhập') }}
-                                </Link>
-                            </template>
                         </div>
 
                         <!-- Quick Contact info -->
@@ -394,24 +412,44 @@ export default {
             menuSelected: null,
             isDrawerOpen: false,
             isSearchOpen: false,
+            isProductAccordionOpen: false,
         }
     },
     computed: {
         currentLocale() {
             return this.$page.props.locale?.current || 'vi'
         },
-        cartCount() {
-            return this.$page.props.cart_count ?? this.$page.props.cart?.count ?? 0
-        },
-        hasUnreadNotification() {
-            const auth = this.$page.props.auth
-            return (
-                !!auth?.admin_note ||
-                !!auth?.user?.funky_note ||
-                (auth?.daily_reward && auth.daily_reward.granted && auth.daily_reward.points > 0)
-            )
+        productCategories() {
+            const fromProps = this.$page?.props?.product_categories || this.$page?.props?.data?.product_categories
+            if (fromProps && fromProps.length > 0) {
+                return fromProps
+            }
+            return [
+                { id: 'trang-tri-khong-gian', title: this.tt('Trang trí không gian'), slug: 'trang-tri-khong-gian' },
+                { id: 'moc-khoa-phu-kien', title: this.tt('Móc khoá & Phụ kiện'), slug: 'moc-khoa-phu-kien' },
+                { id: 'trang-tri-do-dung', title: this.tt('Trang trí & Đồ dùng'), slug: 'trang-tri-do-dung' },
+                { id: 'gia-cong-theo-yeu-cau', title: this.tt('Gia công theo yêu cầu'), slug: 'gia-cong-theo-yeu-cau' },
+            ]
         },
         menus() {
+            const categories = this.productCategories
+            const productSubMenu = [
+                {
+                    title: this.tt('Xem tất cả sản phẩm'),
+                    slug: this.route('products.index'),
+                    url: this.route('products.index'),
+                    isAll: true,
+                },
+                ...categories.map(cat => ({
+                    id: cat.id,
+                    title: cat.title,
+                    slug: cat.url || (this.route('products.index') + '?category=' + cat.slug),
+                    url: cat.url || (this.route('products.index') + '?category=' + cat.slug),
+                    categorySlug: cat.slug,
+                    isAll: false,
+                })),
+            ]
+
             return [
                 {
                     title: this.tt('Trang chủ'),
@@ -423,7 +461,7 @@ export default {
                     title: this.tt('Sản phẩm'),
                     slug: this.route('products.index'),
                     type: 'products',
-                    subMenu: [],
+                    subMenu: productSubMenu,
                 },
                 {
                     title: this.tt('Dịch vụ'),
@@ -588,9 +626,6 @@ export default {
         setMenuSelected(item) {
             this.menuSelected = item
         },
-        openActivityPopup() {
-            window.dispatchEvent(new CustomEvent('open-activity-popup'))
-        },
         openDrawer() {
             this.isDrawerOpen = true
             if (typeof document !== 'undefined') {
@@ -606,15 +641,19 @@ export default {
         switchLocale(lang) {
             if (this.currentLocale === lang) return
 
+            this.closeDrawer()
+
             // 1. Try resolving using current route name and Ziggy
             const currentRouteName = this.$page?.props?.route?.name || ''
             if (currentRouteName) {
                 const baseRouteName = currentRouteName.replace(/^(vi|en)\./, '')
                 const targetRouteName = `${lang}.${baseRouteName}`
                 if (this.routes && this.routes()[targetRouteName]) {
-                    const params = this.$page?.props?.route?.query || {}
+                    const routeParams = this.$page?.props?.route?.params || {}
+                    const routeQuery = this.$page?.props?.route?.query || {}
+                    const allParams = { ...routeParams, ...routeQuery }
                     try {
-                        const targetUrl = this.route(targetRouteName, params)
+                        const targetUrl = this.route(targetRouteName, allParams)
                         if (targetUrl && targetUrl !== '#') {
                             if (this.$inertia) {
                                 this.$inertia.visit(targetUrl)
@@ -630,49 +669,75 @@ export default {
             }
 
             // 2. Intelligent path translation mapping
-            let currentPath = typeof window !== 'undefined' ? window.location.pathname : (this.$page?.url || '/')
-            const cleanPath = currentPath.split('?')[0].split('#')[0]
+            let currentUrl = typeof window !== 'undefined'
+                ? window.location.pathname + window.location.search
+                : (this.$page?.url || '/')
+            const [rawPath, rawQuery] = currentUrl.split('?')
+            const cleanPath = (rawPath || '/').split('#')[0]
+            const queryString = rawQuery ? `?${rawQuery}` : ''
 
-            const viToEn = {
-                '/san-pham': '/products',
-                '/dich-vu': '/services',
-                '/gioi-thieu': '/about-us',
-                '/ve-chung-toi': '/about-us',
-                '/cot-moc-phat-trien': '/about-us',
-                '/quy-trinh': '/process',
-                '/lien-he': '/contact',
-                '/tim-kiem': '/search',
-                '/tin-tuc': '/posts',
-                '/chinh-sach': '/policies',
-            }
+            const viToEnPrefixes = [
+                { from: '/san-pham', to: '/products' },
+                { from: '/dich-vu', to: '/services' },
+                { from: '/gioi-thieu', to: '/about-us' },
+                { from: '/ve-chung-toi', to: '/about-us' },
+                { from: '/cot-moc-phat-trien', to: '/about-us' },
+                { from: '/quy-trinh', to: '/process' },
+                { from: '/lien-he', to: '/contact' },
+                { from: '/tim-kiem', to: '/search' },
+                { from: '/tin-tuc', to: '/posts' },
+                { from: '/chinh-sach', to: '/policies' },
+            ]
 
-            const enToVi = {
-                '/products': '/san-pham',
-                '/services': '/dich-vu',
-                '/about-us': '/gioi-thieu',
-                '/about': '/gioi-thieu',
-                '/histories': '/gioi-thieu',
-                '/process': '/quy-trinh',
-                '/contact': '/lien-he',
-                '/search': '/tim-kiem',
-                '/posts': '/tin-tuc',
-                '/policies': '/chinh-sach',
-            }
+            const enToViPrefixes = [
+                { from: '/products', to: '/san-pham' },
+                { from: '/services', to: '/dich-vu' },
+                { from: '/about-us', to: '/gioi-thieu' },
+                { from: '/about', to: '/gioi-thieu' },
+                { from: '/histories', to: '/gioi-thieu' },
+                { from: '/process', to: '/quy-trinh' },
+                { from: '/contact', to: '/lien-he' },
+                { from: '/search', to: '/tim-kiem' },
+                { from: '/posts', to: '/tin-tuc' },
+                { from: '/policies', to: '/chinh-sach' },
+            ]
 
             let newPath = '/'
             if (lang === 'en') {
                 if (cleanPath === '/' || cleanPath === '/vi') {
                     newPath = '/en'
                 } else {
-                    const stripped = cleanPath.replace(/^\/vi/, '')
-                    const translated = viToEn[stripped] || stripped
+                    const stripped = cleanPath.replace(/^\/vi/, '') || '/'
+                    let translated = stripped
+                    for (const p of viToEnPrefixes) {
+                        if (stripped === p.from) {
+                            translated = p.to
+                            break
+                        } else if (stripped.startsWith(p.from + '/')) {
+                            translated = p.to + stripped.slice(p.from.length)
+                            break
+                        }
+                    }
                     newPath = '/en' + (translated.startsWith('/') ? translated : '/' + translated)
                 }
             } else {
                 // Switching to 'vi'
                 const stripped = cleanPath.replace(/^\/en/, '') || '/'
-                const translated = enToVi[stripped] || stripped
-                newPath = translated
+                let translated = stripped
+                for (const p of enToViPrefixes) {
+                    if (stripped === p.from) {
+                        translated = p.to
+                        break
+                    } else if (stripped.startsWith(p.from + '/')) {
+                        translated = p.to + stripped.slice(p.from.length)
+                        break
+                    }
+                }
+                newPath = translated.startsWith('/') ? translated : '/' + translated
+            }
+
+            if (queryString) {
+                newPath += queryString
             }
 
             if (this.$inertia) {
@@ -681,17 +746,7 @@ export default {
                 window.location.href = newPath
             }
         },
-        logout() {
-            this.$inertia.post(
-                this.route('user.login'),
-                {},
-                {
-                    onSuccess: () => {
-                        this.$toast?.success(this.tt('Đăng xuất thành công'))
-                    },
-                }
-            )
-        },
+
         handleKeydown(e) {
             // Phím tắt Ctrl+K hoặc Cmd+K mở modal tìm kiếm
             if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
@@ -753,14 +808,28 @@ body {
     transform: translateX(100%);
 }
 
-/* Submenu Dropdown Fade */
-.fade-down-enter-active,
-.fade-down-leave-active {
-    transition: all 0.2s ease-out;
+/* Dropdown Fade with Hover Bridge */
+.dropdown-fade-enter-active,
+.dropdown-fade-leave-active {
+    transition: opacity 0.2s ease, transform 0.2s ease;
 }
-.fade-down-enter-from,
-.fade-down-leave-to {
+.dropdown-fade-enter-from,
+.dropdown-fade-leave-to {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-6px);
+}
+
+/* Accordion Transition for Mobile Drawer */
+.accordion-enter-active,
+.accordion-leave-active {
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    max-height: 500px;
+    overflow: hidden;
+}
+.accordion-enter-from,
+.accordion-leave-to {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-6px);
 }
 </style>

@@ -100,12 +100,23 @@ class ProductCategory extends BaseModel
             if (strpos(request()->getRequestUri(), '/product-categories') !== false) {
                 $model->saveProducts($model);
             }
-            Product::clearProductCaches();
+            static::clearCategoryCaches();
         });
 
         static::deleted(function (self $model) {
-            Product::clearProductCaches();
+            static::clearCategoryCaches();
         });
+    }
+
+    public static function clearCategoryCaches(): void
+    {
+        Product::clearProductCaches();
+        $locales = config('app.locales', ['vi', 'en']);
+        foreach ($locales as $locale) {
+            \Illuminate\Support\Facades\Cache::forget('inertia_layout_shared_data_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('products_index_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('home_page_data_' . $locale);
+        }
     }
 
     public function saveProducts($model)

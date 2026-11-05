@@ -13,11 +13,11 @@
         <ProcessHero :banner="heroBanner" />
 
         <!-- SECTION 2: Stepper Bar 5 Điểm Quy Trình (Figma Node 2283:6851, 1440x176px) -->
-        <ProcessStepper :steps="processSteps" />
+        <ProcessStepper v-if="processSteps.length > 0" :steps="processSteps" />
 
         <!-- SECTION 3: Chi Tiết 5 Bước Gia Công (Figma Node 2283:6882, 1440x1273px) -->
-        <section class="relative w-full py-6 lg:py-10">
-            <div class="max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-0">
+        <section v-if="processSteps.length > 0" class="relative w-full py-6 lg:py-10">
+            <div class="app-container">
                 <ProcessStepItem
                     v-for="step in processSteps"
                     :key="step.number"
@@ -87,51 +87,15 @@ const pageDescription = computed(() => {
     )
 })
 
-const fallbackProcessSteps = [
-    {
-        number: '01',
-        title: 'Liên hệ',
-        description: 'Mọi sản phẩm bắt đầu bằng một cuộc trao đổi. HH Maker tiếp nhận ý tưởng và làm rõ nhu cầu trước khi đề xuất hướng thực hiện.',
-        clientPrep: 'Gửi ý tưởng, ảnh tham khảo hoặc file 3D; nêu mục đích sử dụng, kích thước và số lượng dự kiến.',
-        makerAction: 'Xem xét tính khả thi, đặt câu hỏi để hiểu yêu cầu và tư vấn hướng thiết kế, vật liệu, cách gia công.',
-    },
-    {
-        number: '02',
-        title: 'Báo giá',
-        description: 'Thống nhất những điều quan trọng trước khi bắt tay vào chế tác: phạm vi công việc, yêu cầu sản phẩm và phương án thực hiện.',
-        clientPrep: 'Xác nhận thiết kế, kích thước, số lượng và các yêu cầu hoàn thiện; phản hồi những điểm cần điều chỉnh.',
-        makerAction: 'Tổng hợp phương án và báo giá theo yêu cầu thực tế. Trao đổi các hạng mục trước khi khách hàng xác nhận triển khai.',
-    },
-    {
-        number: '03',
-        title: 'Gia công 3D',
-        description: 'Từ mô hình số đến sản phẩm vật lý. Thiết kế, vật liệu và quy trình in được kết nối trong từng chi tiết.',
-        clientPrep: 'Xác nhận các điều chỉnh kỹ thuật nếu có để phương án gia công phù hợp với nhu cầu đã trao đổi.',
-        makerAction: 'Chuẩn bị mô hình, thực hiện in 3D và hoàn thiện theo phương án đã chốt; kiểm tra hình dáng, bề mặt và chi tiết sản phẩm.',
-    },
-    {
-        number: '04',
-        title: 'Đóng gói',
-        description: 'Sản phẩm sau gia công được kiểm tra và chuẩn bị cho hành trình vận chuyển.',
-        clientPrep: 'Cung cấp thông tin người nhận và lưu ý về việc giao nhận hoặc cách đóng gói nếu có yêu cầu riêng.',
-        makerAction: 'Kiểm tra sản phẩm, sắp xếp các chi tiết và lựa chọn cách bảo vệ, đóng gói phù hợp với hình dáng của từng món đồ.',
-    },
-    {
-        number: '05',
-        title: 'Gửi hàng',
-        description: 'Khép lại quá trình chế tác, mở đầu trải nghiệm sử dụng sản phẩm của bạn.',
-        clientPrep: 'Xác nhận địa chỉ, số điện thoại nhận hàng; kiểm tra sản phẩm khi nhận và trao đổi nếu cần hỗ trợ.',
-        makerAction: 'Bàn giao kiện hàng để vận chuyển, cung cấp thông tin gửi hàng và tiếp nhận phản hồi sau khi khách hàng nhận sản phẩm.',
-    },
-]
-
-const processSteps = computed(() =>
-    Array.isArray(props.processSteps) && props.processSteps.length
-        ? props.processSteps
-        : Array.isArray(props.steps) && props.steps.length
-          ? props.steps
-          : fallbackProcessSteps
-)
+const processSteps = computed(() => {
+    if (Array.isArray(props.processSteps) && props.processSteps.length) {
+        return props.processSteps
+    }
+    if (Array.isArray(props.steps) && props.steps.length) {
+        return props.steps
+    }
+    return []
+})
 </script>
 
 <style>

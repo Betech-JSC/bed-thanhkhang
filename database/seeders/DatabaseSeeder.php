@@ -45,6 +45,8 @@ class DatabaseSeeder extends Seeder
             PointPackageSeeder::class,
             SynologyResourceSeeder::class,
             UserRankSeeder::class,
+            PolicySeeder::class,
+            ServiceContentSeeder::class,
         ]);
 
         // Seed dynamic data using factories

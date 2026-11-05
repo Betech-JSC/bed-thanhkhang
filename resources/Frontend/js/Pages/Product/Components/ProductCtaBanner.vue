@@ -1,8 +1,8 @@
 <template>
     <section v-scroll-reveal class="pt-8 pb-12 lg:pt-[40px] lg:pb-[80px] bg-[#111322]">
-        <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-[144px]">
+        <div class="app-container">
             <div
-                class="relative w-full max-w-[1152px] mx-auto min-h-[183px] lg:h-[183px] rounded-[16px] overflow-hidden p-8 lg:p-[40px] shadow-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-6"
+                class="relative w-full min-h-[183px] lg:h-[183px] rounded-[16px] overflow-hidden p-8 lg:p-[40px] shadow-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-6"
                 style="background: linear-gradient(90deg, #2970FF 0%, #00359E 89%);"
             >
                 <!-- Content Area (Figma 2346:742) -->

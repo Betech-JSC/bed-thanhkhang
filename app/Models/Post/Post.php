@@ -573,58 +573,6 @@ class Post extends BaseModel
 
     public static function getFrontendFaqs(?string $locale = null): array
     {
-        $locale = $locale ?: (function_exists('current_locale') ? current_locale() : app()->getLocale());
-
-        $defaultFaqsVi = [
-            [
-                'id' => 1,
-                'title' => 'Tôi chưa có sẵn file thiết kế 3D, bên mình có hỗ trợ dựng file không?',
-                'question' => 'Tôi chưa có sẵn file thiết kế 3D, bên mình có hỗ trợ dựng file không?',
-                'content' => 'Có. HH MAKER hỗ trợ dựng file 3D từ ý tưởng, bản phác thảo hoặc hình ảnh tham khảo của bạn. Bạn chỉ cần cung cấp kích thước, công năng và yêu cầu mong muốn; đội ngũ sẽ tư vấn phương án thiết kế, báo chi phí dựng file và gửi bản 3D để bạn duyệt trước khi sản xuất.',
-                'answer' => 'Có. HH MAKER hỗ trợ dựng file 3D từ ý tưởng, bản phác thảo hoặc hình ảnh tham khảo của bạn. Bạn chỉ cần cung cấp kích thước, công năng và yêu cầu mong muốn; đội ngũ sẽ tư vấn phương án thiết kế, báo chi phí dựng file và gửi bản 3D để bạn duyệt trước khi sản xuất.',
-            ],
-            [
-                'id' => 2,
-                'title' => 'Để nhận được bảng báo giá chính xác và nhanh chóng nhất cho dự án của mình, tôi cần cung cấp những gì?',
-                'question' => 'Để nhận được bảng báo giá chính xác và nhanh chóng nhất cho dự án của mình, tôi cần cung cấp những gì?',
-                'content' => 'Bạn chỉ cần gửi file thiết kế 3D (nếu có định dạng .STL, .OBJ, .STEP...), kích thước mong muốn, yêu cầu về độ mịn, vật liệu hoặc ảnh mô tả ý tưởng. Đội ngũ kỹ thuật HH Maker sẽ phản hồi và gửi báo giá chi tiết trong vòng 2-4 giờ làm việc.',
-                'answer' => 'Bạn chỉ cần gửi file thiết kế 3D (nếu có định dạng .STL, .OBJ, .STEP...), kích thước mong muốn, yêu cầu về độ mịn, vật liệu hoặc ảnh mô tả ý tưởng. Đội ngũ kỹ thuật HH Maker sẽ phản hồi và gửi báo giá chi tiết trong vòng 2-4 giờ làm việc.',
-            ],
-            [
-                'id' => 3,
-                'title' => 'Tôi muốn đặt sản phẩm theo ý tưởng riêng hoặc điều chỉnh khác đi so với các mẫu có sẵn thì có được không?',
-                'question' => 'Tôi muốn đặt sản phẩm theo ý tưởng riêng hoặc điều chỉnh khác đi so với các mẫu có sẵn thì có được không?',
-                'content' => 'Hoàn toàn được! Dịch vụ làm đồ Custom và chế tác theo yêu cầu là thế mạnh hàng đầu tại HH Maker. Chúng tôi sẵn sàng tinh chỉnh kích thước, tỷ lệ, phối màu hoặc thiết kế riêng biệt hoàn toàn theo concept của bạn.',
-                'answer' => 'Hoàn toàn được! Dịch vụ làm đồ Custom và chế tác theo yêu cầu là thế mạnh hàng đầu tại HH Maker. Chúng tôi sẵn sàng tinh chỉnh kích thước, tỷ lệ, phối màu hoặc thiết kế riêng biệt hoàn toàn theo concept của bạn.',
-            ],
-        ];
-
-        $defaultFaqsEn = [
-            [
-                'id' => 1,
-                'title' => 'I do not have a 3D design file yet. Do you support 3D modeling?',
-                'question' => 'I do not have a 3D design file yet. Do you support 3D modeling?',
-                'content' => 'Yes. HH MAKER supports 3D modeling from your ideas, sketches, or reference images. Simply provide the desired dimensions, functionality, and requirements; our team will advise on the design approach, quote the modeling cost, and send a 3D preview for your approval before production.',
-                'answer' => 'Yes. HH MAKER supports 3D modeling from your ideas, sketches, or reference images. Simply provide the desired dimensions, functionality, and requirements; our team will advise on the design approach, quote the modeling cost, and send a 3D preview for your approval before production.',
-            ],
-            [
-                'id' => 2,
-                'title' => 'What information do I need to provide to get the fastest and most accurate quote for my project?',
-                'question' => 'What information do I need to provide to get the fastest and most accurate quote for my project?',
-                'content' => 'Simply send your 3D design file (in .STL, .OBJ, .STEP format if available), desired dimensions, resolution/surface finish requirements, material preference, or reference photos describing your idea. HH Maker\'s engineering team will respond with a detailed quote within 2–4 business hours.',
-                'answer' => 'Simply send your 3D design file (in .STL, .OBJ, .STEP format if available), desired dimensions, resolution/surface finish requirements, material preference, or reference photos describing your idea. HH Maker\'s engineering team will respond with a detailed quote within 2–4 business hours.',
-            ],
-            [
-                'id' => 3,
-                'title' => 'Can I order a custom product based on my own concept or modify existing designs?',
-                'question' => 'Can I order a custom product based on my own concept or modify existing designs?',
-                'content' => 'Absolutely! Custom fabrication and bespoke 3D manufacturing are HH Maker\'s core strengths. We are ready to customize dimensions, proportions, color schemes, or create an entirely new design tailored to your concept.',
-                'answer' => 'Absolutely! Custom fabrication and bespoke 3D manufacturing are HH Maker\'s core strengths. We are ready to customize dimensions, proportions, color schemes, or create an entirely new design tailored to your concept.',
-            ],
-        ];
-
-        $defaultFaqs = $locale === 'en' ? $defaultFaqsEn : $defaultFaqsVi;
-
         try {
             if (\Illuminate\Support\Facades\Schema::hasTable('posts')) {
                 $items = static::query()
@@ -645,7 +593,7 @@ class Post extends BaseModel
             report($e);
         }
 
-        return $defaultFaqs;
+        return [];
     }
 
     public function transformDetails()

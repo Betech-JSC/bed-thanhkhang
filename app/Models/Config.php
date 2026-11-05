@@ -462,124 +462,6 @@ class Config extends Model
         $locale = function_exists('current_locale') ? current_locale() : app()->getLocale();
         $isEn = $locale === 'en';
 
-        $defaultStepsVi = [
-            [
-                'number' => '01',
-                'title' => 'Liên hệ',
-                'subtitle' => 'Tiếp nhận & làm rõ nhu cầu',
-                'description' => 'Mọi sản phẩm bắt đầu bằng một cuộc trao đổi. HH Maker tiếp nhận ý tưởng và làm rõ nhu cầu trước khi đề xuất hướng thực hiện.',
-                'clientPrep' => 'Gửi ý tưởng, ảnh tham khảo hoặc file 3D; nêu mục đích sử dụng, kích thước và số lượng dự kiến.',
-                'makerAction' => 'Xem xét tính khả thi, đặt câu hỏi để hiểu yêu cầu và tư vấn hướng thiết kế, vật liệu, cách gia công.',
-                'deliverables' => 'Tư vấn giải pháp kỹ thuật & định hướng vật liệu',
-                'quality_standard' => 'Phản hồi nhanh chóng, nắm bắt đúng trọng tâm ý tưởng',
-                'isLast' => false,
-            ],
-            [
-                'number' => '02',
-                'title' => 'Báo giá',
-                'subtitle' => 'Phương án & chi phí minh bạch',
-                'description' => 'Thống nhất những điều quan trọng trước khi bắt tay vào chế tác: phạm vi công việc, yêu cầu sản phẩm và phương án thực hiện.',
-                'clientPrep' => 'Xác nhận thiết kế, kích thước, số lượng và các yêu cầu hoàn thiện; phản hồi những điểm cần điều chỉnh.',
-                'makerAction' => 'Tổng hợp phương án và báo giá theo yêu cầu thực tế. Trao đổi các hạng mục trước khi khách hàng xác nhận triển khai.',
-                'deliverables' => 'Bảng báo giá chi tiết & tiến độ dự kiến',
-                'quality_standard' => 'Minh bạch hạng mục, tối ưu chi phí theo nhu cầu thực tế',
-                'isLast' => false,
-            ],
-            [
-                'number' => '03',
-                'title' => 'Gia công 3D',
-                'subtitle' => 'Chế tác & hoàn thiện chi tiết',
-                'description' => 'Từ mô hình số đến sản phẩm vật lý. Thiết kế, vật liệu và quy trình in được kết nối trong từng chi tiết.',
-                'clientPrep' => 'Xác nhận các điều chỉnh kỹ thuật nếu có để phương án gia công phù hợp với nhu cầu đã trao đổi.',
-                'makerAction' => 'Chuẩn bị mô hình, thực hiện in 3D và hoàn thiện theo phương án đã chốt; kiểm tra hình dáng, bề mặt và chi tiết sản phẩm.',
-                'deliverables' => 'Sản phẩm hoàn thiện theo đúng thông số đã duyệt',
-                'quality_standard' => 'Chuẩn xác kích thước, bề mặt mịn và kết cấu vững chắc',
-                'isLast' => false,
-            ],
-            [
-                'number' => '04',
-                'title' => 'Đóng gói',
-                'subtitle' => 'Kiểm định & bảo vệ an toàn',
-                'description' => 'Sản phẩm sau gia công được kiểm tra và chuẩn bị cho hành trình vận chuyển.',
-                'clientPrep' => 'Cung cấp thông tin người nhận và lưu ý về việc giao nhận hoặc cách đóng gói nếu có yêu cầu riêng.',
-                'makerAction' => 'Kiểm tra sản phẩm, sắp xếp các chi tiết và lựa chọn cách bảo vệ, đóng gói phù hợp với hình dáng của từng món đồ.',
-                'deliverables' => 'Kiện hàng đóng gói chống sốc tiêu chuẩn',
-                'quality_standard' => 'Bảo vệ tối đa các chi tiết mảnh và bề mặt hoàn thiện',
-                'isLast' => false,
-            ],
-            [
-                'number' => '05',
-                'title' => 'Gửi hàng',
-                'subtitle' => 'Bàn giao & đồng hành sau nhận hàng',
-                'description' => 'Khép lại quá trình chế tác, mở đầu trải nghiệm sử dụng sản phẩm của bạn.',
-                'clientPrep' => 'Xác nhận địa chỉ, số điện thoại nhận hàng; kiểm tra sản phẩm khi nhận và trao đổi nếu cần hỗ trợ.',
-                'makerAction' => 'Bàn giao kiện hàng để vận chuyển, cung cấp thông tin gửi hàng và tiếp nhận phản hồi sau khi khách hàng nhận sản phẩm.',
-                'deliverables' => 'Bàn giao sản phẩm & mã vận đơn theo dõi',
-                'quality_standard' => 'Giao hàng đúng hẹn, hỗ trợ tận tâm sau bàn giao',
-                'isLast' => true,
-            ],
-        ];
-
-        $defaultStepsEn = [
-            [
-                'number' => '01',
-                'title' => 'Contact',
-                'subtitle' => 'Initial Consultation & Requirement Clarification',
-                'description' => 'Every product begins with a conversation. HH Maker receives your idea and clarifies requirements before proposing an execution direction.',
-                'clientPrep' => 'Send your idea, reference images or 3D files; state intended use, dimensions, and estimated quantity.',
-                'makerAction' => 'Evaluate feasibility, ask clarifying questions, and advise on design direction, materials, and fabrication methods.',
-                'deliverables' => 'Technical consultation & material direction',
-                'quality_standard' => 'Prompt response & accurate understanding of your concept',
-                'isLast' => false,
-            ],
-            [
-                'number' => '02',
-                'title' => 'Quotation',
-                'subtitle' => 'Transparent Plan & Pricing',
-                'description' => 'Align on key details before crafting begins: scope of work, product specifications, and execution plan.',
-                'clientPrep' => 'Confirm design, dimensions, quantity, and finishing requirements; provide feedback on any needed adjustments.',
-                'makerAction' => 'Compile the execution plan and quotation based on actual requirements. Discuss all items before confirming production.',
-                'deliverables' => 'Detailed quotation & estimated timeline',
-                'quality_standard' => 'Transparent breakdown, cost-optimized for actual needs',
-                'isLast' => false,
-            ],
-            [
-                'number' => '03',
-                'title' => '3D Fabrication',
-                'subtitle' => 'Precision Printing & Finishing',
-                'description' => 'From digital model to physical product. Design, materials, and printing processes come together in every detail.',
-                'clientPrep' => 'Confirm any technical adjustments so the fabrication plan matches the agreed requirements.',
-                'makerAction' => 'Prepare the model, execute 3D printing and post-processing per the approved plan; inspect shape, surface, and fine details.',
-                'deliverables' => 'Finished product matching approved specifications',
-                'quality_standard' => 'Dimensional accuracy, smooth surface, and structural integrity',
-                'isLast' => false,
-            ],
-            [
-                'number' => '04',
-                'title' => 'Packaging',
-                'subtitle' => 'Inspection & Protective Packaging',
-                'description' => 'Fabricated products are carefully inspected and prepared for safe transit.',
-                'clientPrep' => 'Provide recipient details and any special delivery or packaging notes if needed.',
-                'makerAction' => 'Inspect the product, arrange components, and select protective packaging tailored to each item\'s geometry.',
-                'deliverables' => 'Shock-resistant packaged parcel',
-                'quality_standard' => 'Maximum protection for delicate parts and finished surfaces',
-                'isLast' => false,
-            ],
-            [
-                'number' => '05',
-                'title' => 'Delivery',
-                'subtitle' => 'Handover & Post-Delivery Support',
-                'description' => 'Completing the crafting journey and beginning your experience with the product.',
-                'clientPrep' => 'Confirm shipping address and phone number; inspect the product upon arrival and reach out if support is needed.',
-                'makerAction' => 'Hand over the parcel for shipping, provide tracking details, and follow up after you receive the product.',
-                'deliverables' => 'Product handover & tracking information',
-                'quality_standard' => 'On-time delivery & dedicated post-handover support',
-                'isLast' => true,
-            ],
-        ];
-
-        $defaultSteps = $isEn ? $defaultStepsEn : $defaultStepsVi;
-
         try {
             $general = $rawSettings;
             if ($general === null) {
@@ -610,13 +492,11 @@ class Config extends Model
 
             if (is_array($baseSteps) && count($baseSteps) > 0) {
                 $total = count($baseSteps);
-                return array_values(array_map(function ($item, $index) use ($total, $defaultSteps, $defaultStepsVi, $rawStepsVi, $rawStepsEn, $isEn) {
+                return array_values(array_map(function ($item, $index) use ($total, $rawStepsVi, $rawStepsEn, $isEn) {
                     $itemVi = is_array($rawStepsVi[$index] ?? null) ? $rawStepsVi[$index] : (is_array($item) ? $item : []);
                     $itemEn = is_array($rawStepsEn[$index] ?? null) ? $rawStepsEn[$index] : [];
-                    $fallback = $defaultSteps[$index] ?? ($defaultStepsVi[$index] ?? []);
-                    $fallbackVi = $defaultStepsVi[$index] ?? [];
 
-                    $resolveField = static function (string $key, ?string $snakeKey = null) use ($itemVi, $itemEn, $fallback, $fallbackVi, $isEn): string {
+                    $resolveField = static function (string $key, ?string $snakeKey = null) use ($itemVi, $itemEn, $isEn): string {
                         $viVal = trim((string) ($itemVi[$key] ?? ($snakeKey ? ($itemVi[$snakeKey] ?? '') : '')));
                         $enVal = trim((string) (
                             $itemEn[$key]
@@ -629,19 +509,16 @@ class Config extends Model
                             if ($enVal !== '') {
                                 return $enVal;
                             }
-                            if ($viVal !== '') {
-                                return $viVal;
-                            }
-                            return (string) ($fallback[$key] ?? ($fallbackVi[$key] ?? ''));
+                            return $viVal;
                         }
 
                         if ($viVal !== '') {
                             return $viVal;
                         }
-                        return (string) ($fallbackVi[$key] ?? ($fallback[$key] ?? ''));
+                        return $enVal;
                     };
 
-                    $number = $itemVi['number'] ?? $itemEn['number'] ?? ($fallback['number'] ?? str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT));
+                    $number = $itemVi['number'] ?? $itemEn['number'] ?? str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT);
 
                     return [
                         'number' => $number,
@@ -660,6 +537,6 @@ class Config extends Model
             report($e);
         }
 
-        return $defaultSteps;
+        return [];
     }
 }

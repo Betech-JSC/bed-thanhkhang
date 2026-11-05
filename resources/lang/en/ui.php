@@ -178,8 +178,15 @@ return [
     'KẾT NỐI DỰ ÁN' => 'CONNECT YOUR PROJECT',
 
     // Homepage - Services Overview Section
+    'Custom' => 'Custom',
     'Làm đồ custom' => 'Custom Bespoke Creations',
     'Làm đồ Custom' => 'Custom Bespoke Creations',
+    'Hiện thực hóa mô hình bằng công nghệ in 3D, chú trọng độ chính xác và chất lượng sản phẩm' => 'Realizing models with 3D printing technology, focusing on precision and product quality.',
+    'Hiện thực hóa mô hình bằng công nghệ in 3D, chú trọng độ chính xác và chất lượng sản phẩm.' => 'Realizing models with 3D printing technology, focusing on precision and product quality.',
+    'Biến ý tưởng thành mô hình 3D chi tiết, kết hợp tính thẩm mỹ và khả năng chế tác thực tế.' => 'Transforming ideas into detailed 3D models, blending aesthetics with practical manufacturability.',
+    'Biến ý tưởng thành mô hình 3D chi tiết, kết hợp tính thẩm mỹ và khả năng chế tác thực tế' => 'Transforming ideas into detailed 3D models, blending aesthetics with practical manufacturability.',
+    'Thiết kế và chế tác theo yêu cầu, tạo nên những món đồ độc đáo mang dấu ấn riêng của bạn.' => 'Custom design and manufacturing on demand, crafting unique pieces with your signature touch.',
+    'Thiết kế và chế tác theo yêu cầu, tạo nên những món đồ độc đáo mang dấu ấn riêng của bạn' => 'Custom design and manufacturing on demand, crafting unique pieces with your signature touch.',
     'Một ý tưởng chưa cần hoàn chỉnh để bắt đầu.' => 'An idea does not need to be complete to begin.',
     'Đưa bản thiết kế ra ngoài màn hình.' => 'Bringing digital designs into the physical world.',
     'Không chỉ khác biệt. Là của riêng bạn.' => 'Not just different. Exclusively yours.',

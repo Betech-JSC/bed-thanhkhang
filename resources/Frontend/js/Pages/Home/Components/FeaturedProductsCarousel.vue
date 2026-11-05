@@ -1,6 +1,6 @@
 <template>
-    <section v-scroll-reveal id="featured-carousel" class="pt-6 md:pt-10 pb-10 md:pb-16">
-        <div class="max-w-[1180px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8 md:space-y-10">
+    <section v-if="displayItems.length > 0" v-scroll-reveal id="featured-carousel" class="pt-6 md:pt-10 pb-10 md:pb-16">
+        <div class="app-container space-y-8 md:space-y-10">
             <!-- Section Header (Figma Node 2261:5504) -->
             <div class="text-center">
                 <h2
@@ -11,7 +11,7 @@
             </div>
 
             <!-- Carousel Wrapper (Figma Node 2261:5505 - 1116px = 4 cards 264px + 3 gaps 20px) -->
-            <div class="relative group max-w-[1116px] mx-auto">
+            <div class="relative group">
                 <!-- Navigation Prev Button (Left) -->
                 <button
                     type="button"
@@ -33,64 +33,43 @@
                 >
                     <div
                         ref="trackRef"
-                        class="flex items-center gap-5 w-full"
+                        class="flex items-center gap-5 will-change-transform"
+                        :style="{
+                            transform: `translateX(-${currentOffset}px)`,
+                            transition: 'transform 450ms cubic-bezier(0.22, 1, 0.36, 1)'
+                        }"
                     >
-                        <div
-                            v-for="(slotItem, slotIndex) in visibleCards"
-                            :key="slotIndex"
-                            class="w-[264px] min-w-[264px] max-w-[264px] h-[419px] flex-shrink-0 rounded-[12px] overflow-hidden flex flex-col justify-between hover:shadow-2xl hover:shadow-primary/20 border border-white/5 cursor-pointer bg-[#182238] select-none group/card"
+                        <Link
+                            v-for="(item, idx) in displayItems"
+                            :key="item.id || idx"
+                            :href="item.url || '/san-pham'"
+                            class="w-[264px] min-w-[264px] max-w-[264px] h-[419px] flex-shrink-0 rounded-[12px] overflow-hidden flex flex-col justify-between hover:shadow-2xl hover:shadow-primary/20 border border-white/5 cursor-pointer bg-[#182238] select-none group/card block"
                         >
-                            <!-- Top Image: Fixed 264x335 Frame with Inner Horizontal Slide Transition -->
+                            <!-- Top Image: Fixed 264x335 Frame -->
                             <div class="w-full h-[335px] relative overflow-hidden bg-[#0A0D14] shrink-0">
-                                <Transition
-                                    enter-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform"
-                                    :enter-from-class="slideDirection === 'next' ? 'translate-x-full' : '-translate-x-full'"
-                                    enter-to-class="translate-x-0"
-                                    leave-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform absolute inset-0 pointer-events-none"
-                                    leave-from-class="translate-x-0"
-                                    :leave-to-class="slideDirection === 'next' ? '-translate-x-full' : 'translate-x-full'"
-                                >
-                                    <div
-                                        :key="`${currentIndex}-${slotIndex}`"
-                                        class="w-full h-full relative overflow-hidden"
-                                    >
-                                        <img
-                                            :src="slotItem.image"
-                                            :alt="slotItem.name"
-                                            class="w-full h-full object-cover object-center select-none"
-                                            loading="eager"
-                                            decoding="sync"
-                                        />
-                                    </div>
-                                </Transition>
+                                <img
+                                    :src="item.image"
+                                    :alt="item.name"
+                                    class="w-full h-full object-cover object-center select-none"
+                                    loading="eager"
+                                    decoding="sync"
+                                />
                                 <!-- Subtle highlight sheen on hover -->
                                 <div class="absolute inset-0 bg-primary/10 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 pointer-events-none z-10"></div>
                             </div>
 
                             <!-- Bottom Footer: Locked 264x84px Dark Slate Card (Figma Node 2261:5510: height 84px, bg #30374F) -->
                             <div class="w-full h-[84px] bg-[#30374F] relative overflow-hidden shrink-0">
-                                <Transition
-                                    enter-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform"
-                                    :enter-from-class="slideDirection === 'next' ? 'translate-x-full' : '-translate-x-full'"
-                                    enter-to-class="translate-x-0"
-                                    leave-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform absolute inset-0 pointer-events-none"
-                                    leave-from-class="translate-x-0"
-                                    :leave-to-class="slideDirection === 'next' ? '-translate-x-full' : 'translate-x-full'"
-                                >
-                                    <div
-                                        :key="`${currentIndex}-${slotIndex}`"
-                                        class="w-full h-full px-6 py-3 flex flex-col justify-center space-y-1"
-                                    >
-                                        <h3 class="text-base font-bold text-[#F5F8FF] truncate leading-[22px]">
-                                            {{ tt(slotItem.name) }}
-                                        </h3>
-                                        <p class="text-xs text-[#B9C0D4] truncate font-normal leading-[17px]">
-                                            {{ tt(slotItem.description) }}
-                                        </p>
-                                    </div>
-                                </Transition>
+                                <div class="w-full h-full px-6 py-3 flex flex-col justify-center space-y-1">
+                                    <h3 class="text-base font-bold text-[#F5F8FF] truncate leading-[22px]">
+                                        {{ tt(item.name) }}
+                                    </h3>
+                                    <p class="text-xs text-[#B9C0D4] truncate font-normal leading-[17px]">
+                                        {{ tt(item.description) }}
+                                    </p>
+                                </div>
                             </div>
-                        </div>
+                        </Link>
                     </div>
                 </div>
 
@@ -111,10 +90,15 @@
 </template>
 
 <script>
+import { Link } from '@inertiajs/inertia-vue3';
+
 const tt = (s) => s;
 
 export default {
     name: 'FeaturedProductsCarousel',
+    components: {
+        Link,
+    },
     props: {
         title: {
             type: String,
@@ -127,73 +111,22 @@ export default {
     },
     data() {
         return {
-            currentIndex: 0,
             currentOffset: 0,
-            slideDirection: 'next',
             touchStartX: 0,
-            defaultItems: [
-                {
-                    name: this.tt('Tên sản phẩm'),
-                    description: 'This awesome element has more variants and fully',
-                    image: '/assets/images/homepage/product-sample-warm.png',
-                },
-                {
-                    name: this.tt('Tên sản phẩm'),
-                    description: 'This awesome element has more variants and fully',
-                    image: '/assets/images/homepage/product-sample-cool.png',
-                },
-                {
-                    name: this.tt('Tên sản phẩm'),
-                    description: 'This awesome element has more variants and fully',
-                    image: '/assets/images/homepage/product-sample-warm.png',
-                },
-                {
-                    name: this.tt('Tên sản phẩm'),
-                    description: 'This awesome element has more variants and fully',
-                    image: '/assets/images/homepage/product-sample-cool.png',
-                },
-                {
-                    name: this.tt('Tên sản phẩm'),
-                    description: 'This awesome element has more variants and fully',
-                    image: '/assets/images/homepage/product-sample-warm.png',
-                },
-                {
-                    name: this.tt('Tên sản phẩm'),
-                    description: 'This awesome element has more variants and fully',
-                    image: '/assets/images/homepage/product-sample-cool.png',
-                },
-            ],
         };
     },
     computed: {
         displayItems() {
-            if (this.items && this.items.length > 0) {
-                const mapped = this.items.map((it, idx) => ({
-                    name: it.name || it.title || this.tt('Tên sản phẩm'),
-                    description: it.description || 'This awesome element has more variants and fully',
-                    image: it.image || it.thumbnail || (idx % 2 === 0 ? '/assets/images/homepage/product-sample-warm.png' : '/assets/images/homepage/product-sample-cool.png'),
-                }));
-                if (mapped.length < 6) {
-                    return [...mapped, ...this.defaultItems.slice(mapped.length)];
-                }
-                return mapped;
+            if (this.items && Array.isArray(this.items) && this.items.length > 0) {
+                return this.items.map((it, idx) => ({
+                    id: it.id || `feat-${idx}`,
+                    name: it.name || it.title || '',
+                    description: it.description || it.short_description || '',
+                    image: it.image?.url ? it.image.url : (typeof it.image === 'string' ? it.image : (it.thumbnail?.url || it.thumbnail || '')),
+                    url: it.url || (it.slug ? `/san-pham/${it.slug}` : (it.id ? `/san-pham/${it.id}` : '/san-pham')),
+                })).filter(it => it.name);
             }
-            return this.defaultItems;
-        },
-        visibleCards() {
-            const list = this.displayItems;
-            if (!list || list.length === 0) return [];
-            const total = list.length;
-            const cards = [];
-            for (let i = 0; i < 4; i++) {
-                const itemIndex = (this.currentIndex + i) % total;
-                cards.push({
-                    ...list[itemIndex],
-                    slotIndex: i,
-                    itemIndex,
-                });
-            }
-            return cards;
+            return [];
         },
     },
     mounted() {
@@ -208,9 +141,12 @@ export default {
         }
     },
     methods: {
+        tt(s) {
+            return this.$root?.tt ? this.$root.tt(s) : tt(s);
+        },
         preloadImages() {
             if (typeof window === 'undefined') return;
-            this.displayItems.forEach(item => {
+            this.displayItems.forEach((item) => {
                 if (item && item.image) {
                     const img = new window.Image();
                     img.src = item.image;
@@ -220,9 +156,8 @@ export default {
         getMaxOffset() {
             const viewport = this.$refs.viewportRef;
             const totalItems = this.displayItems.length;
-            const trackWidth = totalItems > 0 ? totalItems * 264 + (totalItems - 1) * 20 : 0;
-            const viewportWidth = viewport ? viewport.clientWidth : 1116;
-            return Math.max(0, trackWidth - viewportWidth);
+            const viewportWidth = viewport ? viewport.clientWidth : 1152;
+            return Math.max(0, totalItems * 284 - 20 - viewportWidth);
         },
         handleResize() {
             const maxOffset = this.getMaxOffset();
@@ -231,18 +166,10 @@ export default {
             }
         },
         scrollNext() {
-            this.slideDirection = 'next';
-            const total = this.displayItems.length || 1;
-            this.currentIndex = (this.currentIndex + 1) % total;
-            const step = 284; // 264px card + 20px gap
+            const step = 284;
             const maxOffset = this.getMaxOffset();
-            if (maxOffset <= 0) {
-                const track = this.$refs.trackRef;
-                if (track && track.scrollBy) {
-                    track.scrollBy({ left: step, behavior: 'smooth' });
-                }
-                return;
-            }
+            if (maxOffset <= 0) return;
+
             if (this.currentOffset >= maxOffset - 5) {
                 this.currentOffset = 0;
             } else {
@@ -250,18 +177,10 @@ export default {
             }
         },
         scrollPrev() {
-            this.slideDirection = 'prev';
-            const total = this.displayItems.length || 1;
-            this.currentIndex = (this.currentIndex - 1 + total) % total;
             const step = 284;
             const maxOffset = this.getMaxOffset();
-            if (maxOffset <= 0) {
-                const track = this.$refs.trackRef;
-                if (track && track.scrollBy) {
-                    track.scrollBy({ left: -step, behavior: 'smooth' });
-                }
-                return;
-            }
+            if (maxOffset <= 0) return;
+
             if (this.currentOffset <= 5) {
                 this.currentOffset = maxOffset;
             } else {

@@ -1,6 +1,6 @@
 <template>
     <footer id="footer-section" class="bg-[#111322] border-t border-[#F5F8FF]/10 text-secondary pt-14 pb-8">
-        <div class="w-full max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-0 space-y-12">
+        <div class="app-container space-y-12">
             <!-- 4 Column Grid (Figma 2261:5820 / 2226:3250) -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
                 <!-- Column 1: Brand Info (5 cols / 361px) (Figma 2226:3251) -->
@@ -112,15 +112,14 @@
                 class="pt-6 border-t border-[#F5F8FF]/20 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#D1E0FF]"
             >
                 <p>© {{ tt('Bản quyền') }} {{ currentYear }} HH MAKER</p>
-                <div class="flex items-center gap-6 sm:gap-10">
-                    <Link :href="route('policies.index')" class="text-[#D1E0FF] hover:text-white transition-colors">
-                        {{ tt('Chính sách bảo mật') }}
-                    </Link>
-                    <Link :href="route('policies.index')" class="text-[#D1E0FF] hover:text-white transition-colors">
-                        {{ tt('Điều khoản sử dụng') }}
-                    </Link>
-                    <Link :href="route('policies.index')" class="text-[#D1E0FF] hover:text-white transition-colors">
-                        {{ tt('Chính sách Cookie') }}
+                <div class="flex flex-wrap items-center justify-center sm:justify-end gap-6 sm:gap-10">
+                    <Link
+                        v-for="(item, index) in policyLinks"
+                        :key="index"
+                        :href="item.url"
+                        class="text-[#D1E0FF] hover:text-white transition-colors"
+                    >
+                        {{ item.title }}
                     </Link>
                 </div>
             </div>
@@ -156,6 +155,30 @@ export default {
         }
     },
     computed: {
+        currentLocale() {
+            return this.$inertia?.page?.props?.locale?.current || this.$page?.props?.locale?.current || 'vi'
+        },
+        policyLinks() {
+            const isEn = this.currentLocale === 'en'
+            const policies = [
+                {
+                    title: this.tt('Chính sách bảo mật'),
+                    slug: isEn ? 'privacy-policy' : 'chinh-sach-bao-mat',
+                },
+                {
+                    title: this.tt('Điều khoản dịch vụ'),
+                    slug: isEn ? 'terms-of-service' : 'dieu-khoan-dich-vu',
+                },
+                {
+                    title: this.tt('Chính sách bảo hành & đổi trả'),
+                    slug: isEn ? 'warranty-return-policy' : 'chinh-sach-bao-hanh-doi-tra',
+                },
+            ]
+            return policies.map((item) => ({
+                ...item,
+                url: this.getPolicyUrl(item.slug),
+            }))
+        },
         displayAddress() {
             const raw = this.address || this.$page.props.global?.general_address || this.tt('Số 65 đường số 9, khu dân cư Hương Lộ 5, Phường An Lạc, Thành phố Hồ Chí Minh')
             return this.tt(raw)
@@ -165,6 +188,18 @@ export default {
         },
         displayEmail() {
             return this.email || this.$page.props.global?.general_email || 'info@hhmaker.vn'
+        },
+    },
+    methods: {
+        getPolicyUrl(slug) {
+            if (typeof this.route === 'function') {
+                try {
+                    return this.route('policies.show', slug)
+                } catch (e) {
+                    // Fallback to localized URL
+                }
+            }
+            return this.currentLocale === 'en' ? `/en/policies/${slug}` : `/chinh-sach/${slug}`
         },
     },
 }
