@@ -5,24 +5,17 @@
             <!-- Breadcrumbs (Figma Node 2367:2157) -->
             <nav class="flex items-center gap-[10px] select-none font-sans" aria-label="Breadcrumb">
                 <Link
-                    :href="servicesUrl"
-                    class="text-[16px] leading-[24px] font-normal text-[#B9C0D4] hover:text-[#FAFAFA] transition-colors inline-flex items-center gap-[10px]"
+                    :href="homeUrl"
+                    class="text-[16px] leading-[24px] font-normal text-[#B9C0D4] hover:text-[#FAFAFA] transition-colors"
                 >
-                    <svg
-                        class="w-[18px] h-[18px] shrink-0"
-                        viewBox="0 0 18 18"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            d="M14.25 9H3.75M3.75 9L9 14.25M3.75 9L9 3.75"
-                            stroke="currentColor"
-                            stroke-width="1.5"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        />
-                    </svg>
-                    <span>{{ tt('Dịch vụ') }}</span>
+                    {{ tt('Trang chủ') }}
+                </Link>
+                <span class="text-[14px] leading-[17px] text-[#84ADFF]">/</span>
+                <Link
+                    :href="servicesUrl"
+                    class="text-[16px] leading-[24px] font-normal text-[#B9C0D4] hover:text-[#FAFAFA] transition-colors"
+                >
+                    {{ tt('Dịch vụ') }}
                 </Link>
                 <span class="text-[14px] leading-[17px] text-[#84ADFF]">/</span>
                 <span class="text-[14px] leading-[17px] font-normal text-[#84ADFF] truncate max-w-[240px] sm:max-w-none">
@@ -67,7 +60,7 @@
                         </span>
                         <div class="space-y-2 font-sans">
                             <div
-                                v-for="(item, idx) in inputItems"
+                                v-for="(item, idx) in displayInputItems"
                                 :key="idx"
                                 class="text-lg sm:text-[20px] font-normal text-[#FAFAFA] leading-[29px]"
                             >
@@ -83,7 +76,7 @@
                         </span>
                         <div class="space-y-2 font-sans">
                             <div
-                                v-for="(item, idx) in processItems"
+                                v-for="(item, idx) in displayProcessItems"
                                 :key="idx"
                                 class="text-lg sm:text-[20px] font-normal text-[#FAFAFA] leading-[29px]"
                             >
@@ -106,6 +99,10 @@ const props = defineProps({
         type: String,
         default: '',
     },
+    headline: {
+        type: String,
+        default: '',
+    },
     description: {
         type: String,
         default: '',
@@ -113,6 +110,14 @@ const props = defineProps({
     image: {
         type: String,
         default: '',
+    },
+    inputItems: {
+        type: Array,
+        default: () => [],
+    },
+    processItems: {
+        type: Array,
+        default: () => [],
     },
 })
 
@@ -142,15 +147,21 @@ const defaultDescription = computed(() =>
 )
 
 const displayHeadline = computed(() => {
+    if (props.headline && props.headline.trim() !== '') {
+        return i18n.tt(props.headline.trim())
+    }
+
     const baseTitle = props.title || i18n.tt('Thiết kế 3D')
     const rawTitle = (
         (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(baseTitle) : baseTitle) || ''
     ).trim()
+
     if (isEn.value) {
         if (!rawTitle) return '3D Design: From sketch to concrete geometry'
         if (rawTitle.includes(':')) return rawTitle
         return `${rawTitle}: From sketch to concrete geometry`
     }
+
     if (!rawTitle) return i18n.tt('Thiết kế 3D: Từ phác thảo đến hình khối rõ ràng')
     if (rawTitle.includes(':')) return rawTitle
     return `${rawTitle}: ${i18n.tt('Từ phác thảo đến hình khối rõ ràng')}`
@@ -160,15 +171,25 @@ const imageSrc = computed(() => {
     return props.image || '/assets/images/services/hero-3d-illustration.png'
 })
 
-const inputItems = computed(() => [
-    i18n.tt('Ý tưởng'),
-    i18n.tt('Ảnh tham khảo'),
-    i18n.tt('Bản phác thảo'),
-])
+const displayInputItems = computed(() => {
+    if (Array.isArray(props.inputItems) && props.inputItems.length > 0) {
+        return props.inputItems
+    }
+    return [
+        i18n.tt('Ý tưởng'),
+        i18n.tt('Ảnh tham khảo'),
+        i18n.tt('Bản phác thảo'),
+    ]
+})
 
-const processItems = computed(() => [
-    i18n.tt('Tỉ lệ & hình khối'),
-    i18n.tt('Cấu trúc & chi tiết'),
-    i18n.tt('Khả năng chế tác'),
-])
+const displayProcessItems = computed(() => {
+    if (Array.isArray(props.processItems) && props.processItems.length > 0) {
+        return props.processItems
+    }
+    return [
+        i18n.tt('Tỉ lệ & hình khối'),
+        i18n.tt('Cấu trúc & chi tiết'),
+        i18n.tt('Khả năng chế tác'),
+    ]
+})
 </script>

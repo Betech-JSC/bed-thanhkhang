@@ -178,8 +178,15 @@ return [
     'KẾT NỐI DỰ ÁN' => 'KẾT NỐI DỰ ÁN',
 
     // Homepage - Services Overview Section
+    'Custom' => 'Custom',
     'Làm đồ custom' => 'Làm đồ custom',
     'Làm đồ Custom' => 'Làm đồ Custom',
+    'Hiện thực hóa mô hình bằng công nghệ in 3D, chú trọng độ chính xác và chất lượng sản phẩm' => 'Hiện thực hóa mô hình bằng công nghệ in 3D, chú trọng độ chính xác và chất lượng sản phẩm',
+    'Hiện thực hóa mô hình bằng công nghệ in 3D, chú trọng độ chính xác và chất lượng sản phẩm.' => 'Hiện thực hóa mô hình bằng công nghệ in 3D, chú trọng độ chính xác và chất lượng sản phẩm.',
+    'Biến ý tưởng thành mô hình 3D chi tiết, kết hợp tính thẩm mỹ và khả năng chế tác thực tế.' => 'Biến ý tưởng thành mô hình 3D chi tiết, kết hợp tính thẩm mỹ và khả năng chế tác thực tế.',
+    'Biến ý tưởng thành mô hình 3D chi tiết, kết hợp tính thẩm mỹ và khả năng chế tác thực tế' => 'Biến ý tưởng thành mô hình 3D chi tiết, kết hợp tính thẩm mỹ và khả năng chế tác thực tế',
+    'Thiết kế và chế tác theo yêu cầu, tạo nên những món đồ độc đáo mang dấu ấn riêng của bạn.' => 'Thiết kế và chế tác theo yêu cầu, tạo nên những món đồ độc đáo mang dấu ấn riêng của bạn.',
+    'Thiết kế và chế tác theo yêu cầu, tạo nên những món đồ độc đáo mang dấu ấn riêng của bạn' => 'Thiết kế và chế tác theo yêu cầu, tạo nên những món đồ độc đáo mang dấu ấn riêng của bạn',
     'Một ý tưởng chưa cần hoàn chỉnh để bắt đầu.' => 'Một ý tưởng chưa cần hoàn chỉnh để bắt đầu.',
     'Đưa bản thiết kế ra ngoài màn hình.' => 'Đưa bản thiết kế ra ngoài màn hình.',
     'Không chỉ khác biệt. Là của riêng bạn.' => 'Không chỉ khác biệt. Là của riêng bạn.',

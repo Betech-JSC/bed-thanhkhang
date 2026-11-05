@@ -1,6 +1,6 @@
 <template>
-    <section v-scroll-reveal id="services-section" class="py-12 md:py-20 bg-dark-bg">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1152px]">
+    <section v-if="displayServices.length > 0" v-scroll-reveal id="services-section" class="py-12 md:py-20 bg-dark-bg">
+        <div class="app-container">
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 lg:gap-12">
                 <!-- Left Title (Figma Node 2261:5529: 320px width, 38px font-bold, line-height 46px) -->
                 <div class="lg:w-[320px] flex-shrink-0">
@@ -71,41 +71,14 @@ export default {
         },
     },
     data() {
-        return {
-            defaultServices: [
-                {
-                    title: this.tt('Thiết kế 3D'),
-                    slug: 'thiet-ke-3d',
-                    image: '/assets/images/homepage/service-thietke-3d.png',
-                    description: this.tt('Một ý tưởng chưa cần hoàn chỉnh để bắt đầu.'),
-                    gradient: 'linear-gradient(180deg, #111322 20%, #2970FF 94%)',
-                    hoverShadow: 'hover:shadow-[#2970FF]/30',
-                },
-                {
-                    title: this.tt('Gia công 3D'),
-                    slug: 'gia-cong-3d',
-                    image: '/assets/images/homepage/service-giacong-3d.png',
-                    description: this.tt('Đưa bản thiết kế ra ngoài màn hình.'),
-                    gradient: 'linear-gradient(180deg, #111322 20%, #30374F 100%)',
-                    hoverShadow: 'hover:shadow-[#30374F]/50',
-                },
-                {
-                    title: this.tt('Làm đồ custom'),
-                    slug: 'lam-do-custom',
-                    image: '/assets/images/homepage/service-custom-3d.png',
-                    description: this.tt('Không chỉ khác biệt. Là của riêng bạn.'),
-                    gradient: 'linear-gradient(180deg, #111322 20%, #2970FF 94%)',
-                    hoverShadow: 'hover:shadow-[#2970FF]/30',
-                },
-            ],
-        };
+        return {};
     },
     computed: {
         displayServices() {
-            if (this.services && this.services.length > 0) {
+            if (this.services && Array.isArray(this.services) && this.services.length > 0) {
                 return this.services;
             }
-            return this.defaultServices;
+            return [];
         },
     },
     methods: {
@@ -122,56 +95,68 @@ export default {
             const slug = (service?.slug || '').toLowerCase();
             const title = (service?.title || '').toLowerCase();
 
-            if (slug.includes('thiet-ke') || title.includes(this.tt('thiết kế')) || slug.includes('design')) {
-                return '/assets/images/homepage/service-thietke-3d.png';
-            }
-            if (slug.includes('gia-cong') || title.includes(this.tt('gia công')) || slug.includes('print')) {
+            if (slug.includes('gia-cong') || title.includes(this.tt('gia công')) || title.includes('machin') || slug.includes('print')) {
                 return '/assets/images/homepage/service-giacong-3d.png';
             }
-            if (slug.includes('custom') || title.includes('custom')) {
+            if (slug.includes('thiet-ke') || title.includes(this.tt('thiết kế')) || slug.includes('design') || title.includes('design')) {
+                return '/assets/images/homepage/service-thietke-3d.png';
+            }
+            if (slug.includes('custom') || title.includes('custom') || title.includes('làm đồ')) {
                 return '/assets/images/homepage/service-custom-3d.png';
             }
-            return '/assets/images/homepage/service-thietke-3d.png';
+            return '/assets/images/homepage/service-giacong-3d.png';
         },
         handleImageError(event, service) {
             const slug = (service?.slug || '').toLowerCase();
             const title = (service?.title || '').toLowerCase();
-            if (slug.includes('gia-cong') || title.includes(this.tt('gia công')) || slug.includes('print')) {
+            if (slug.includes('gia-cong') || title.includes(this.tt('gia công')) || title.includes('machin') || slug.includes('print')) {
                 event.target.src = '/assets/images/homepage/service-giacong-3d.png';
-            } else if (slug.includes('custom') || title.includes('custom')) {
+            } else if (slug.includes('custom') || title.includes('custom') || title.includes('làm đồ')) {
                 event.target.src = '/assets/images/homepage/service-custom-3d.png';
             } else {
                 event.target.src = '/assets/images/homepage/service-thietke-3d.png';
             }
         },
         getServiceGradient(service, index) {
-            if (service && service.gradient) {
-                return service.gradient;
-            }
-            // Thẻ giữa (index 1: Thiết kế 3D) dùng nền #30374F theo chuẩn Figma Node 2261:5549
+            // Thẻ giữa (index 1: Thiết kế 3D) bắt buộc dùng nền Slate Dark #30374F theo chuẩn Figma Node 2261:5549
             if (index === 1) {
                 return 'linear-gradient(180deg, #111322 20%, #30374F 100%)';
+            }
+            if (service && service.gradient) {
+                return service.gradient;
             }
             return 'linear-gradient(180deg, #111322 20%, #2970FF 94%)';
         },
         getHoverShadow(service, index) {
-            if (service && service.hoverShadow) {
-                return service.hoverShadow;
-            }
             if (index === 1) {
                 return 'hover:shadow-[#30374F]/50';
+            }
+            if (service && service.hoverShadow) {
+                return service.hoverShadow;
             }
             return 'hover:shadow-[#2970FF]/30';
         },
         getServiceUrl(service) {
             const slugMap = {
+                'Gia công 3D': 'gia-cong-3d',
+                '3D Machining & Printing': 'gia-cong-3d',
+                '3D Manufacturing': 'gia-cong-3d',
                 [this.tt('Gia công 3D')]: 'gia-cong-3d',
+                'Thiết kế 3D': 'thiet-ke-3d',
+                '3D Design': 'thiet-ke-3d',
                 [this.tt('Thiết kế 3D')]: 'thiet-ke-3d',
                 'Custom': 'lam-do-custom',
+                'Custom Bespoke Creations': 'lam-do-custom',
+                [this.tt('Custom')]: 'lam-do-custom',
                 [this.tt('Làm đồ custom')]: 'lam-do-custom',
                 [this.tt('Làm đồ Custom')]: 'lam-do-custom',
             };
-            const slug = service.slug || slugMap[service.title] || 'thiet-ke-3d';
+            const title = service?.title || '';
+            const slug = service?.slug || slugMap[title] || (
+                title.toLowerCase().includes('custom') || title.toLowerCase().includes('làm đồ') ? 'lam-do-custom' :
+                title.toLowerCase().includes('gia công') || title.toLowerCase().includes('machin') ? 'gia-cong-3d' :
+                'thiet-ke-3d'
+            );
             try {
                 if (typeof route === 'function') {
                     return this.route ? this.route('services.show', { slug }) : route('services.show', { slug });

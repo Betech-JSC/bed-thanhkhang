@@ -1,9 +1,9 @@
 <template>
     <Link
         :href="productUrl"
-        class="group relative flex flex-col w-full lg:w-[273px] h-[419px] rounded-[12px] overflow-hidden bg-[#30374F] hover:shadow-2xl shadow-lg select-none"
+        class="group relative flex flex-col w-full lg:w-[273px] h-[419px] rounded-[12px] overflow-hidden bg-[#30374F] hover:-translate-y-1.5 hover:border-[#2970FF]/50 hover:shadow-2xl hover:shadow-[#2970FF]/20 border border-white/5 shadow-lg select-none transition-all duration-300"
     >
-        <!-- Showcase Image Container (Locked 273x335px Frame with Inner Horizontal Slide Transition) -->
+        <!-- Showcase Image Container (Locked 273x335px Frame) -->
         <div class="relative w-full h-[335px] bg-[#D1D2D2] overflow-hidden shrink-0">
             <!-- Best Choice Badge (Figma 2283:6509) -->
             <div
@@ -13,29 +13,17 @@
                 {{ tt('Best choice') }}
             </div>
 
-            <Transition
-                enter-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform"
-                :enter-from-class="slideDirection === 'next' ? 'translate-x-full' : '-translate-x-full'"
-                enter-to-class="translate-x-0"
-                leave-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform absolute inset-0 pointer-events-none"
-                leave-from-class="translate-x-0"
-                :leave-to-class="slideDirection === 'next' ? '-translate-x-full' : 'translate-x-full'"
-            >
-                <div
-                    :key="slideKey || product.id"
-                    class="w-full h-full relative overflow-hidden"
-                >
-                    <!-- Product Showcase Image -->
-                    <img
-                        :src="productImageSrc"
-                        :alt="productImageAlt"
-                        class="w-full h-full object-cover select-none group-hover:scale-105 transition-transform duration-500 ease-out"
-                        loading="eager"
-                        decoding="sync"
-                        @error="onImageError"
-                    />
-                </div>
-            </Transition>
+            <div class="w-full h-full relative overflow-hidden">
+                <!-- Product Showcase Image -->
+                <img
+                    :src="productImageSrc"
+                    :alt="productImageAlt"
+                    class="w-full h-full object-cover select-none group-hover:scale-105 transition-transform duration-500 ease-out"
+                    loading="eager"
+                    decoding="sync"
+                    @error="onImageError"
+                />
+            </div>
 
             <!-- Subtle hover tint -->
             <div
@@ -45,29 +33,17 @@
 
         <!-- Bottom Info Bar (Locked Height 84px, Figma 2283:6515) -->
         <div class="relative h-[84px] w-full bg-[#30374F] overflow-hidden shrink-0">
-            <Transition
-                enter-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform"
-                :enter-from-class="slideDirection === 'next' ? 'translate-x-full' : '-translate-x-full'"
-                enter-to-class="translate-x-0"
-                leave-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform absolute inset-0 pointer-events-none"
-                leave-from-class="translate-x-0"
-                :leave-to-class="slideDirection === 'next' ? '-translate-x-full' : 'translate-x-full'"
-            >
-                <div
-                    :key="slideKey || product.id"
-                    class="w-full h-full px-6 py-3 flex flex-col justify-between gap-1"
+            <div class="w-full h-full px-6 py-3 flex flex-col justify-between gap-1">
+                <h3
+                    class="text-base font-bold text-[#F5F8FF] line-clamp-1 h-[22px] leading-[22px] font-sans group-hover:text-[#84ADFF] transition-colors"
+                    :title="tt(product.name || product.title)"
                 >
-                    <h3
-                        class="text-base font-bold text-[#F5F8FF] line-clamp-1 h-[22px] leading-[22px] font-sans group-hover:text-[#84ADFF] transition-colors"
-                        :title="tt(product.name || product.title)"
-                    >
-                        {{ tt(product.name || product.title) }}
-                    </h3>
-                    <p class="text-xs text-[#B9C0D4] line-clamp-2 h-[34px] leading-[17px] font-normal">
-                        {{ product.description ? tt(product.description) : tt('Mô hình trưng bày · In theo yêu cầu') }}
-                    </p>
-                </div>
-            </Transition>
+                    {{ tt(product.name || product.title) }}
+                </h3>
+                <p class="text-xs text-[#B9C0D4] line-clamp-2 h-[34px] leading-[17px] font-normal">
+                    {{ product.description ? tt(product.description) : tt('Mô hình trưng bày · In theo yêu cầu') }}
+                </p>
+            </div>
         </div>
     </Link>
 </template>
@@ -79,14 +55,6 @@ export default {
         product: {
             type: Object,
             required: true,
-        },
-        slideDirection: {
-            type: String,
-            default: 'next',
-        },
-        slideKey: {
-            type: [String, Number],
-            default: '',
         },
     },
     mounted() {

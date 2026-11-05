@@ -1,8 +1,8 @@
 <template>
     <!-- SECTION 2: Lộ trình năm bước (Figma Node 2283:6851, 1440x176px, padding: 16px 144px 64px) -->
-    <section id="process-steps" v-scroll-reveal class="relative w-full py-4 sm:py-6 lg:pt-4 lg:pb-16 scroll-mt-24">
+    <section v-if="steps.length > 0" id="process-steps" v-scroll-reveal class="relative w-full py-4 sm:py-6 lg:pt-4 lg:pb-16 scroll-mt-24">
         <!-- Container max-width 1152px (1440px - 288px padding) -->
-        <div class="max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-0">
+        <div class="app-container">
             <!-- Stepper Grid (5 steps, 230x96px each in Figma Node 2283:6851) -->
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 lg:flex lg:justify-between lg:items-start lg:gap-0">
                 <div
@@ -85,16 +85,13 @@ const props = defineProps({
     },
 })
 
-const fallbackSteps = [
-    { number: '01', title: 'Liên hệ', isLast: false },
-    { number: '02', title: 'Báo giá', isLast: false },
-    { number: '03', title: 'Gia công 3D', isLast: false },
-    { number: '04', title: 'Đóng gói', isLast: false },
-    { number: '05', title: 'Gửi hàng', isLast: true },
-]
-
 const steps = computed(() =>
-    Array.isArray(props.steps) && props.steps.length ? props.steps : fallbackSteps
+    Array.isArray(props.steps) && props.steps.length
+        ? props.steps.map((s, idx, arr) => ({
+              ...s,
+              isLast: idx === arr.length - 1,
+          }))
+        : []
 )
 
 const scrollToStep = (stepNumber) => {

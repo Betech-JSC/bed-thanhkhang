@@ -3,7 +3,8 @@
 OPSX Audit — CMS Hardcoded & Fixed Return Values Scanner
 Quét tự động toàn bộ mã nguồn CMS (Backend PHP/Laravel & Frontend Vue/React/Next/Blade)
 để phát hiện các vị trí đang hardcode và return giá trị cố định (mock arrays, fake metrics,
-fallback data giả lập, thông tin liên hệ/setting cứng) cần được liệt kê và remove.
+fallback data giả lập, logic đệm mảng padding/slice, Vue Options API data(), thông tin liên hệ cứng)
+cần được liệt kê và remove.
 
 100% Read-Only (Không sửa đổi hay xóa bất kỳ file nào).
 """
@@ -14,6 +15,13 @@ import re
 import sys
 from pathlib import Path
 from typing import Any, Dict, List
+
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
 
 IGNORE_DIRS = {
     ".git",
@@ -56,6 +64,27 @@ PHP_SCALAR_RETURN_RE = re.compile(
     r"""return\s+(?:['"][^'"]{15,}['"]|\d{2,})\s*;"""
 )
 
+# PHP Fallback / Mock methods in Controllers / Services / Models
+PHP_FALLBACK_METHOD_RE = re.compile(
+    r"""function\s+((?:get)?(?:Fallback|Mock|Default)[a-zA-Z0-9_]*)\s*\(""",
+    re.IGNORECASE,
+)
+
+PHP_CALL_FALLBACK_RE = re.compile(
+    r"""->\s*((?:get)?(?:Fallback|Mock)[a-zA-Z0-9_]*)\s*\(""",
+    re.IGNORECASE,
+)
+
+PHP_SAFE_DEFAULT_METHODS = {
+    "getDefaultLocale",
+    "getDefaultGuardName",
+    "getDefaultDriver",
+    "getDefaultPagination",
+    "getDefaultParentAttribute",
+    "getDefaultSupportInfo",
+    "getDefaultConnection",
+}
+
 FE_COMPUTED_FIXED_ARRAY_RE = re.compile(
     r"""(?:computed\s*\(\s*\(\)\s*=>\s*\[|function\s+\w+\s*\([^)]*\)\s*\{\s*return\s*\[|const\s+\w+\s*=\s*\([^)]*\)\s*=>\s*\[)""",
     re.MULTILINE,
@@ -64,6 +93,29 @@ FE_COMPUTED_FIXED_ARRAY_RE = re.compile(
 FE_MOCK_ARRAY_RE = re.compile(
     r"""(?:const|let|var)\s+([a-zA-Z0-9_]+)\s*=\s*(?:ref\s*\(\s*|reactive\s*\(\s*)?\[\s*\{""",
     re.MULTILINE,
+)
+
+# Vue Options API data() containing mock / hardcoded records
+FE_OPTIONS_DATA_PROPERTY_RE = re.compile(
+    r"""^\s*([a-zA-Z0-9_]+)\s*:\s*\[\s*\{""",
+    re.MULTILINE,
+)
+
+# Array padding logic & slicing on mocks/defaults
+FE_ARRAY_PADDING_RE = re.compile(
+    r"""(?:"""
+    r"""\b(?:defaultItems|remainingMocks|rawMockProducts|mockCatalog|fallbackItems|currentMocks|defaultServices|defaultCards)\.slice\s*\("""
+    r"""|\[\s*\.\.\.\w+\s*,\s*\.\.\.(?:remainingMocks|defaultItems|rawMock|mock|fallback)\w*"""
+    r"""|\b(?:padded|padding)\.push\s*\("""
+    r"""|\bpush\s*\(\s*(?:cat\.)?defaultItems"""
+    r"""|\b(?:while|if)\s*\([^)]*\.length\s*<\s*\d+[^)]*\)\s*\{[^}]*\b(?:push|concat)\s*\("""
+    r""")""",
+    re.IGNORECASE | re.MULTILINE,
+)
+
+FE_MOCK_NAMED_VAR_RE = re.compile(
+    r"""\b(rawMock[a-zA-Z0-9_]*|remainingMocks|currentMocks|defaultItems|defaultServices|fallbackProcessSteps|fallbackFaqs|fallbackPolicies|mockCatalog)\b""",
+    re.IGNORECASE,
 )
 
 FE_PROP_FALLBACK_RE = re.compile(
@@ -124,7 +176,45 @@ def scan_php_file(file_path: Path, root: Path) -> List[Dict[str, Any]]:
     lines = content.splitlines()
     rel_path = file_path.relative_to(root).as_posix()
 
-    # 1. Multi-dimensional array / collection returns in Controllers, Services, Models, Routes
+    # 1. Fallback / Mock methods in Controllers / Services / Models (ADD-04)
+    for match in PHP_FALLBACK_METHOD_RE.finditer(content):
+        method_name = match.group(1)
+        if method_name in PHP_SAFE_DEFAULT_METHODS:
+            continue
+        line_no = find_line_number(content, match.start())
+        window = "\n".join(lines[max(0, line_no - 1) : min(len(lines), line_no + 30)])
+        if PHP_RECORD_KEYS_RE.search(window) or "return [" in window or "return collect(" in window:
+            findings.append(
+                {
+                    "layer": "Backend (PHP)",
+                    "category": f"Hardcoded Fallback/Mock Method ({method_name}())",
+                    "severity": "P1",
+                    "file": rel_path,
+                    "line": line_no,
+                    "symbol": f"{method_name}()",
+                    "snippet": extract_snippet(lines, line_no),
+                    "remediation": f"Remove hàm mock/fallback {method_name}(); truy vấn từ Database Eloquent Model hoặc trả về rỗng/404.",
+                }
+            )
+
+    # 2. Call to Fallback / Mock methods (e.g. $this->getFallbackProduct(...))
+    for match in PHP_CALL_FALLBACK_RE.finditer(content):
+        callee = match.group(1)
+        line_no = find_line_number(content, match.start())
+        findings.append(
+            {
+                "layer": "Backend (PHP)",
+                "category": f"Call to Fallback/Mock Method ({callee}())",
+                "severity": "P1",
+                "file": rel_path,
+                "line": line_no,
+                "symbol": f"{callee}()",
+                "snippet": extract_snippet(lines, line_no),
+                "remediation": f"Remove lệnh gọi {callee}(); xử lý trực tiếp kết quả truy vấn từ Database.",
+            }
+        )
+
+    # 3. Multi-dimensional array / collection returns in Controllers, Services, Models, Routes
     for match in PHP_FIXED_RETURN_RE.finditer(content):
         line_no = find_line_number(content, match.start())
         method_name = find_enclosing_php_method(lines, line_no)
@@ -143,7 +233,7 @@ def scan_php_file(file_path: Path, root: Path) -> List[Dict[str, Any]]:
                 }
             )
 
-    # 2. Direct return of hardcoded record arrays with literal strings/data
+    # 4. Direct return of hardcoded record arrays with literal strings/data
     for idx, line in enumerate(lines, start=1):
         if re.search(r"\breturn\s*\[", line):
             method_name = find_enclosing_php_method(lines, idx)
@@ -151,7 +241,6 @@ def scan_php_file(file_path: Path, root: Path) -> List[Dict[str, Any]]:
                 continue
             window = "\n".join(lines[max(0, idx - 1) : min(len(lines), idx + 20)])
             key_matches = PHP_RECORD_KEYS_RE.findall(window)
-            # Check if values in window contain hardcoded string literals on RHS of =>
             literal_rhs = re.findall(r"=>\s*['\"][^'\"]{4,}['\"]", window)
             if len(key_matches) >= 2 and len(literal_rhs) >= 1 and not any(
                 f["file"] == rel_path and abs(f["line"] - idx) <= 3 for f in findings
@@ -170,7 +259,7 @@ def scan_php_file(file_path: Path, root: Path) -> List[Dict[str, Any]]:
                         }
                     )
 
-        # 3. Hardcoded scalar return in custom getters/helpers (excluding framework getView/getModel/getTable/getResource)
+        # 5. Hardcoded scalar return in custom getters/helpers (excluding framework getView/getModel/getTable/getResource)
         if PHP_SCALAR_RETURN_RE.search(line):
             method_name = find_enclosing_php_method(lines, idx)
             if method_name in {"getView()", "getModel()", "getTable()", "getResource()", "redirectTo()"}:
@@ -202,7 +291,44 @@ def scan_fe_file(file_path: Path, root: Path) -> List[Dict[str, Any]]:
     lines = content.splitlines()
     rel_path = file_path.relative_to(root).as_posix()
 
-    # 1. Computed / Function returning fixed literal array
+    # 1. Vue Options API data() containing hardcoded mock arrays (ADD-04)
+    for match in FE_OPTIONS_DATA_PROPERTY_RE.finditer(content):
+        prop_name = match.group(1)
+        line_no = find_line_number(content, match.start())
+        window = "\n".join(lines[max(0, line_no - 1) : min(len(lines), line_no + 25)])
+        key_matches = FE_OBJECT_CONTENT_KEYS_RE.findall(window)
+        if len(key_matches) >= 2 or FE_MOCK_NAMED_VAR_RE.search(prop_name):
+            if not re.search(r"(?:columns|headers|fields|rules|toolbar|options|routes|tabs|breadcrumbs|locales)", prop_name, re.IGNORECASE):
+                findings.append(
+                    {
+                        "layer": "Frontend / CMS UI",
+                        "category": f"Vue Options API Hardcoded Data Array ({prop_name})",
+                        "severity": "P1",
+                        "file": rel_path,
+                        "line": line_no,
+                        "symbol": f"data.{prop_name}",
+                        "snippet": extract_snippet(lines, line_no),
+                        "remediation": f"Remove mảng tĩnh '{prop_name}' trong data(); truyền dữ liệu động từ CMS qua props.",
+                    }
+                )
+
+    # 2. Array padding and mock slicing logic (ADD-04)
+    for match in FE_ARRAY_PADDING_RE.finditer(content):
+        line_no = find_line_number(content, match.start())
+        findings.append(
+            {
+                "layer": "Frontend / CMS UI",
+                "category": "Array Padding / Mock Slicing Logic",
+                "severity": "P1",
+                "file": rel_path,
+                "line": line_no,
+                "symbol": "array padding",
+                "snippet": extract_snippet(lines, line_no),
+                "remediation": "Remove logic đệm/ghép mảng giả lập; chỉ hiển thị đúng số lượng bản ghi thực tế từ CMS.",
+            }
+        )
+
+    # 3. Computed / Function returning fixed literal array
     for match in FE_COMPUTED_FIXED_ARRAY_RE.finditer(content):
         line_no = find_line_number(content, match.start())
         window = "\n".join(lines[max(0, line_no - 1) : min(len(lines), line_no + 20)])
@@ -220,7 +346,7 @@ def scan_fe_file(file_path: Path, root: Path) -> List[Dict[str, Any]]:
                 }
             )
 
-    # 2. Props fallback to hardcoded mock items (e.g. props.items?.length ? props.items : mockItems)
+    # 4. Props fallback to hardcoded mock items (e.g. props.items?.length ? props.items : mockItems)
     for match in FE_PROP_FALLBACK_RE.finditer(content):
         line_no = find_line_number(content, match.start())
         findings.append(
@@ -236,13 +362,13 @@ def scan_fe_file(file_path: Path, root: Path) -> List[Dict[str, Any]]:
             }
         )
 
-    # 3. Hardcoded mock arrays of content objects in Pages/Components/Layouts
+    # 5. Hardcoded mock arrays of content objects in Pages/Components/Layouts
     for match in FE_MOCK_ARRAY_RE.finditer(content):
         var_name = match.group(1)
         line_no = find_line_number(content, match.start())
         window = "\n".join(lines[max(0, line_no - 1) : min(len(lines), line_no + 25)])
         key_matches = FE_OBJECT_CONTENT_KEYS_RE.findall(window)
-        if len(key_matches) >= 2:
+        if len(key_matches) >= 2 or FE_MOCK_NAMED_VAR_RE.search(var_name):
             if not re.search(r"(?:columns|headers|fields|rules|toolbar|options|routes|tabs|breadcrumbs)", var_name, re.IGNORECASE):
                 findings.append(
                     {
@@ -257,7 +383,7 @@ def scan_fe_file(file_path: Path, root: Path) -> List[Dict[str, Any]]:
                     }
                 )
 
-    # 4. Hardcoded tel:/mailto: or phone numbers in templates
+    # 6. Hardcoded tel:/mailto: or phone numbers in templates
     for idx, line in enumerate(lines, start=1):
         if HARDCODED_CONTACT_RE.search(line):
             if not any(tok in line for tok in [":href", "v-bind", "${", "{{", "props.", "settings.", "global."]):

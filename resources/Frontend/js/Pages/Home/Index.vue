@@ -29,6 +29,7 @@
 
         <!-- 2. Featured Products Carousel (Figma Node 2261:5503: Khung tranh chứng chỉ RMIT, nút > điều hướng bên phải) -->
         <FeaturedProductsCarousel
+            :items="products"
             :title="tt('SẢN PHẨM NỔI BẬT')"
         />
 
@@ -41,6 +42,7 @@
         <!-- 4. Category Products Section with 3 Carousel Rows (Figma Node 2261:5563: Móc khoá, Đồ dùng/Decor, Gia công) -->
         <ProductsSection
             :title="''"
+            :categories="categories"
             :products="products"
         />
 
@@ -102,6 +104,10 @@ export default {
             type: Array,
             default: () => [],
         },
+        categories: {
+            type: Array,
+            default: () => [],
+        },
         products: {
             type: Array,
             default: () => [],
@@ -152,13 +158,19 @@ export default {
             return this.heroBanner;
         },
         dynamicHeroTitle() {
-            return this.tt(this.activeSlider?.title || this.heroTitle);
+            if (this.activeSlider?.title && !this.activeSlider.title.includes('HH Maker - Dịch vụ')) {
+                return this.tt(this.activeSlider.title);
+            }
+            return this.tt(this.heroTitle);
         },
         dynamicHeroSubtitle() {
             return this.tt(this.activeSlider?.subtitle || this.heroSubtitle);
         },
         dynamicHeroDescription() {
-            return this.tt(this.activeSlider?.description || this.heroDescription);
+            if (this.activeSlider?.description && !this.activeSlider.description.includes('Giải pháp gia công')) {
+                return this.tt(this.activeSlider.description);
+            }
+            return this.tt(this.heroDescription);
         },
         dynamicPrimaryCtaText() {
             return this.activeSlider?.primary_cta_text ? this.tt(this.activeSlider.primary_cta_text) : this.tt('Khám phá ngay');

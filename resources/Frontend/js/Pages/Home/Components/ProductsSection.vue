@@ -1,6 +1,6 @@
 <template>
-    <section v-scroll-reveal id="products-section" class="py-12 md:py-20 bg-dark-bg">
-        <div class="max-w-[1180px] mx-auto px-4 sm:px-6 lg:px-8">
+    <section v-if="displayCategories.length > 0" v-scroll-reveal id="products-section" class="py-12 md:py-20 bg-dark-bg">
+        <div class="app-container">
             <!-- Section Header (Figma Node 2261:5565) -->
             <div v-if="title" class="text-center mb-10 sm:mb-14">
                 <h2
@@ -15,7 +15,7 @@
                 <div
                     v-for="(category, rIdx) in displayCategories"
                     :key="category.id"
-                    class="space-y-5 max-w-[1116px] mx-auto"
+                    class="space-y-5"
                 >
                     <!-- Row Header: Category Name + Prev/Next Controls (Figma Node 2261:5580) -->
                     <div class="flex items-center justify-between gap-4">
@@ -49,19 +49,7 @@
                     </div>
 
                     <!-- Smooth GPU Product Track (Figma Node 2261:5595 - Frame 253: 264x419 cards, gap 20px, 1116px = 4 cards) -->
-                    <div class="relative group max-w-[1116px] mx-auto">
-                        <!-- Synchronized Left Prev Button -->
-                        <button
-                            type="button"
-                            @click="scrollRow(rIdx, 'prev')"
-                            class="absolute -left-3 sm:-left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#111322]/90 border border-white/20 text-white hover:bg-[#2970FF] hover:border-[#2970FF] flex items-center justify-center transition-colors duration-200 active:scale-95 shadow-xl backdrop-blur-sm cursor-pointer"
-                            aria-label="Previous Slide"
-                        >
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-                            </svg>
-                        </button>
-
+                    <div class="relative group">
                         <div
                             :ref="el => { if (el) rowViewports[rIdx] = el }"
                             class="overflow-hidden w-full py-2"
@@ -70,44 +58,35 @@
                         >
                             <div
                                 :ref="el => { if (el) rowTracks[rIdx] = el }"
-                                class="flex items-center gap-5 w-full"
+                                class="flex items-center gap-5 will-change-transform"
+                                :style="{
+                                    transform: `translateX(-${rowOffsets[rIdx] || 0}px)`,
+                                    transition: 'transform 450ms cubic-bezier(0.22, 1, 0.36, 1)'
+                                }"
                             >
-                                <div
-                                    v-for="(slotItem, slotIndex) in getVisibleRowItems(category, rIdx)"
-                                    :key="slotIndex"
-                                    class="w-[264px] min-w-[264px] max-w-[264px] h-[419px] flex-shrink-0 rounded-[12px] overflow-hidden flex flex-col justify-between hover:shadow-2xl hover:shadow-primary/20 border border-white/5 cursor-pointer bg-[#182238] select-none group/card"
+                                <Link
+                                    v-for="(item, idx) in category.items"
+                                    :key="item.id || idx"
+                                    :href="item.url || '/san-pham'"
+                                    class="w-[264px] min-w-[264px] max-w-[264px] h-[419px] flex-shrink-0 rounded-[12px] overflow-hidden flex flex-col justify-between hover:shadow-2xl hover:shadow-primary/20 border border-white/5 cursor-pointer bg-[#182238] select-none group/card block"
                                 >
-                                    <!-- Top: Fixed 264x335 Product Image Frame with Inner Horizontal Slide Transition -->
+                                    <!-- Top: Fixed 264x335 Product Image Frame -->
                                     <div class="w-full h-[335px] relative overflow-hidden bg-[#D1D2D2] shrink-0">
                                         <!-- Best Choice Badge (Figma Node 2261:5598: 97x25px, bg #00359E, rounded 4px) -->
                                         <div
-                                            v-if="slotIndex === 0 && category.hasBestChoice"
+                                            v-if="idx === 0 && category.hasBestChoice"
                                             class="absolute top-3 left-3 z-20 w-[97px] h-[25px] bg-[#00359E] text-[#F5F8FF] text-[12px] font-medium leading-[17px] rounded-[4px] shadow-md flex items-center justify-center select-none pointer-events-none"
                                         >
                                             {{ tt('Best choice') }}
                                         </div>
 
-                                        <Transition
-                                            enter-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform"
-                                            :enter-from-class="(rowDirections[rIdx] || slideDirection) === 'next' ? 'translate-x-full' : '-translate-x-full'"
-                                            enter-to-class="translate-x-0"
-                                            leave-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform absolute inset-0 pointer-events-none"
-                                            leave-from-class="translate-x-0"
-                                            :leave-to-class="(rowDirections[rIdx] || slideDirection) === 'next' ? '-translate-x-full' : 'translate-x-full'"
-                                        >
-                                            <div
-                                                :key="`${rowIndices[rIdx] || 0}-${slotIndex}`"
-                                                class="w-full h-full relative overflow-hidden"
-                                            >
-                                                <img
-                                                    :src="slotItem.image"
-                                                    :alt="slotItem.title"
-                                                    class="w-full h-full object-cover object-center select-none"
-                                                    loading="eager"
-                                                    decoding="sync"
-                                                />
-                                            </div>
-                                        </Transition>
+                                        <img
+                                            :src="item.image"
+                                            :alt="item.title"
+                                            class="w-full h-full object-cover object-center select-none"
+                                            loading="eager"
+                                            decoding="sync"
+                                        />
 
                                         <!-- Subtle Sheen Overlay on Hover -->
                                         <div class="absolute inset-0 bg-primary/10 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 pointer-events-none z-10"></div>
@@ -115,42 +94,18 @@
 
                                     <!-- Bottom: Locked 264x84px Dark Slate Card Footer (Figma Node 2261:5600: height 84px, bg #30374F) -->
                                     <div class="w-full h-[84px] bg-[#30374F] relative overflow-hidden shrink-0">
-                                        <Transition
-                                            enter-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform"
-                                            :enter-from-class="(rowDirections[rIdx] || slideDirection) === 'next' ? 'translate-x-full' : '-translate-x-full'"
-                                            enter-to-class="translate-x-0"
-                                            leave-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform absolute inset-0 pointer-events-none"
-                                            leave-from-class="translate-x-0"
-                                            :leave-to-class="(rowDirections[rIdx] || slideDirection) === 'next' ? '-translate-x-full' : 'translate-x-full'"
-                                        >
-                                            <div
-                                                :key="`${rowIndices[rIdx] || 0}-${slotIndex}`"
-                                                class="w-full h-full px-6 py-3 flex flex-col justify-center space-y-1"
-                                            >
-                                                <h4 class="text-base font-bold text-[#F5F8FF] truncate font-sans leading-[22px]">
-                                                    {{ tt(slotItem.title) }}
-                                                </h4>
-                                                <p class="text-xs text-[#B9C0D4] truncate font-normal leading-[17px]">
-                                                    {{ tt(slotItem.description) }}
-                                                </p>
-                                            </div>
-                                        </Transition>
+                                        <div class="w-full h-full px-6 py-3 flex flex-col justify-center space-y-1">
+                                            <h4 class="text-base font-bold text-[#F5F8FF] truncate font-sans leading-[22px]">
+                                                {{ tt(item.title) }}
+                                            </h4>
+                                            <p class="text-xs text-[#B9C0D4] truncate font-normal leading-[17px]">
+                                                {{ tt(item.description) }}
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
+                                </Link>
                             </div>
                         </div>
-
-                        <!-- Synchronized Right Next Button -->
-                        <button
-                            type="button"
-                            @click="scrollRow(rIdx, 'next')"
-                            class="absolute -right-3 sm:-right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#111322]/90 border border-white/20 text-white hover:bg-[#2970FF] hover:border-[#2970FF] flex items-center justify-center transition-colors duration-200 active:scale-95 shadow-xl backdrop-blur-sm cursor-pointer"
-                            aria-label="Next Slide"
-                        >
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
-                            </svg>
-                        </button>
                     </div>
 
                     <!-- Row CTA Button: "Xem thêm sản phẩm khác" (Figma Node 2261:5613 - Frame 260: 239x48px, gradient 90deg #2970FF to #00359E) -->
@@ -170,14 +125,23 @@
 </template>
 
 <script>
+import { Link } from '@inertiajs/inertia-vue3';
+
 const tt = (s) => s;
 
 export default {
     name: 'ProductsSection',
+    components: {
+        Link,
+    },
     props: {
         title: {
             type: String,
             default: tt('SẢN PHẨM NỔI BẬT'),
+        },
+        categories: {
+            type: Array,
+            default: () => [],
         },
         products: {
             type: Array,
@@ -186,211 +150,102 @@ export default {
     },
     data() {
         return {
-            slideDirection: 'next',
             rowTracks: {},
             rowViewports: {},
-            rowIndices: { 0: 0, 1: 0, 2: 0 },
-            rowDirections: { 0: 'next', 1: 'next', 2: 'next' },
             rowOffsets: { 0: 0, 1: 0, 2: 0 },
             rowTouchStartX: {},
             categoryRows: [
                 {
                     id: 'keychains',
-                    name: this.tt('Móc khoá'),
-                    keywords: ['khoa', 'keychain', 'moc'],
+                    name: tt('Móc khoá'),
+                    keywords: ['khoa', 'keychain', 'moc', 'moc-khoa', 'phu-kien'],
                     hasBestChoice: true,
                     url: '/san-pham?category=moc-khoa',
-                    defaultItems: [
-                        {
-                            id: 'kc-1',
-                            title: this.tt('Tên sản phẩm'),
-                            description: 'This awesome element has more variants and fully',
-                            image: '/assets/images/homepage/products/mockhoa-toho.png',
-                            isBestChoice: true,
-                            url: '/san-pham',
-                        },
-                        {
-                            id: 'kc-2',
-                            title: this.tt('Tên sản phẩm'),
-                            description: 'This awesome element has more variants and fully',
-                            image: '/assets/images/homepage/products/mockhoa-co4la.png',
-                            isBestChoice: false,
-                            url: '/san-pham',
-                        },
-                        {
-                            id: 'kc-3',
-                            title: this.tt('Tên sản phẩm'),
-                            description: 'This awesome element has more variants and fully',
-                            image: '/assets/images/homepage/products/mockhoa-melacung.png',
-                            isBestChoice: false,
-                            url: '/san-pham',
-                        },
-                        {
-                            id: 'kc-4',
-                            title: this.tt('Tên sản phẩm'),
-                            description: 'This awesome element has more variants and fully',
-                            image: '/assets/images/homepage/products/mockhoa-cavang.png',
-                            isBestChoice: false,
-                            url: '/san-pham',
-                        },
-                        {
-                            id: 'kc-5',
-                            title: this.tt('Tên sản phẩm'),
-                            description: 'This awesome element has more variants and fully',
-                            image: '/assets/images/homepage/products/mockhoa-toho.png',
-                            isBestChoice: false,
-                            url: '/san-pham',
-                        },
-                    ],
                 },
                 {
                     id: 'office',
-                    name: this.tt('Đồ dùng/ Đồ trang trí văn phòng'),
-                    keywords: ['decor', 'van-phong', 'office', 'trang-tri'],
+                    name: tt('Đồ dùng/ Đồ trang trí văn phòng'),
+                    keywords: ['decor', 'van-phong', 'office', 'trang-tri', 'do-dung', 'khong-gian'],
                     hasBestChoice: true,
                     url: '/san-pham?category=van-phong',
-                    defaultItems: [
-                        {
-                            id: 'of-1',
-                            title: this.tt('Tên sản phẩm'),
-                            description: 'This awesome element has more variants and fully',
-                            image: '/assets/images/homepage/products/decor-denngu.png',
-                            isBestChoice: true,
-                            url: '/san-pham',
-                        },
-                        {
-                            id: 'of-2',
-                            title: this.tt('Tên sản phẩm'),
-                            description: 'This awesome element has more variants and fully',
-                            image: '/assets/images/homepage/products/decor-ongpudding.png',
-                            isBestChoice: false,
-                            url: '/san-pham',
-                        },
-                        {
-                            id: 'of-3',
-                            title: this.tt('Tên sản phẩm'),
-                            description: 'This awesome element has more variants and fully',
-                            image: '/assets/images/homepage/products/decor-giane.png',
-                            isBestChoice: false,
-                            url: '/san-pham',
-                        },
-                        {
-                            id: 'of-4',
-                            title: this.tt('Tên sản phẩm'),
-                            description: 'This awesome element has more variants and fully',
-                            image: '/assets/images/homepage/products/decor-giatainghe.png',
-                            isBestChoice: false,
-                            url: '/san-pham',
-                        },
-                        {
-                            id: 'of-5',
-                            title: this.tt('Tên sản phẩm'),
-                            description: 'This awesome element has more variants and fully',
-                            image: '/assets/images/homepage/products/decor-denngu.png',
-                            isBestChoice: false,
-                            url: '/san-pham',
-                        },
-                    ],
                 },
                 {
                     id: 'custom',
-                    name: this.tt('Gia công theo yêu cầu'),
+                    name: tt('Gia công theo yêu cầu'),
                     keywords: ['custom', 'gia-cong', 'yeu-cau'],
                     hasBestChoice: false,
                     url: '/san-pham?category=gia-cong',
-                    defaultItems: [
-                        {
-                            id: 'cs-1',
-                            title: this.tt('Tên sản phẩm'),
-                            description: 'This awesome element has more variants and fully',
-                            image: '/assets/images/homepage/products/giacong-emily.png',
-                            isBestChoice: false,
-                            url: '/san-pham',
-                        },
-                        {
-                            id: 'cs-2',
-                            title: this.tt('Tên sản phẩm'),
-                            description: 'This awesome element has more variants and fully',
-                            image: '/assets/images/homepage/products/giacong-tuongmat.png',
-                            isBestChoice: false,
-                            url: '/san-pham',
-                        },
-                        {
-                            id: 'cs-3',
-                            title: this.tt('Tên sản phẩm'),
-                            description: 'This awesome element has more variants and fully',
-                            image: '/assets/images/homepage/products/giacong-hopuno.png',
-                            isBestChoice: false,
-                            url: '/san-pham',
-                        },
-                        {
-                            id: 'cs-4',
-                            title: this.tt('Tên sản phẩm'),
-                            description: 'This awesome element has more variants and fully',
-                            image: '/assets/images/homepage/products/giacong-opbatlua.png',
-                            isBestChoice: false,
-                            url: '/san-pham',
-                        },
-                        {
-                            id: 'cs-5',
-                            title: this.tt('Tên sản phẩm'),
-                            description: 'This awesome element has more variants and fully',
-                            image: '/assets/images/homepage/products/giacong-emily.png',
-                            isBestChoice: false,
-                            url: '/san-pham',
-                        },
-                    ],
                 },
             ],
         };
     },
     computed: {
         displayCategories() {
-            return this.categoryRows.map((cat, rIdx) => {
+            let baseCategories = [];
+            if (this.categories && this.categories.length > 0) {
+                baseCategories = this.categories.filter(c => c.slug !== 'all' && c.id !== 'all').map(c => ({
+                    id: c.slug || c.id,
+                    name: this.tt(c.name || c.title),
+                    url: `/san-pham?category=${c.slug || c.id}`,
+                    hasBestChoice: c.hasBestChoice ?? true,
+                    keywords: [String(c.slug || c.id).toLowerCase()],
+                    items: c.items || [],
+                }));
+            } else {
+                baseCategories = this.categoryRows;
+            }
+
+            return baseCategories.map((cat, rIdx) => {
                 let items = [];
-                if (this.products && this.products.length > 0) {
+
+                // 1. Ưu tiên lấy sản phẩm đã load sẵn theo quan hệ danh mục từ Backend
+                if (cat.items && Array.isArray(cat.items) && cat.items.length > 0) {
+                    items = cat.items.map((p, idx) => ({
+                        id: p.id || `p-${rIdx}-${idx}`,
+                        title: p.title || p.name || '',
+                        description: p.description || p.short_description || '',
+                        image: p.thumbnail?.url || p.image?.url || (typeof p.image === 'string' ? p.image : (p.thumbnail || '')),
+                        isBestChoice: idx === 0 && cat.hasBestChoice,
+                        url: p.slug ? `/san-pham/${p.slug}` : (p.id ? `/san-pham/${p.id}` : '/san-pham'),
+                    }));
+                } else if (this.products && this.products.length > 0) {
+                    // 2. Fallback lọc từ this.products nếu Backend không truyền items trong category
+                    const catId = String(cat.id).toLowerCase();
                     const matched = this.products.filter(p => {
-                        const catSlug = (p.category?.slug || p.category_slug || p.category || '').toLowerCase();
-                        const catName = (p.category?.name || '').toLowerCase();
-                        return (
-                            catSlug.includes(cat.id) ||
-                            cat.keywords.some(k => catSlug.includes(k) || catName.includes(k))
-                        );
+                        if (!p.categories || !Array.isArray(p.categories) || p.categories.length === 0) {
+                            const pCatId = String(p.category_id || p.categoryId || '').toLowerCase();
+                            const catSlug = String(p.category?.slug || p.category_slug || (typeof p.category === 'string' ? p.category : '')).toLowerCase();
+                            const catName = String(p.category?.name || p.category?.title || '').toLowerCase();
+                            if (pCatId === catId || catSlug === catId) return true;
+                            if (cat.keywords && cat.keywords.some(k => catSlug.includes(k) || catName.includes(k))) return true;
+                            return false;
+                        }
+
+                        return p.categories.some(c => {
+                            const cId = String(c.id).toLowerCase();
+                            const cSlug = String(c.slug || '').toLowerCase();
+                            const cTitle = String(c.title || c.name || '').toLowerCase();
+                            if (cId === catId || cSlug === catId) return true;
+                            if (cat.keywords && cat.keywords.some(k => cSlug.includes(k) || cTitle.includes(k))) return true;
+                            return false;
+                        });
                     });
 
-                    if (matched.length > 0) {
-                        items = matched.map((p, idx) => ({
-                            id: p.id || `p-${rIdx}-${idx}`,
-                            title: p.title || p.name || this.tt('Tên sản phẩm'),
-                            description:
-                                p.description ||
-                                p.short_description ||
-                                'This awesome element has more variants and fully',
-                            image:
-                                p.thumbnail?.url ||
-                                p.image?.url ||
-                                p.thumbnail ||
-                                cat.defaultItems[idx % cat.defaultItems.length].image,
-                            isBestChoice: idx === 0 && cat.hasBestChoice,
-                            url: p.slug ? `/san-pham/${p.slug}` : '/san-pham',
-                        }));
-                    }
-                }
-
-                if (items.length < 5) {
-                    const existingImages = new Set(items.map(i => i.image));
-                    const remainingDefaults = cat.defaultItems.filter(d => !existingImages.has(d.image));
-                    items = [...items, ...remainingDefaults].slice(0, 5);
-                    if (items.length < 5) {
-                        items = cat.defaultItems;
-                    }
+                    items = matched.map((p, idx) => ({
+                        id: p.id || `p-${rIdx}-${idx}`,
+                        title: p.title || p.name || '',
+                        description: p.description || p.short_description || '',
+                        image: p.thumbnail?.url || p.image?.url || (typeof p.image === 'string' ? p.image : (p.thumbnail || '')),
+                        isBestChoice: idx === 0 && cat.hasBestChoice,
+                        url: p.slug ? `/san-pham/${p.slug}` : (p.id ? `/san-pham/${p.id}` : '/san-pham'),
+                    }));
                 }
 
                 return {
                     ...cat,
                     items,
                 };
-            });
+            }).filter(cat => cat.items.length > 0);
         },
     },
     mounted() {
@@ -405,6 +260,9 @@ export default {
         }
     },
     methods: {
+        tt(s) {
+            return this.$root?.tt ? this.$root.tt(s) : tt(s);
+        },
         preloadImages() {
             if (typeof window === 'undefined') return;
             this.displayCategories.forEach(cat => {
@@ -416,29 +274,12 @@ export default {
                 });
             });
         },
-        getVisibleRowItems(category, rIdx) {
-            const list = (category && category.items) || [];
-            if (list.length === 0) return [];
-            const total = list.length;
-            const startIdx = this.rowIndices[rIdx] || 0;
-            const cards = [];
-            for (let i = 0; i < 4; i++) {
-                const itemIndex = (startIdx + i) % total;
-                cards.push({
-                    ...list[itemIndex],
-                    slotIndex: i,
-                    itemIndex,
-                });
-            }
-            return cards;
-        },
         getRowMaxOffset(rIdx) {
             const viewport = this.rowViewports[rIdx];
             const cat = this.displayCategories[rIdx];
             const totalItems = cat && cat.items ? cat.items.length : 0;
-            const trackWidth = totalItems > 0 ? totalItems * 264 + (totalItems - 1) * 20 : 0;
-            const viewportWidth = viewport ? viewport.clientWidth : 1116;
-            return Math.max(0, trackWidth - viewportWidth);
+            const viewportWidth = viewport ? viewport.clientWidth : 1152;
+            return Math.max(0, totalItems * 284 - 20 - viewportWidth);
         },
         handleResize() {
             this.displayCategories.forEach((_, rIdx) => {
@@ -450,24 +291,10 @@ export default {
             });
         },
         scrollRow(rIdx, direction) {
-            const dir = direction === 'prev' ? 'prev' : 'next';
-            this.slideDirection = dir;
-            this.rowDirections = { ...this.rowDirections, [rIdx]: dir };
-            const cat = this.displayCategories[rIdx];
-            const total = (cat && cat.items ? cat.items.length : 0) || 1;
-            const curIdx = this.rowIndices[rIdx] || 0;
-            const nextIdx = dir === 'next' ? (curIdx + 1) % total : (curIdx - 1 + total) % total;
-            this.rowIndices = { ...this.rowIndices, [rIdx]: nextIdx };
-
-            const step = 284; // 264px card width + 20px gap
+            const step = 284;
             const maxOffset = this.getRowMaxOffset(rIdx);
-            if (maxOffset <= 0) {
-                const track = this.rowTracks[rIdx];
-                if (track && track.scrollBy) {
-                    track.scrollBy({ left: direction === 'next' ? step : -step, behavior: 'smooth' });
-                }
-                return;
-            }
+            if (maxOffset <= 0) return;
+
             const current = this.rowOffsets[rIdx] || 0;
             let nextOffset = current;
             if (direction === 'next') {
@@ -501,6 +328,7 @@ export default {
     },
 };
 </script>
+
 <style scoped>
 .no-scrollbar::-webkit-scrollbar {
     display: none !important;
@@ -512,4 +340,3 @@ export default {
     scrollbar-width: none !important;
 }
 </style>
-

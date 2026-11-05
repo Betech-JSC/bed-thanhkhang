@@ -1,35 +1,32 @@
 <template>
     <article class="w-full max-w-[840px] space-y-10 font-sans text-left">
-        <!-- Mục 01: Khi nào bạn cần thiết kế 3D? (Figma Node 2367:2197) -->
-        <section v-scroll-reveal id="section-01" class="scroll-mt-32 space-y-4">
+<!-- Mục 01: Khi nào bạn cần...? (Figma Node 2367:2197) -->
+        <section v-if="section01 && section01.title" v-scroll-reveal id="section-01" class="scroll-mt-32 space-y-4">
             <h2 class="text-2xl sm:text-[28px] font-bold text-[#FAFAFA] leading-tight sm:leading-[36px]">
-                {{ tt('Khi nào bạn cần thiết kế 3D?') }}
+                {{ tt(section01.title) }}
             </h2>
             <div class="space-y-4 text-base text-[#B9C0D4] leading-[26px]">
-                <p>
-                    {{ tt('Bạn đã hình dung một món đồ nhưng chưa có mô hình để triển khai? Một bức ảnh thường chỉ cho thấy một góc nhìn; bản phác thảo có thể chưa thể hiện rõ chiều sâu, tỉ lệ hay cách các phần kết nối với nhau.') }}
-                </p>
-                <p>
-                    {{ tt('Thiết kế 3D giúp làm rõ những điều đó trước khi chuyển sang sản phẩm vật lý. Đây là bước phù hợp khi bạn muốn phát triển một hình dáng mới, điều chỉnh mẫu tham khảo hoặc kiểm tra các chi tiết cần lắp ghép. HH Maker cùng bạn chuyển thông tin ban đầu thành phương án có thể xem xét và trao đổi cụ thể hơn.') }}
+                <p v-for="(paragraph, pIdx) in section01.paragraphs" :key="pIdx">
+                    {{ tt(paragraph) }}
                 </p>
             </div>
         </section>
 
-        <!-- Mục 02: Từ ý tưởng tới mô hình 3D (Figma Node 2367:2201) -->
-        <section v-scroll-reveal id="section-02" class="scroll-mt-32 space-y-5">
+<!-- Mục 02: Quy trình các bước (Figma Node 2367:2201) -->
+        <section v-if="resolvedSteps.length > 0 || (section02 && section02.title)" v-scroll-reveal id="section-02" class="scroll-mt-32 space-y-5">
             <div class="space-y-3">
                 <h2 class="text-2xl sm:text-[28px] font-bold text-[#FAFAFA] leading-tight sm:leading-[36px]">
-                    {{ tt('Từ ý tưởng tới mô hình 3D') }}
+                    {{ tt(section02.title) }}
                 </h2>
-                <p class="text-base text-[#B9C0D4] leading-[28px]">
-                    {{ tt('Không nhất thiết phải chốt mọi chi tiết từ đầu. Điều quan trọng là làm rõ từng phần theo thứ tự, để những điều chỉnh sau đó có cơ sở.') }}
+                <p v-if="section02.intro" class="text-base text-[#B9C0D4] leading-[28px]">
+                    {{ tt(section02.intro) }}
                 </p>
             </div>
 
-            <!-- 4 Bước thiết kế (Figma Node 2367:2204) -->
+            <!-- 4 Bước quy trình (Figma Node 2367:2204) -->
             <div class="space-y-0">
                 <div
-                    v-for="step in steps"
+                    v-for="step in resolvedSteps"
                     :key="step.number"
                     class="border-t border-[#404968] py-5 sm:py-[20px] flex items-start gap-4 sm:gap-5"
                 >
@@ -53,21 +50,21 @@
             </div>
         </section>
 
-        <!-- Mục 03: Bạn cần chuẩn bị gì? (Figma Node 2367:2229) -->
-        <section v-scroll-reveal id="section-03" class="scroll-mt-32 space-y-5">
+<!-- Mục 03: Danh mục chuẩn bị / Thông số kỹ thuật (Figma Node 2367:2229) -->
+        <section v-if="resolvedChecklistItems.length > 0 || (section03 && section03.title)" v-scroll-reveal id="section-03" class="scroll-mt-32 space-y-5">
             <div class="space-y-3">
                 <h2 class="text-2xl sm:text-[28px] font-bold text-[#FAFAFA] leading-tight sm:leading-[36px]">
-                    {{ tt('Bạn cần chuẩn bị gì?') }}
+                    {{ tt(section03.title) }}
                 </h2>
-                <p class="text-base text-[#B9C0D4] leading-[28px]">
-                    {{ tt('Thông tin càng rõ, việc trao đổi càng sát với mong muốn của bạn. Trước khi gửi yêu cầu, hãy tập hợp những nội dung dưới đây; phần nào chưa chắc có thể ghi chú để cùng thảo luận.') }}
+                <p v-if="section03.intro" class="text-base text-[#B9C0D4] leading-[28px]">
+                    {{ tt(section03.intro) }}
                 </p>
             </div>
 
             <!-- Card Checklist Thông Số Kỹ Thuật (Figma Node 2367:2232 - bg #171B30, bo góc 12px, padding 28px) -->
             <div class="w-full rounded-[12px] bg-[#171B30] p-6 sm:p-7 space-y-5">
                 <div
-                    v-for="(item, index) in checklistItems"
+                    v-for="(item, index) in resolvedChecklistItems"
                     :key="index"
                     class="flex items-start gap-3 sm:gap-3.5"
                 >
@@ -89,19 +86,19 @@
             </div>
         </section>
 
-        <!-- Mục 04: Cùng hoàn thiện trước khi gia công (Figma Node 2367:2253) -->
-        <section v-scroll-reveal id="section-04" class="scroll-mt-32 space-y-4">
+<!-- Mục 04: Hoàn thiện & Tiêu chuẩn chế tác (Figma Node 2367:2253) -->
+        <section v-if="section04 && section04.title" v-scroll-reveal id="section-04" class="scroll-mt-32 space-y-4">
             <h2 class="text-2xl sm:text-[28px] font-bold text-[#FAFAFA] leading-tight sm:leading-[36px]">
-                {{ tt('Cùng hoàn thiện trước khi gia công') }}
+                {{ tt(section04.title) }}
             </h2>
-            <p class="text-base text-[#B9C0D4] leading-[28px]">
-                {{ tt('Kết quả của giai đoạn thiết kế là phương án mô hình 3D cùng các chi tiết đã thống nhất: hình dáng, tỉ lệ, kích thước và những yêu cầu liên quan đến cách sử dụng. Đây là cơ sở để trao đổi bước gia công tiếp theo, không phải sản phẩm vật lý hoàn thiện.') }}
+            <p v-if="section04.paragraph" class="text-base text-[#B9C0D4] leading-[28px]">
+                {{ tt(section04.paragraph) }}
             </p>
 
-            <!-- Callout Lưu Ý Về Mô Hình (Figma Node 2367:2256 - viền trái #2970FF 2px, padding-left 20px) -->
-            <div class="border-l-2 border-[#2970FF] pl-5 py-2">
+            <!-- Callout Lưu Ý (Figma Node 2367:2256 - viền trái #2970FF 2px, padding-left 20px) -->
+            <div v-if="section04.callout" class="border-l-2 border-[#2970FF] pl-5 py-2">
                 <p class="text-base text-[#B2CCFF] leading-[28px]">
-                    {{ tt('Một mô hình đẹp trên màn hình vẫn cần được xem xét với vật liệu và cách chế tác thực tế. Hãy thống nhất các yêu cầu quan trọng trước khi chuyển sang gia công.') }}
+                    {{ tt(section04.callout) }}
                 </p>
             </div>
         </section>
@@ -120,10 +117,14 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, getCurrentInstance } from 'vue'
 
 const props = defineProps({
     service: {
+        type: Object,
+        default: () => ({}),
+    },
+    sections: {
         type: Object,
         default: () => ({}),
     },
@@ -141,71 +142,31 @@ const props = defineProps({
     },
 })
 
+const instance = getCurrentInstance()
+const i18n = {
+    tt: (text) => (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(text) : text),
+}
+
 const hasDynamicContent = computed(() => {
     return !!props.dynamicHtml && props.dynamicHtml.trim().length > 0
 })
 
-const fallbackSteps = [
-    {
-        number: '01',
-        title: 'Trao đổi ý tưởng và mục đích sử dụng',
-        description:
-            'Bạn chia sẻ sản phẩm muốn làm, hình ảnh tham khảo và điều quan trọng nhất với mình. HH Maker cùng bạn xác định công năng, kích thước dự kiến và những chi tiết cần ưu tiên.',
-    },
-    {
-        number: '02',
-        title: 'Dựng hình khối và xác định tỉ lệ',
-        description:
-            'Từ thông tin đã trao đổi, ý tưởng được chuyển thành hình khối 3D. Ở bước này, hãy tập trung vào dáng tổng thể, tương quan kích thước và vị trí các bộ phận trước khi đi sâu vào chi tiết.',
-    },
-    {
-        number: '03',
-        title: 'Hoàn thiện cấu trúc và chi tiết',
-        description:
-            'Cùng xem lại độ dày, bề mặt, vị trí lắp ghép hoặc phần chữ cần thể hiện. Những chi tiết nhỏ cần được cân nhắc với kích thước thực tế và hướng gia công, thay vì chỉ đẹp trên màn hình.',
-    },
-    {
-        number: '04',
-        title: 'Thống nhất phương án trước khi gia công',
-        description:
-            'Hai bên rà soát mô hình, kích thước và các chi tiết đã điều chỉnh. Nếu chuyển sang gia công, vật liệu, bề mặt và yêu cầu lắp ghép cần được trao đổi thêm để chọn cách thực hiện phù hợp.',
-    },
-]
+const section01 = computed(() => props.sections?.section_01 || props.service?.sections?.section_01 || null)
+const section02 = computed(() => props.sections?.section_02 || props.service?.sections?.section_02 || null)
+const section03 = computed(() => props.sections?.section_03 || props.service?.sections?.section_03 || null)
+const section04 = computed(() => props.sections?.section_04 || props.service?.sections?.section_04 || null)
 
-const fallbackChecklistItems = [
-    {
-        title: 'Ý tưởng & mục đích sử dụng',
-        description:
-            'Món đồ dùng để làm gì, dành cho ai? Có yêu cầu về cầm nắm, trưng bày hay lắp vào một bộ phận khác không?',
-    },
-    {
-        title: 'Ảnh tham khảo hoặc phác thảo',
-        description:
-            'Gửi các góc nhìn bạn có và đánh dấu chi tiết muốn giữ hoặc thay đổi. Một bản vẽ tay có ghi chú cũng là điểm bắt đầu hữu ích.',
-    },
-    {
-        title: 'Kích thước dự kiến',
-        description:
-            'Chiều dài, rộng, cao và đơn vị đo. Nếu cần lắp ghép, bổ sung kích thước hoặc ảnh của phần tiếp xúc liên quan.',
-    },
-    {
-        title: 'Chi tiết cần ưu tiên',
-        description:
-            'Ghi rõ phần chữ, hình dáng, bề mặt hoặc giới hạn không thể thay đổi để cùng cân nhắc ngay từ đầu.',
-    },
-]
-
-const steps = computed(() => {
+const resolvedSteps = computed(() => {
     if (Array.isArray(props.steps) && props.steps.length) return props.steps
     if (Array.isArray(props.service?.steps) && props.service.steps.length) return props.service.steps
-    return fallbackSteps
+    return []
 })
 
-const checklistItems = computed(() => {
+const resolvedChecklistItems = computed(() => {
     if (Array.isArray(props.checklistItems) && props.checklistItems.length) return props.checklistItems
     if (Array.isArray(props.service?.checklist_items) && props.service.checklist_items.length) return props.service.checklist_items
     if (Array.isArray(props.service?.checklistItems) && props.service.checklistItems.length) return props.service.checklistItems
-    return fallbackChecklistItems
+    return []
 })
 </script>
 

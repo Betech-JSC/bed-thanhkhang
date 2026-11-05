@@ -11,7 +11,7 @@
         </Head>
 
         <!-- 1. BREADCRUMBS & SECTION TỔNG QUAN SẢN PHẨM (FIGMA 2358:2979: 1440x713 px, padding 24px 144px 40px) -->
-        <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-[144px] pt-6 pb-10">
+        <div class="app-container pt-6 pb-10">
             <!-- ĐƯỜNG DẪN BREADCRUMB (FIGMA 2358:2980) -->
             <nav class="flex items-center gap-2.5 text-sm leading-[17px] text-[#B9C0D4] mb-6 overflow-x-auto scrollbar-none whitespace-nowrap" aria-label="Breadcrumb">
                 <Link :href="route('home')" class="hover:text-white transition-colors leading-[17px]">
@@ -22,9 +22,9 @@
                     {{ tt('Sản phẩm') }}
                 </Link>
                 <img src="/images/pdp/chevron_right.svg" alt=">" class="w-3.5 h-3.5 opacity-60" />
-                <span class="hover:text-white transition-colors cursor-pointer leading-[17px]">
+                <Link :href="categoryUrl" class="hover:text-white transition-colors leading-[17px]">
                     {{ currentCategory }}
-                </span>
+                </Link>
                 <img src="/images/pdp/chevron_right.svg" alt=">" class="w-3.5 h-3.5 opacity-60" />
                 <span class="text-[#FAFAFA] font-normal leading-[17px] truncate max-w-[200px] sm:max-w-none">
                     {{ currentTitle }}
@@ -95,7 +95,7 @@
         </div>
 
         <!-- 2. CHI TIẾT VÀ THÔNG SỐ (FIGMA 2358:3035: 1440x604 px, padding 0px 144px 64px) -->
-        <section v-scroll-reveal class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-[144px] pt-0 pb-16">
+<section v-scroll-reveal class="app-container pt-0 pb-16">
             <!-- ĐIỀU HƯỚNG NỘI DUNG TABS (FIGMA 2358:3036: height 55px, border-b 1px solid #404968, gap 40px) -->
             <div class="flex items-center gap-10 border-b border-[#404968] overflow-x-auto scrollbar-none pb-0 mb-10 h-[55px]">
                 <button
@@ -146,40 +146,33 @@
                                 </p>
                             </div>
 
-                            <!-- CÁC ĐẶC ĐIỂM SẢN PHẨM (FIGMA 2358:3048, 2358:3054: BỐ CỤC TỰ NHIÊN, KHÔNG ĐÓNG KHUNG CARD THÔ) -->
-                            <div class="flex flex-col gap-6">
-                                <!-- ĐẶC ĐIỂM 1 (FIGMA 2358:3048) -->
-                                <div class="flex flex-col gap-1">
-                                    <h3 class="text-base font-semibold text-[#FAFAFA] leading-[22px]">
-                                        {{ feature1Title }}
-                                    </h3>
-                                    <p class="text-sm text-[#B9C0D4] leading-5">
-                                        {{ feature1Desc }}
-                                    </p>
-                                </div>
+                            <!-- CÁC ĐẶC ĐIỂM SẢN PHẨM -->
+                                <div v-if="feature1Title || feature2Title" class="flex flex-col gap-6">
+                                    <!-- ĐẶC ĐIỂM 1 -->
+                                    <div v-if="feature1Title" class="flex flex-col gap-1">
+                                        <h3 class="text-base font-semibold text-[#FAFAFA] leading-[22px]">
+                                            {{ feature1Title }}
+                                        </h3>
+                                        <p class="text-sm text-[#B9C0D4] leading-5">
+                                            {{ feature1Desc }}
+                                        </p>
+                                    </div>
 
-                                <!-- ĐẶC ĐIỂM 2 (FIGMA 2358:3054) -->
-                                <div class="flex flex-col gap-1">
-                                    <h3 class="text-base font-semibold text-[#FAFAFA] leading-[22px]">
-                                        {{ feature2Title }}
-                                    </h3>
-                                    <p class="text-sm text-[#B9C0D4] leading-5">
-                                        {{ feature2Desc }}
-                                    </p>
+                                    <!-- ĐẶC ĐIỂM 2 -->
+                                    <div v-if="feature2Title" class="flex flex-col gap-1">
+                                        <h3 class="text-base font-semibold text-[#FAFAFA] leading-[22px]">
+                                            {{ feature2Title }}
+                                        </h3>
+                                        <p class="text-sm text-[#B9C0D4] leading-5">
+                                            {{ feature2Desc }}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- NỘI DUNG CONTENT TỪ BACKEND NẾU CÓ -->
-                            <div
-                                v-if="product.content"
-                                class="prose prose-invert max-w-none pt-2 text-sm text-[#B9C0D4]"
-                                v-html="product.content"
-                            ></div>
-                        </div>
-
                         <!-- BẢNG THÔNG SỐ KỸ THUẬT EMBEDDED BÊN PHẢI (FIGMA 2358:3066: 480x445 px) -->
                         <div class="w-full lg:w-[480px] shrink-0">
-                            <SpecTable />
+                            <SpecTable :specs="product?.specifications || product?.pdp_metadata?.specifications || []" />
                         </div>
                     </div>
 
@@ -262,14 +255,12 @@
         </section>
 
         <!-- 3. SẢN PHẨM LIÊN QUAN (FIGMA 2358:3094) -->
-        <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-[144px]">
+        <div class="app-container">
             <RelatedProducts :products="related_products" />
         </div>
 
         <!-- 4. KẾT NỐI DỰ ÁN - LỜI MỜI SÁNG TẠO (FIGMA 2352:9972) -->
-        <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-[144px]">
-            <ProductCtaBanner />
-        </div>
+        <ProductCtaBanner />
 
         <!-- NOTIFICATION TOAST -->
         <Teleport to="body">
@@ -347,30 +338,45 @@ export default {
             ]
         },
         currentTitle() {
-            if (this.product?.title || this.product?.name) {
-                return this.product.title || this.product.name
-            }
-            return this.isEn ? 'Decorative Fox Model' : this.tt('Mô hình Cáo trang trí')
+            return this.product?.title || this.product?.name || ''
         },
         currentCategory() {
-            const rawCat = this.product?.category?.title || this.product?.category_name;
+            const rawCat = this.product?.category?.title || this.product?.category?.name || this.product?.category_name;
             if (rawCat) {
                 return this.tt(rawCat)
             }
             return this.isEn ? 'Space Decor' : this.tt('Trang trí không gian')
         },
+        currentCategorySlug() {
+            if (this.product?.category?.slug) {
+                return this.product.category.slug;
+            }
+            if (this.product?.category_slug) {
+                return this.product.category_slug;
+            }
+            const cat = (this.currentCategory || '').toLowerCase();
+            if (cat.includes('không gian') || cat.includes('space')) {
+                return 'trang-tri-khong-gian';
+            }
+            if (cat.includes('móc khoá') || cat.includes('móc khóa') || cat.includes('keychain') || cat.includes('phụ kiện') || cat.includes('accessories')) {
+                return 'moc-khoa-phu-kien';
+            }
+            if (cat.includes('đồ dùng') || cat.includes('lifestyle') || cat.includes('stationery') || cat.includes('văn phòng phẩm') || cat.includes('decor')) {
+                return 'trang-tri-do-dung';
+            }
+            if (cat.includes('gia công') || cat.includes('custom') || cat.includes('manufacturing')) {
+                return 'gia-cong-theo-yeu-cau';
+            }
+            return 'all';
+        },
+        categoryUrl() {
+            if (this.currentCategorySlug && this.currentCategorySlug !== 'all') {
+                return this.route('products.index', { category: this.currentCategorySlug });
+            }
+            return this.route('products.index');
+        },
         currentDescription() {
-            if (this.product?.description && this.product.description.trim()) {
-                return this.product.description
-            }
-            if (this.currentTitle.includes('Iron')) {
-                return this.isEn
-                    ? 'High-detail Iron Man Mark 85 model, sharply reproducing the pinnacle nano-tech armor with accurate mechanical seams, produced with advanced 3D printing technology.'
-                    : this.tt('Mô hình Iron Man Mark 85 chi tiết cao, tái hiện sắc nét bộ giáp công nghệ nano đỉnh cao với các đường nét cơ khí chuẩn xác, sản xuất bằng công nghệ in 3D tiên tiến.')
-            }
-            return this.isEn
-                ? 'Add a touch of agility and smart elegance to your space. Featuring an iconic bushy tail and meticulous 3D printed layers, this companion inspires creativity every day.'
-                : this.tt('Thêm một chút linh hoạt và thông minh vào góc nhỏ của bạn. Chú cáo nhỏ với chiếc đuôi xù đặc trưng và những lớp in tỉ mỉ không chỉ là một món đồ trang trí, mà còn là người bạn đồng hành truyền cảm hứng mỗi ngày.')
+            return this.product?.description || this.product?.short_description || ''
         },
         productMaterial() {
             return this.product?.material || this.tt('Nhựa PLA · Công nghệ FDM')
@@ -391,48 +397,22 @@ export default {
             return []
         },
         storyTitle() {
-            if (this.currentTitle.includes('Iron')) {
-                return this.isEn
-                    ? 'Technological Legend. Sharp Down to Every Detail.'
-                    : this.tt('Huyền thoại công nghệ. Sắc nét đến từng chi tiết.')
-            }
-            return this.isEn
-                ? 'Compact. Full of Wonders to Explore.'
-                : this.tt('Nhỏ gọn. Nhiều điều để khám phá.')
+            return this.product?.story_title || this.product?.pdp_metadata?.story_title || (this.currentTitle ? `${this.currentTitle}` : '')
         },
         storyIntro() {
-            if (this.currentTitle.includes('Iron')) {
-                return this.isEn
-                    ? 'The Iron Man Mark 85 model is a collector masterpiece for superhero enthusiasts and tech model hobbyists. Every armor plate and joint is sharply reproduced using advanced 3D printing.'
-                    : this.tt('Mô hình Iron Man Mark 85 là tuyệt phẩm trưng bày dành cho người hâm mộ siêu anh hùng và người đam mê mô hình công nghệ cao. Từng chi tiết giáp và khớp nối được tái hiện sắc sảo qua công nghệ in 3D.')
-            }
-            return this.isEn
-                ? 'The low-poly fox model brings a modern accent to living and workspaces. Designed with sharp polygonal facets paired with warm orange tones, creating an inspiring, creative ambiance.'
-                : this.tt('Mô hình chú cáo low-poly là điểm nhấn hiện đại cho không gian sống và làm việc. Thiết kế tạo hình từ các mặt cắt đa giác sắc sảo, kết hợp cùng gam màu cam ấm áp mang đến cảm giác tinh tế, sáng tạo và đầy năng lượng')
+            return this.product?.story_intro || this.product?.pdp_metadata?.story_intro || this.currentDescription
         },
         feature1Title() {
-            if (this.currentTitle.includes('Iron')) {
-                return this.isEn ? 'Sharp Mechanical Details' : this.tt('Chi tiết cơ khí sắc sảo')
-            }
-            return this.isEn ? 'Sharp Low-Poly Contours' : this.tt('Tạo hình Low-Poly sắc nét')
+            return this.product?.feature1_title || this.product?.pdp_metadata?.feature1_title || ''
         },
         feature1Desc() {
-            if (this.currentTitle.includes('Iron')) {
-                return this.isEn
-                    ? 'Every armor seam and joint is finished with precision, showcasing the technological prowess of the Mark 85 armor.'
-                    : this.tt('Mọi đường rãnh giáp và khớp nối được hoàn thiện chuẩn xác, tôn lên uy lực công nghệ của bộ giáp Mark 85.')
-            }
-            return this.isEn
-                ? 'Smooth polygonal facets reflect light uniquely from every angle, demonstrating the precision strength of FDM 3D printing technology.'
-                : this.tt('Các góc cạnh đa giác được hoàn thiện mượt mà, phản chiếu ánh sáng độc đáo ở từng góc nhìn, thể hiện rõ thế mạnh độ chính xác của công nghệ in 3D FDM.')
+            return this.product?.feature1_desc || this.product?.pdp_metadata?.feature1_desc || ''
         },
         feature2Title() {
-            return this.isEn ? 'Customizable on Request' : this.tt('Tùy chỉnh theo yêu cầu')
+            return this.product?.feature2_title || this.product?.pdp_metadata?.feature2_title || ''
         },
         feature2Desc() {
-            return this.isEn
-                ? 'You can discuss with HH Maker to adjust colors, scale dimensions, or order in bulk for corporate gifting and event decor.'
-                : this.tt('Bạn có thể trao đổi với HH Maker để thay đổi màu sắc, điều chỉnh kích thước (tỉ lệ scale) hoặc đặt số lượng lớn làm quà tặng, decor sự kiện.')
+            return this.product?.feature2_desc || this.product?.pdp_metadata?.feature2_desc || '';
         },
     },
     methods: {

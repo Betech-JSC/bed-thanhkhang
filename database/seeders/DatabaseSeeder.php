@@ -41,10 +41,13 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             AgencySeeder::class,
             SchoolSeeder::class,
-            ProductSeeder::class,
+            FigmaProductsSeeder::class,
             PointPackageSeeder::class,
             SynologyResourceSeeder::class,
             UserRankSeeder::class,
+            PolicySeeder::class,
+            ServiceContentSeeder::class,
+            ProcessContentSeeder::class,
         ]);
 
         // Seed dynamic data using factories

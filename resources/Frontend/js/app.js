@@ -32,8 +32,6 @@ import 'vue-plyr/dist/vue-plyr.css'
 
 import '../scss/app.scss'
 
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import { useThemeStore } from './stores/themeStore.js'
 import axios from 'axios'
 
@@ -104,7 +102,6 @@ createInertiaApp({
 
         app_instance
             .use(i18n)
-            .use(AOS.init())
             .use(VuePlyr, { plyr: {} })
             .component('Link', Link)
             .component('Head', Head)
@@ -226,9 +223,6 @@ createInertiaApp({
                         }).format(value)
                     },
                 },
-                mounted() {
-                    AOS.refresh();
-                }
             })
             .mount(el)
 
@@ -240,5 +234,5 @@ createInertiaApp({
 InertiaProgress.init({
     color: '#2970FF',
     showSpinner: true, // Hide the spinner
-    delay: 200, // Show the progress bar after 200ms
+    delay: 50, // Show the progress bar after 200ms
 })

@@ -573,7 +573,8 @@ class Post extends BaseModel
 
     public static function getFrontendFaqs(?string $locale = null): array
     {
-        $locale = $locale ?: (function_exists('current_locale') ? current_locale() : app()->getLocale());
+        $targetLocale = $locale ?: (function_exists('current_locale') ? current_locale() : app()->getLocale());
+        $isEn = $targetLocale === 'en';
 
         $defaultFaqsVi = [
             [
@@ -597,48 +598,106 @@ class Post extends BaseModel
                 'content' => 'Hoàn toàn được! Dịch vụ làm đồ Custom và chế tác theo yêu cầu là thế mạnh hàng đầu tại HH Maker. Chúng tôi sẵn sàng tinh chỉnh kích thước, tỷ lệ, phối màu hoặc thiết kế riêng biệt hoàn toàn theo concept của bạn.',
                 'answer' => 'Hoàn toàn được! Dịch vụ làm đồ Custom và chế tác theo yêu cầu là thế mạnh hàng đầu tại HH Maker. Chúng tôi sẵn sàng tinh chỉnh kích thước, tỷ lệ, phối màu hoặc thiết kế riêng biệt hoàn toàn theo concept của bạn.',
             ],
+            [
+                'id' => 4,
+                'title' => 'Thời gian in và giao hàng thường mất bao lâu?',
+                'question' => 'Thời gian in và giao hàng thường mất bao lâu?',
+                'content' => 'Thời gian hoàn thiện phụ thuộc vào kích thước, công nghệ và số lượng sản phẩm. Với các mẫu in thử đơn chiếc, thời gian gia công thường từ 24 - 48 giờ. Đơn hàng số lượng lớn sẽ được lên lịch sản xuất chi tiết.',
+                'answer' => 'Thời gian hoàn thiện phụ thuộc vào kích thước, công nghệ và số lượng sản phẩm. Với các mẫu in thử đơn chiếc, thời gian gia công thường từ 24 - 48 giờ. Đơn hàng số lượng lớn sẽ được lên lịch sản xuất chi tiết.',
+            ],
+            [
+                'id' => 5,
+                'title' => 'HH Maker hỗ trợ những định dạng file 3D nào?',
+                'question' => 'HH Maker hỗ trợ những định dạng file 3D nào?',
+                'content' => 'Chúng tôi tiếp nhận hầu hết các định dạng 3D tiêu chuẩn bao gồm STL, OBJ, STEP, 3MF, IGES, SLDPRT. Nếu bạn chỉ có bản vẽ 2D hoặc hình phác thảo, HH Maker sẽ hỗ trợ dựng lại thành file 3D.',
+                'answer' => 'Chúng tôi tiếp nhận hầu hết các định dạng 3D tiêu chuẩn bao gồm STL, OBJ, STEP, 3MF, IGES, SLDPRT. Nếu bạn chỉ có bản vẽ 2D hoặc hình phác thảo, HH Maker sẽ hỗ trợ dựng lại thành file 3D.',
+            ],
+            [
+                'id' => 6,
+                'title' => 'Sản phẩm in 3D có độ bền và khả năng chịu lực như thế nào?',
+                'question' => 'Sản phẩm in 3D có độ bền và khả năng chịu lực như thế nào?',
+                'content' => 'Độ bền phụ thuộc vào loại vật liệu được lựa chọn: từ PLA+ thân thiện, PETG chịu va đập, ABS/Nylon chịu nhiệt và cơ tính cao, đến Carbon Fiber siêu cứng hoặc Resin 8K độ mịn tuyệt đối. Kỹ sư sẽ tư vấn loại nhựa tối ưu theo mục đích sử dụng của bạn.',
+                'answer' => 'Độ bền phụ thuộc vào loại vật liệu được lựa chọn: từ PLA+ thân thiện, PETG chịu va đập, ABS/Nylon chịu nhiệt và cơ tính cao, đến Carbon Fiber siêu cứng hoặc Resin 8K độ mịn tuyệt đối. Kỹ sư sẽ tư vấn loại nhựa tối ưu theo mục đích sử dụng của bạn.',
+            ],
         ];
 
         $defaultFaqsEn = [
             [
                 'id' => 1,
-                'title' => 'I do not have a 3D design file yet. Do you support 3D modeling?',
-                'question' => 'I do not have a 3D design file yet. Do you support 3D modeling?',
-                'content' => 'Yes. HH MAKER supports 3D modeling from your ideas, sketches, or reference images. Simply provide the desired dimensions, functionality, and requirements; our team will advise on the design approach, quote the modeling cost, and send a 3D preview for your approval before production.',
-                'answer' => 'Yes. HH MAKER supports 3D modeling from your ideas, sketches, or reference images. Simply provide the desired dimensions, functionality, and requirements; our team will advise on the design approach, quote the modeling cost, and send a 3D preview for your approval before production.',
+                'title' => 'I do not have a 3D CAD file yet, does HH Maker support 3D modeling from scratch?',
+                'question' => 'I do not have a 3D CAD file yet, does HH Maker support 3D modeling from scratch?',
+                'content' => 'Yes. HH Maker provides full 3D modeling support from your concepts, sketches, or reference photos. You simply share dimensions, functions, and aesthetic preferences; our team will advise on designs, provide quote estimates, and send 3D renders for your approval before production.',
+                'answer' => 'Yes. HH Maker provides full 3D modeling support from your concepts, sketches, or reference photos. You simply share dimensions, functions, and aesthetic preferences; our team will advise on designs, provide quote estimates, and send 3D renders for your approval before production.',
             ],
             [
                 'id' => 2,
-                'title' => 'What information do I need to provide to get the fastest and most accurate quote for my project?',
-                'question' => 'What information do I need to provide to get the fastest and most accurate quote for my project?',
-                'content' => 'Simply send your 3D design file (in .STL, .OBJ, .STEP format if available), desired dimensions, resolution/surface finish requirements, material preference, or reference photos describing your idea. HH Maker\'s engineering team will respond with a detailed quote within 2–4 business hours.',
-                'answer' => 'Simply send your 3D design file (in .STL, .OBJ, .STEP format if available), desired dimensions, resolution/surface finish requirements, material preference, or reference photos describing your idea. HH Maker\'s engineering team will respond with a detailed quote within 2–4 business hours.',
+                'title' => 'What information should I provide to get the fastest and most accurate quotation?',
+                'question' => 'What information should I provide to get the fastest and most accurate quotation?',
+                'content' => 'Simply share your 3D design files (if available in .STL, .OBJ, .STEP, .3MF format), desired dimensions, surface finish expectations, material preferences, or reference imagery. Our engineering team will respond with a comprehensive quote within 2-4 business hours.',
+                'answer' => 'Simply share your 3D design files (if available in .STL, .OBJ, .STEP, .3MF format), desired dimensions, surface finish expectations, material preferences, or reference imagery. Our engineering team will respond with a comprehensive quote within 2-4 business hours.',
             ],
             [
                 'id' => 3,
-                'title' => 'Can I order a custom product based on my own concept or modify existing designs?',
-                'question' => 'Can I order a custom product based on my own concept or modify existing designs?',
-                'content' => 'Absolutely! Custom fabrication and bespoke 3D manufacturing are HH Maker\'s core strengths. We are ready to customize dimensions, proportions, color schemes, or create an entirely new design tailored to your concept.',
-                'answer' => 'Absolutely! Custom fabrication and bespoke 3D manufacturing are HH Maker\'s core strengths. We are ready to customize dimensions, proportions, color schemes, or create an entirely new design tailored to your concept.',
+                'title' => 'Can I request a custom product based on my own concept or modify an existing model?',
+                'question' => 'Can I request a custom product based on my own concept or modify an existing model?',
+                'content' => 'Absolutely! Bespoke custom crafting and on-demand fabrication are HH Maker\'s core strengths. We are ready to adjust dimensions, proportions, color schemes, or develop entirely new designs matching your vision.',
+                'answer' => 'Absolutely! Bespoke custom crafting and on-demand fabrication are HH Maker\'s core strengths. We are ready to adjust dimensions, proportions, color schemes, or develop entirely new designs matching your vision.',
+            ],
+            [
+                'id' => 4,
+                'title' => 'How long does 3D printing and delivery typically take?',
+                'question' => 'How long does 3D printing and delivery typically take?',
+                'content' => 'Turnaround time depends on dimensions, printing technology, and batch volume. Single prototypes are typically completed within 24-48 hours. Volume orders are scheduled with transparent delivery timelines.',
+                'answer' => 'Turnaround time depends on dimensions, printing technology, and batch volume. Single prototypes are typically completed within 24-48 hours. Volume orders are scheduled with transparent delivery timelines.',
+            ],
+            [
+                'id' => 5,
+                'title' => 'Which 3D file formats does HH Maker support?',
+                'question' => 'Which 3D file formats does HH Maker support?',
+                'content' => 'We accept standard 3D formats including STL, OBJ, STEP, 3MF, IGES, and SLDPRT. If you only have 2D drawings or reference images, our engineers will help convert them into 3D printable files.',
+                'answer' => 'We accept standard 3D formats including STL, OBJ, STEP, 3MF, IGES, and SLDPRT. If you only have 2D drawings or reference images, our engineers will help convert them into 3D printable files.',
+            ],
+            [
+                'id' => 6,
+                'title' => 'What is the durability and mechanical strength of 3D printed products?',
+                'question' => 'What is the durability and mechanical strength of 3D printed products?',
+                'content' => 'Durability depends on the chosen material: eco-friendly PLA+, impact-resistant PETG, heat-resistant ABS/Nylon, high-stiffness Carbon Fiber, or ultra-smooth 8K Resin. Our engineers advise on the optimal material suited to your application.',
+                'answer' => 'Durability depends on the chosen material: eco-friendly PLA+, impact-resistant PETG, heat-resistant ABS/Nylon, high-stiffness Carbon Fiber, or ultra-smooth 8K Resin. Our engineers advise on the optimal material suited to your application.',
             ],
         ];
 
-        $defaultFaqs = $locale === 'en' ? $defaultFaqsEn : $defaultFaqsVi;
+        $defaultFaqs = $isEn ? $defaultFaqsEn : $defaultFaqsVi;
 
         try {
             if (\Illuminate\Support\Facades\Schema::hasTable('posts')) {
-                $items = static::query()
-                    ->active()
+                $posts = static::query()
                     ->where('type', self::TYPE_FAQ)
+                    ->where('status', self::STATUS_ACTIVE)
                     ->orderByPosition()
-                    ->orderBy('id', 'desc')
-                    ->get()
-                    ->map(fn($item) => $item->transformFaqs())
-                    ->values()
-                    ->toArray();
+                    ->orderBy('id', 'asc')
+                    ->get();
 
-                if (!empty($items)) {
-                    return $items;
+                if ($posts->isNotEmpty()) {
+                    return $posts->map(function ($item) use ($targetLocale) {
+                        $trans = method_exists($item, 'translate') ? $item->translate($targetLocale, true) : null;
+                        $viTrans = method_exists($item, 'translate') ? $item->translate('vi', false) : null;
+
+                        $title = $trans?->title ?: ($item->title ?: ($viTrans?->title ?? ''));
+                        $rawAnswer = $trans?->content
+                            ?: ($trans?->description
+                            ?: ($item->content
+                            ?: ($item->description
+                            ?: ($viTrans?->content ?: ($viTrans?->description ?: '')))));
+                        $cleanAnswer = trim(strip_tags((string) $rawAnswer));
+
+                        return [
+                            'id' => $item->id,
+                            'title' => $title,
+                            'question' => $title,
+                            'content' => $rawAnswer,
+                            'answer' => $cleanAnswer !== '' ? $cleanAnswer : (string) $rawAnswer,
+                        ];
+                    })->values()->toArray();
                 }
             }
         } catch (\Throwable $e) {

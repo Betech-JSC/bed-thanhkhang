@@ -8,6 +8,7 @@ use Inertia\Middleware;
 use Illuminate\Http\Request;
 use App\Models\Policy\Policy;
 use App\Models\User;
+use App\Models\Product\ProductCategory;
 use JamstackVietnam\MetaPage\Models\MetaPage;
 use JamstackVietnam\Slider\Models\Slider;
 use Illuminate\Support\Facades\Auth;
@@ -47,6 +48,7 @@ class HandleInertiaFrontendRequests extends Middleware
             'members' => [],
             'policies' => [],
             'faqs' => [],
+            'product_categories' => [],
             'globalCtaBanner' => null,
             'banner' => [
                 'banner_home' => null,
@@ -81,6 +83,7 @@ class HandleInertiaFrontendRequests extends Middleware
                         ->get()
                         ->map(fn($item) => $item->transform());
 
+
                     $members = Post::query()
                         ->active()
                         ->where('type', Post::TYPE_MEMBER)
@@ -93,6 +96,12 @@ class HandleInertiaFrontendRequests extends Middleware
                         ->get()
                         ->map(fn($item) => $item->transformFaqs());
 
+                    $productCategories = ProductCategory::query()
+                        ->active()
+                        ->sortByPosition()
+                        ->get()
+                        ->map(fn($item) => $item->transform());
+
                     $banner_home = Slider::getByPosition('HOME_SLIDER');
                     $globalCtaBanner = Slider::getByPosition('BANNER_GLOBAL_CTA');
 
@@ -103,6 +112,7 @@ class HandleInertiaFrontendRequests extends Middleware
                         'members' => $members,
                         'policies' => $policies,
                         'faqs' => $faqs,
+                        'product_categories' => $productCategories,
                         'globalCtaBanner' => $globalCtaBanner,
                         'banner' => [
                             'banner_home' => $banner_home,
@@ -158,6 +168,7 @@ class HandleInertiaFrontendRequests extends Middleware
         $share = array_merge(parent::share($request), [
             'global' => $global,
             'globalCtaBanner' => $layoutData['globalCtaBanner'] ?? null,
+            'product_categories' => $layoutData['product_categories'] ?? [],
             'locale' => [
                 'current' => current_locale(),
                 'default' => config('app.locale'),
@@ -166,8 +177,9 @@ class HandleInertiaFrontendRequests extends Middleware
             'route' => [
                 'url' => $request->url(),
                 'path' => $request->path(),
-                'name' => $request->route()->getName(),
+                'name' => optional($request->route())->getName(),
                 'query' => $request->query(),
+                'params' => optional($request->route())->parameters() ?? [],
             ],
             'auth' => [
                 'user' => $user ?? null,
@@ -179,6 +191,7 @@ class HandleInertiaFrontendRequests extends Middleware
                 'members' => $layoutData['members'],
                 'policies' => $layoutData['policies'],
                 'faqs' => $layoutData['faqs'],
+                'product_categories' => $layoutData['product_categories'] ?? [],
                 'banner' => $layoutData['banner']
             ],
             'flash' => [

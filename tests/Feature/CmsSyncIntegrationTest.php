@@ -99,7 +99,7 @@ class CmsSyncIntegrationTest extends TestCase
     {
         app()->setLocale('en');
 
-        $defaultProcessEn = Config::getProcessSteps([]);
+        $defaultProcessEn = Config::getProcessSteps('en');
         $this->assertCount(5, $defaultProcessEn);
         $this->assertEquals('Contact', $defaultProcessEn[0]['title']);
 
@@ -117,14 +117,14 @@ class CmsSyncIntegrationTest extends TestCase
         $this->assertEquals('Consultation Contact', $customSteps[0]['title']);
         $this->assertEquals('Mô tả tiếng Việt bước 1', $customSteps[0]['description']);
 
-        $serviceStepsEn = \App\Models\Service::getDefaultSteps('en');
-        $this->assertEquals('Discuss Ideas and Intended Use', $serviceStepsEn[0]['title']);
-
-        $checklistEn = \App\Models\Service::getDefaultChecklistItems('en');
-        $this->assertEquals('Concept & Intended Use', $checklistEn[0]['title']);
+        $service = new \App\Models\Service();
+        $this->assertEmpty($service->resolveSteps());
+        $this->assertEmpty($service->resolveChecklistItems());
 
         $faqsEn = \App\Models\Post\Post::getFrontendFaqs('en');
-        $this->assertStringContainsString('3D design file', $faqsEn[0]['question']);
+        $this->assertNotEmpty($faqsEn);
+        $this->assertCount(6, $faqsEn);
+        $this->assertStringContainsString('3D CAD', $faqsEn[0]['question']);
 
         Cache::put('home_page_data_vi', ['cached' => 1], 600);
         Cache::put('home_page_data_en', ['cached' => 1], 600);

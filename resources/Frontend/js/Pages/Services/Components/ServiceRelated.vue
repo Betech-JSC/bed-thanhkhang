@@ -1,5 +1,5 @@
 <template>
-    <section v-scroll-reveal class="pb-12 lg:pb-16">
+    <section v-if="displayCards.length > 0" v-scroll-reveal class="pb-12 lg:pb-16">
         <div class="max-w-[1152px] space-y-6">
             <!-- Section Title (Figma Node 2367:2271) -->
             <div class="flex items-center justify-between">
@@ -83,42 +83,9 @@ const getServiceHref = (slug) => {
     return isEn.value ? `/en/services/${slug}` : `/dich-vu/${slug}`
 }
 
-const defaultCards = computed(() => {
-    if (isEn.value) {
-        return [
-            {
-                slug: 'gia-cong-3d',
-                title: '3D Machining & Printing',
-                description: 'Bringing digital designs into the physical world. Reviewing materials, print methods, and finishing requirements.',
-                image: '/assets/images/services/service-gia-cong-3d.png',
-            },
-            {
-                slug: 'lam-do-custom',
-                title: 'Custom Bespoke Creations',
-                description: 'Custom accessories, gifts, and decor with distinctive signature touch, from concept to fabrication.',
-                image: '/assets/images/services/service-lam-do-custom.png',
-            },
-        ]
-    }
-    return [
-        {
-            slug: 'gia-cong-3d',
-            title: i18n.tt('Gia công 3D'),
-            description: i18n.tt('Đưa bản thiết kế ra ngoài màn hình. Cùng xem xét vật liệu, cách in và yêu cầu hoàn thiện'),
-            image: '/assets/images/services/service-gia-cong-3d.png',
-        },
-        {
-            slug: 'lam-do-custom',
-            title: i18n.tt('Làm đồ Custom'),
-            description: i18n.tt('Phụ kiện, quà tặng và đồ trang trí mang dấu ấn riêng, từ ý tưởng đến phương án chế tác'),
-            image: '/assets/images/services/service-lam-do-custom.png',
-        },
-    ]
-})
-
 const displayCards = computed(() => {
     if (props.services && props.services.length > 0) {
-        const filtered = props.services
+        return props.services
             .filter((item) => item.slug !== props.currentSlug)
             .map((item) => ({
                 slug: item.slug,
@@ -126,20 +93,11 @@ const displayCards = computed(() => {
                 description: item.description,
                 image:
                     item.image?.url ||
-                    (item.slug?.includes('gia-cong')
-                        ? '/assets/images/services/service-gia-cong-3d.png'
-                        : '/assets/images/services/service-lam-do-custom.png'),
+                    (typeof item.image === 'string' ? item.image : '/assets/images/services/service-gia-cong-3d.png'),
                 href: item.slug ? getServiceHref(item.slug) : (isEn.value ? '/en/services' : '/dich-vu'),
             }))
-
-        if (filtered.length >= 2) {
-            return filtered.slice(0, 2)
-        }
+            .slice(0, 2)
     }
-
-    return defaultCards.value.map((card) => ({
-        ...card,
-        href: getServiceHref(card.slug),
-    }))
+    return []
 })
 </script>

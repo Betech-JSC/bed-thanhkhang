@@ -72,7 +72,7 @@ test.describe('Home Page & Services System Multilingual i18n Verification', () =
     await expect(servicesEn.getByText('SERVICES OVERVIEW')).toBeVisible();
     await expect(servicesEn.getByText('3D Design')).toBeVisible();
     await expect(servicesEn.getByText('3D Machining & Printing')).toBeVisible();
-    await expect(servicesEn.getByText('Custom Bespoke Creations')).toBeVisible();
+    await expect(servicesEn.getByText('Custom', { exact: true })).toBeVisible();
 
     // Kiểm tra Brand Story & 5-Step Process tiếng Anh
     await expect(page.locator('text=FROM HH MAKER FOUNDER').first()).toBeVisible();

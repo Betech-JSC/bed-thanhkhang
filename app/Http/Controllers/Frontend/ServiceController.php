@@ -61,30 +61,58 @@ class ServiceController extends Controller
                 return [
                     'service' => $serviceDetails,
                     'services' => $services,
-                    'steps' => $serviceDetails['steps'] ?? Service::getDefaultSteps(),
-                    'checklist_items' => $serviceDetails['checklist_items'] ?? Service::getDefaultChecklistItems(),
-                    'checklistItems' => $serviceDetails['checklistItems'] ?? Service::getDefaultChecklistItems(),
+                    'hero' => $serviceDetails['hero'] ?? $service->resolveHeroData(),
+                    'toc_items' => $serviceDetails['toc_items'] ?? $service->resolveTocItems(),
+                    'tocItems' => $serviceDetails['toc_items'] ?? $service->resolveTocItems(),
+                    'sections' => $serviceDetails['sections'] ?? $service->resolveArticleSections(),
+                    'steps' => $serviceDetails['steps'] ?? $service->resolveSteps(),
+                    'checklist_items' => $serviceDetails['checklist_items'] ?? $service->resolveChecklistItems(),
+                    'checklistItems' => $serviceDetails['checklistItems'] ?? $service->resolveChecklistItems(),
                     'seo' => $service->transformSeo(),
                 ];
             });
 
             if (is_array($data['service'] ?? null)) {
+                if (empty($data['service']['hero'])) {
+                    $data['service']['hero'] = $data['hero'] ?? [];
+                }
+                if (empty($data['service']['toc_items'])) {
+                    $data['service']['toc_items'] = $data['toc_items'] ?? [];
+                }
+                if (empty($data['service']['tocItems'])) {
+                    $data['service']['tocItems'] = $data['service']['toc_items'];
+                }
+                if (empty($data['service']['sections'])) {
+                    $data['service']['sections'] = $data['sections'] ?? [];
+                }
                 if (empty($data['service']['steps'])) {
-                    $data['service']['steps'] = Service::getDefaultSteps();
+                    $data['service']['steps'] = $data['steps'] ?? [];
                 }
                 if (empty($data['service']['checklist_items'])) {
-                    $data['service']['checklist_items'] = Service::getDefaultChecklistItems();
+                    $data['service']['checklist_items'] = $data['checklist_items'] ?? [];
                 }
                 if (empty($data['service']['checklistItems'])) {
                     $data['service']['checklistItems'] = $data['service']['checklist_items'];
                 }
             }
 
+            if (empty($data['hero'])) {
+                $data['hero'] = $data['service']['hero'] ?? [];
+            }
+            if (empty($data['toc_items'])) {
+                $data['toc_items'] = $data['service']['toc_items'] ?? [];
+            }
+            if (empty($data['tocItems'])) {
+                $data['tocItems'] = $data['toc_items'];
+            }
+            if (empty($data['sections'])) {
+                $data['sections'] = $data['service']['sections'] ?? [];
+            }
             if (empty($data['steps'])) {
-                $data['steps'] = $data['service']['steps'] ?? Service::getDefaultSteps();
+                $data['steps'] = $data['service']['steps'] ?? [];
             }
             if (empty($data['checklist_items'])) {
-                $data['checklist_items'] = $data['service']['checklist_items'] ?? Service::getDefaultChecklistItems();
+                $data['checklist_items'] = $data['service']['checklist_items'] ?? [];
             }
             if (empty($data['checklistItems'])) {
                 $data['checklistItems'] = $data['checklist_items'];

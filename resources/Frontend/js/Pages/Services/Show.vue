@@ -10,12 +10,15 @@
         </Head>
 
         <!-- Main Container (1152px on Desktop) -->
-        <div class="max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-0">
+        <div class="app-container">
             <!-- Section 1: Hero & Khung Minh Họa Kỹ Thuật (Figma Node 2367:2156) -->
             <ServiceHero
                 :title="serviceData.title"
-                :description="serviceData.description"
-                :image="heroImage"
+                :headline="heroData.headline"
+                :description="heroData.description"
+                :image="heroData.image || heroImage"
+                :input-items="heroData.inputItems"
+                :process-items="heroData.processItems"
             />
 
             <!-- Section 2: Layout Kỹ Thuật 2 Cột Bất Đối Xứng (Figma Node 2367:2177) -->
@@ -31,8 +34,9 @@
                     <!-- Cột Phải - Nội Dung Bài Viết Kỹ Thuật (Node 2367:2196 - 840px) -->
                     <ServiceArticleContent
                         :service="serviceData"
-                        :steps="serviceData.steps"
-                        :checklist-items="serviceData.checklist_items || serviceData.checklistItems"
+                        :sections="sectionsData"
+                        :steps="stepsData"
+                        :checklist-items="checklistData"
                         :dynamic-html="serviceData.content"
                     />
                 </div>
@@ -75,6 +79,34 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
+    hero: {
+        type: Object,
+        default: () => ({}),
+    },
+    toc_items: {
+        type: Array,
+        default: () => [],
+    },
+    tocItems: {
+        type: Array,
+        default: () => [],
+    },
+    sections: {
+        type: Object,
+        default: () => ({}),
+    },
+    steps: {
+        type: Array,
+        default: () => [],
+    },
+    checklist_items: {
+        type: Array,
+        default: () => [],
+    },
+    checklistItems: {
+        type: Array,
+        default: () => [],
+    },
 })
 
 const instance = getCurrentInstance()
@@ -84,35 +116,12 @@ const i18n = {
 const page = usePage()
 const currentLocale = computed(() => page.props.value?.locale?.current || 'vi')
 
-// Fallback data if service prop is empty or undefined
-const defaultService = computed(() => {
-    if (currentLocale.value === 'en') {
-        return {
-            id: 1,
-            title: '3D Design',
-            slug: 'thiet-ke-3d',
-            description:
-                'An idea does not need to be complete to begin. Together with HH Maker, clarify proportions, structure, and details, ensuring the 3D model is not only easy to visualize but also ready for real-world manufacturing.',
-            content: '',
-        }
-    }
-    return {
-        id: 1,
-        title: i18n.tt('Thiết kế 3D'),
-        slug: 'thiet-ke-3d',
-        description: i18n.tt('Một ý tưởng chưa cần hoàn chỉnh để bắt đầu. Cùng HH Maker làm rõ tỉ lệ, cấu trúc và chi tiết, để mô hình 3D không chỉ dễ hình dung mà còn hướng đến khả năng chế tác thực tế.'),
-        content: '',
-    }
-})
-
 const serviceData = computed(() => {
-    const fallback = defaultService.value
     return {
-        ...fallback,
         ...(props.service || {}),
-        title: props.service?.title || fallback.title,
-        slug: props.service?.slug || fallback.slug,
-        description: props.service?.description || fallback.description,
+        title: props.service?.title || '',
+        slug: props.service?.slug || '',
+        description: props.service?.description || '',
         content: props.service?.content || '',
     }
 })
@@ -136,62 +145,97 @@ const heroImage = computed(() => {
     return '/assets/images/services/hero-3d-illustration.png'
 })
 
-// Table of contents configuration
+const heroData = computed(() => {
+    const fromProps = props.hero && Object.keys(props.hero).length > 0 ? props.hero : null
+    const fromService = props.service?.hero && Object.keys(props.service.hero).length > 0 ? props.service.hero : null
+    const resolved = fromProps || fromService || {}
+
+    return {
+        headline: resolved.headline || serviceData.value.title_content || '',
+        description: resolved.description || serviceData.value.description || '',
+        image: resolved.image || heroImage.value,
+        inputItems: resolved.input_items || resolved.inputItems || [],
+        processItems: resolved.process_items || resolved.processItems || [],
+    }
+})
+
+// Dynamic Table of contents configuration
 const tocItems = computed(() => {
+    if (Array.isArray(props.toc_items) && props.toc_items.length > 0) return props.toc_items
+    if (Array.isArray(props.tocItems) && props.tocItems.length > 0) return props.tocItems
+    if (Array.isArray(props.service?.toc_items) && props.service.toc_items.length > 0) return props.service.toc_items
+    if (Array.isArray(props.service?.tocItems) && props.service.tocItems.length > 0) return props.service.tocItems
+
+    const slug = serviceData.value.slug
+    if (slug === 'gia-cong-3d') {
+        if (currentLocale.value === 'en') {
+            return [
+                { id: 'section-01', number: '01', title: 'When do you need 3D machining & printing?', shortTitle: 'When need machining?' },
+                { id: 'section-02', number: '02', title: 'Precision fabrication workflow', shortTitle: 'Workflow' },
+                { id: 'section-03', number: '03', title: 'Technical specifications to prepare', shortTitle: 'Specs to prepare' },
+                { id: 'section-04', number: '04', title: 'Post-processing & finishing standards', shortTitle: 'Finishing standards' },
+            ]
+        }
+        return [
+            { id: 'section-01', number: '01', title: i18n.tt('Khi nào bạn cần gia công 3D?'), shortTitle: i18n.tt('Khi nào cần gia công?') },
+            { id: 'section-02', number: '02', title: i18n.tt('Quy trình gia công chuẩn xác'), shortTitle: i18n.tt('Quy trình') },
+            { id: 'section-03', number: '03', title: i18n.tt('Thông số kỹ thuật cần chuẩn bị'), shortTitle: i18n.tt('Thông số cần có') },
+            { id: 'section-04', number: '04', title: i18n.tt('Hậu kỳ & Tiêu chuẩn hoàn thiện'), shortTitle: i18n.tt('Tiêu chuẩn hoàn thiện') },
+        ]
+    }
+
+    if (slug === 'lam-do-custom') {
+        if (currentLocale.value === 'en') {
+            return [
+                { id: 'section-01', number: '01', title: 'Who is custom fabrication for?', shortTitle: 'Who is it for?' },
+                { id: 'section-02', number: '02', title: 'Bespoke creation process', shortTitle: 'Creation process' },
+                { id: 'section-03', number: '03', title: 'What information to prepare?', shortTitle: 'Info to prepare' },
+                { id: 'section-04', number: '04', title: 'Delivery & product care', shortTitle: 'Delivery & care' },
+            ]
+        }
+        return [
+            { id: 'section-01', number: '01', title: i18n.tt('Đồ custom dành cho ai?'), shortTitle: i18n.tt('Đồ custom cho ai?') },
+            { id: 'section-02', number: '02', title: i18n.tt('Các bước chế tác độc bản'), shortTitle: i18n.tt('Quy trình chế tác') },
+            { id: 'section-03', number: '03', title: i18n.tt('Bạn chuẩn bị thông tin gì?'), shortTitle: i18n.tt('Thông tin chuẩn bị') },
+            { id: 'section-04', number: '04', title: i18n.tt('Bàn giao & Bảo quản sản phẩm'), shortTitle: i18n.tt('Bàn giao & bảo quản') },
+        ]
+    }
+
+    // Default thiet-ke-3d
     if (currentLocale.value === 'en') {
         return [
-            {
-                id: 'section-01',
-                number: '01',
-                title: 'When do you need 3D design?',
-                shortTitle: 'When need 3D?',
-            },
-            {
-                id: 'section-02',
-                number: '02',
-                title: 'From concept to 3D model',
-                shortTitle: 'From concept',
-            },
-            {
-                id: 'section-03',
-                number: '03',
-                title: 'What should you prepare?',
-                shortTitle: 'What to prepare?',
-            },
-            {
-                id: 'section-04',
-                number: '04',
-                title: 'Completing together before machining',
-                shortTitle: 'Completion',
-            },
+            { id: 'section-01', number: '01', title: 'When do you need 3D design?', shortTitle: 'When need 3D?' },
+            { id: 'section-02', number: '02', title: 'From concept to 3D model', shortTitle: 'From concept' },
+            { id: 'section-03', number: '03', title: 'What should you prepare?', shortTitle: 'What to prepare?' },
+            { id: 'section-04', number: '04', title: 'Completing together before machining', shortTitle: 'Completion' },
         ]
     }
     return [
-        {
-            id: 'section-01',
-            number: '01',
-            title: i18n.tt('Khi nào cần thiết kế 3D?'),
-            shortTitle: i18n.tt('Khi nào cần 3D?'),
-        },
-        {
-            id: 'section-02',
-            number: '02',
-            title: i18n.tt('Từ ý tưởng tới mô hình'),
-            shortTitle: i18n.tt('Quy trình'),
-        },
-        {
-            id: 'section-03',
-            number: '03',
-            title: i18n.tt('Bạn cần chuẩn bị gì?'),
-            shortTitle: i18n.tt('Chuẩn bị gì?'),
-        },
-        {
-            id: 'section-04',
-            number: '04',
-            title: i18n.tt('Kết quả cùng hoàn thiện'),
-            shortTitle: i18n.tt('Hoàn thiện'),
-        },
+        { id: 'section-01', number: '01', title: i18n.tt('Khi nào cần thiết kế 3D?'), shortTitle: i18n.tt('Khi nào cần 3D?') },
+        { id: 'section-02', number: '02', title: i18n.tt('Từ ý tưởng tới mô hình'), shortTitle: i18n.tt('Quy trình') },
+        { id: 'section-03', number: '03', title: i18n.tt('Bạn cần chuẩn bị gì?'), shortTitle: i18n.tt('Chuẩn bị gì?') },
+        { id: 'section-04', number: '04', title: i18n.tt('Kết quả cùng hoàn thiện'), shortTitle: i18n.tt('Hoàn thiện') },
     ]
+})
+
+const sectionsData = computed(() => {
+    if (props.sections && Object.keys(props.sections).length > 0) return props.sections
+    if (props.service?.sections && Object.keys(props.service.sections).length > 0) return props.service.sections
+    return {}
+})
+
+const stepsData = computed(() => {
+    if (Array.isArray(props.steps) && props.steps.length > 0) return props.steps
+    if (Array.isArray(props.service?.steps) && props.service.steps.length > 0) return props.service.steps
+    return []
+})
+
+const checklistData = computed(() => {
+    if (Array.isArray(props.checklist_items) && props.checklist_items.length > 0) return props.checklist_items
+    if (Array.isArray(props.checklistItems) && props.checklistItems.length > 0) return props.checklistItems
+    if (Array.isArray(props.service?.checklist_items) && props.service.checklist_items.length > 0) return props.service.checklist_items
+    if (Array.isArray(props.service?.checklistItems) && props.service.checklistItems.length > 0) return props.service.checklistItems
+    return []
 })
 
 const activeSection = ref('section-01')

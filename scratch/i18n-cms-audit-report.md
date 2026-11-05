@@ -1,7 +1,7 @@
 # Báo Cáo Kiểm Toán Đa Ngôn Ngữ Backend CMS (`VI / EN` & Auto-Fallback `EN -> VI`) (`/opsx-i18n-cms`)
 
-- **Thư mục dự án**: `/Users/macbookpro2020/bed-hhmaker`
-- **Thời gian quét**: `2026-11-04 22:46:02`
+- **Thư mục dự án**: `D:\bed-hhmaker`
+- **Thời gian quét**: `2026-11-05 09:45:35`
 - **Chế độ**: `Strict Read-Only Pre-Flight Audit`
 - **Ranh giới chạy song song**: `[ALLOWED: config/, app/, database/, resources/Backend/]` | `[LOCKED: resources/Frontend/]`
 
@@ -34,16 +34,16 @@
 
 | Model (`app/Models/`) | Các trường đã có trong `$translatedAttributes` (`*_translations`) | Các trường Text/JSON chưa tách ngôn ngữ `VI/EN` | Biểu mẫu Admin (`resources/Backend/`) | Trạng thái |
 | :--- | :--- | :--- | :--- | :--- |
-| `History` (`app/Models/History.php`) | `slug`, `locale`, `title`, `description`, `content`, `seo_meta_title`, `seo_slug`, `seo_meta_description` | — (Đã xử lý đa ngôn ngữ) | `resources/Backend/js/Pages/Histories/Form.vue` | **✅ PASS** |
-| `Service` (`app/Models/Service.php`) | `slug`, `locale`, `title`, `description`, `content`, `title_content`, `content_by_tab`, `benefits` | — (Đã xử lý đa ngôn ngữ) | `resources/Backend/js/Pages/Services/Form.vue` | **✅ PASS** |
-| `Post` (`app/Models/Post/Post.php`) | `slug`, `locale`, `title`, `author`, `description`, `content`, `sliders`, `take_note` | — | `resources/Backend/js/Pages/Posts/Form.vue` | **✅ PASS** |
-| `PostCategory` (`app/Models/Post/PostCategory.php`) | `slug`, `locale`, `title`, `sliders`, `seo_meta_title`, `seo_slug`, `seo_meta_description`, `seo_meta_keywords` | — | `resources/Backend/js/Pages/PostCategories/Form.vue` | **✅ PASS** |
-| `Brand` (`app/Models/Brand/Brand.php`) | `locale`, `title`, `slug`, `summary`, `description`, `seo_meta_title`, `seo_slug`, `seo_meta_description` | — | `resources/Backend/js/Pages/Products/Brands/Form.vue` | **✅ PASS** |
-| `Product` (`app/Models/Product/Product.php`) | `slug`, `locale`, `title`, `content`, `description`, `seo_meta_title`, `seo_slug`, `seo_meta_description` | — | `resources/Backend/js/Pages/Products/Options/Form.vue`, `resources/Backend/js/Pages/Products/Products/Form.vue`, `resources/Backend/js/Pages/Products/ProductVariants/Form.vue`, `resources/Backend/js/Pages/Products/Brands/Form.vue`, `resources/Backend/js/Pages/Products/Ratings/Form.vue`, `resources/Backend/js/Pages/Products/Tags/Form.vue`, `resources/Backend/js/Pages/Products/Orders/Form.vue`, `resources/Backend/js/Pages/Products/Origins/Form.vue` | **✅ PASS** |
-| `ProductCategory` (`app/Models/Product/ProductCategory.php`) | `locale`, `title`, `slug`, `banner`, `description`, `seo_meta_title`, `seo_slug`, `seo_meta_description` | — | — | **✅ PASS** |
-| `ProductVariant` (`app/Models/Product/ProductVariant.php`) | `locale`, `title`, `seo_meta_title`, `seo_slug`, `seo_meta_description`, `seo_meta_keywords`, `seo_meta_robots`, `seo_canonical` | — | `resources/Backend/js/Pages/Products/ProductVariants/Form.vue` | **✅ PASS** |
-| `Policy` (`app/Models/Policy/Policy.php`) | `slug`, `locale`, `title`, `content`, `seo_meta_title`, `seo_slug`, `seo_meta_description`, `seo_meta_keywords` | — | `resources/Backend/js/Pages/Policies/Form.vue` | **✅ PASS** |
-| `Config` (`app/Models/Config.php`) | Hỗ trợ cấu hình theo `locale` / `*_en` | — | `resources/Backend/js/Pages/Configs.vue` | **✅ PASS** |
+| `History` (`app\Models\History.php`) | `slug`, `locale`, `title`, `description`, `content`, `seo_meta_title`, `seo_slug`, `seo_meta_description` | — (Đã xử lý đa ngôn ngữ) | `resources\Backend\js\Pages\Histories\Form.vue` | **✅ PASS** |
+| `Service` (`app\Models\Service.php`) | `slug`, `locale`, `title`, `description`, `content`, `title_content`, `content_by_tab`, `benefits` | — (Đã xử lý đa ngôn ngữ) | `resources\Backend\js\Pages\Services\Form.vue` | **✅ PASS** |
+| `Brand` (`app\Models\Brand\Brand.php`) | `locale`, `title`, `slug`, `summary`, `description`, `seo_meta_title`, `seo_slug`, `seo_meta_description` | — | `resources\Backend\js\Pages\Products\Brands\Form.vue` | **✅ PASS** |
+| `Policy` (`app\Models\Policy\Policy.php`) | `slug`, `locale`, `title`, `content`, `seo_meta_title`, `seo_slug`, `seo_meta_description`, `seo_meta_keywords` | — | `resources\Backend\js\Pages\Policies\Form.vue` | **✅ PASS** |
+| `Post` (`app\Models\Post\Post.php`) | `slug`, `locale`, `title`, `author`, `description`, `content`, `sliders`, `take_note` | — | `resources\Backend\js\Pages\Posts\Form.vue` | **✅ PASS** |
+| `PostCategory` (`app\Models\Post\PostCategory.php`) | `slug`, `locale`, `title`, `sliders`, `seo_meta_title`, `seo_slug`, `seo_meta_description`, `seo_meta_keywords` | — | `resources\Backend\js\Pages\PostCategories\Form.vue` | **✅ PASS** |
+| `Product` (`app\Models\Product\Product.php`) | `slug`, `locale`, `title`, `content`, `description`, `seo_meta_title`, `seo_slug`, `seo_meta_description` | — | `resources\Backend\js\Pages\Products\Brands\Form.vue`, `resources\Backend\js\Pages\Products\Options\Form.vue`, `resources\Backend\js\Pages\Products\Orders\Form.vue`, `resources\Backend\js\Pages\Products\Origins\Form.vue`, `resources\Backend\js\Pages\Products\Products\Form.vue`, `resources\Backend\js\Pages\Products\ProductVariants\Form.vue`, `resources\Backend\js\Pages\Products\Ratings\Form.vue`, `resources\Backend\js\Pages\Products\Tags\Form.vue` | **✅ PASS** |
+| `ProductCategory` (`app\Models\Product\ProductCategory.php`) | `locale`, `title`, `slug`, `banner`, `description`, `seo_meta_title`, `seo_slug`, `seo_meta_description` | — | — | **✅ PASS** |
+| `ProductVariant` (`app\Models\Product\ProductVariant.php`) | `locale`, `title`, `seo_meta_title`, `seo_slug`, `seo_meta_description`, `seo_meta_keywords`, `seo_meta_robots`, `seo_canonical` | — | `resources\Backend\js\Pages\Products\ProductVariants\Form.vue` | **✅ PASS** |
+| `Config` (`app/Models/Config.php`) | Hỗ trợ cấu hình theo `locale` / `*_en` | — | `resources\Backend\js\Pages\Configs.vue` | **✅ PASS** |
 
 ---
 
@@ -51,27 +51,27 @@
 
 | Tọa độ `File:Dòng` | Biểu thức Khóa Cache (`Cache::remember`) | Trạng thái phân tách `VI / EN` |
 | :--- | :--- | :--- |
-| `app/Http/Controllers/Frontend/AgencyController.php:18` | `'agencies_index_' . current_locale()` | **✅ Có `_{$locale}`** |
-| `app/Http/Controllers/Frontend/FeedbackController.php:15` | `'feedback_index_' . current_locale()` | **✅ Có `_{$locale}`** |
-| `app/Http/Controllers/Frontend/HistoryController.php:17` | `'history_index_' . current_locale()` | **✅ Có `_{$locale}`** |
-| `app/Http/Controllers/Frontend/HistoryController.php:59` | `'history_show_' . $slug . '_' . current_locale()` | **✅ Có `_{$locale}`** |
-| `app/Http/Controllers/Frontend/HomeController.php:22` | `'home_page_data_' . $locale` | **✅ Có `_{$locale}`** |
-| `app/Http/Controllers/Frontend/PostController.php:18` | `'posts_index_' . app()->getLocale()` | **✅ Có `_{$locale}`** |
-| `app/Http/Controllers/Frontend/PostController.php:63` | `'post_show_' . $slug . '_' . app()->getLocale()` | **✅ Có `_{$locale}`** |
-| `app/Http/Controllers/Frontend/PostController.php:89` | `'related_posts_' . $postId . '_' . app()->getLocale()` | **✅ Có `_{$locale}`** |
-| `app/Http/Controllers/Frontend/PrizeController.php:18` | `'prizes_index_' . current_locale() . '_page_' . $page` | **✅ Có `_{$locale}`** |
-| `app/Http/Controllers/Frontend/PrizeController.php:45` | `'prize_show_' . $slug . '_' . current_locale()` | **✅ Có `_{$locale}`** |
-| `app/Http/Controllers/Frontend/ProcessController.php:18` | `'process_index_' . current_locale()` | **✅ Có `_{$locale}`** |
-| `app/Http/Controllers/Frontend/ProductController.php:20` | `'products_index_' . current_locale()` | **✅ Có `_{$locale}`** |
-| `app/Http/Controllers/Frontend/ProductController.php:62` | `'product_show_' . $slug . '_' . current_locale()` | **✅ Có `_{$locale}`** |
-| `app/Http/Controllers/Frontend/ProductController.php:532` | `'galleries_index_' . current_locale()` | **✅ Có `_{$locale}`** |
-| `app/Http/Controllers/Frontend/ProjectController.php:18` | `'projects_index_' . current_locale()` | **✅ Có `_{$locale}`** |
-| `app/Http/Controllers/Frontend/ProjectController.php:52` | `'project_show_' . $slug . '_' . current_locale()` | **✅ Có `_{$locale}`** |
-| `app/Http/Controllers/Frontend/ServiceController.php:15` | `'services_index_' . $locale` | **✅ Có `_{$locale}`** |
-| `app/Http/Controllers/Frontend/ServiceController.php:47` | `'service_show_' . $slug . '_' . current_locale()` | **✅ Có `_{$locale}`** |
-| `app/Http/Controllers/Frontend/Auth/UserAuthController.php:756` | `'otp_' . $phone . '_' . app()->getLocale()` | **✅ Có `_{$locale}`** |
-| `app/Http/Controllers/Frontend/Auth/UserAuthController.php:774` | `'otp_' . $phone . '_' . app()->getLocale()` | **✅ Có `_{$locale}`** |
-| `app/Http/Middleware/HandleInertiaFrontendRequests.php:58` | `'inertia_layout_shared_data_' . $locale` | **✅ Có `_{$locale}`** |
+| `app\Http\Controllers\Frontend\AgencyController.php:18` | `'agencies_index_' . current_locale()` | **✅ Có `_{$locale}`** |
+| `app\Http\Controllers\Frontend\FeedbackController.php:15` | `'feedback_index_' . current_locale()` | **✅ Có `_{$locale}`** |
+| `app\Http\Controllers\Frontend\HistoryController.php:17` | `'history_index_' . current_locale()` | **✅ Có `_{$locale}`** |
+| `app\Http\Controllers\Frontend\HistoryController.php:59` | `'history_show_' . $slug . '_' . current_locale()` | **✅ Có `_{$locale}`** |
+| `app\Http\Controllers\Frontend\HomeController.php:22` | `'home_page_data_' . $locale` | **✅ Có `_{$locale}`** |
+| `app\Http\Controllers\Frontend\PostController.php:18` | `'posts_index_' . app()->getLocale()` | **✅ Có `_{$locale}`** |
+| `app\Http\Controllers\Frontend\PostController.php:63` | `'post_show_' . $slug . '_' . app()->getLocale()` | **✅ Có `_{$locale}`** |
+| `app\Http\Controllers\Frontend\PostController.php:89` | `'related_posts_' . $postId . '_' . app()->getLocale()` | **✅ Có `_{$locale}`** |
+| `app\Http\Controllers\Frontend\PrizeController.php:18` | `'prizes_index_' . current_locale() . '_page_' . $page` | **✅ Có `_{$locale}`** |
+| `app\Http\Controllers\Frontend\PrizeController.php:45` | `'prize_show_' . $slug . '_' . current_locale()` | **✅ Có `_{$locale}`** |
+| `app\Http\Controllers\Frontend\ProcessController.php:18` | `'process_index_' . current_locale()` | **✅ Có `_{$locale}`** |
+| `app\Http\Controllers\Frontend\ProductController.php:20` | `'products_index_' . current_locale()` | **✅ Có `_{$locale}`** |
+| `app\Http\Controllers\Frontend\ProductController.php:62` | `'product_show_' . $slug . '_' . current_locale()` | **✅ Có `_{$locale}`** |
+| `app\Http\Controllers\Frontend\ProductController.php:532` | `'galleries_index_' . current_locale()` | **✅ Có `_{$locale}`** |
+| `app\Http\Controllers\Frontend\ProjectController.php:18` | `'projects_index_' . current_locale()` | **✅ Có `_{$locale}`** |
+| `app\Http\Controllers\Frontend\ProjectController.php:52` | `'project_show_' . $slug . '_' . current_locale()` | **✅ Có `_{$locale}`** |
+| `app\Http\Controllers\Frontend\ServiceController.php:15` | `'services_index_' . $locale` | **✅ Có `_{$locale}`** |
+| `app\Http\Controllers\Frontend\ServiceController.php:47` | `'service_show_' . $slug . '_' . current_locale()` | **✅ Có `_{$locale}`** |
+| `app\Http\Controllers\Frontend\Auth\UserAuthController.php:756` | `'otp_' . $phone . '_' . app()->getLocale()` | **✅ Có `_{$locale}`** |
+| `app\Http\Controllers\Frontend\Auth\UserAuthController.php:774` | `'otp_' . $phone . '_' . app()->getLocale()` | **✅ Có `_{$locale}`** |
+| `app\Http\Middleware\HandleInertiaFrontendRequests.php:58` | `'inertia_layout_shared_data_' . $locale` | **✅ Có `_{$locale}`** |
 
 ---
 
@@ -90,7 +90,7 @@
 | Mã | Trụ cột | Tọa độ / Phạm vi | Hạng mục bảo toàn (`[=]`) | Lý do |
 | :--- | :--- | :--- | :--- | :--- |
 | `KEEP-01` | Trụ cột 1 (Config Locales) | `config/app.php:88` | Cấu hình `'locales' => ['vi', 'en']` kích hoạt bộ chuyển đổi ngôn ngữ `VI | EN` trong Admin | Giúp Admin chuyển qua lại giữa Tiếng Việt và Tiếng Anh trên mọi Form quản trị. |
-| `KEEP-02` | Trụ cột 3 (Save per-locale) | `packages/bed-package-essentials/core/src/Traits/HasCrudActions.php:1` | Cơ chế lưu bản dịch theo từng `locale` độc lập kết hợp `use_property_fallback => true` | Cho phép Admin nhập Tiếng Việt trước, các trường chưa nhập Tiếng Anh tự động đọc từ bản ghi Tiếng Việt. |
+| `KEEP-02` | Trụ cột 3 (Save per-locale) | `packages\bed-package-essentials\core\src\Traits\HasCrudActions.php:1` | Cơ chế lưu bản dịch theo từng `locale` độc lập kết hợp `use_property_fallback => true` | Cho phép Admin nhập Tiếng Việt trước, các trường chưa nhập Tiếng Anh tự động đọc từ bản ghi Tiếng Việt. |
 | `KEEP-03` | Trụ cột 4 (Locale Cache Keys) | `app/Http/Controllers/Frontend/ & HandleInertiaFrontendRequests.php` | 21/21 khóa Cache đã phân tách độc lập theo `_{$locale}` (`vi` / `en`) | Đảm bảo dữ liệu cache của Tiếng Việt và Tiếng Anh không bao giờ bị ghi đè lẫn nhau. |
 
 ---

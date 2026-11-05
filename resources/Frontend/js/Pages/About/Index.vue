@@ -78,7 +78,7 @@
 
         <!-- 2. LÝ DO KHỞI ĐẦU (FIGMA 2283:7109) -->
         <section v-scroll-reveal class="py-10 lg:py-[40px] bg-dark-bg">
-            <div class="w-full max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-0">
+            <div class="app-container">
                 <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 lg:gap-[120px]">
                     <!-- Left Column: Chuyên mục & Tiêu đề (Figma 2283:7110) -->
                     <div class="lg:w-[360px] shrink-0 flex flex-col gap-4">
@@ -105,7 +105,7 @@
 
         <!-- 3. NHÀ SÁNG LẬP (FIGMA 2283:7116) -->
         <section v-scroll-reveal class="py-10 lg:py-[40px] bg-dark-bg">
-            <div class="w-full max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-0">
+            <div class="app-container">
                 <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 lg:gap-[72px]">
                     <!-- Left: Khung chân dung Founder Lâm Hồng Hải vát góc công nghệ (Figma 2283:7602) -->
                     <div class="w-full max-w-[561px] lg:w-[561px] lg:h-[666px] mx-auto lg:mx-0 shrink-0 select-none">
@@ -151,7 +151,7 @@
 
         <!-- 4. TRIẾT LÝ CHẾ TÁC (FIGMA 2283:7129) -->
         <section v-scroll-reveal class="py-14 lg:py-[80px] bg-dark-bg">
-            <div class="w-full max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-0 flex flex-col gap-8 lg:gap-[40px]">
+            <div class="app-container flex flex-col gap-8 lg:gap-[40px]">
                 <!-- Section Header (Figma 2283:7647) -->
                 <div class="flex flex-col gap-3">
                     <p class="text-[#84ADFF] font-normal text-[16px] leading-[19px] font-sans">
@@ -226,7 +226,7 @@
 
         <!-- 5. KẾT NỐI DỰ ÁN CTA (FIGMA 2283:7633) -->
         <section v-scroll-reveal class="pt-10 pb-14 lg:pt-[40px] lg:pb-[80px] bg-dark-bg">
-            <div class="w-full max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-0">
+            <div class="app-container">
                 <!-- Banner gradient #2970FF -> #00359E (Figma 2283:7634) -->
                 <div
                     class="relative rounded-[16px] overflow-hidden p-6 sm:p-8 lg:p-[40px] lg:h-[157px] flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6"

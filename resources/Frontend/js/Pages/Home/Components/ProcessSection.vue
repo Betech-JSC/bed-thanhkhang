@@ -48,7 +48,7 @@
                 </p>
 
                 <!-- 5 Steps Minimalist Rows (Figma Node 2261:5732) -->
-                <div class="mt-8 sm:mt-10 lg:mt-12 max-w-[560px] w-full border-b border-[#B5B5B5]/30">
+                <div v-if="steps.length > 0" class="mt-8 sm:mt-10 lg:mt-12 max-w-[560px] w-full border-b border-[#B5B5B5]/30">
                     <div
                         v-for="(step, idx) in steps"
                         :key="step.number"
@@ -134,40 +134,12 @@ export default {
     data() {
         return {
             activeStep: null,
-            defaultSteps: [
-                {
-                    number: '01',
-                    title: this.tt('Tiếp nhận & Tư vấn'),
-                    detail: this.tt('Tiếp nhận file mô hình 3D (STL, OBJ, STEP, 3MF) hoặc bản vẽ 2D phác thảo từ khách hàng; tư vấn công nghệ in và vật liệu phù hợp nhất.'),
-                },
-                {
-                    number: '02',
-                    title: this.tt('Phân tích & Báo giá'),
-                    detail: this.tt('Kỹ sư kiểm tra tính toàn vẹn cấu trúc lưới mesh, slice mô hình, tính toán thời gian in, chi phí tối ưu và gửi bảng báo giá chi tiết.'),
-                },
-                {
-                    number: '03',
-                    title: this.tt('Gia công In 3D'),
-                    detail: this.tt('Vận hành dây chuyền in 3D công nghiệp với thông số cài đặt chuẩn xác, kiểm soát nhiệt độ buồng và độ phân giải từng lớp in 0.05mm.'),
-                },
-                {
-                    number: '04',
-                    title: this.tt('Đóng gói chuẩn quy cách'),
-                    detail: this.tt('Gọt bỏ support, làm sạch siêu âm, xử lý bề mặt hoàn thiện mịn đẹp, kiểm tra kích thước dung sai và đóng gói chống sốc an toàn.'),
-                },
-                {
-                    number: '05',
-                    title: this.tt('Giao hàng tận nơi'),
-                    detail: this.tt('Bàn giao tận tay khách hàng qua mạng lưới vận chuyển hỏa tốc toàn quốc, kèm chính sách bảo hành và hướng dẫn sử dụng chu đáo.'),
-                },
-            ],
-        };
+            };
     },
     computed: {
         steps() {
-            return this.customSteps && this.customSteps.length > 0
-                ? this.customSteps
-                : this.defaultSteps;
+            if (this.customSteps && this.customSteps.length > 0) return this.customSteps;
+            return [];
         },
     },
     methods: {

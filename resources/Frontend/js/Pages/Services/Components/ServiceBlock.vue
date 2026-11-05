@@ -84,13 +84,19 @@
                         </div>
                     </div>
 
-                    <!-- 5. Primary CTA Button (Figma h-40px, px-20px, py-8px, rounded-8px) -->
-                    <div class="flex items-center">
+                    <!-- 5. Primary CTA Button & Secondary Detail Link -->
+                    <div class="flex items-center gap-3 sm:gap-4 flex-wrap">
                         <Link
                             :href="contactHref"
                             class="inline-flex items-center justify-center h-[40px] px-[20px] py-[8px] rounded-[8px] bg-[#F5F8FF] hover:bg-white text-[#111322] font-medium text-sm sm:text-[16px] sm:leading-[24px] transition-transform duration-200 shadow-sm hover:shadow-[0_0_16px_rgba(255,255,255,0.3)] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-primary/50 font-sans"
                         >
                             {{ tt(service.ctaText) }}
+                        </Link>
+                        <Link
+                            :href="detailUrl"
+                            class="inline-flex items-center justify-center h-[40px] px-[20px] py-[8px] rounded-[8px] border border-[#84ADFF]/30 hover:border-[#84ADFF] text-[#D1E0FF] hover:text-white font-medium text-sm sm:text-[16px] sm:leading-[24px] transition-all duration-200 hover:bg-[#84ADFF]/10 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#84ADFF]/50 font-sans"
+                        >
+                            {{ tt('Tìm hiểu chi tiết') }}
                         </Link>
                     </div>
                 </div>

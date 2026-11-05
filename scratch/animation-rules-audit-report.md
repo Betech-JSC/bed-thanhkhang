@@ -1,7 +1,7 @@
 # Báo Cáo Kiểm Toán 4 Quy Tắc Vàng Animation (`/opsx-animation` & `/ui-skill`)
 
-- **Thư mục dự án**: `/Users/macbookpro2020/bed-hhmaker`
-- **Thời gian quét**: `2026-11-05 09:46:22`
+- **Thư mục dự án**: `D:ed-hhmaker`
+- **Thời gian quét**: `2026-11-05 15:53:00`
 - **Chế độ**: `Strict Read-Only (Không tự ý sửa/xóa file)`
 - **Kết luận tổng thể**: **PASS 100% (4 QUY TẮC VÀNG ANIMATION)** (`[+] ADD`: 0 | `[-] REMOVE`: 0 | `[=] KEEP`: 10)
 

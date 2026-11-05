@@ -15,7 +15,7 @@
             class="relative w-full overflow-hidden pt-12 md:pt-16 pb-20 md:pb-28 lg:py-0 lg:h-[545px]"
             style="background: linear-gradient(0deg, #111322 20%, #2970FF 94%);"
         >
-            <div class="max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-0 relative">
+            <div class="app-container relative">
                 <!-- Left Hero Content (Figma Node 2283:6728) -->
                 <div class="relative z-10 flex flex-col gap-4 max-w-[740px] pt-4 sm:pt-6 lg:pt-[197px]">
                     <div class="text-[16px] leading-[22px] font-normal text-[#D1E0FF] uppercase">
@@ -33,9 +33,9 @@
 
                 <!-- Right Hero Logo 3D HH Maker (Figma Node 2308:8196) -->
                 <img
-                    src="/images/contact/hh_maker-01_2.png"
+                    src="/images/contact/hh_maker_monogram.png"
                     :alt="tt('HH Maker Logo 3D - From Ideas To Reality')"
-                    class="w-[200px] sm:w-[240px] max-h-[220px] mx-auto mt-6 lg:mt-0 lg:mx-0 lg:max-h-none lg:absolute lg:w-[469px] lg:h-[889px] lg:top-[-172px] lg:left-[877px] object-contain pointer-events-none select-none"
+                    class="w-[200px] sm:w-[240px] max-h-[220px] mx-auto mt-6 lg:mt-0 lg:mx-0 lg:max-h-none lg:absolute lg:w-[469px] lg:h-[889px] lg:top-[-172px] lg:left-[877px] object-contain pointer-events-none select-none opacity-20"
                     loading="eager"
                 />
             </div>
@@ -45,7 +45,7 @@
         <!-- SECTION 2: 3 THẺ KÍNH KÊNH LIÊN HỆ (Figma Node 2308:8241)-->
         <!-- ======================================================== -->
         <section v-scroll-reveal class="relative z-20 -mt-10 sm:-mt-14 lg:-mt-[165px] py-6 sm:py-8 lg:py-[40px]">
-            <div class="max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-0">
+            <div class="app-container">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <!-- 1. Card Zalo (Node 2308:8242) -->
                     <a
@@ -152,7 +152,7 @@
         <!-- SECTION 3: GỬI YÊU CẦU TƯ VẤN (Figma Node 2283:6767)     -->
         <!-- ======================================================== -->
         <section v-scroll-reveal class="py-12 sm:py-16 lg:pt-[112px] lg:pb-[64px] bg-[#111322]">
-            <div class="max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-0">
+            <div class="app-container">
                 <div class="flex flex-col lg:flex-row items-start gap-10 lg:gap-16">
                     <!-- Cột Trái: Lời Mời & Artwork Điêu khắc xanh (Node 2283:6768) - Width 380px -->
                     <div class="w-full lg:w-[380px] lg:h-[598px] shrink-0 flex flex-col gap-6">
@@ -328,8 +328,8 @@
         <!-- ======================================================== -->
         <!-- SECTION 4: FAQ ACCORDION (Figma Node 2330:8413)          -->
         <!-- ======================================================== -->
-        <section v-scroll-reveal class="py-14 sm:py-20 lg:pt-[80px] lg:pb-[120px] bg-[#111322]">
-            <div class="max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-0">
+        <section v-if="faqList.length > 0" v-scroll-reveal class="py-14 sm:py-20 lg:pt-[80px] lg:pb-[120px] bg-[#111322]">
+            <div class="app-container">
                 <div class="flex flex-col gap-4 mb-8">
                     <div class="text-[14px] leading-[20px] font-normal text-[#84ADFF] uppercase">
                         {{ tt('CÂU HỎI THƯỜNG GẶP') }}
@@ -523,28 +523,13 @@ const toggleFaq = (index) => {
     activeFaq.value = activeFaq.value === index ? null : index
 }
 
-const fallbackFaqList = [
-    {
-        question: 'Tôi chưa có sẵn file thiết kế 3D, bên mình có hỗ trợ dựng file không?',
-        answer: 'Có. HH MAKER hỗ trợ dựng file 3D từ ý tưởng, bản phác thảo hoặc hình ảnh tham khảo của bạn. Bạn chỉ cần cung cấp kích thước, công năng và yêu cầu mong muốn; đội ngũ sẽ tư vấn phương án thiết kế, báo chi phí dựng file và gửi bản 3D để bạn duyệt trước khi sản xuất.',
-    },
-    {
-        question: 'Để nhận được bảng báo giá chính xác và nhanh chóng nhất cho dự án của mình, tôi cần cung cấp những gì?',
-        answer: 'Bạn chỉ cần gửi file thiết kế 3D (nếu có định dạng .STL, .OBJ, .STEP...), kích thước mong muốn, yêu cầu về độ mịn, vật liệu hoặc ảnh mô tả ý tưởng. Đội ngũ kỹ thuật HH Maker sẽ phản hồi và gửi báo giá chi tiết trong vòng 2-4 giờ làm việc.',
-    },
-    {
-        question: 'Tôi muốn đặt sản phẩm theo ý tưởng riêng hoặc điều chỉnh khác đi so với các mẫu có sẵn thì có được không?',
-        answer: 'Hoàn toàn được! Dịch vụ làm đồ Custom và chế tác theo yêu cầu là thế mạnh hàng đầu tại HH Maker. Chúng tôi sẵn sàng tinh chỉnh kích thước, tỷ lệ, phối màu hoặc thiết kế riêng biệt hoàn toàn theo concept của bạn.',
-    },
-]
-
 const faqList = computed(() =>
     Array.isArray(props.faqs) && props.faqs.length
         ? props.faqs.map((item) => ({
               question: item.question || item.title || '',
               answer: item.answer || item.content || item.description || '',
           }))
-        : fallbackFaqList
+        : []
 )
 
 // Form state using Inertia useForm

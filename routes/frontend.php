@@ -22,6 +22,7 @@ Route::redirect('/ho-so-ca-nhan', '/dashboard/update-profile');
 Route::redirect('/about', '/gioi-thieu');
 Route::redirect('/about-us', '/gioi-thieu');
 Route::redirect('/search', '/tim-kiem');
+Route::redirect('/dang-nhap', '/', 301)->name('user.login');
 
 if (app()->environment('local')) {
     Route::get('/dev-login-user/{id}', function ($id) {
@@ -36,7 +37,6 @@ Route::get(Lang::uri('search-v2'), [HomeController::class, 'searchV2'])->name('a
 
 // Guest routes
 Route::middleware('guest:user')->group(function () {
-    Route::inertia('/dang-nhap', 'Users/Login')->name('user.login');
     Route::inertia('/dang-ky', 'Users/Register')->name('user.register');
 
     // Form gửi email khôi phục
@@ -50,7 +50,6 @@ Route::middleware('guest:user')->group(function () {
     // Gửi form cập nhật mật khẩu mới
     Route::post('/dat-lai-mat-khau', [UserAuthController::class, 'resetPass'])->name('password.update');
 
-    Route::post('/dang-nhap', [UserAuthController::class, 'login'])->name('login');
     Route::post('/dang-ky', [UserAuthController::class, 'register'])->name('register');
 
     Route::get('/auth/google', [UserAuthController::class, 'redirectToGoogle'])->name('auth.google');
