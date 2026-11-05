@@ -21,7 +21,7 @@
                     <div class="shrink-0 flex items-center">
                         <Link
                             :href="contactHref"
-                            class="inline-flex items-center justify-center w-[175px] h-10 rounded-[8px] bg-[#F5F8FF] hover:bg-white text-[#111322] font-medium text-[16px] leading-6 transition-all duration-200 shadow-md hover:shadow-[0_0_16px_rgba(255,255,255,0.4)] active:scale-[0.98] select-none focus:outline-none focus:ring-2 focus:ring-white font-sans"
+                            class="inline-flex items-center justify-center w-[175px] h-10 rounded-[8px] bg-[#F5F8FF] hover:bg-white text-[#111322] font-medium text-[16px] leading-6 transition-transform duration-200 shadow-md hover:shadow-[0_0_16px_rgba(255,255,255,0.4)] active:scale-[0.98] select-none focus:outline-none focus:ring-2 focus:ring-white font-sans"
                         >
                             {{ tt(ctaText) }}
                         </Link>

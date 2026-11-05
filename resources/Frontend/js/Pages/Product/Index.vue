@@ -10,7 +10,7 @@
         </Head>
 
         <!-- 1. Header Banner & Intro (Figma 2346:702 - Mở đầu) -->
-        <section class="relative pt-10 pb-8 lg:pt-10 lg:pb-10 bg-[#111322]">
+        <section v-scroll-reveal class="relative pt-10 pb-8 lg:pt-10 lg:pb-10 bg-[#111322]">
             <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-[144px]">
                 <div class="flex flex-col gap-6">
                     <!-- Eyebrow (Figma 2346:703) -->
@@ -27,7 +27,7 @@
         </section>
 
         <!-- 2. Main Catalog Content Area (Figma 2346:994 - Sidebar Layout) -->
-        <section class="pb-[12px] bg-[#111322]">
+        <section v-scroll-reveal class="pb-[12px] bg-[#111322]">
             <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-[144px]">
                 <div class="flex flex-col lg:flex-row lg:justify-between gap-8 lg:gap-[45px] items-start">
                     <!-- Left Sidebar (Desktop: Cố định 240px, Mobile: Offcanvas Drawer) -->
@@ -82,7 +82,7 @@
                                 <button
                                     type="button"
                                     @click="isMobileFilterOpen = true"
-                                    class="lg:hidden p-1 text-[#84ADFF] hover:text-white mr-1"
+                                    class="lg:hidden p-1 text-[#84ADFF] hover:text-white mr-1 transition-colors duration-200 active:scale-95"
                                     :title="tt('Mở bộ lọc')"
                                 >
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -126,36 +126,45 @@
                                 </button>
 
                                 <!-- Dropdown Menu Popover -->
-                                <div
-                                    v-if="isSortOpen"
-                                    class="absolute right-0 mt-1.5 w-40 bg-[#171B30] border border-[#404968] rounded-[8px] shadow-2xl py-1 z-30 overflow-hidden"
-                                    role="listbox"
+                                <Transition
+                                    enter-active-class="transition-transform duration-200 ease-out"
+                                    enter-from-class="translate-y-1"
+                                    enter-to-class="translate-y-0"
+                                    leave-active-class="transition-transform duration-150 ease-in"
+                                    leave-from-class="translate-y-0"
+                                    leave-to-class="translate-y-1"
                                 >
-                                    <button
-                                        v-for="opt in sortOptions"
-                                        :key="opt.value"
-                                        type="button"
-                                        @click="selectSort(opt.value)"
-                                        class="w-full text-left px-3.5 py-2 text-xs sm:text-sm flex items-center justify-between transition-colors cursor-pointer"
-                                        :class="[
-                                            filters.sortBy === opt.value
-                                                ? 'bg-[#2970FF] text-white font-semibold'
-                                                : 'text-[#B9C0D4] hover:bg-[#222842] hover:text-white'
-                                        ]"
-                                        role="option"
-                                        :aria-selected="filters.sortBy === opt.value"
+                                    <div
+                                        v-if="isSortOpen"
+                                        class="absolute right-0 mt-1.5 w-40 bg-[#171B30] border border-[#404968] rounded-[8px] shadow-2xl py-1 z-30 overflow-hidden"
+                                        role="listbox"
                                     >
-                                        <span>{{ opt.label }}</span>
-                                        <svg
-                                            v-if="filters.sortBy === opt.value"
-                                            class="w-3.5 h-3.5 text-white"
-                                            viewBox="0 0 20 20"
-                                            fill="currentColor"
+                                        <button
+                                            v-for="opt in sortOptions"
+                                            :key="opt.value"
+                                            type="button"
+                                            @click="selectSort(opt.value)"
+                                            class="w-full text-left px-3.5 py-2 text-xs sm:text-sm flex items-center justify-between transition-colors cursor-pointer"
+                                            :class="[
+                                                filters.sortBy === opt.value
+                                                    ? 'bg-[#2970FF] text-white font-semibold'
+                                                    : 'text-[#B9C0D4] hover:bg-[#222842] hover:text-white'
+                                            ]"
+                                            role="option"
+                                            :aria-selected="filters.sortBy === opt.value"
                                         >
-                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                                        </svg>
-                                    </button>
-                                </div>
+                                            <span>{{ opt.label }}</span>
+                                            <svg
+                                                v-if="filters.sortBy === opt.value"
+                                                class="w-3.5 h-3.5 text-white"
+                                                viewBox="0 0 20 20"
+                                                fill="currentColor"
+                                            >
+                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </Transition>
                             </div>
                         </div>
 

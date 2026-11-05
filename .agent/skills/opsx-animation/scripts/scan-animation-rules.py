@@ -22,11 +22,19 @@ SLIDER_COMPONENTS = [
     ("resources/Frontend/js/Components/ProductDetail/RelatedProductsSection.vue", "Slider 3 Sản phẩm liên quan (nút `<` / `>` & Dots)"),
     ("resources/Frontend/js/Components/Home/HomeHeroSection.vue", "Hero Banner Slider Trang chủ (Dots chuyển slide)"),
     ("resources/Frontend/js/Components/Products/ProductGrid.vue", "Lưới phân trang Danh sách sản phẩm (nút `<` / `>` Pagination)"),
+    ("resources/Frontend/js/Pages/Home/Components/FeaturedProductsCarousel.vue", "Carousel 4 thẻ Sản phẩm nổi bật Trang chủ (nút `<` / `>`)"),
+    ("resources/Frontend/js/Pages/Home/Components/ProductsSection.vue", "3 hàng Carousel Danh mục sản phẩm Trang chủ (nút `<` / `>`)"),
+    ("resources/Frontend/js/Components/Product/RelatedProducts.vue", "Slider 4 Sản phẩm liên quan trang Chi tiết (nút `<` / `>`)"),
+    ("resources/Frontend/js/Pages/Product/Index.vue", "Lưới phân trang Danh mục sản phẩm kèm `ProductCard.vue` & `ProductPagination.vue` (nút `<` / `>`)"),
+    ("resources/Frontend/js/Pages/Product/Show.vue", "Tabs Chi tiết & Thông số sản phẩm (trượt ngang `tabSlideDirection`)"),
 ]
 
 PRESERVED_GALLERY_COMPONENTS = [
     ("resources/Frontend/js/Components/ProductDetail/ProductGallery.vue", "Gallery chi tiết sản phẩm `688×688px` kèm hàng 6 ảnh preview `104×104px` ở dưới"),
     ("resources/Frontend/js/Components/ProductDetail/ProductInfoPanel.vue", "Bảng thông tin chi tiết sản phẩm & chọn mẫu vải/phụ kiện"),
+    ("resources/Frontend/js/Components/Product/ProductGallery.vue", "Gallery chi tiết sản phẩm `624×600px` kèm hàng ảnh preview nhỏ ở dưới"),
+    ("resources/Frontend/js/Components/Product/VariantSelector.vue", "Bảng lựa chọn tham khảo chất liệu, màu sắc & tùy chỉnh sản phẩm"),
+    ("resources/Frontend/js/Components/Product/SpecTable.vue", "Bảng thông số kỹ thuật sản phẩm chi tiết"),
 ]
 
 
@@ -88,7 +96,7 @@ def scan_project(project_dir: Path):
         if not fpath.is_file():
             continue
         content = read_text_safe(fpath)
-        has_slide_dir = "slideDirection" in content
+        has_slide_dir = any(k in content for k in ("slideDirection", "rowDirections", "tabSlideDirection"))
         has_translate_x = "translate-x-" in content
 
         # Check main slider transitions in this component

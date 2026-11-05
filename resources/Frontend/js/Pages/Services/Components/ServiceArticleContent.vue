@@ -1,7 +1,7 @@
 <template>
     <article class="w-full max-w-[840px] space-y-10 font-sans text-left">
         <!-- Mục 01: Khi nào bạn cần thiết kế 3D? (Figma Node 2367:2197) -->
-        <section id="section-01" class="scroll-mt-32 space-y-4">
+        <section v-scroll-reveal id="section-01" class="scroll-mt-32 space-y-4">
             <h2 class="text-2xl sm:text-[28px] font-bold text-[#FAFAFA] leading-tight sm:leading-[36px]">
                 {{ tt('Khi nào bạn cần thiết kế 3D?') }}
             </h2>
@@ -16,7 +16,7 @@
         </section>
 
         <!-- Mục 02: Từ ý tưởng tới mô hình 3D (Figma Node 2367:2201) -->
-        <section id="section-02" class="scroll-mt-32 space-y-5">
+        <section v-scroll-reveal id="section-02" class="scroll-mt-32 space-y-5">
             <div class="space-y-3">
                 <h2 class="text-2xl sm:text-[28px] font-bold text-[#FAFAFA] leading-tight sm:leading-[36px]">
                     {{ tt('Từ ý tưởng tới mô hình 3D') }}
@@ -54,7 +54,7 @@
         </section>
 
         <!-- Mục 03: Bạn cần chuẩn bị gì? (Figma Node 2367:2229) -->
-        <section id="section-03" class="scroll-mt-32 space-y-5">
+        <section v-scroll-reveal id="section-03" class="scroll-mt-32 space-y-5">
             <div class="space-y-3">
                 <h2 class="text-2xl sm:text-[28px] font-bold text-[#FAFAFA] leading-tight sm:leading-[36px]">
                     {{ tt('Bạn cần chuẩn bị gì?') }}
@@ -90,7 +90,7 @@
         </section>
 
         <!-- Mục 04: Cùng hoàn thiện trước khi gia công (Figma Node 2367:2253) -->
-        <section id="section-04" class="scroll-mt-32 space-y-4">
+        <section v-scroll-reveal id="section-04" class="scroll-mt-32 space-y-4">
             <h2 class="text-2xl sm:text-[28px] font-bold text-[#FAFAFA] leading-tight sm:leading-[36px]">
                 {{ tt('Cùng hoàn thiện trước khi gia công') }}
             </h2>

@@ -244,7 +244,7 @@
                     <div class="shrink-0">
                         <Link
                             :href="ctaButtonLink"
-                            class="inline-flex items-center justify-center min-w-[175px] h-[40px] px-[20px] py-[8px] bg-[#F5F8FF] hover:bg-white text-[#111322] font-medium text-[16px] leading-[24px] rounded-[8px] transition-all duration-200 whitespace-nowrap font-sans"
+                            class="inline-flex items-center justify-center min-w-[175px] h-[40px] px-[20px] py-[8px] bg-[#F5F8FF] hover:bg-white text-[#111322] font-medium text-[16px] leading-[24px] rounded-[8px] transition-colors duration-200 active:scale-[0.98] whitespace-nowrap font-sans"
                         >
                             {{ tt(ctaButtonText) }}
                         </Link>

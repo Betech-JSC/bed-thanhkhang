@@ -12,7 +12,7 @@
         <!-- Main Services Content Container (1152px on Desktop) -->
         <div class="max-w-[1152px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-0">
             <!-- Section 1: Hero / Mở đầu (Figma Node 2352:10097) -->
-            <section class="py-10">
+            <section v-scroll-reveal class="py-10">
                 <div class="max-w-[626px] flex flex-col gap-6">
                     <!-- Badge chuyên mục (Node 2352:10098) -->
                     <span class="inline-block text-xs sm:text-[14px] sm:leading-[20px] font-normal text-[#84ADFF] uppercase select-none font-sans">

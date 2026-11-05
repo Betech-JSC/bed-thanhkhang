@@ -14,7 +14,7 @@
                     v-for="(card, index) in displayCards"
                     :key="card.slug || index"
                     :href="card.href"
-                    class="group bg-[#111322] border border-[#404968] hover:border-[#2970FF] rounded-[12px] overflow-hidden flex flex-col sm:flex-row sm:h-[220px] transition-all duration-300 hover:shadow-[0_8px_24px_rgba(41,112,255,0.15)] focus:outline-none focus:ring-1 focus:ring-[#2970FF]"
+                    class="group bg-[#111322] border border-[#404968] hover:border-[#2970FF] rounded-[12px] overflow-hidden flex flex-col sm:flex-row sm:h-[220px] transition-colors duration-300 hover:shadow-[0_8px_24px_rgba(41,112,255,0.15)] focus:outline-none focus:ring-1 focus:ring-[#2970FF]"
                 >
                     <!-- Left Thumbnail (Figma Node 2367:2278 - 180x220px) -->
                     <div
