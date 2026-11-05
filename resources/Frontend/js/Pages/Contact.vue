@@ -201,7 +201,7 @@
                                             v-model="form.name"
                                             :placeholder="tt('Nhập họ và tên')"
                                             :class="[
-                                                'w-full h-[52px] px-4 rounded-[8px] bg-white/20 border text-[14px] leading-[20px] text-white placeholder-[#B9C0D4] transition-all focus:outline-none',
+                                                'w-full h-[52px] px-4 rounded-[8px] bg-white/20 border text-[14px] leading-[20px] text-white placeholder-[#B9C0D4] transition-colors duration-200 focus:outline-none',
                                                 clientErrors.name || form.errors.name
                                                     ? 'border-red-500 focus:border-red-500'
                                                     : 'border-[#5D6B98] focus:border-primary focus:ring-1 focus:ring-primary focus:bg-white/[0.25]'
@@ -222,7 +222,7 @@
                                             v-model="form.phone"
                                             :placeholder="tt('Nhập số điện thoại')"
                                             :class="[
-                                                'w-full h-[52px] px-4 rounded-[8px] bg-white/20 border text-[14px] leading-[20px] text-white placeholder-[#B9C0D4] transition-all focus:outline-none',
+                                                'w-full h-[52px] px-4 rounded-[8px] bg-white/20 border text-[14px] leading-[20px] text-white placeholder-[#B9C0D4] transition-colors duration-200 focus:outline-none',
                                                 clientErrors.phone || form.errors.phone
                                                     ? 'border-red-500 focus:border-red-500'
                                                     : 'border-[#5D6B98] focus:border-primary focus:ring-1 focus:ring-primary focus:bg-white/[0.25]'
@@ -244,7 +244,7 @@
                                         v-model="form.email"
                                         :placeholder="tt('Nhập địa chỉ email')"
                                         :class="[
-                                            'w-full h-[52px] px-4 rounded-[8px] bg-white/20 border text-[14px] leading-[20px] text-white placeholder-[#B9C0D4] transition-all focus:outline-none',
+                                            'w-full h-[52px] px-4 rounded-[8px] bg-white/20 border text-[14px] leading-[20px] text-white placeholder-[#B9C0D4] transition-colors duration-200 focus:outline-none',
                                             clientErrors.email || form.errors.email
                                                 ? 'border-red-500 focus:border-red-500'
                                                 : 'border-[#5D6B98] focus:border-primary focus:ring-1 focus:ring-primary focus:bg-white/[0.25]'
@@ -268,7 +268,7 @@
                                         :key="service"
                                         @click="form.service = service"
                                         :class="[
-                                            'h-[39px] px-[14px] py-[12px] rounded-[8px] text-[12px] leading-[15px] font-normal inline-flex items-center justify-center border transition-all duration-200 cursor-pointer',
+                                            'h-[39px] px-[14px] py-[12px] rounded-[8px] text-[12px] leading-[15px] font-normal inline-flex items-center justify-center border transition-colors duration-200 cursor-pointer',
                                             form.service === service
                                                 ? 'bg-[#243971] border-[#528BFF] text-[#FAFAFA]'
                                                 : 'bg-[#1A1C32] border-[#2C3049] text-[#FAFAFA] hover:border-[#5D6B98]'
@@ -289,7 +289,7 @@
                                     rows="4"
                                     :placeholder="tt('Chia sẻ ý tưởng, hình ảnh hoặc bản phác thảo của bạn...')"
                                     :class="[
-                                        'block w-full h-[136px] p-4 rounded-[8px] bg-white/20 border text-[14px] leading-[20px] text-white placeholder-[#B9C0D4] resize-none transition-all focus:outline-none',
+                                        'block w-full h-[136px] p-4 rounded-[8px] bg-white/20 border text-[14px] leading-[20px] text-white placeholder-[#B9C0D4] resize-none transition-colors duration-200 focus:outline-none',
                                         clientErrors.content || form.errors.content
                                             ? 'border-red-500 focus:border-red-500'
                                             : 'border-[#5D6B98] focus:border-primary focus:ring-1 focus:ring-primary focus:bg-white/[0.25]'
@@ -304,7 +304,7 @@
                             <button
                                 type="submit"
                                 :disabled="form.processing"
-                                class="w-full h-[56px] rounded-[8px] text-[16px] leading-[24px] font-semibold text-[#FAFAFA] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:brightness-110 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed"
+                                class="w-full h-[56px] rounded-[8px] text-[16px] leading-[24px] font-semibold text-[#FAFAFA] transition-transform duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:brightness-110 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed"
                                 style="background: linear-gradient(90deg, #2970FF 0%, #00359E 89%);"
                             >
                                 <svg

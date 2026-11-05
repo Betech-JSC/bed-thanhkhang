@@ -148,7 +148,7 @@
             </div>
             <Link
                 :href="route('contact')"
-                class="w-full h-10 rounded-lg text-[#F5F8FF] text-base font-medium flex items-center justify-center transition-all duration-200 shadow-md hover:shadow-lg hover:opacity-95 select-none"
+                class="w-full h-10 rounded-lg text-[#F5F8FF] text-base font-medium flex items-center justify-center transition-colors duration-200 active:scale-[0.98] shadow-md hover:shadow-lg hover:opacity-95 select-none"
                 style="background: linear-gradient(90deg, #2970FF 0%, #00359E 89%);"
             >
                 {{ tt('Liên hệ tư vấn') }}

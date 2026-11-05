@@ -10,7 +10,7 @@
             <div class="w-full max-w-[460px] lg:w-[460px] lg:h-[448px] shrink-0 mx-auto lg:mx-0">
                 <Link
                     :href="detailUrl"
-                    class="group relative w-full h-[400px] sm:h-[448px] lg:w-[460px] lg:h-[448px] rounded-[16px] p-6 sm:p-8 lg:py-[40px] lg:px-[52px] flex flex-col justify-between items-center overflow-hidden transition-all duration-300 hover:shadow-[0_8px_32px_rgba(45,75,226,0.35)] block cursor-pointer"
+                    class="group relative w-full h-[400px] sm:h-[448px] lg:w-[460px] lg:h-[448px] rounded-[16px] p-6 sm:p-8 lg:py-[40px] lg:px-[52px] flex flex-col justify-between items-center overflow-hidden transition-shadow duration-300 hover:shadow-[0_8px_32px_rgba(45,75,226,0.35)] block cursor-pointer"
                     style="background: linear-gradient(180deg, #101121 0%, #2D4BE2 100%)"
                 >
                     <!-- Top Category Code -->
@@ -88,7 +88,7 @@
                     <div class="flex items-center gap-3 sm:gap-4 flex-wrap">
                         <Link
                             :href="contactHref"
-                            class="inline-flex items-center justify-center h-[40px] px-[20px] py-[8px] rounded-[8px] bg-[#F5F8FF] hover:bg-white text-[#111322] font-medium text-sm sm:text-[16px] sm:leading-[24px] transition-all duration-200 shadow-sm hover:shadow-[0_0_16px_rgba(255,255,255,0.3)] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-primary/50 font-sans"
+                            class="inline-flex items-center justify-center h-[40px] px-[20px] py-[8px] rounded-[8px] bg-[#F5F8FF] hover:bg-white text-[#111322] font-medium text-sm sm:text-[16px] sm:leading-[24px] transition-transform duration-200 shadow-sm hover:shadow-[0_0_16px_rgba(255,255,255,0.3)] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-primary/50 font-sans"
                         >
                             {{ tt(service.ctaText) }}
                         </Link>

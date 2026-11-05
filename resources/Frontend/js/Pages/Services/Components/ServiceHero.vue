@@ -1,5 +1,5 @@
 <template>
-    <section class="pt-8 pb-10 sm:pb-12 lg:pb-14">
+    <section v-scroll-reveal class="pt-8 pb-10 sm:pb-12 lg:pb-14">
         <!-- Breadcrumb & Title Section (Figma Node 2352:11827) -->
         <div class="space-y-6 max-w-[1152px]">
             <!-- Breadcrumbs (Figma Node 2367:2157) -->

@@ -18,7 +18,7 @@
                 <div
                     v-for="(faq, index) in faqs"
                     :key="index"
-                    class="rounded-xl border border-[#5D6B98] bg-white/20 backdrop-blur-[10px] transition-all duration-200 overflow-hidden"
+                    class="rounded-xl border border-[#5D6B98] bg-white/20 backdrop-blur-[10px] transition-colors duration-200 overflow-hidden"
                 >
                     <!-- Question Button (Figma padding: 24px, Collapsed height: 72px, Expanded gap: 16px) -->
                     <button

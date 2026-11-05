@@ -1,9 +1,9 @@
 # Báo Cáo Kiểm Toán 4 Quy Tắc Vàng Animation (`/opsx-animation` & `/ui-skill`)
 
-- **Thư mục dự án**: `D:\bed-hhmaker`
-- **Thời gian quét**: `2026-11-05 14:19:25`
+- **Thư mục dự án**: `D:ed-hhmaker`
+- **Thời gian quét**: `2026-11-05 15:53:00`
 - **Chế độ**: `Strict Read-Only (Không tự ý sửa/xóa file)`
-- **Kết luận tổng thể**: **PASS 100% (4 QUY TẮC VÀNG ANIMATION)** (`[+] ADD`: 0 | `[-] REMOVE`: 0 | `[=] KEEP`: 2)
+- **Kết luận tổng thể**: **PASS 100% (4 QUY TẮC VÀNG ANIMATION)** (`[+] ADD`: 0 | `[-] REMOVE`: 0 | `[=] KEEP`: 10)
 
 ---
 
@@ -23,8 +23,16 @@
 
 | # | Quy tắc | Tọa độ File | Trạng thái (`[=] KEEP AS-IS`) |
 | :--- | :--- | :--- | :--- |
-| 1 | Quy tắc 2 (`Zero White-Out Scroll Reveal`) | `resources\Frontend\js\Composables\useScrollReveal.js` | Chuẩn 100%: Chỉ trượt nhẹ `translate-y-4 -> translate-y-0` với `transition-transform`, không dùng `opacity-0`. |
-| 2 | Quy tắc 1 (`Single-Animation-Per-Element`) | `resources/Frontend/js/{Layouts,Pages,Components}` | Chuẩn 100%: Mỗi phần tử chỉ có duy nhất 1 animation chủ đạo, không lồng `<TransitionGroup>` kép. |
+| 1 | Quy tắc 4 (`Preserve Product Gallery — KEEP AS-IS`) | `resources/Frontend/js/Components/Product/ProductGallery.vue` | GIỮ NGUYÊN 100%: Gallery chi tiết sản phẩm `624×600px` kèm hàng ảnh preview nhỏ ở dưới. |
+| 2 | Quy tắc 4 (`Preserve Product Gallery — KEEP AS-IS`) | `resources/Frontend/js/Components/Product/VariantSelector.vue` | GIỮ NGUYÊN 100%: Bảng lựa chọn tham khảo chất liệu, màu sắc & tùy chỉnh sản phẩm. |
+| 3 | Quy tắc 4 (`Preserve Product Gallery — KEEP AS-IS`) | `resources/Frontend/js/Components/Product/SpecTable.vue` | GIỮ NGUYÊN 100%: Bảng thông số kỹ thuật sản phẩm chi tiết. |
+| 4 | Quy tắc 2 (`Zero White-Out Scroll Reveal`) | `resources/Frontend/js/Composables/useScrollReveal.js` | Chuẩn 100%: Chỉ trượt nhẹ `translate-y-4 -> translate-y-0` với `transition-transform`, không dùng `opacity-0`. |
+| 5 | Quy tắc 3 (`Directional Horizontal Slide translate-x`) | `resources/Frontend/js/Pages/Home/Components/FeaturedProductsCarousel.vue` | Chuẩn 100%: Carousel 4 thẻ Sản phẩm nổi bật Trang chủ (nút `<` / `>`) đã trượt ngang `translate-x` theo hướng bấm (`next`/`prev`), không dùng `opacity-0`. |
+| 6 | Quy tắc 3 (`Directional Horizontal Slide translate-x`) | `resources/Frontend/js/Pages/Home/Components/ProductsSection.vue` | Chuẩn 100%: 3 hàng Carousel Danh mục sản phẩm Trang chủ (nút `<` / `>`) đã trượt ngang `translate-x` theo hướng bấm (`next`/`prev`), không dùng `opacity-0`. |
+| 7 | Quy tắc 3 (`Directional Horizontal Slide translate-x`) | `resources/Frontend/js/Components/Product/RelatedProducts.vue` | Chuẩn 100%: Slider 4 Sản phẩm liên quan trang Chi tiết (nút `<` / `>`) đã trượt ngang `translate-x` theo hướng bấm (`next`/`prev`), không dùng `opacity-0`. |
+| 8 | Quy tắc 3 (`Directional Horizontal Slide translate-x`) | `resources/Frontend/js/Pages/Product/Index.vue` | Chuẩn 100%: Lưới phân trang Danh mục sản phẩm kèm `ProductCard.vue` & `ProductPagination.vue` (nút `<` / `>`) đã trượt ngang `translate-x` theo hướng bấm (`next`/`prev`), không dùng `opacity-0`. |
+| 9 | Quy tắc 3 (`Directional Horizontal Slide translate-x`) | `resources/Frontend/js/Pages/Product/Show.vue` | Chuẩn 100%: Tabs Chi tiết & Thông số sản phẩm (trượt ngang `tabSlideDirection`) đã trượt ngang `translate-x` theo hướng bấm (`next`/`prev`), không dùng `opacity-0`. |
+| 10 | Quy tắc 1 (`Single-Animation-Per-Element`) | `resources/Frontend/js/{Layouts,Pages,Components}` | Chuẩn 100%: Mỗi phần tử chỉ có duy nhất 1 animation chủ đạo, không lồng `<TransitionGroup>` kép. |
 
 ---
 

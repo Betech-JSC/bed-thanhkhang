@@ -1,7 +1,7 @@
 <template>
     <article class="w-full max-w-[840px] space-y-10 font-sans text-left">
-        <!-- Mục 01: Khi nào bạn cần...? (Figma Node 2367:2197) -->
-        <section v-if="section01 && section01.title" id="section-01" class="scroll-mt-32 space-y-4">
+<!-- Mục 01: Khi nào bạn cần...? (Figma Node 2367:2197) -->
+        <section v-if="section01 && section01.title" v-scroll-reveal id="section-01" class="scroll-mt-32 space-y-4">
             <h2 class="text-2xl sm:text-[28px] font-bold text-[#FAFAFA] leading-tight sm:leading-[36px]">
                 {{ tt(section01.title) }}
             </h2>
@@ -12,8 +12,8 @@
             </div>
         </section>
 
-        <!-- Mục 02: Quy trình các bước (Figma Node 2367:2201) -->
-        <section v-if="resolvedSteps.length > 0 || (section02 && section02.title)" id="section-02" class="scroll-mt-32 space-y-5">
+<!-- Mục 02: Quy trình các bước (Figma Node 2367:2201) -->
+        <section v-if="resolvedSteps.length > 0 || (section02 && section02.title)" v-scroll-reveal id="section-02" class="scroll-mt-32 space-y-5">
             <div class="space-y-3">
                 <h2 class="text-2xl sm:text-[28px] font-bold text-[#FAFAFA] leading-tight sm:leading-[36px]">
                     {{ tt(section02.title) }}
@@ -50,8 +50,8 @@
             </div>
         </section>
 
-        <!-- Mục 03: Danh mục chuẩn bị / Thông số kỹ thuật (Figma Node 2367:2229) -->
-        <section v-if="resolvedChecklistItems.length > 0 || (section03 && section03.title)" id="section-03" class="scroll-mt-32 space-y-5">
+<!-- Mục 03: Danh mục chuẩn bị / Thông số kỹ thuật (Figma Node 2367:2229) -->
+        <section v-if="resolvedChecklistItems.length > 0 || (section03 && section03.title)" v-scroll-reveal id="section-03" class="scroll-mt-32 space-y-5">
             <div class="space-y-3">
                 <h2 class="text-2xl sm:text-[28px] font-bold text-[#FAFAFA] leading-tight sm:leading-[36px]">
                     {{ tt(section03.title) }}
@@ -86,8 +86,8 @@
             </div>
         </section>
 
-        <!-- Mục 04: Hoàn thiện & Tiêu chuẩn chế tác (Figma Node 2367:2253) -->
-        <section v-if="section04 && section04.title" id="section-04" class="scroll-mt-32 space-y-4">
+<!-- Mục 04: Hoàn thiện & Tiêu chuẩn chế tác (Figma Node 2367:2253) -->
+        <section v-if="section04 && section04.title" v-scroll-reveal id="section-04" class="scroll-mt-32 space-y-4">
             <h2 class="text-2xl sm:text-[28px] font-bold text-[#FAFAFA] leading-tight sm:leading-[36px]">
                 {{ tt(section04.title) }}
             </h2>

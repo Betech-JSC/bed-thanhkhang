@@ -95,7 +95,7 @@
         </div>
 
         <!-- 2. CHI TIẾT VÀ THÔNG SỐ (FIGMA 2358:3035: 1440x604 px, padding 0px 144px 64px) -->
-        <section class="app-container pt-0 pb-16">
+<section v-scroll-reveal class="app-container pt-0 pb-16">
             <!-- ĐIỀU HƯỚNG NỘI DUNG TABS (FIGMA 2358:3036: height 55px, border-b 1px solid #404968, gap 40px) -->
             <div class="flex items-center gap-10 border-b border-[#404968] overflow-x-auto scrollbar-none pb-0 mb-10 h-[55px]">
                 <button
@@ -265,12 +265,12 @@
         <!-- NOTIFICATION TOAST -->
         <Teleport to="body">
             <Transition
-                enter-active-class="transition duration-200 ease-out"
-                enter-from-class="opacity-0 translate-y-3"
-                enter-to-class="opacity-100 translate-y-0"
-                leave-active-class="transition duration-150 ease-in"
-                leave-from-class="opacity-100 translate-y-0"
-                leave-to-class="opacity-0 translate-y-3"
+                enter-active-class="transition-transform duration-200 ease-out"
+                enter-from-class="translate-y-3"
+                enter-to-class="translate-y-0"
+                leave-active-class="transition-transform duration-150 ease-in"
+                leave-from-class="translate-y-0"
+                leave-to-class="translate-y-3"
             >
                 <div
                     v-if="toastMessage"

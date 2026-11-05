@@ -17,7 +17,7 @@
                         v-for="(service, index) in displayServices"
                         :key="index"
                         :href="getServiceUrl(service)"
-                        class="relative rounded-[12px] w-full max-w-[280px] md:max-w-[241px] h-[316px] p-[20px_24px] flex flex-col items-center justify-between text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl group cursor-pointer block no-underline focus:outline-none focus:ring-2 focus:ring-[#2970FF]/50 border border-white/5"
+                        class="relative rounded-[12px] w-full max-w-[280px] md:max-w-[241px] h-[316px] p-[20px_24px] flex flex-col items-center justify-between text-center transition-transform duration-300 ease-out hover:-translate-y-2 hover:shadow-2xl group cursor-pointer block no-underline focus:outline-none focus:ring-2 focus:ring-[#2970FF]/50 border border-white/5"
                         :class="getHoverShadow(service, index)"
                         :style="{
                             background: getServiceGradient(service, index),
