@@ -158,14 +158,14 @@ export default {
                 {
                     id: 'keychains',
                     name: tt('Móc khoá'),
-                    keywords: ['khoa', 'keychain', 'moc'],
+                    keywords: ['khoa', 'keychain', 'moc', 'moc-khoa', 'phu-kien'],
                     hasBestChoice: true,
                     url: '/san-pham?category=moc-khoa',
                 },
                 {
                     id: 'office',
                     name: tt('Đồ dùng/ Đồ trang trí văn phòng'),
-                    keywords: ['decor', 'van-phong', 'office', 'trang-tri', 'stationery'],
+                    keywords: ['decor', 'van-phong', 'office', 'trang-tri', 'do-dung', 'khong-gian'],
                     hasBestChoice: true,
                     url: '/san-pham?category=van-phong',
                 },
@@ -187,8 +187,9 @@ export default {
                     id: c.slug || c.id,
                     name: this.tt(c.name || c.title),
                     url: `/san-pham?category=${c.slug || c.id}`,
-                    hasBestChoice: true,
+                    hasBestChoice: c.hasBestChoice ?? true,
                     keywords: [String(c.slug || c.id).toLowerCase()],
+                    items: c.items || [],
                 }));
             } else {
                 baseCategories = this.categoryRows;
@@ -196,25 +197,38 @@ export default {
 
             return baseCategories.map((cat, rIdx) => {
                 let items = [];
-                if (this.products && this.products.length > 0) {
+
+                // 1. Ưu tiên lấy sản phẩm đã load sẵn theo quan hệ danh mục từ Backend
+                if (cat.items && Array.isArray(cat.items) && cat.items.length > 0) {
+                    items = cat.items.map((p, idx) => ({
+                        id: p.id || `p-${rIdx}-${idx}`,
+                        title: p.title || p.name || '',
+                        description: p.description || p.short_description || '',
+                        image: p.thumbnail?.url || p.image?.url || (typeof p.image === 'string' ? p.image : (p.thumbnail || '')),
+                        isBestChoice: idx === 0 && cat.hasBestChoice,
+                        url: p.slug ? `/san-pham/${p.slug}` : (p.id ? `/san-pham/${p.id}` : '/san-pham'),
+                    }));
+                } else if (this.products && this.products.length > 0) {
+                    // 2. Fallback lọc từ this.products nếu Backend không truyền items trong category
                     const catId = String(cat.id).toLowerCase();
                     const matched = this.products.filter(p => {
-                        const pCatId = String(p.category_id || p.categoryId || '').toLowerCase();
-                        const catSlug = (p.category?.slug || p.category_slug || (typeof p.category === 'string' ? p.category : '')).toLowerCase();
-                        const catName = (p.category?.name || p.category?.title || '').toLowerCase();
+                        if (!p.categories || !Array.isArray(p.categories) || p.categories.length === 0) {
+                            const pCatId = String(p.category_id || p.categoryId || '').toLowerCase();
+                            const catSlug = String(p.category?.slug || p.category_slug || (typeof p.category === 'string' ? p.category : '')).toLowerCase();
+                            const catName = String(p.category?.name || p.category?.title || '').toLowerCase();
+                            if (pCatId === catId || catSlug === catId) return true;
+                            if (cat.keywords && cat.keywords.some(k => catSlug.includes(k) || catName.includes(k))) return true;
+                            return false;
+                        }
 
-                        if (p.categories && Array.isArray(p.categories)) {
-                            if (p.categories.some(c => String(c.id).toLowerCase() === catId || String(c.slug).toLowerCase() === catId)) {
-                                return true;
-                            }
-                        }
-                        if (pCatId === catId || catSlug === catId) {
-                            return true;
-                        }
-                        if (cat.keywords && cat.keywords.some(k => catSlug.includes(k) || catName.includes(k))) {
-                            return true;
-                        }
-                        return false;
+                        return p.categories.some(c => {
+                            const cId = String(c.id).toLowerCase();
+                            const cSlug = String(c.slug || '').toLowerCase();
+                            const cTitle = String(c.title || c.name || '').toLowerCase();
+                            if (cId === catId || cSlug === catId) return true;
+                            if (cat.keywords && cat.keywords.some(k => cSlug.includes(k) || cTitle.includes(k))) return true;
+                            return false;
+                        });
                     });
 
                     items = matched.map((p, idx) => ({

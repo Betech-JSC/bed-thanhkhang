@@ -99,8 +99,9 @@ class CmsSyncIntegrationTest extends TestCase
     {
         app()->setLocale('en');
 
-        $defaultProcessEn = Config::getProcessSteps([]);
-        $this->assertCount(0, $defaultProcessEn);
+        $defaultProcessEn = Config::getProcessSteps('en');
+        $this->assertCount(5, $defaultProcessEn);
+        $this->assertEquals('Contact', $defaultProcessEn[0]['title']);
 
         $customSteps = Config::getProcessSteps([
             'process_steps' => [
@@ -121,7 +122,9 @@ class CmsSyncIntegrationTest extends TestCase
         $this->assertEmpty($service->resolveChecklistItems());
 
         $faqsEn = \App\Models\Post\Post::getFrontendFaqs('en');
-        $this->assertEmpty($faqsEn);
+        $this->assertNotEmpty($faqsEn);
+        $this->assertCount(6, $faqsEn);
+        $this->assertStringContainsString('3D CAD', $faqsEn[0]['question']);
 
         Cache::put('home_page_data_vi', ['cached' => 1], 600);
         Cache::put('home_page_data_en', ['cached' => 1], 600);

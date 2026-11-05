@@ -76,7 +76,7 @@ class ProductController extends Controller
 
                 return [
                     'product' => $details,
-                    'related_products' => $product->related(),
+                    'related_products' => $product->related(['limit' => 4]),
                     'seo' => $product->transformSeo(),
                 ];
             });

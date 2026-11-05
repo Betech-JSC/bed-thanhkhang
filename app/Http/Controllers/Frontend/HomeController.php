@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller;
 use App\Models\Post\Post;
 use App\Models\Post\PostCategory;
 use App\Models\Product\Product;
+use App\Models\Product\ProductCategory;
 use App\Models\Service;
 use JamstackVietnam\Slider\Models\Slider;
 use Illuminate\Support\Facades\Cache;
@@ -57,11 +58,36 @@ class HomeController extends Controller
                         ->get()
                         ->map(fn($post) => $post->transformFeedback());
 
+                    // Fetch Active Categories with Featured Products (Strict Featured)
+                    $categories = ProductCategory::query()
+                        ->active()
+                        ->whereParent()
+                        ->sortByPosition()
+                        ->with(['products' => function ($q) {
+                            $q->where('status', Product::STATUS_ACTIVE)
+                              ->where('is_featured', true)
+                              ->ordered();
+                        }])
+                        ->get()
+                        ->map(function ($cat) {
+                            return [
+                                'id' => $cat->id,
+                                'title' => $cat->title,
+                                'name' => $cat->title,
+                                'slug' => $cat->seo_slug ?? $cat->slug,
+                                'hasBestChoice' => true,
+                                'items' => $cat->products->take(4)->map(fn($p) => $p->transform()),
+                            ];
+                        })
+                        ->filter(fn($cat) => count($cat['items']) > 0)
+                        ->values();
+
                     // Prepare Response Data
                     return [
                         'sliders' => $sliders,
                         'announcements' => $announcements,
                         'services' => $services,
+                        'categories' => $categories,
                         'products' => $products,
                         'featured_posts' => $featured_posts,
                         'feedback' => $feedback,
@@ -71,6 +97,7 @@ class HomeController extends Controller
                         'sliders' => [],
                         'announcements' => [],
                         'services' => [],
+                        'categories' => [],
                         'products' => [],
                         'featured_posts' => [],
                         'feedback' => [],
