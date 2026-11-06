@@ -37,7 +37,7 @@
         <!-- Khung Minh Họa Bài Viết Nổi Bật (Figma Node 2352:11858 - 1152x310px) -->
         <div class="mt-8 sm:mt-10 max-w-[1152px]">
             <div
-                class="relative w-full rounded-2xl overflow-hidden p-6 sm:p-8 lg:h-[310px] lg:py-[15px] lg:px-[64px] flex items-center transition-shadow duration-300 hover:shadow-[0_8px_32px_rgba(45,75,226,0.35)]"
+                class="relative w-full rounded-2xl overflow-hidden p-6 sm:p-8 lg:h-[310px] lg:py-[15px] lg:px-20 flex items-center transition-shadow duration-300 hover:shadow-[0_8px_32px_rgba(45,75,226,0.35)]"
                 style="background: linear-gradient(180deg, #101121 0%, #2D4BE2 100%)"
             >
                 <div class="w-full grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center">

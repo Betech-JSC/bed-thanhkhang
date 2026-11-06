@@ -33,11 +33,10 @@
                         @keydown.enter="handleEnterKey"
                     />
 
-                    <!-- Actions in Input: Clear button and ESC Badge -->
-                    <div class="flex items-center gap-2 shrink-0 ml-2">
+                    <!-- Actions in Input: Clear button -->
+                    <div v-if="keyword" class="flex items-center shrink-0 ml-2">
                         <!-- Clear input button -->
                         <button
-                            v-if="keyword"
                             type="button"
                             @click="clearKeyword"
                             class="w-7 h-7 rounded-full flex items-center justify-center text-[#B9C0D4] hover:text-white hover:bg-[#23273F] transition-colors"
@@ -48,21 +47,11 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
-
-                        <!-- ESC Badge -->
-                        <button
-                            type="button"
-                            @click="close"
-                            class="hidden sm:inline-flex items-center px-2 py-0.5 rounded text-[11px] font-mono font-medium text-[#84ADFF] bg-[#1A1F36] border border-[#30374F] hover:bg-[#23273F] transition-colors"
-                            :title="tt('Đóng cửa sổ (ESC)')"
-                        >
-                            ESC
-                        </button>
                     </div>
                 </div>
 
                 <!-- Modal Content Body -->
-                <div class="p-4 sm:p-5 max-h-[60vh] sm:max-h-[460px] overflow-y-auto custom-scrollbar space-y-4">
+                <div class="p-4 sm:p-5 pb-5 sm:pb-6 max-h-[60vh] sm:max-h-[480px] overflow-y-auto custom-scrollbar space-y-4">
                     <!-- 1. Trạng thái Đang tải (Dark Tech Skeleton Loading) -->
                     <div v-if="isLoading" class="space-y-3 py-1">
                         <div
@@ -244,45 +233,6 @@
                         <p class="text-xs sm:text-sm text-[#B9C0D4] max-w-sm mx-auto">
                             {{ tt('Không tìm thấy sản phẩm nào khớp với từ khóa') }} "<span class="text-[#84ADFF]">{{ keyword }}</span>". {{ tt('Vui lòng thử từ khóa khác hoặc duyệt bộ sưu tập.') }}
                         </p>
-                    </div>
-                </div>
-
-                <!-- Footer Bar -->
-                <div class="px-4 sm:px-5 py-3.5 bg-[#0E101D] border-t border-[#23273F] flex items-center justify-between text-xs text-[#B9C0D4]">
-                    <!-- Nút Xem tất cả kết quả -->
-                    <button
-                        v-if="keyword.trim()"
-                        type="button"
-                        @click="viewAllResults"
-                        class="text-[#84ADFF] hover:text-white font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
-                    >
-                        <span>{{ tt('Xem tất cả kết quả cho') }} "<span class="text-white">{{ keyword }}</span>"</span>
-                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    </button>
-                    <button
-                        v-else
-                        type="button"
-                        @click="viewAllResults"
-                        class="text-[#84ADFF] hover:text-white font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
-                    >
-                        <span>{{ tt('Duyệt toàn bộ danh mục sản phẩm') }}</span>
-                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    </button>
-
-                    <!-- Phím tắt hướng dẫn -->
-                    <div class="hidden sm:flex items-center gap-3 text-[#5D6B98] text-[11px]">
-                        <span class="flex items-center gap-1">
-                            <kbd class="px-1.5 py-0.5 rounded bg-[#16192B] border border-[#23273F] text-[#84ADFF] font-mono text-[10px]">ESC</kbd>
-                            {{ tt('để đóng') }}
-                        </span>
-                        <span class="flex items-center gap-1">
-                            <kbd class="px-1.5 py-0.5 rounded bg-[#16192B] border border-[#23273F] text-[#84ADFF] font-mono text-[10px]">↵</kbd>
-                            {{ tt('để chọn') }}
-                        </span>
                     </div>
                 </div>
             </div>

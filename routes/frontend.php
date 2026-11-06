@@ -17,59 +17,24 @@ use Inertia\Inertia;
 
 Route::get('sitemap.xml', [SitemapController::class, 'index']);
 
-// Hỗ trợ truy cập /ho-so-ca-nhan theo yêu cầu người dùng
-Route::redirect('/ho-so-ca-nhan', '/dashboard/update-profile');
-Route::redirect('/about', '/gioi-thieu');
-Route::redirect('/about-us', '/gioi-thieu');
-Route::redirect('/search', '/tim-kiem');
+// Chuyển hướng 301 an toàn các route thành viên cũ về trang chủ /
+Route::redirect('/ho-so-ca-nhan', '/', 301);
+Route::redirect('/about', '/gioi-thieu', 301);
+Route::redirect('/about-us', '/gioi-thieu', 301);
+Route::redirect('/search', '/tim-kiem', 301);
 Route::redirect('/dang-nhap', '/', 301)->name('user.login');
-
-if (app()->environment('local')) {
-    Route::get('/dev-login-user/{id}', function ($id) {
-        $user = \App\Models\User::findOrFail($id);
-        auth()->guard('user')->login($user);
-        request()->session()->regenerate();
-        return redirect()->route('users.profile.index');
-    });
-}
+Route::redirect('/dang-ky', '/', 301)->name('user.register');
+Route::redirect('/quen-mat-khau', '/', 301)->name('forgot.password.index');
+Route::redirect('/dashboard', '/', 301)->name('user.dashboard');
+Route::redirect('/dashboard/{any}', '/', 301)->where('any', '.*');
+Route::redirect('/dat-lai-mat-khau', '/', 301);
+Route::redirect('/dat-lai-mat-khau/{token}', '/', 301)->name('password.reset');
 
 Route::get(Lang::uri('search-v2'), [HomeController::class, 'searchV2'])->name('api.search');
 
-// Guest routes
-Route::middleware('guest:user')->group(function () {
-    Route::inertia('/dang-ky', 'Users/Register')->name('user.register');
-
-    // Form gửi email khôi phục
-    Route::inertia('/quen-mat-khau', 'Users/ForgotPassword')->name('forgot.password.index');
-
-    Route::post('/quen-mat-khau', [UserAuthController::class, 'sendResetPass'])->name('forgot.password.email');
-
-    // Hiển thị form nhập lại mật khẩu mới
-    Route::get('/dat-lai-mat-khau/{token}', [UserAuthController::class, 'showResetForm'])->name('password.reset');
-
-    // Gửi form cập nhật mật khẩu mới
-    Route::post('/dat-lai-mat-khau', [UserAuthController::class, 'resetPass'])->name('password.update');
-
-    Route::post('/dang-ky', [UserAuthController::class, 'register'])->name('register');
-
-    Route::get('/auth/google', [UserAuthController::class, 'redirectToGoogle'])->name('auth.google');
-    Route::get('/auth/google/callback', [UserAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
-});
-
-// Authenticated user routes
-Route::middleware('auth:user')->prefix('dashboard')->name('users.')->group(function () {
-    // Profile
-    Route::get('update-profile', [UserAuthController::class, 'showProfile'])->name('profile.index');
-    Route::get('profile', [UserAuthController::class, 'showProfile'])->name('profile');
-    Route::post('update-profile', [UserAuthController::class, 'updateProfile'])->name('profile.update');
-    Route::post('upload-avatar', [UserAuthController::class, 'uploadAvatar'])->name('profile.upload-avatar');
-    Route::get('tin-yeu-thich', [UserAuthController::class, 'getWishlist'])->name('profile.wishlist');
-    Route::get('update-profile/change-password', fn() => Inertia::render('Users/Profile/ResetPassword'))->name('profile.change-password');
-    Route::post('reset-password', [UserAuthController::class, 'resetPassword'])->name('reset.submit');
-
-    // Logout
-    Route::post('dang-xuat', [UserAuthController::class, 'logout'])->name('logout');
-});
+// Tắt hoàn toàn các route đăng nhập / đăng ký / đổi mật khẩu khách hàng cũ
+// Route::middleware('guest:user')->group(...)
+// Route::middleware('auth:user')->group(...)
 
 Route::middleware(['meta_seo', 'opening'])->group(function () {
     Route::localized(function () {

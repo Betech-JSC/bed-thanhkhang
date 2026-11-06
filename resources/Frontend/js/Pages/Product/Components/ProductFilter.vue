@@ -1,6 +1,6 @@
 <template>
     <div class="w-full lg:w-[240px] space-y-3">
-        <!-- Main Filter Card (Figma 2346:996 - Cao 464px) -->
+        <!-- Main Filter Card (Figma 2701:5303 - Cao 464px, bg #30374F, r 12px) -->
         <div class="bg-[#30374F] rounded-[12px] p-4 flex flex-col gap-4 shadow-lg min-h-[464px]">
             <!-- Header on mobile with close button -->
             <div class="flex items-center justify-between pb-2 border-b border-[#404968] lg:hidden">
@@ -16,12 +16,12 @@
                 </button>
             </div>
 
-            <!-- Title: Danh mục sản phẩm (Figma 2346:997) -->
+            <!-- Title: DANH MỤC SẢN PHẨM (Figma 2701:5304) -->
             <h4 class="text-sm font-semibold text-[#B9C0D4] uppercase leading-[21px]">
                 {{ tt('DANH MỤC SẢN PHẨM') }}
             </h4>
 
-            <!-- 1. Search Box (Figma 2380:1524) -->
+            <!-- 1. Search Box (Figma 2701:5305 - h 46px, bg #111322, r 8px) -->
             <div class="relative w-full h-[46px] bg-[#111322] border border-[#5D6B98] rounded-lg px-[13px] flex items-center justify-between gap-2 focus-within:border-[#84ADFF] transition-colors">
                 <input
                     type="text"
@@ -30,7 +30,7 @@
                     :placeholder="tt('Tìm kiếm sản phẩm…')"
                     class="w-full bg-transparent text-sm leading-5 text-[#FAFAFA] placeholder-[#B9C0D4] focus:outline-none pr-2"
                 />
-                <!-- Search Icon on the RIGHT -->
+                <!-- Clear Search button or Search Icon on the RIGHT -->
                 <button
                     v-if="filters.search"
                     type="button"
@@ -52,26 +52,77 @@
                 </svg>
             </div>
 
-            <!-- 2. Danh mục sản phẩm (Động từ Backend + fallback Figma 2346:708 - 4 mục chuẩn, h 188px) -->
+            <!-- 2. Danh mục sản phẩm (Figma 2701:5309 - 4 mục chuẩn, h 44px, có chevron xổ ra) -->
             <div class="flex flex-col gap-1">
-                <button
-                    v-for="cat in displayCategories"
+                <div
+                    v-for="cat in categoryTree"
                     :key="cat.id"
-                    type="button"
-                    @click="selectCategory(cat.id)"
-                    class="w-full h-[44px] px-3.5 rounded-lg text-sm leading-5 font-normal flex items-center transition-colors duration-150 text-left"
-                    :class="
-                        isCategorySelected(cat)
-                            ? 'bg-[#404968] text-[#FAFAFA] font-medium'
-                            : 'text-[#EFF1F5] hover:bg-[#404968]/50 hover:text-white'
-                    "
+                    class="flex flex-col"
                 >
-                    <span>{{ cat.name }}</span>
-                </button>
+                    <!-- Category Item Row -->
+                    <div
+                        @click="handleCategoryClick(cat)"
+                        class="w-full h-[44px] px-3 rounded-lg text-sm leading-5 flex items-center justify-between transition-colors duration-200 text-left cursor-pointer select-none group"
+                        :class="
+                            isCategorySelected(cat)
+                                ? 'bg-[#404968] text-[#FAFAFA] font-medium'
+                                : 'text-[#EFF1F5] hover:bg-[#404968]/50 hover:text-white'
+                        "
+                    >
+                        <span class="truncate pr-2">{{ cat.name }}</span>
+
+                        <!-- Chevron Icon ở đằng sau các mục có danh mục con (Figma 2701:5314, 5317, 5320) -->
+                        <button
+                            v-if="cat.hasChevron"
+                            type="button"
+                            @click.stop="toggleCategoryExpand(cat.id)"
+                            class="w-6 h-6 flex items-center justify-center shrink-0 text-[#EFF1F5] group-hover:text-white transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                            :class="{ 'rotate-90': isCategoryExpanded(cat.id) }"
+                            :aria-expanded="isCategoryExpanded(cat.id)"
+                            :title="tt('Mở rộng danh mục con')"
+                        >
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+                                <path d="M6 12L10 8L6 4" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Subcategories Accordion (Xổ ra các mục con mượt 60fps bằng CSS Grid 0fr <-> 1fr) -->
+                    <div
+                        v-if="cat.hasChevron && cat.subcategories && cat.subcategories.length"
+                        class="subcategory-accordion-grid"
+                        :class="{ 'is-expanded': isCategoryExpanded(cat.id) }"
+                        :aria-hidden="!isCategoryExpanded(cat.id)"
+                    >
+                        <div class="overflow-hidden min-h-0">
+                            <div class="flex flex-col gap-1 pl-4 pr-1 py-1 my-0.5">
+                                <button
+                                    v-for="sub in cat.subcategories"
+                                    :key="sub.id"
+                                    type="button"
+                                    :tabindex="isCategoryExpanded(cat.id) ? 0 : -1"
+                                    @click="selectSubcategory(cat, sub.id)"
+                                    class="w-full h-8 px-3 rounded-md text-xs leading-4 flex items-center justify-between text-left transition-colors duration-150 cursor-pointer select-none"
+                                    :class="
+                                        isSubcategorySelected(sub.id)
+                                            ? 'bg-[#2970FF]/25 text-[#84ADFF] font-medium border border-[#2970FF]/50 shadow-sm'
+                                            : 'text-[#B9C0D4] hover:bg-[#404968]/40 hover:text-[#FAFAFA]'
+                                    "
+                                >
+                                    <span class="truncate">{{ sub.name }}</span>
+                                    <span
+                                        v-if="isSubcategorySelected(sub.id)"
+                                        class="w-1.5 h-1.5 rounded-full bg-[#84ADFF] shrink-0"
+                                    ></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- 3. Lọc theo nhu cầu (Figma 2390:1536 - gap 16px, h 121px) -->
-            <div class="pt-2 flex flex-col gap-4">
+            <!-- 3. Lọc theo nhu cầu (Figma 2701:5321 - gap 12px, checkbox TRƯỚC label) -->
+            <div class="pt-2 flex flex-col gap-3">
                 <h4 class="text-sm font-semibold text-[#B9C0D4] uppercase leading-[21px]">
                     {{ tt('LỌC THEO NHU CẦU') }}
                 </h4>
@@ -81,27 +132,15 @@
                         :key="purpose"
                         type="button"
                         @click="togglePurpose(purpose)"
-                        class="w-full h-[20px] px-3 flex items-center justify-between gap-3 text-left group cursor-pointer focus:outline-none select-none"
+                        class="w-full h-5 px-3 flex items-center gap-3 text-left group cursor-pointer focus:outline-none select-none"
                     >
-                        <!-- Label text bên TRÁI (Figma 2390:1538) -->
-                        <span
-                            class="text-sm leading-5 transition-colors"
-                            :class="
-                                isPurposeSelected(purpose)
-                                    ? 'text-[#FAFAFA] font-medium'
-                                    : 'text-[#EFF1F5] group-hover:text-white'
-                            "
-                        >
-                            {{ purpose }}
-                        </span>
-
-                        <!-- Custom Checkbox bên PHẢI (Figma 2390:1539) -->
+                        <!-- Checkbox nằm TRƯỚC (bên trái label), kích thước 16x16, bo góc 4px (Figma 2701:5325, 5328, 5331) -->
                         <div
-                            class="w-[18px] h-[18px] rounded border flex items-center justify-center transition-colors shrink-0"
+                            class="w-4 h-4 rounded-[4px] border flex items-center justify-center transition-colors shrink-0"
                             :class="
                                 isPurposeSelected(purpose)
                                     ? 'bg-[#2970FF] border-[#2970FF]'
-                                    : 'border-[#5D6B98] bg-transparent group-hover:border-[#84ADFF]'
+                                    : 'border-[#5D6B98] bg-transparent group-hover:border-[#EFF1F5]'
                             "
                         >
                             <svg
@@ -117,26 +156,25 @@
                                 />
                             </svg>
                         </div>
+
+                        <!-- Label text nằm SAU (bên phải checkbox), cách checkbox đúng 12px (gap-3) -->
+                        <span
+                            class="text-sm leading-5 transition-colors"
+                            :class="
+                                isPurposeSelected(purpose)
+                                    ? 'text-[#FAFAFA] font-medium'
+                                    : 'text-[#EFF1F5] group-hover:text-white'
+                            "
+                        >
+                            {{ purpose }}
+                        </span>
                     </button>
                 </div>
             </div>
-
-            <!-- Nút Reset Filter nếu đang lọc -->
-            <div v-if="hasActiveFilters" class="pt-2 border-t border-[#404968]">
-                <button
-                    type="button"
-                    @click="resetFilters"
-                    class="w-full py-2 text-xs font-semibold text-[#84ADFF] hover:text-white transition-colors flex items-center justify-center gap-1.5"
-                >
-                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                    <span>{{ tt('Đặt lại bộ lọc') }}</span>
-                </button>
-            </div>
+            <!-- Đã XÓA nút "Đặt lại bộ lọc" bên sidebar theo đúng yêu cầu feedback của User -->
         </div>
 
-        <!-- Custom Request Box (Figma 2346:998 - Cao 156px) -->
+        <!-- Custom Request Box (Figma 2701:5333 - Cao 156px, bg #30374F, r 12px) -->
         <div class="bg-[#30374F] rounded-[12px] p-4 flex flex-col justify-between h-[156px] shadow-lg">
             <div class="flex flex-col gap-3">
                 <h4 class="text-sm font-medium text-[#FAFAFA] leading-[20px]">
@@ -171,6 +209,12 @@ export default {
         },
     },
     emits: ['update:filters', 'reset', 'close'],
+    data() {
+        return {
+            // Danh sách các danh mục đang mở rộng mục con
+            expandedCategories: [],
+        }
+    },
     computed: {
         purposes() {
             return [
@@ -179,39 +223,87 @@ export default {
                 this.tt('Quà tặng cá nhân'),
             ]
         },
-        displayCategories() {
-            const list = [{ id: 'all', name: this.tt('Tất cả sản phẩm'), slug: 'all' }];
-            if (this.categories && this.categories.length > 0) {
-                this.categories.forEach(c => {
-                    const id = c.slug || c.id;
-                    if (id !== 'all') {
-                        list.push({
-                            id: id,
-                            name: this.tt(c.title || c.name),
-                            slug: c.slug || c.id,
-                        });
+        categoryTree() {
+            // Chuẩn hóa 4 mục danh mục theo đúng bản Figma chuẩn (Node 2701:5295) kèm danh mục con
+            return [
+                {
+                    id: 'all',
+                    name: this.tt('Tất cả sản phẩm'),
+                    slug: 'all',
+                    hasChevron: false,
+                    subcategories: [],
+                },
+                {
+                    id: 'moc-khoa',
+                    name: this.tt('Móc khoá'),
+                    slug: 'moc-khoa-phu-kien',
+                    hasChevron: true,
+                    subcategories: [
+                        { id: 'moc-khoa-co-khi', name: this.tt('Móc khoá cơ khí') },
+                        { id: 'moc-khoa-the-thao', name: this.tt('Móc khoá thể thao & phụ kiện') },
+                    ],
+                },
+                {
+                    id: 'van-phong-pham',
+                    name: this.tt('Văn phòng phẩm'),
+                    slug: 'trang-tri-do-dung',
+                    hasChevron: true,
+                    subcategories: [
+                        { id: 'ly', name: this.tt('Ly') },
+                        { id: 'lo-cam-hoa-de-ban', name: this.tt('Lọ cắm hoa để bàn') },
+                        { id: 'den', name: this.tt('Đèn') },
+                    ],
+                },
+                {
+                    id: 'gia-cong-theo-yeu-cau',
+                    name: this.tt('Gia công theo yêu cầu'),
+                    slug: 'gia-cong-theo-yeu-cau',
+                    hasChevron: true,
+                    subcategories: [
+                        { id: 'mo-hinh-resin', name: this.tt('Mô hình Resin & Khớp cử động') },
+                        { id: 'linh-kien-carbon', name: this.tt('Linh kiện cơ khí & Carbon Fiber') },
+                    ],
+                },
+            ]
+        },
+    },
+    watch: {
+        'filters.category': {
+            immediate: true,
+            handler(val) {
+                if (val && val !== 'all') {
+                    // Tự động mở rộng danh mục nếu category được chọn
+                    const match = this.categoryTree.find(c => c.id === val || c.slug === val)
+                    if (match && match.hasChevron && !this.expandedCategories.includes(match.id)) {
+                        this.expandedCategories.push(match.id)
                     }
-                });
+                }
             }
-            return list;
-        },
-        hasActiveFilters() {
-            return (
-                (this.filters.search && this.filters.search.trim() !== '') ||
-                (this.filters.category && this.filters.category !== 'all') ||
-                (this.filters.purposes && this.filters.purposes.length > 0)
-            )
-        },
+        }
     },
     methods: {
         isCategorySelected(cat) {
-            const current = this.filters.category;
-            if (!current || current === 'all') return cat.id === 'all' || cat.slug === 'all';
-            return current === cat.id || current === cat.slug;
+            const current = this.filters.category
+            if (!current || current === 'all') return cat.id === 'all' || cat.slug === 'all'
+            return current === cat.id || current === cat.slug
+        },
+        isCategoryExpanded(catId) {
+            return this.expandedCategories.includes(catId)
+        },
+        toggleCategoryExpand(catId) {
+            const idx = this.expandedCategories.indexOf(catId)
+            if (idx > -1) {
+                this.expandedCategories.splice(idx, 1)
+            } else {
+                this.expandedCategories.push(catId)
+            }
+        },
+        isSubcategorySelected(subId) {
+            return this.filters.subcategory === subId
         },
         isPurposeSelected(purpose) {
-            if (!this.filters.purposes) return false;
-            return this.filters.purposes.includes(purpose);
+            if (!this.filters.purposes) return false
+            return this.filters.purposes.includes(purpose)
         },
         updateFilter(key, value) {
             this.$emit('update:filters', {
@@ -219,8 +311,39 @@ export default {
                 [key]: value,
             })
         },
-        selectCategory(catId) {
-            this.updateFilter('category', catId)
+        handleCategoryClick(cat) {
+            if (cat.id === 'all') {
+                this.expandedCategories = []
+                this.$emit('update:filters', {
+                    ...this.filters,
+                    category: 'all',
+                    subcategory: null,
+                })
+                return
+            }
+
+            // Điều khiển đóng/mở accordion danh mục mượt mà khi click vào hàng danh mục
+            if (cat.hasChevron) {
+                if (this.isCategorySelected(cat) && !this.filters.subcategory) {
+                    this.toggleCategoryExpand(cat.id)
+                } else {
+                    this.expandedCategories = [cat.id]
+                }
+            }
+
+            this.$emit('update:filters', {
+                ...this.filters,
+                category: cat.id,
+                subcategory: null, // Xoá subcategory cụ thể khi chọn danh mục cha
+            })
+        },
+        selectSubcategory(parentCat, subId) {
+            // Khi chọn subcategory, đảm bảo parent category cũng được kích hoạt
+            this.$emit('update:filters', {
+                ...this.filters,
+                category: parentCat.id,
+                subcategory: this.filters.subcategory === subId ? null : subId,
+            })
         },
         togglePurpose(purpose) {
             const arr = [...(this.filters.purposes || [])]
@@ -233,8 +356,21 @@ export default {
             this.updateFilter('purposes', arr)
         },
         resetFilters() {
+            this.expandedCategories = []
             this.$emit('reset')
         },
     },
 }
 </script>
+
+<style scoped>
+.subcategory-accordion-grid {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.subcategory-accordion-grid.is-expanded {
+    grid-template-rows: 1fr;
+}
+</style>

@@ -3,7 +3,7 @@
         class="fixed top-0 inset-x-0 z-[1000] bg-[#111322] antialiased transition-colors duration-200"
         @mouseleave="menuSelected = null"
     >
-        <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-20 h-[64px] lg:h-[80px] xl:h-[111px] xl:py-8 flex items-center justify-between">
+        <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-20 h-[64px] lg:h-[111px] lg:py-8 flex items-center justify-between">
             <!-- Brand Logo HH Maker (Node 2352:10264) -->
             <div class="flex items-center shrink-0">
                 <Link :href="route('home')" class="inline-flex items-center">
@@ -67,7 +67,7 @@
                                             v-for="(sub, subIdx) in menu.subMenu.filter(s => !s.isAll)"
                                             :key="subIdx"
                                             :href="sub.url || sub.slug"
-                                            class="px-3 py-2.5 rounded-lg text-sm font-medium text-[#B9C0D4] hover:text-[#FAFAFA] hover:bg-[#222842] flex items-center justify-between transition-colors group relative border-l-2 border-transparent hover:border-[#2970FF]"
+                                            class="px-3 py-2.5 rounded-lg text-sm font-medium text-[#B9C0D4] hover:text-[#FAFAFA] hover:bg-[#222842] flex items-center justify-between transition-colors group relative"
                                             @click="menuSelected = null"
                                         >
                                             <span class="truncate">{{ sub.title }}</span>
@@ -88,7 +88,20 @@
                                                 @click="menuSelected = null"
                                             >
                                                 <span>{{ tt('Xem tất cả sản phẩm') }}</span>
-                                                <span class="text-sm font-bold">&rarr;</span>
+                                                <svg
+                                                    class="w-4 h-4 shrink-0"
+                                                    viewBox="0 0 16 16"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        d="M3.33334 8H12.6667M8 3.33334L12.6667 8L8 12.6667"
+                                                        stroke="currentColor"
+                                                        stroke-width="1.5"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    />
+                                                </svg>
                                             </Link>
                                         </div>
                                     </div>
@@ -284,7 +297,21 @@
                                                     : 'text-[#B9C0D4] hover:text-white hover:bg-dark-surface'"
                                             >
                                                 <span>{{ sub.title }}</span>
-                                                <span v-if="sub.isAll" class="text-xs font-bold">&rarr;</span>
+                                                <svg
+                                                    v-if="sub.isAll"
+                                                    class="w-4 h-4 shrink-0"
+                                                    viewBox="0 0 16 16"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        d="M3.33334 8H12.6667M8 3.33334L12.6667 8L8 12.6667"
+                                                        stroke="currentColor"
+                                                        stroke-width="1.5"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    />
+                                                </svg>
                                             </Link>
                                         </div>
                                     </transition>

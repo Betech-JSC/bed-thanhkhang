@@ -52,9 +52,9 @@
                         :href="displayZaloUrl"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="lg:w-[368px] lg:h-[193px] p-7 rounded-[12px] bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] flex flex-col justify-between gap-5 transition-colors duration-200 hover:border-primary hover:bg-white/[0.28] hover:shadow-glow-primary-subtle group"
+                        class="lg:w-[368px] lg:h-[193px] p-7 rounded-[12px] bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] flex flex-col justify-between gap-5 transition duration-200 hover:border-white/50 hover:bg-white/[0.28] hover:shadow-[0_0_20px_rgba(255,255,255,0.06)]"
                     >
-                        <div class="w-7 h-7 flex items-center text-white group-hover:text-primary transition-colors">
+                        <div class="w-7 h-7 flex items-center text-white">
                             <!-- Lucide MessageCircle (28x28) -->
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -71,7 +71,7 @@
                             </svg>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <h3 class="text-[24px] leading-[29px] font-semibold text-[#FAFAFA] group-hover:text-primary transition-colors">
+                            <h3 class="text-[24px] leading-[29px] font-semibold text-[#FAFAFA]">
                                 {{ tt('Tư vấn qua Zalo') }}
                             </h3>
                             <p class="text-[16px] leading-[26px] font-normal text-[#B9C0D4]">
@@ -83,9 +83,9 @@
                     <!-- 2. Card Hotline (Node 2308:8252) -->
                     <a
                         :href="'tel:' + displayPhone.replace(/\s+/g, '')"
-                        class="lg:w-[368px] lg:h-[193px] p-7 rounded-[12px] bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] flex flex-col justify-between gap-5 transition-colors duration-200 hover:border-primary hover:bg-white/[0.28] hover:shadow-glow-primary-subtle group"
+                        class="lg:w-[368px] lg:h-[193px] p-7 rounded-[12px] bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] flex flex-col justify-between gap-5 transition duration-200 hover:border-white/50 hover:bg-white/[0.28] hover:shadow-[0_0_20px_rgba(255,255,255,0.06)]"
                     >
-                        <div class="w-7 h-7 flex items-center text-white group-hover:text-primary transition-colors">
+                        <div class="w-7 h-7 flex items-center text-white">
                             <!-- Lucide Phone (28x28) -->
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -104,7 +104,7 @@
                             </svg>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <h3 class="text-[24px] leading-[29px] font-semibold text-[#FAFAFA] group-hover:text-primary transition-colors">
+                            <h3 class="text-[24px] leading-[29px] font-semibold text-[#FAFAFA]">
                                 {{ displayPhone }}
                             </h3>
                             <p class="text-[16px] leading-[26px] font-normal text-[#B9C0D4]">
@@ -116,9 +116,9 @@
                     <!-- 3. Card Email (Node 2308:8262) -->
                     <a
                         :href="'mailto:' + displayEmail"
-                        class="lg:w-[368px] lg:h-[193px] p-7 rounded-[12px] bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] flex flex-col justify-between gap-5 transition-colors duration-200 hover:border-primary hover:bg-white/[0.28] hover:shadow-glow-primary-subtle group"
+                        class="lg:w-[368px] lg:h-[193px] p-7 rounded-[12px] bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] flex flex-col justify-between gap-5 transition duration-200 hover:border-white/50 hover:bg-white/[0.28] hover:shadow-[0_0_20px_rgba(255,255,255,0.06)]"
                     >
-                        <div class="w-7 h-7 flex items-center text-white group-hover:text-primary transition-colors">
+                        <div class="w-7 h-7 flex items-center text-white">
                             <!-- Lucide Mail (28x28) -->
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -136,7 +136,7 @@
                             </svg>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <h3 class="text-[24px] leading-[29px] font-semibold text-[#FAFAFA] group-hover:text-primary transition-colors">
+                            <h3 class="text-[24px] leading-[29px] font-semibold text-[#FAFAFA]">
                                 {{ displayEmail }}
                             </h3>
                             <p class="text-[16px] leading-[26px] font-normal text-[#B9C0D4]">
@@ -204,7 +204,7 @@
                                                 'w-full h-[52px] px-4 rounded-[8px] bg-white/20 border text-[14px] leading-[20px] text-white placeholder-[#B9C0D4] transition-colors duration-200 focus:outline-none',
                                                 clientErrors.name || form.errors.name
                                                     ? 'border-red-500 focus:border-red-500'
-                                                    : 'border-[#5D6B98] focus:border-primary focus:ring-1 focus:ring-primary focus:bg-white/[0.25]'
+                                                    : 'border-[#5D6B98] hover:border-white/40 focus:ring-2 focus:ring-white/40 focus:border-white'
                                             ]"
                                         />
                                         <p v-if="clientErrors.name || form.errors.name" class="text-xs text-red-400 mt-1.5">
@@ -225,7 +225,7 @@
                                                 'w-full h-[52px] px-4 rounded-[8px] bg-white/20 border text-[14px] leading-[20px] text-white placeholder-[#B9C0D4] transition-colors duration-200 focus:outline-none',
                                                 clientErrors.phone || form.errors.phone
                                                     ? 'border-red-500 focus:border-red-500'
-                                                    : 'border-[#5D6B98] focus:border-primary focus:ring-1 focus:ring-primary focus:bg-white/[0.25]'
+                                                    : 'border-[#5D6B98] hover:border-white/40 focus:ring-2 focus:ring-white/40 focus:border-white'
                                             ]"
                                         />
                                         <p v-if="clientErrors.phone || form.errors.phone" class="text-xs text-red-400 mt-1.5">
@@ -247,7 +247,7 @@
                                             'w-full h-[52px] px-4 rounded-[8px] bg-white/20 border text-[14px] leading-[20px] text-white placeholder-[#B9C0D4] transition-colors duration-200 focus:outline-none',
                                             clientErrors.email || form.errors.email
                                                 ? 'border-red-500 focus:border-red-500'
-                                                : 'border-[#5D6B98] focus:border-primary focus:ring-1 focus:ring-primary focus:bg-white/[0.25]'
+                                                : 'border-[#5D6B98] hover:border-white/40 focus:ring-2 focus:ring-white/40 focus:border-white'
                                         ]"
                                     />
                                     <p v-if="clientErrors.email || form.errors.email" class="text-xs text-red-400 mt-1.5">
@@ -292,7 +292,7 @@
                                         'block w-full h-[136px] p-4 rounded-[8px] bg-white/20 border text-[14px] leading-[20px] text-white placeholder-[#B9C0D4] resize-none transition-colors duration-200 focus:outline-none',
                                         clientErrors.content || form.errors.content
                                             ? 'border-red-500 focus:border-red-500'
-                                            : 'border-[#5D6B98] focus:border-primary focus:ring-1 focus:ring-primary focus:bg-white/[0.25]'
+                                            : 'border-[#5D6B98] hover:border-white/40 focus:ring-2 focus:ring-white/40 focus:border-white'
                                     ]"
                                 ></textarea>
                                 <p v-if="clientErrors.content || form.errors.content" class="text-xs text-red-400 mt-1.5">
@@ -343,66 +343,62 @@
                     <div
                         v-for="(faq, index) in faqList"
                         :key="index"
-                        class="rounded-[12px] bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] p-6 transition-colors duration-200"
+                        :class="[
+                            'rounded-[12px] bg-white/20 border border-[#5D6B98] backdrop-blur-[10px] hover:border-white/50 hover:bg-white/[0.24] transition-colors duration-200 overflow-hidden',
+                            activeFaq === index ? '!border-white/60 !bg-white/[0.25]' : ''
+                        ]"
                     >
                         <button
                             type="button"
                             @click="toggleFaq(index)"
-                            class="w-full flex items-center justify-between gap-4 text-left cursor-pointer"
+                            class="w-full px-5 py-5 sm:px-6 sm:py-[23px] flex items-center justify-between gap-4 text-left cursor-pointer select-none focus:outline-none"
                             :aria-expanded="activeFaq === index"
                         >
-                            <span class="text-[18px] leading-[22px] font-medium text-[#FAFAFA]">
+                            <span class="text-base sm:text-[18px] leading-[22px] font-medium text-[#FAFAFA]">
                                 {{ tt(faq.question) }}
                             </span>
-                            <span class="w-6 h-[22px] shrink-0 flex items-center justify-center text-[#FCFCFC]">
+                            <span
+                                class="w-6 h-6 shrink-0 flex items-center justify-center text-[#FCFCFC] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                                :class="activeFaq === index ? 'rotate-180' : 'rotate-0'"
+                            >
                                 <svg
-                                    v-if="activeFaq === index"
-                                    class="shrink-0"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
+                                    class="w-6 h-6"
+                                    viewBox="0 0 48 48"
                                     fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                >
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                                <svg
-                                    v-else
-                                    class="shrink-0"
                                     xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
                                 >
-                                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <path
+                                        d="M24 10V38"
+                                        stroke="#FCFCFC"
+                                        stroke-width="4"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        class="origin-center transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                                        :class="activeFaq === index ? 'rotate-90 scale-y-0' : 'rotate-0 scale-y-100'"
+                                    />
+                                    <path
+                                        d="M10 24H38"
+                                        stroke="#FCFCFC"
+                                        stroke-width="4"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
                                 </svg>
                             </span>
                         </button>
-                        <Transition
-                            enter-active-class="transition-transform duration-200 ease-out"
-                            enter-from-class="translate-y-1"
-                            enter-to-class="translate-y-0"
-                            leave-active-class="transition-transform duration-150 ease-in"
-                            leave-from-class="translate-y-0"
-                            leave-to-class="translate-y-1"
+                        <div
+                            class="faq-accordion-grid"
+                            :class="{ 'is-expanded': activeFaq === index }"
+                            :aria-hidden="activeFaq !== index"
                         >
-                            <div
-                                v-if="activeFaq === index"
-                                class="mt-4 text-[16px] leading-[26px] font-normal text-[#FCFCFC]"
-                            >
-                                {{ tt(faq.answer) }}
+                            <div class="overflow-hidden min-h-0">
+                                <div
+                                    class="px-5 pb-5 sm:px-6 sm:pb-[23px] -mt-1 sm:-mt-[7px] text-sm sm:text-[16px] leading-[26px] font-normal text-[#FCFCFC]"
+                                >
+                                    {{ tt(faq.answer) }}
+                                </div>
                             </div>
-                        </Transition>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -643,3 +639,15 @@ const submitContact = () => {
     })
 }
 </script>
+
+<style scoped>
+.faq-accordion-grid {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.faq-accordion-grid.is-expanded {
+    grid-template-rows: 1fr;
+}
+</style>

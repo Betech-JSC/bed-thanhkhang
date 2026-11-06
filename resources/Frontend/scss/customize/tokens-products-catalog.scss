@@ -1,0 +1,135 @@
+/**
+ * Design Tokens extracted from Figma Node 2346:669 ("S\u1ea3n ph\u1ea9m option 3 - Sidebar")
+ * File: HH-Maker (Key: otk6uzZmitaXPdZZZiRG1K)
+ */
+
+:root {
+  /* ==========================================================================
+     1. COLOR PALETTE
+     ========================================================================== */
+
+  /* Primary & Brand Accents */
+  --hhm-color-primary: #2970FF;             /* Active Nav item & Brand Primary Blue */
+  --hhm-color-primary-dark: #00359E;        /* "Best choice" badge background */
+  --hhm-color-primary-light: #84ADFF;       /* Category Tag "B\u1ed8 S\u01afU T\u1eacP HH MAKER" */
+  --hhm-color-primary-soft: #D1E0FF;        /* Footer address & category titles */
+
+  /* Backgrounds & Canvas */
+  --hhm-color-bg-canvas: #111322;           /* Main page dark background & Header */
+  --hhm-color-bg-card: #30374F;             /* Product card bottom bar & Sidebar boxes */
+  --hhm-color-bg-card-media: #D1D2D2;       /* Product card image canvas */
+  --hhm-color-bg-sidebar-active: #404968;   /* Active category item background */
+  --hhm-color-bg-badge-choice: #00359E;     /* Best choice badge fill */
+  --hhm-color-bg-btn-primary: #F5F8FF;      /* Primary button background (CTA, Nav CTA) */
+  --hhm-color-bg-switch-active: #FAFAFA;    /* Language switch active toggle */
+
+  /* Neutral & Text Colors */
+  --hhm-color-text-primary: #FAFAFA;        /* H1 Title, Hero heading, Main text */
+  --hhm-color-text-inverse: #111322;        /* Text on light button / active switch */
+  --hhm-color-text-white: #FFFFFF;          /* Logo text, English switch */
+  --hhm-color-text-card-title: #F5F8FF;     /* Product card titles, Button text */
+  --hhm-color-text-secondary: #EFF1F5;      /* Sidebar category links & filter items */
+  --hhm-color-text-muted: #B9C0D4;          /* Card description, search placeholder, section sub */
+  --hhm-color-text-subtle: #D1E0FF;         /* Footer links & address information */
+
+  /* Semantic Variables */
+  --hhm-color-badge-choice-bg: var(--hhm-color-primary-dark);
+  --hhm-color-badge-choice-text: var(--hhm-color-text-card-title);
+  --hhm-color-card-border: transparent;
+  --hhm-color-focus-ring: rgba(41, 112, 255, 0.5);
+
+  /* ==========================================================================
+     2. TYPOGRAPHY SCALE
+     ========================================================================== */
+
+  /* Font Families */
+  --hhm-font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --hhm-font-brand: 'Futura', var(--hhm-font-primary);
+
+  /* Font Sizes */
+  --hhm-font-size-2xs: 9px;                 /* Logo subtext "FROM IDEAS TO REALITY" */
+  --hhm-font-size-xs: 11px;                 /* Footer slogan subtext */
+  --hhm-font-size-sm: 12px;                 /* Badge text, card description, copyright */
+  --hhm-font-size-base: 14px;               /* Categories, filters, breadcrumbs, search input */
+  --hhm-font-size-md: 16px;                 /* Product title, Nav links, Buttons, Body */
+  --hhm-font-size-lg: 20px;                 /* Header Logo HH MAKER */
+  --hhm-font-size-xl: 24px;                 /* Footer Company Title */
+  --hhm-font-size-2xl: 26px;                /* Footer Logo HH MAKER */
+  --hhm-font-size-3xl: 32px;                /* CTA Title "T\u1ea1o n\u00ean phi\u00ean b\u1ea3n mang d\u1ea5u \u1ea5n ri\u00eang" */
+  --hhm-font-size-4xl: 38px;                /* Hero Title "\u00dd T\u01af\u1edeNG TH\u00c0NH H\u00ccNH" */
+
+  /* Font Weights */
+  --hhm-font-weight-regular: 400;
+  --hhm-font-weight-medium: 500;
+  --hhm-font-weight-semibold: 600;
+  --hhm-font-weight-bold: 700;
+
+  /* Line Heights */
+  --hhm-line-height-2xs: 11px;
+  --hhm-line-height-xs: 15px;
+  --hhm-line-height-sm: 17px;
+  --hhm-line-height-base: 20px;
+  --hhm-line-height-md: 22px;
+  --hhm-line-height-lg: 24px;
+  --hhm-line-height-xl: 26px;
+  --hhm-line-height-2xl: 34px;
+  --hhm-line-height-3xl: 37px;
+  --hhm-line-height-4xl: 46px;
+
+  /* Heading Typography Presets */
+  --hhm-h1-size: var(--hhm-font-size-4xl);
+  --hhm-h1-weight: var(--hhm-font-weight-bold);
+  --hhm-h1-line-height: var(--hhm-line-height-4xl);
+
+  --hhm-h2-size: var(--hhm-font-size-3xl);
+  --hhm-h2-weight: var(--hhm-font-weight-bold);
+  --hhm-h2-line-height: var(--hhm-line-height-3xl);
+
+  --hhm-h3-size: var(--hhm-font-size-xl);
+  --hhm-h3-weight: var(--hhm-font-weight-medium);
+  --hhm-h3-line-height: var(--hhm-line-height-2xl);
+
+  --hhm-h4-size: var(--hhm-font-size-md);
+  --hhm-h4-weight: var(--hhm-font-weight-bold);
+  --hhm-h4-line-height: var(--hhm-line-height-md);
+
+  --hhm-body-size: var(--hhm-font-size-base);
+  --hhm-body-weight: var(--hhm-font-weight-regular);
+  --hhm-body-line-height: var(--hhm-line-height-base);
+
+  /* ==========================================================================
+     3. SPACING SYSTEM (Normalized 4px / 8px grid)
+     ========================================================================== */
+  --hhm-spacing-1: 4px;
+  --hhm-spacing-2: 8px;
+  --hhm-spacing-2-5: 10px;
+  --hhm-spacing-3: 12px;
+  --hhm-spacing-4: 16px;
+  --hhm-spacing-5: 20px;
+  --hhm-spacing-6: 24px;
+  --hhm-spacing-8: 32px;
+  --hhm-spacing-10: 40px;
+  --hhm-spacing-12: 48px;
+  --hhm-spacing-15: 60px;
+  --hhm-spacing-page-x: 144px;
+
+  /* Component Layout Dimensions */
+  --hhm-card-width: 273px;
+  --hhm-card-height: 419px;
+  --hhm-card-image-height: 335px;
+  --hhm-card-info-height: 84px;
+  --hhm-sidebar-width: 280px;
+  --hhm-container-max-width: 1440px;
+
+  /* ==========================================================================
+     4. EFFECTS & RADII
+     ========================================================================== */
+  --hhm-radius-xs: 4px;                     /* Badge Best choice, checkbox */
+  --hhm-radius-sm: 8px;                     /* Search input, action button */
+  --hhm-radius-md: 12px;                    /* Product card, sidebar box */
+  --hhm-radius-lg: 16px;                    /* CTA banner container */
+
+  --hhm-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --hhm-transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --hhm-transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}

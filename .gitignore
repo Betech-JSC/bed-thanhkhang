@@ -41,3 +41,11 @@ cookies.txt
 /public/assets/images/about/figma_inspect/
 __pycache__/
 *.py[cod]
+
+/tests/screenshots/
+/public/images/scratch/
+/tmp_figma/
+/scratch/*.js
+/scratch/*.mjs
+/scratch/hub-qa-screenshots/
+/public/assets/images/process_figma/

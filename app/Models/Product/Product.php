@@ -9,7 +9,7 @@ use App\Models\BaseModel;
 use App\Traits\Searchable;
 use App\Traits\Translatable;
 use Illuminate\Database\Eloquent\Builder;
-use App\Models\Option;
+use JamstackVietnam\Option\Models\Option;
 use App\Models\Post\Post;
 
 class Product extends BaseModel
@@ -90,17 +90,20 @@ class Product extends BaseModel
     protected $casts = [
         'images' => 'array',
         'image' => 'array',
-        'filter_attributes' => 'array',
-        'pdp_metadata' => 'array',
-        'specifications' => 'array',
     ];
 
-    public function rules()
+    public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
-            'seo_slug' => 'nullable|unique:product_translations,slug|max:255',
-            'seo_slug' => 'nullable|unique:product_translations,seo_slug|max:255',
+            'store' => [
+                'title' => 'required|string|max:255',
+                'slug' => 'nullable|string|max:255',
+                'seo_slug' => 'nullable|string|max:255',
+                'sku' => 'nullable|string|max:255',
+                'price' => 'nullable|numeric|min:0',
+                'compare_at_price' => 'nullable|numeric|min:0',
+                'status' => 'nullable|string|in:ACTIVE,INACTIVE',
+            ],
         ];
     }
 

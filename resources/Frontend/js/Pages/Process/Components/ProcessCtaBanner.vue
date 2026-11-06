@@ -1,5 +1,5 @@
 <template>
-    <section v-scroll-reveal class="relative w-full pb-16 lg:pb-24">
+    <section v-scroll-reveal class="relative w-full pb-16 lg:pb-20">
         <!-- Container max-width 1152px -->
         <div class="app-container">
             <div
