@@ -107,31 +107,31 @@ class="lg:hidden p-1 text-[#84ADFF] hover:text-white mr-1 shrink-0 transition-co
                                     <path fill-rule="evenodd" d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06z" clip-rule="evenodd" />
                                 </svg>
                                 <span class="text-[#FAFAFA] leading-[17px] truncate whitespace-nowrap">
-                                    {{ tt('Sản phẩm') }}
+                                    {{ tt('Sản phẩm') }} ({{ filteredProducts.length }} {{ tt('sản phẩm') }})
                                 </span>
                             </div>
 
-                            <!-- Right: Custom Sort Dropdown (Dark Tech style) -->
+                            <!-- Right: Custom Sort Dropdown (Minimal clean text + chevron matching user spec) -->
                             <div class="relative shrink-0" ref="sortDropdownRef">
                                 <button
                                     type="button"
                                     @click="isSortOpen = !isSortOpen"
-                                    class="bg-[#1A1F36] hover:bg-[#222842] border border-[#404968] hover:border-[#2970FF] rounded-[8px] px-3.5 py-1.5 text-sm text-[#FAFAFA] flex items-center gap-2 shadow-sm transition-colors duration-200 cursor-pointer select-none"
-                                    :class="{ 'border-[#2970FF] ring-1 ring-[#2970FF]/40': isSortOpen }"
+                                    class="group inline-flex items-center gap-1.5 text-xs sm:text-sm text-[#B9C0D4] hover:text-[#FAFAFA] transition-colors duration-200 cursor-pointer select-none py-1 focus:outline-none"
                                     aria-haspopup="listbox"
                                     :aria-expanded="isSortOpen"
                                 >
-                                    <svg class="w-3.5 h-3.5 text-[#84ADFF]" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
-                                    </svg>
-                                    <span class="font-medium text-xs sm:text-sm text-[#FAFAFA]">{{ currentSortLabel }}</span>
+                                    <span class="font-normal">{{ currentSortLabel }}</span>
                                     <svg
-                                        class="w-3.5 h-3.5 text-[#B9C0D4] transition-transform duration-200"
-                                        :class="{ 'rotate-180 text-[#2970FF]': isSortOpen }"
-                                        viewBox="0 0 20 20"
-                                        fill="currentColor"
+                                        class="w-3.5 h-3.5 text-[#B9C0D4] group-hover:text-[#FAFAFA] transition-transform duration-200 shrink-0"
+                                        :class="{ 'rotate-180': isSortOpen }"
+                                        viewBox="0 0 16 16"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.8"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
                                     >
-                                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                                        <path d="m4 6 4 4 4-4" />
                                     </svg>
                                 </button>
 
@@ -178,6 +178,111 @@ class="lg:hidden p-1 text-[#84ADFF] hover:text-white mr-1 shrink-0 transition-co
                             </div>
                         </div>
 
+                        <!-- Active Filter Chips Row & Reset Filter Button (Figma Feedback requirement) -->
+                        <Transition
+                            enter-active-class="transition-all duration-200 ease-out"
+                            enter-from-class="opacity-0 -translate-y-1"
+                            enter-to-class="opacity-100 translate-y-0"
+                            leave-active-class="transition-all duration-150 ease-in"
+                            leave-from-class="opacity-100 translate-y-0"
+                            leave-to-class="opacity-0 -translate-y-1"
+                        >
+                            <div
+                                v-if="hasActiveFilters"
+                                class="flex flex-wrap items-center gap-2 pt-1 pb-1 select-none"
+                            >
+                                <span class="text-xs text-[#B9C0D4] mr-0.5">{{ tt('Đang lọc:') }}</span>
+
+                                <!-- Chip: Tìm kiếm -->
+                                <div
+                                    v-if="filters.search && filters.search.trim()"
+                                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-[#1A1F36] border border-[#404968] text-xs text-[#EFF1F5] shadow-sm"
+                                >
+                                    <span class="text-[#84ADFF]">{{ tt('Từ khoá:') }}</span>
+                                    <span class="max-w-[120px] truncate">"{{ filters.search.trim() }}"</span>
+                                    <button
+                                        type="button"
+                                        @click="clearSearch"
+                                        class="text-[#B9C0D4] hover:text-white p-0.5 rounded-full hover:bg-white/10 transition-colors ml-0.5 cursor-pointer"
+                                        :title="tt('Xoá tìm kiếm')"
+                                    >
+                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <!-- Chip: Danh mục chính -->
+                                <div
+                                    v-if="activeCategoryLabel"
+                                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-[#1A1F36] border border-[#404968] text-xs text-[#EFF1F5] shadow-sm"
+                                >
+                                    <span class="text-[#84ADFF]">{{ tt('Danh mục:') }}</span>
+                                    <span>{{ activeCategoryLabel }}</span>
+                                    <button
+                                        type="button"
+                                        @click="clearCategory"
+                                        class="text-[#B9C0D4] hover:text-white p-0.5 rounded-full hover:bg-white/10 transition-colors ml-0.5 cursor-pointer"
+                                        :title="tt('Xoá danh mục')"
+                                    >
+                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <!-- Chip: Danh mục con (Subcategory) -->
+                                <div
+                                    v-if="activeSubcategoryLabel"
+                                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-[#1A1F36] border border-[#2970FF]/50 text-xs text-[#84ADFF] shadow-sm"
+                                >
+                                    <span class="text-[#B9C0D4]">{{ tt('Mục con:') }}</span>
+                                    <span class="font-medium">{{ activeSubcategoryLabel }}</span>
+                                    <button
+                                        type="button"
+                                        @click="clearSubcategory"
+                                        class="text-[#84ADFF] hover:text-white p-0.5 rounded-full hover:bg-white/10 transition-colors ml-0.5 cursor-pointer"
+                                        :title="tt('Xoá mục con')"
+                                    >
+                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <!-- Chip: Nhu cầu (Purposes) -->
+                                <div
+                                    v-for="p in filters.purposes"
+                                    :key="p"
+                                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-[#1A1F36] border border-[#404968] text-xs text-[#EFF1F5] shadow-sm"
+                                >
+                                    <span>{{ p }}</span>
+                                    <button
+                                        type="button"
+                                        @click="removePurpose(p)"
+                                        class="text-[#B9C0D4] hover:text-white p-0.5 rounded-full hover:bg-white/10 transition-colors ml-0.5 cursor-pointer"
+                                        :title="tt('Bỏ chọn nhu cầu này')"
+                                    >
+                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <!-- Nút/link Đặt lại bộ lọc (Không làm button ở đây quá nổi bật, bám sát styling Figma) -->
+                                <button
+                                    type="button"
+                                    @click="resetFilters"
+                                    class="inline-flex items-center gap-1.5 px-2 py-1 text-xs text-[#84ADFF] hover:text-white hover:underline transition-colors cursor-pointer select-none ml-1"
+                                >
+                                    <svg class="w-3 h-3 fill-none stroke-current" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </svg>
+                                    <span>{{ tt('Đặt lại bộ lọc') }}</span>
+                                </button>
+                            </div>
+                        </Transition>
+
                         <!-- Products Grid (Figma 2346:717 - 3 cột chuẩn, Fixed Outer Card Frames + Inner Card Slide Transition) -->
                         <div class="w-full min-h-[600px]">
                             <div
@@ -208,7 +313,7 @@ class="lg:hidden p-1 text-[#84ADFF] hover:text-white mr-1 shrink-0 transition-co
                                 <button
                                     type="button"
                                     @click="resetFilters"
-                                    class="px-5 py-2.5 rounded-lg bg-[#2970FF] hover:bg-[#155EEF] text-white text-xs font-semibold shadow-md transition-colors duration-200 active:scale-95"
+                                    class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#1E2338] hover:bg-[#2A314D] border border-[#404968] hover:border-[#84ADFF] text-[#FAFAFA] text-xs font-medium transition-colors shadow-sm cursor-pointer select-none"
                                 >
                                     {{ tt('Đặt lại bộ lọc') }}
                                 </button>
@@ -266,6 +371,7 @@ export default {
             filters: {
                 search: '',
                 category: 'all',
+                subcategory: null,
                 purposes: [],
                 sortBy: 'popular',
             },
@@ -303,20 +409,69 @@ export default {
             return [];
         },
         displayCategories() {
-            const list = [{ id: 'all', name: this.tt('Tất cả sản phẩm'), slug: 'all' }];
-            if (this.categories && this.categories.length > 0) {
-                this.categories.forEach(c => {
-                    const id = c.slug || c.id;
-                    if (id !== 'all') {
-                        list.push({
-                            id: id,
-                            slug: c.slug || c.id,
-                            name: this.tt(c.name || c.title),
-                        });
-                    }
-                });
+            return [
+                {
+                    id: 'all',
+                    name: this.tt('Tất cả sản phẩm'),
+                    slug: 'all',
+                    hasChevron: false,
+                    subcategories: [],
+                },
+                {
+                    id: 'moc-khoa',
+                    name: this.tt('Móc khoá'),
+                    slug: 'moc-khoa-phu-kien',
+                    hasChevron: true,
+                    subcategories: [
+                        { id: 'moc-khoa-co-khi', name: this.tt('Móc khoá cơ khí') },
+                        { id: 'moc-khoa-the-thao', name: this.tt('Móc khoá thể thao & phụ kiện') },
+                    ],
+                },
+                {
+                    id: 'van-phong-pham',
+                    name: this.tt('Văn phòng phẩm'),
+                    slug: 'trang-tri-do-dung',
+                    hasChevron: true,
+                    subcategories: [
+                        { id: 'ly', name: this.tt('Ly') },
+                        { id: 'lo-cam-hoa-de-ban', name: this.tt('Lọ cắm hoa để bàn') },
+                        { id: 'den', name: this.tt('Đèn') },
+                    ],
+                },
+                {
+                    id: 'gia-cong-theo-yeu-cau',
+                    name: this.tt('Gia công theo yêu cầu'),
+                    slug: 'gia-cong-theo-yeu-cau',
+                    hasChevron: true,
+                    subcategories: [
+                        { id: 'mo-hinh-resin', name: this.tt('Mô hình Resin & Khớp cử động') },
+                        { id: 'linh-kien-carbon', name: this.tt('Linh kiện cơ khí & Carbon Fiber') },
+                    ],
+                },
+            ];
+        },
+        hasActiveFilters() {
+            return (
+                (this.filters.search && this.filters.search.trim() !== '') ||
+                (this.filters.category && this.filters.category !== 'all') ||
+                (this.filters.subcategory && this.filters.subcategory !== null) ||
+                (this.filters.purposes && this.filters.purposes.length > 0)
+            );
+        },
+        activeCategoryLabel() {
+            if (!this.filters.category || this.filters.category === 'all') return null;
+            const found = this.displayCategories.find(c => c.id === this.filters.category || c.slug === this.filters.category);
+            return found ? found.name : this.filters.category;
+        },
+        activeSubcategoryLabel() {
+            if (!this.filters.subcategory) return null;
+            for (const cat of this.displayCategories) {
+                if (cat.subcategories) {
+                    const found = cat.subcategories.find(s => s.id === this.filters.subcategory);
+                    if (found) return found.name;
+                }
             }
-            return list;
+            return this.filters.subcategory;
         },
         filteredProducts() {
             let result = [...this.allProducts];
@@ -336,39 +491,83 @@ export default {
             if (this.filters.category && this.filters.category !== 'all') {
                 const targetCat = this.filters.category;
                 result = result.filter((p) => {
-                    // Check if targetCat matches real DB categories
                     if (p.categories && Array.isArray(p.categories) && p.categories.some(c => c.id == targetCat || c.slug == targetCat)) {
                         return true;
                     }
                     if (p.categoryId === targetCat || p.category === targetCat) {
                         return true;
                     }
-                    // Map DB slugs and aliases to mock/product properties
                     const catStr = (typeof p.category === 'string' ? p.category : (p.category?.title || p.category?.name || '')).toLowerCase();
-                    if (targetCat === 'moc-khoa-phu-kien' || targetCat === 'keychains-accessories' || targetCat === 'keychains') {
+                    if (targetCat === 'moc-khoa' || targetCat === 'moc-khoa-phu-kien' || targetCat === 'keychains-accessories' || targetCat === 'keychains') {
                         return p.categoryId === 'keychains' || catStr.includes('móc khoá') || catStr.includes('móc khóa') || catStr.includes('keychain');
                     }
-                    if (targetCat === 'trang-tri-khong-gian' || targetCat === 'space-decor') {
-                        return p.purposeKey === 'space_decor' || p.categoryId === 'space_decor' || catStr.includes('không gian') || catStr.includes('space');
-                    }
-                    if (targetCat === 'trang-tri-do-dung' || targetCat === 'decor-lifestyle' || targetCat === 'stationery') {
-                        return p.categoryId === 'stationery' || catStr.includes('đồ dùng') || catStr.includes('decor') || catStr.includes('stationery');
+                    if (targetCat === 'van-phong-pham' || targetCat === 'trang-tri-do-dung' || targetCat === 'decor-lifestyle' || targetCat === 'stationery') {
+                        return p.categoryId === 'stationery' || catStr.includes('đồ dùng') || catStr.includes('decor') || catStr.includes('stationery') || catStr.includes('văn phòng');
                     }
                     if (targetCat === 'gia-cong-theo-yeu-cau' || targetCat === 'custom-manufacturing' || targetCat === 'custom') {
                         return p.categoryId === 'custom' || catStr.includes('gia công') || catStr.includes('custom');
                     }
+                    if (targetCat === 'trang-tri-khong-gian' || targetCat === 'space-decor') {
+                        return p.purposeKey === 'space_decor' || p.categoryId === 'space_decor' || catStr.includes('không gian') || catStr.includes('space');
+                    }
                     return false;
+                });
+            }
+
+            // 2.5 Subcategory filter
+            if (this.filters.subcategory) {
+                const sub = this.filters.subcategory.toLowerCase();
+                result = result.filter((p) => {
+                    const text = ((p.name || '') + ' ' + (p.title || '') + ' ' + (p.description || '')).toLowerCase();
+                    if (sub === 'ly') {
+                        return text.includes('ly') || text.includes('cốc') || text.includes('hộp') || text.includes('bút') || text.includes('khay');
+                    }
+                    if (sub === 'lo-cam-hoa-de-ban') {
+                        return text.includes('lọ') || text.includes('hoa') || text.includes('chậu') || text.includes('voronoi');
+                    }
+                    if (sub === 'den') {
+                        return text.includes('đèn') || text.includes('lamp') || text.includes('led');
+                    }
+                    if (sub === 'moc-khoa-co-khi') {
+                        return text.includes('cơ khí') || text.includes('piston') || text.includes('turbine') || text.includes('gear');
+                    }
+                    if (sub === 'moc-khoa-the-thao') {
+                        return text.includes('vô lăng') || text.includes('thể thao') || text.includes('f1') || text.includes('phụ kiện');
+                    }
+                    if (sub === 'mo-hinh-resin') {
+                        return text.includes('resin') || text.includes('robot') || text.includes('iron man') || text.includes('khớp');
+                    }
+                    if (sub === 'linh-kien-carbon') {
+                        return text.includes('carbon') || text.includes('khung') || text.includes('bánh răng') || text.includes('bàn phím');
+                    }
+                    return text.includes(sub);
                 });
             }
 
             // 3. Purposes filter
             if (this.filters.purposes.length > 0) {
                 result = result.filter((p) => {
+                    const catTitles = Array.isArray(p.categories) ? p.categories.map(c => (c.title || c.name || c.slug || '').toLowerCase()).join(' ') : '';
+                    const catStr = (typeof p.category === 'string' ? p.category : (p.category?.title || p.category?.name || '')).toLowerCase();
+                    const text = ((p.name || '') + ' ' + (p.title || '') + ' ' + (p.description || '')).toLowerCase();
+
                     return this.filters.purposes.some(sel => {
+                        const s = (sel || '').toLowerCase();
                         if (sel === p.purpose) return true;
-                        if (p.purposeKey === 'space_decor' && (sel === this.tt('Trang trí không gian') || sel === 'Space Decor')) return true;
-                        if (p.purposeKey === 'daily_essentials' && (sel === this.tt('Đồ dùng hằng ngày') || sel === 'Daily Essentials')) return true;
-                        if (p.purposeKey === 'personal_gifts' && (sel === this.tt('Quà tặng cá nhân') || sel === 'Personal Gifts')) return true;
+                        if (p.purposeKey === 'space_decor' && (s.includes('không gian') || s.includes('space'))) return true;
+                        if (p.purposeKey === 'daily_essentials' && (s.includes('hằng ngày') || s.includes('daily'))) return true;
+                        if (p.purposeKey === 'personal_gifts' && (s.includes('quà tặng') || s.includes('gift'))) return true;
+
+                        // Check via categories & content fallback
+                        if (s.includes('không gian') || s.includes('space')) {
+                            return catTitles.includes('không gian') || catStr.includes('không gian') || text.includes('không gian') || text.includes('trang trí');
+                        }
+                        if (s.includes('hằng ngày') || s.includes('đồ dùng') || s.includes('daily')) {
+                            return catTitles.includes('đồ dùng') || catStr.includes('đồ dùng') || text.includes('đồ dùng') || text.includes('bàn làm việc');
+                        }
+                        if (s.includes('quà tặng') || s.includes('cá nhân') || s.includes('gift')) {
+                            return catTitles.includes('phụ kiện') || catStr.includes('móc khoá') || text.includes('quà tặng') || text.includes('móc khoá');
+                        }
                         return false;
                     });
                 });
@@ -496,11 +695,28 @@ export default {
             this.currentPage = page;
             this.slideTick += 1;
         },
+        clearSearch() {
+            this.filters.search = '';
+        },
+        clearCategory() {
+            this.filters.category = 'all';
+            this.filters.subcategory = null;
+        },
+        clearSubcategory() {
+            this.filters.subcategory = null;
+        },
+        removePurpose(purpose) {
+            const idx = this.filters.purposes.indexOf(purpose);
+            if (idx > -1) {
+                this.filters.purposes.splice(idx, 1);
+            }
+        },
         resetFilters() {
             this.slideDirection = 'next';
             this.filters = {
                 search: '',
                 category: 'all',
+                subcategory: null,
                 purposes: [],
                 sortBy: 'popular',
             };

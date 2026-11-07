@@ -5,17 +5,13 @@
         <Footer v-if="!isMigrated" />
         <SocialFixed />
         <NotificationPopup />
-        <DailyRewardPopup />
         <!-- <CursorIcon /> -->
     </div>
 </template>
 
 <script>
-import DailyRewardPopup from '@/Components/DailyRewardPopup.vue'
-
 export default {
     components: {
-        DailyRewardPopup,
     },
     computed: {
         isMigrated() {

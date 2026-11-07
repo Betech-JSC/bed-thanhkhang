@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\BaseModel;
 use App\Traits\Searchable;
 use App\Traits\Translatable;
-use App\Models\Option;
+use JamstackVietnam\Option\Models\Option;
 
 class ProductCategory extends BaseModel
 {

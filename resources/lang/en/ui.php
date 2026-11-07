@@ -512,4 +512,5 @@ return [
     'Đóng phóng to' => 'Close zoom',
     'Ảnh lớn' => 'Large image',
     'Mô hình Cáo trang trí' => 'Decorative Fox Model',
+    'Xuất phát từ niềm đam mê với nghệ thuật 3D và công nghệ chế tác hiện đại, tôi thành lập HH Maker với sứ mệnh rút ngắn khoảng cách giữa ý tưởng sơ khai và sản phẩm vật lý. /n Với mỗi dự án, tôi cùng đội ngũ luôn tỉ mỉ trong từng đường nét thiết kế, lựa chọn vật liệu và kiểm soát quy trình in để mang lại những sản phẩm sắc nét, chuẩn xác và mang đậm dấu ấn cá nhân nhất.' => 'Born from a passion for 3D art and modern manufacturing technology, I founded HH Maker with the mission to bridge the gap between initial concepts and physical products. /n With each project, our team meticulously refines every design line, selects optimal materials, and controls printing processes to deliver sharp, precise, and deeply personalized creations.',
 ];

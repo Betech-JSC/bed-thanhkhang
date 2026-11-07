@@ -14,6 +14,7 @@
             <file>./tests/Feature/ProductTest.php</file>
             <file>./tests/Feature/DangNhapRedirectTest.php</file>
             <file>./tests/Feature/PolicyTest.php</file>
+            <file>./tests/Feature/BackendProductTest.php</file>
         </testsuite>
     </testsuites>
     <coverage processUncoveredFiles="true">

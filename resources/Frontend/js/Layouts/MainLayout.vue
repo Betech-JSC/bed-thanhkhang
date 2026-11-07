@@ -6,7 +6,6 @@
         </main>
         <Footer />
         <NotificationPopup />
-        <DailyRewardPopup />
     </div>
 </template>
 
@@ -14,7 +13,6 @@
 import Header from '@/Components/Header.vue'
 import Footer from '@/Components/Footer.vue'
 import NotificationPopup from '@/Components/NotificationPopup.vue'
-import DailyRewardPopup from '@/Components/DailyRewardPopup.vue'
 
 export default {
     name: 'MainLayout',
@@ -22,7 +20,6 @@ export default {
         Header,
         Footer,
         NotificationPopup,
-        DailyRewardPopup,
     },
     watch: {
         '$page.url': function () {

@@ -14,13 +14,11 @@ auth.json
 npm-debug.log
 yarn-error.log
 /.idea
-/.vscode
 .DS_Store
 config.bat
 build.log
 frontend_build.log
 cookies.txt
-.env
 # Local IDE settings
 
 # Graphify local AST output
@@ -41,3 +39,11 @@ cookies.txt
 /public/assets/images/about/figma_inspect/
 __pycache__/
 *.py[cod]
+
+/tests/screenshots/
+/public/images/scratch/
+/tmp_figma/
+/scratch/*.js
+/scratch/*.mjs
+/scratch/hub-qa-screenshots/
+/public/assets/images/process_figma/
