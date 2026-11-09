@@ -98,7 +98,9 @@ class HandleInertiaFrontendRequests extends Middleware
 
                     $productCategories = ProductCategory::query()
                         ->active()
+                        ->whereParent()
                         ->sortByPosition()
+                        ->with(['children', 'nodes'])
                         ->get()
                         ->map(fn($item) => $item->transform());
 

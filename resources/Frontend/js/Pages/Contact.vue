@@ -12,7 +12,7 @@
         <!-- SECTION 1: HERO BANNER & ARTWORK (Figma Node 2308:8195)  -->
         <!-- ======================================================== -->
         <section
-            class="relative w-full overflow-hidden pt-12 md:pt-16 pb-20 md:pb-28 lg:py-0 lg:h-[545px]"
+            class="relative w-full overflow-hidden lg:overflow-visible pt-12 md:pt-16 pb-20 md:pb-28 lg:py-0 lg:h-[545px]"
             style="background: linear-gradient(0deg, #111322 20%, #2970FF 94%);"
         >
             <div class="app-container relative">
@@ -31,14 +31,14 @@
                     </p>
                 </div>
 
-                <!-- Right Hero Logo 3D HH Maker (Figma Node 2308:8196: cropped 469x483 visible window at top 0, left 877px) -->
+                <!-- Right Hero Logo 3D HH Maker (Figma Node 2308:8196: 469x889 at left 1021px, top -172px) -->
                 <div
-                    class="w-[200px] sm:w-[240px] max-h-[220px] mx-auto mt-6 lg:mt-0 lg:mx-0 lg:max-h-none lg:absolute lg:w-[469px] lg:h-[483px] lg:top-0 lg:left-[877px] lg:overflow-hidden pointer-events-none select-none opacity-20"
+                    class="w-[200px] sm:w-[240px] max-h-[220px] mx-auto mt-6 lg:mt-0 lg:mx-0 lg:max-h-none lg:absolute lg:w-[469px] lg:h-[889px] lg:-top-[172px] lg:left-[909px] pointer-events-none select-none opacity-20"
                 >
                     <img
-                        src="/images/contact/hh_maker_monogram.png"
+                        src="/images/contact/hh_maker_monogram.png?v=2"
                         :alt="tt('HH Maker Logo 3D - From Ideas To Reality')"
-                        class="w-full h-full object-contain lg:w-[794px] lg:h-[1136px] lg:max-w-none lg:-ml-[162px] lg:-mt-[179px] lg:object-fill"
+                        class="w-full h-full object-contain pointer-events-none select-none"
                         loading="eager"
                     />
                 </div>
@@ -302,6 +302,17 @@
                                 <p v-if="clientErrors.content || form.errors.content" class="text-xs text-red-400 mt-1.5">
                                     {{ clientErrors.content || form.errors.content }}
                                 </p>
+                            </div>
+
+                            <!-- Thông báo lỗi từ Server (nếu có) -->
+                            <div
+                                v-if="form.errors.error"
+                                class="p-3.5 rounded-[8px] bg-red-500/10 border border-red-500/30 text-red-400 text-sm flex items-center gap-2"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span>{{ form.errors.error }}</span>
                             </div>
 
                             <!-- Cụm 4: Nút Submit (Node 2308:8396) -->

@@ -62,23 +62,65 @@
                                     class="absolute top-full left-0 pt-2 z-[1010]"
                                 >
                                     <div class="min-w-[240px] w-[280px] bg-[#1A1F36]/95 backdrop-blur-md border border-[#30374F] rounded-xl shadow-[0_16px_40px_rgba(0,0,0,0.6)] p-2 flex flex-col gap-1">
-                                        <!-- Category Items -->
-                                        <Link
+                                        <!-- Category Items with Level 2 Flyout Menu (Bay Ngang Bên Phải) -->
+                                        <div
                                             v-for="(sub, subIdx) in menu.subMenu.filter(s => !s.isAll)"
                                             :key="subIdx"
-                                            :href="sub.url || sub.slug"
-                                            class="px-3 py-2.5 rounded-lg text-sm font-medium text-[#B9C0D4] hover:text-[#FAFAFA] hover:bg-[#222842] flex items-center justify-between transition-colors group relative"
-                                            @click="menuSelected = null"
+                                            class="relative group/sub"
                                         >
-                                            <span class="truncate">{{ sub.title }}</span>
-                                            <svg
-                                                class="w-4 h-4 text-[#84ADFF] opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2"
-                                                viewBox="0 0 16 16"
-                                                fill="currentColor"
+                                            <Link
+                                                :href="sub.url || sub.slug"
+                                                class="px-3 py-2.5 rounded-lg text-sm font-medium text-[#B9C0D4] hover:text-[#FAFAFA] hover:bg-[#222842] flex items-center justify-between transition-colors group/item"
+                                                @click="menuSelected = null"
                                             >
-                                                <path fill-rule="evenodd" d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06z" clip-rule="evenodd" />
-                                            </svg>
-                                        </Link>
+                                                <span class="truncate">{{ sub.title }}</span>
+                                                <!-- Chevron-right for items with subcategories -->
+                                                <svg
+                                                    v-if="sub.children && sub.children.length > 0"
+                                                    class="w-4 h-4 text-[#84ADFF] transition-transform duration-200 group-hover/sub:translate-x-0.5 shrink-0 ml-2"
+                                                    viewBox="0 0 16 16"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        d="M6 3.5L10.5 8L6 12.5"
+                                                        stroke="currentColor"
+                                                        stroke-width="1.5"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    />
+                                                </svg>
+                                            </Link>
+
+                                            <!-- Level 2 Flyout Menu (Bay Ngang Bên Phải) with Hover Bridge -->
+                                            <div
+                                                v-if="sub.children && sub.children.length > 0"
+                                                class="absolute left-full -top-1.5 pt-1.5 pb-1.5 pl-[11px] hidden group-hover/sub:block z-[1020]"
+                                            >
+                                                <div class="min-w-[240px] w-[260px] bg-[#1A1F36]/95 backdrop-blur-md border border-[#30374F] rounded-xl shadow-[0_16px_40px_rgba(0,0,0,0.6)] p-2 flex flex-col gap-1">
+                                                    <Link
+                                                        v-for="(child, childIdx) in sub.children"
+                                                        :key="childIdx"
+                                                        :href="child.url || child.slug"
+                                                        class="px-3 py-2.5 rounded-lg text-sm font-medium text-[#B9C0D4] hover:text-[#FAFAFA] hover:bg-[#222842] flex items-center justify-between transition-colors group/child"
+                                                        @click="menuSelected = null"
+                                                    >
+                                                        <span class="truncate">{{ child.title }}</span>
+                                                        <svg
+                                                            class="w-4 h-4 text-[#84ADFF] opacity-0 group-hover/child:opacity-100 transition-opacity shrink-0 ml-2"
+                                                            viewBox="0 0 16 16"
+                                                            fill="currentColor"
+                                                        >
+                                                            <path
+                                                                fill-rule="evenodd"
+                                                                d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06z"
+                                                                clip-rule="evenodd"
+                                                            />
+                                                        </svg>
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                         <!-- Divider & View All Link -->
                                         <div class="pt-1 mt-1 border-t border-[#30374F]">
@@ -280,39 +322,109 @@
                                         </svg>
                                     </button>
 
-                                    <!-- Accordion Submenu Items -->
+                                    <!-- Accordion Submenu Items (Cấp 1 & Cấp 2) -->
                                     <transition name="accordion">
                                         <div
                                             v-show="isProductAccordionOpen"
                                             class="pl-4 pr-1 py-1 space-y-1 border-l border-[#30374F] ml-3"
                                         >
-                                            <Link
-                                                v-for="(sub, subIdx) in menu.subMenu"
+                                            <div
+                                                v-for="(sub, subIdx) in menu.subMenu.filter(s => !s.isAll)"
                                                 :key="subIdx"
-                                                :href="sub.url || sub.slug"
-                                                @click="closeDrawer"
-                                                class="min-h-[44px] px-3 py-2.5 rounded-lg flex items-center justify-between text-sm font-normal transition-colors"
-                                                :class="sub.isAll
-                                                    ? 'text-[#84ADFF] font-semibold hover:text-white hover:bg-dark-surface'
-                                                    : 'text-[#B9C0D4] hover:text-white hover:bg-dark-surface'"
+                                                class="space-y-1"
                                             >
-                                                <span>{{ sub.title }}</span>
-                                                <svg
-                                                    v-if="sub.isAll"
-                                                    class="w-4 h-4 shrink-0"
-                                                    viewBox="0 0 16 16"
-                                                    fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg"
+                                                <!-- Mục cha có con: Hỗ trợ toggle Accordion cấp 2 -->
+                                                <div
+                                                    v-if="sub.children && sub.children.length > 0"
+                                                    class="flex items-center justify-between min-h-[44px] px-3 py-2 rounded-lg text-sm transition-colors"
+                                                    :class="isMobileCategoryExpanded(sub.id) ? 'bg-[#222842]/60 text-white' : 'text-[#B9C0D4] hover:text-white hover:bg-dark-surface'"
                                                 >
-                                                    <path
-                                                        d="M3.33334 8H12.6667M8 3.33334L12.6667 8L8 12.6667"
-                                                        stroke="currentColor"
-                                                        stroke-width="1.5"
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                    />
-                                                </svg>
-                                            </Link>
+                                                    <Link
+                                                        :href="sub.url || sub.slug"
+                                                        @click="closeDrawer"
+                                                        class="flex-1 truncate py-1 text-sm font-medium"
+                                                    >
+                                                        {{ sub.title }}
+                                                    </Link>
+                                                    <button
+                                                        type="button"
+                                                        @click.stop="toggleMobileCategory(sub.id)"
+                                                        class="p-2 -mr-1 rounded-md text-[#84ADFF] hover:bg-[#222842] transition-colors cursor-pointer"
+                                                        :aria-label="tt('Mở rộng danh mục con')"
+                                                        :aria-expanded="isMobileCategoryExpanded(sub.id)"
+                                                    >
+                                                        <svg
+                                                            class="w-4 h-4 transition-transform duration-200"
+                                                            :class="isMobileCategoryExpanded(sub.id) ? 'rotate-180 text-primary' : ''"
+                                                            viewBox="0 0 20 20"
+                                                            fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                            <path
+                                                                d="M5 7.5L10 12.5L15 7.5"
+                                                                stroke="currentColor"
+                                                                stroke-width="1.67"
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                            />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+
+                                                <!-- Mục cha không có con -->
+                                                <Link
+                                                    v-else
+                                                    :href="sub.url || sub.slug"
+                                                    @click="closeDrawer"
+                                                    class="min-h-[44px] px-3 py-2.5 rounded-lg flex items-center justify-between text-sm font-medium text-[#B9C0D4] hover:text-white hover:bg-dark-surface transition-colors"
+                                                >
+                                                    <span class="truncate">{{ sub.title }}</span>
+                                                </Link>
+
+                                                <!-- Danh mục con cấp 2 (Thụt lề pl-6) -->
+                                                <transition name="accordion">
+                                                    <div
+                                                        v-if="sub.children && sub.children.length > 0"
+                                                        v-show="isMobileCategoryExpanded(sub.id)"
+                                                        class="pl-6 pr-1 py-1 space-y-1 border-l border-[#30374F]/60 ml-4"
+                                                    >
+                                                        <Link
+                                                            v-for="(child, childIdx) in sub.children"
+                                                            :key="childIdx"
+                                                            :href="child.url || child.slug"
+                                                            @click="closeDrawer"
+                                                            class="min-h-[40px] px-3 py-2 rounded-lg flex items-center justify-between text-xs font-normal text-[#8E97B2] hover:text-[#FAFAFA] hover:bg-dark-surface transition-colors"
+                                                        >
+                                                            <span class="truncate">{{ child.title }}</span>
+                                                        </Link>
+                                                    </div>
+                                                </transition>
+                                            </div>
+
+                                            <!-- Divider & View All Products -->
+                                            <div class="pt-1 mt-1 border-t border-[#30374F]">
+                                                <Link
+                                                    :href="route('products.index')"
+                                                    @click="closeDrawer"
+                                                    class="min-h-[44px] px-3 py-2.5 rounded-lg flex items-center justify-between text-xs font-semibold text-[#84ADFF] hover:text-white hover:bg-dark-surface transition-colors"
+                                                >
+                                                    <span>{{ tt('Xem tất cả sản phẩm') }}</span>
+                                                    <svg
+                                                        class="w-4 h-4 shrink-0"
+                                                        viewBox="0 0 16 16"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            d="M3.33334 8H12.6667M8 3.33334L12.6667 8L8 12.6667"
+                                                            stroke="currentColor"
+                                                            stroke-width="1.5"
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                        />
+                                                    </svg>
+                                                </Link>
+                                            </div>
                                         </div>
                                     </transition>
                                 </div>
@@ -440,6 +552,7 @@ export default {
             isDrawerOpen: false,
             isSearchOpen: false,
             isProductAccordionOpen: false,
+            expandedMobileCategoryIds: [],
         }
     },
     computed: {
@@ -447,16 +560,93 @@ export default {
             return this.$page.props.locale?.current || 'vi'
         },
         productCategories() {
-            const fromProps = this.$page?.props?.product_categories || this.$page?.props?.data?.product_categories
-            if (fromProps && fromProps.length > 0) {
-                return fromProps
+            const rawCategories = this.$page?.props?.product_categories || this.$page?.props?.data?.product_categories
+            if (!rawCategories || rawCategories.length === 0) {
+                return [
+                    {
+                        id: 'trang-tri-khong-gian',
+                        title: this.tt('Trang trí không gian'),
+                        slug: 'trang-tri-khong-gian',
+                        children: [],
+                    },
+                    {
+                        id: 'moc-khoa-phu-kien',
+                        title: this.tt('Móc khoá & Phụ kiện'),
+                        slug: 'moc-khoa-phu-kien',
+                        children: [
+                            { id: 'moc-khoa-co-khi', title: this.tt('Móc khoá cơ khí'), slug: 'moc-khoa-co-khi' },
+                            { id: 'moc-khoa-the-thao', title: this.tt('Móc khoá thể thao & phụ kiện'), slug: 'moc-khoa-the-thao' },
+                        ],
+                    },
+                    {
+                        id: 'trang-tri-do-dung',
+                        title: this.tt('Trang trí & Đồ dùng'),
+                        slug: 'trang-tri-do-dung',
+                        children: [
+                            { id: 'ly', title: this.tt('Ly'), slug: 'ly' },
+                            { id: 'lo-cam-hoa-de-ban', title: this.tt('Lọ cắm hoa để bàn'), slug: 'lo-cam-hoa-de-ban' },
+                            { id: 'den', title: this.tt('Đèn'), slug: 'den' },
+                        ],
+                    },
+                    {
+                        id: 'gia-cong-theo-yeu-cau',
+                        title: this.tt('Gia công theo yêu cầu'),
+                        slug: 'gia-cong-theo-yeu-cau',
+                        children: [
+                            { id: 'mo-hinh-resin', title: this.tt('Mô hình Resin & Khớp cử động'), slug: 'mo-hinh-resin' },
+                            { id: 'linh-kien-carbon', title: this.tt('Linh kiện cơ khí & Carbon Fiber'), slug: 'linh-kien-carbon' },
+                        ],
+                    },
+                ]
             }
-            return [
-                { id: 'trang-tri-khong-gian', title: this.tt('Trang trí không gian'), slug: 'trang-tri-khong-gian' },
-                { id: 'moc-khoa-phu-kien', title: this.tt('Móc khoá & Phụ kiện'), slug: 'moc-khoa-phu-kien' },
-                { id: 'trang-tri-do-dung', title: this.tt('Trang trí & Đồ dùng'), slug: 'trang-tri-do-dung' },
-                { id: 'gia-cong-theo-yeu-cau', title: this.tt('Gia công theo yêu cầu'), slug: 'gia-cong-theo-yeu-cau' },
-            ]
+
+            // Phòng vệ: Kiểm tra xem có phần tử mang parent_id > 0 ở cấp gốc không
+            const hasFlatChildren = rawCategories.some(c => c && Number(c.parent_id) > 0)
+
+            if (!hasFlatChildren) {
+                return rawCategories.map(cat => ({
+                    ...cat,
+                    children: (cat.children || cat.subcategories || cat.nodes || []).map(child => ({
+                        ...child,
+                        url: child.url || (this.route('products.index') + '?category=' + child.slug),
+                    })),
+                }))
+            }
+
+            // Gộp theo cây danh mục phòng vệ (Defensive tree grouping)
+            const parentMap = new Map()
+            const childItems = []
+
+            rawCategories.forEach(item => {
+                if (!item) return
+                const parentId = Number(item.parent_id || 0)
+                if (parentId === 0) {
+                    parentMap.set(item.id, {
+                        ...item,
+                        children: [...(item.children || item.subcategories || item.nodes || [])],
+                    })
+                } else {
+                    childItems.push(item)
+                }
+            })
+
+            childItems.forEach(child => {
+                const parentId = Number(child.parent_id)
+                if (parentMap.has(parentId)) {
+                    const parent = parentMap.get(parentId)
+                    if (!parent.children.some(c => c.id === child.id)) {
+                        parent.children.push(child)
+                    }
+                }
+            })
+
+            return Array.from(parentMap.values()).map(cat => ({
+                ...cat,
+                children: (cat.children || []).map(child => ({
+                    ...child,
+                    url: child.url || (this.route('products.index') + '?category=' + child.slug),
+                })),
+            }))
         },
         menus() {
             const categories = this.productCategories
@@ -466,15 +656,28 @@ export default {
                     slug: this.route('products.index'),
                     url: this.route('products.index'),
                     isAll: true,
+                    children: [],
                 },
-                ...categories.map(cat => ({
-                    id: cat.id,
-                    title: cat.title,
-                    slug: cat.url || (this.route('products.index') + '?category=' + cat.slug),
-                    url: cat.url || (this.route('products.index') + '?category=' + cat.slug),
-                    categorySlug: cat.slug,
-                    isAll: false,
-                })),
+                ...categories.map(cat => {
+                    const children = (cat.children || []).map(child => ({
+                        id: child.id,
+                        title: child.title || child.name,
+                        slug: child.url || (this.route('products.index') + '?category=' + child.slug),
+                        url: child.url || (this.route('products.index') + '?category=' + child.slug),
+                        categorySlug: child.slug,
+                        isAll: false,
+                    }))
+
+                    return {
+                        id: cat.id,
+                        title: cat.title || cat.name,
+                        slug: cat.url || (this.route('products.index') + '?category=' + cat.slug),
+                        url: cat.url || (this.route('products.index') + '?category=' + cat.slug),
+                        categorySlug: cat.slug,
+                        isAll: false,
+                        children: children,
+                    }
+                }),
             ]
 
             return [
@@ -661,9 +864,21 @@ export default {
         },
         closeDrawer() {
             this.isDrawerOpen = false
+            this.expandedMobileCategoryIds = []
             if (typeof document !== 'undefined') {
                 document.body.classList.remove('overflow-hidden')
             }
+        },
+        toggleMobileCategory(id) {
+            const idx = this.expandedMobileCategoryIds.indexOf(id)
+            if (idx > -1) {
+                this.expandedMobileCategoryIds.splice(idx, 1)
+            } else {
+                this.expandedMobileCategoryIds.push(id)
+            }
+        },
+        isMobileCategoryExpanded(id) {
+            return this.expandedMobileCategoryIds.includes(id)
         },
         switchLocale(lang) {
             if (this.currentLocale === lang) return

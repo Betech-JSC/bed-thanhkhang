@@ -206,7 +206,7 @@ export default {
                         description: p.description || p.short_description || '',
                         image: p.thumbnail?.url || p.image?.url || (typeof p.image === 'string' ? p.image : (p.thumbnail || '')),
                         isBestChoice: idx === 0 && cat.hasBestChoice,
-                        url: p.slug ? `/san-pham/${p.slug}` : (p.id ? `/san-pham/${p.id}` : '/san-pham'),
+                        url: this.resolveProductUrl(p),
                     }));
                 } else if (this.products && this.products.length > 0) {
                     // 2. Fallback lọc từ this.products nếu Backend không truyền items trong category
@@ -237,7 +237,7 @@ export default {
                         description: p.description || p.short_description || '',
                         image: p.thumbnail?.url || p.image?.url || (typeof p.image === 'string' ? p.image : (p.thumbnail || '')),
                         isBestChoice: idx === 0 && cat.hasBestChoice,
-                        url: p.slug ? `/san-pham/${p.slug}` : (p.id ? `/san-pham/${p.id}` : '/san-pham'),
+                        url: this.resolveProductUrl(p),
                     }));
                 }
 
@@ -262,6 +262,39 @@ export default {
     methods: {
         tt(s) {
             return this.$root?.tt ? this.$root.tt(s) : tt(s);
+        },
+        resolveProductUrl(p) {
+            if (!p) return '/san-pham';
+            const isEn = (this.$page?.props?.locale?.current || '').toLowerCase() === 'en';
+            const prefix = isEn ? '/en/products' : '/san-pham';
+
+            if (p.slug) {
+                return `${prefix}/${p.slug}`;
+            }
+            if (typeof p.url === 'string' && p.url) {
+                try {
+                    const parsed = new URL(p.url, typeof window !== 'undefined' ? window.location.origin : 'http://localhost');
+                    return parsed.pathname;
+                } catch (e) {
+                    return p.url;
+                }
+            }
+            if (p.url && typeof p.url === 'object') {
+                const locKey = isEn ? 'EN' : 'VI';
+                const matched = p.url[locKey] || Object.values(p.url)[0];
+                if (matched && typeof matched === 'string') {
+                    try {
+                        const parsed = new URL(matched, typeof window !== 'undefined' ? window.location.origin : 'http://localhost');
+                        return parsed.pathname;
+                    } catch (e) {
+                        return matched;
+                    }
+                }
+            }
+            if (p.id) {
+                return `${prefix}/${p.id}`;
+            }
+            return prefix;
         },
         preloadImages() {
             if (typeof window === 'undefined') return;

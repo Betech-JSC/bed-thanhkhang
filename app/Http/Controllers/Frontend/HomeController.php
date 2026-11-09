@@ -84,10 +84,10 @@ class HomeController extends Controller
                             ->toArray();
                     }
 
-                    // Fetch Featured Products
+                    // Fetch Featured Products (ưu tiên sản phẩm được tích nổi bật is_featured)
                     $products = Product::query()
                         ->where('status', Product::STATUS_ACTIVE)
-                        ->orderByDesc('id')
+                        ->orderByFeatured()
                         ->take(20)
                         ->get()
                         ->map(fn($product) => $product->transform());
@@ -207,6 +207,13 @@ class HomeController extends Controller
     public function searchV2()
     {
         try {
+            $locale = request()->input('locale') ?? request()->input('use_locale') ?? request()->header('X-Locale') ?? current_locale();
+            if (!in_array($locale, config('app.locales', ['vi', 'en']))) {
+                $locale = config('app.locale', 'vi');
+            }
+            app()->setLocale($locale);
+            request()->merge(['use_locale' => $locale]);
+
             $keyword = trim((string) (request()->input('keyword') ?? request()->input('search') ?? request()->input('q') ?? ''));
             $limit = (int) (request()->input('limit') ?? 8);
             if ($limit <= 0 || $limit > 20) {
@@ -216,28 +223,50 @@ class HomeController extends Controller
             $query = Product::query()->active();
 
             if (!empty($keyword)) {
-                $query->where(function ($q) use ($keyword) {
-                    $q->whereHas('translations', function ($t) use ($keyword) {
+                $viKeyword = $this->reverseTranslateKeyword($keyword);
+                $query->where(function ($q) use ($keyword, $viKeyword) {
+                    $q->whereHas('translations', function ($t) use ($keyword, $viKeyword) {
                         $t->where('title', 'like', "%{$keyword}%")
                             ->orWhere('description', 'like', "%{$keyword}%")
                             ->orWhere('slug', 'like', "%{$keyword}%");
+                        if ($viKeyword) {
+                            $t->orWhere('title', 'like', "%{$viKeyword}%")
+                                ->orWhere('description', 'like', "%{$viKeyword}%");
+                        }
+                    })
+                    ->orWhereHas('categories', function ($c) use ($keyword, $viKeyword) {
+                        $c->whereHas('translations', function ($ct) use ($keyword, $viKeyword) {
+                            $ct->where('title', 'like', "%{$keyword}%")
+                                ->orWhere('slug', 'like', "%{$keyword}%");
+                            if ($viKeyword) {
+                                $ct->orWhere('title', 'like', "%{$viKeyword}%");
+                            }
+                        });
                     })
                     ->orWhere('sku', 'like', "%{$keyword}%")
                     ->orWhere('material', 'like', "%{$keyword}%")
                     ->orWhere('print_technology', 'like', "%{$keyword}%");
+
+                    if ($viKeyword) {
+                        $q->orWhere('material', 'like', "%{$viKeyword}%")
+                            ->orWhere('print_technology', 'like', "%{$viKeyword}%");
+                    }
                 });
             }
 
             $products = $query->with(['categories', 'translations'])
                 ->take($limit)
                 ->get()
-                ->map(function ($product) {
+                ->map(function ($product) use ($locale) {
                     $firstCat = $product->categories->first();
                     $imageDetail = $product->getImageDetail($product->image);
                     $imageUrl = $imageDetail['url'] ?? null;
                     if (empty($imageUrl)) {
                         $imageUrl = '/assets/images/products/figma-sample-1.png';
                     }
+
+                    $material = $this->translateTerm($product->material, $locale);
+                    $printTech = $this->translateTerm($product->print_technology, $locale);
 
                     return [
                         'id' => $product->id,
@@ -258,9 +287,9 @@ class HomeController extends Controller
                             'slug' => $firstCat->slug,
                         ] : null,
                         'category_name' => $firstCat?->title ?? '',
-                        'material' => $product->material,
-                        'print_technology' => $product->print_technology,
-                        'url' => route(current_locale() . '.products.show', ['slug' => $product->seo_slug ?? $product->slug]),
+                        'material' => $material,
+                        'print_technology' => $printTech,
+                        'url' => route($locale . '.products.show', ['slug' => $product->seo_slug ?? $product->slug]),
                     ];
                 });
 
@@ -276,5 +305,70 @@ class HomeController extends Controller
                 'message' => $th->getMessage(),
             ], 500);
         }
+    }
+
+    protected function getTermDictionary(): array
+    {
+        return [
+            // Materials
+            'Nhựa PLA Matte Cao Cấp' => 'Premium Matte PLA',
+            'PETG Gia Cường 20% Carbon Fiber (PETG-CF)' => '20% Carbon Fiber Reinforced PETG (PETG-CF)',
+            'Nylon PA12 Kỹ Thuật Tự Bôi Trơn' => 'Self-Lubricating Engineering Nylon PA12',
+            'Polyamide 12 (Nylon PA12) Bột Thiêu Kết' => 'Sintered Powder Polyamide 12 (Nylon PA12)',
+            'PLA Matte Tuyết Trắng & Visor Mạ Vàng' => 'Snow White Matte PLA & Gold-Plated Visor',
+            'PETG Waterproof Chống Thấm 100%' => '100% Waterproof PETG',
+            'PLA+ Tough Gia Cường Chịu Lực' => 'Reinforced Heavy-Duty PLA+ Tough',
+            'PETG Tough Kháng Gãy Khớp' => 'Anti-Fracture Joint PETG Tough',
+            'Nhựa PLA · Công nghệ FDM' => 'PLA Plastic · FDM Technology',
+
+            // Print Technologies
+            'FDM Print-in-Place Khớp Liền Khối' => 'FDM Print-in-Place Integrated Joint',
+            'FDM Lithophane Độ Phân Giải 0.12mm' => '0.12mm High-Resolution FDM Lithophane',
+            'SLS (Selective Laser Sintering) Công Nghiệp' => 'Industrial SLS (Selective Laser Sintering)',
+            'FDM Print-in-Place Siêu Mịn 0.12mm' => '0.12mm Ultra-Fine FDM Print-in-Place',
+            'FDM Watertight In Chống Rò Rỉ' => 'FDM Leak-Proof Watertight Printing',
+            'FDM Print-in-Place 14 Khớp Linh Hoạt' => 'FDM Print-in-Place 14-Joint Articulation',
+        ];
+    }
+
+    protected function translateTerm(?string $term, string $locale): string
+    {
+        if (empty($term)) {
+            return '';
+        }
+        if ($locale === 'vi') {
+            return $term;
+        }
+
+        $uiKey = 'ui.' . $term;
+        $translated = __($uiKey, [], $locale);
+        if ($translated !== $uiKey) {
+            return $translated;
+        }
+
+        $directTrans = __($term, [], $locale);
+        if ($directTrans !== $term) {
+            return $directTrans;
+        }
+
+        $dict = $this->getTermDictionary();
+        return $dict[$term] ?? $term;
+    }
+
+    protected function reverseTranslateKeyword(string $keyword): ?string
+    {
+        $keywordLower = mb_strtolower(trim($keyword));
+        if (empty($keywordLower)) {
+            return null;
+        }
+
+        $dict = $this->getTermDictionary();
+        foreach ($dict as $vi => $en) {
+            if (mb_stripos($en, $keywordLower) !== false) {
+                return $vi;
+            }
+        }
+
+        return null;
     }
 }

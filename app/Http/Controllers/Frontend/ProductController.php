@@ -63,10 +63,26 @@ class ProductController extends Controller
     {
         try {
             $data = Cache::remember('product_show_' . $slug . '_' . current_locale(), 3600, function () use ($slug) {
+                $cleanSlug = trim(urldecode($slug));
+
                 $product = Product::query()
                     ->active()
-                    ->whereSlug($slug)
+                    ->whereSlug($cleanSlug)
                     ->first();
+
+                if (!$product && is_numeric($cleanSlug)) {
+                    $product = Product::query()
+                        ->active()
+                        ->where('id', (int) $cleanSlug)
+                        ->first();
+                }
+
+                if (!$product) {
+                    $product = Product::query()
+                        ->where('status', Product::STATUS_ACTIVE)
+                        ->whereSlug($cleanSlug)
+                        ->first();
+                }
 
                 if (!$product) {
                     return null;

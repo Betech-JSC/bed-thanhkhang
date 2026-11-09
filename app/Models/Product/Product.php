@@ -517,7 +517,7 @@ class Product extends BaseModel
             'is_new' => $this->is_new,
             'is_stock' => $this->is_stock,
             'is_featured' => (bool) $this->is_featured,
-            'url' => $this->url,
+            'url' => $this->current_url ?: (is_array($this->url) ? ($this->url[strtoupper(current_locale())] ?? (reset($this->url) ?: null)) : $this->url),
         ];
 
         return $data;
@@ -1436,7 +1436,7 @@ class Product extends BaseModel
             'image' => $this->image_default,
 
             'is_featured' => (bool) $this->is_featured,
-            'url' => $this->url,
+            'url' => $this->current_url ?: (is_array($this->url) ? ($this->url[strtoupper(current_locale())] ?? (reset($this->url) ?: null)) : $this->url),
         ];
 
         return $data;
