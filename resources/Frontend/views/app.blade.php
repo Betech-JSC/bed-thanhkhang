@@ -6,11 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <!-- Favicon & Brand Icons -->
-    <link rel="icon" type="image/svg+xml" href="/assets/images/header/hh-maker-icon.svg?v=1">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=1">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=1">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=1">
-    <link rel="shortcut icon" href="/favicon.ico?v=1">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/header/hh-maker-icon.svg?v=2">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=2">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=2">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+    <link rel="shortcut icon" href="/favicon.ico?v=2">
+    <link rel="manifest" href="/site.webmanifest?v=2">
 
     @php
         try {
@@ -48,7 +49,7 @@
         $title = $seo['seo_meta_title'] ?? $seo['title'] ?? ($global['seo_meta_title'] ?? env('APP_NAME'));
         $description = $seo['seo_meta_description'] ?? $seo['description'] ?? ($global['seo_meta_description'] ?? null);
         $robots = $seo['seo_meta_robots'] ?? ($global['seo_meta_robots'] ?? 'index');
-        $rawImage = $seo['seo_image'] ?? $seo['image'] ?? ($global['seo_image'] ?? '/cover.jpg');
+        $rawImage = $seo['seo_image'] ?? $seo['image'] ?? ($global['seo_image'] ?? '/cover.jpg?v=2');
 
         // Nếu là đường dẫn tương đối (bắt đầu bằng "/"), nối domain
         if (!Str::startsWith($rawImage, ['http://', 'https://'])) {
@@ -91,6 +92,7 @@
 
         if ($image) {
             SEO::opengraph()->addImage($image);
+            SEO::twitter()->addValue('image', $image);
             SEO::jsonLd()->setImage($image);
         }
 
