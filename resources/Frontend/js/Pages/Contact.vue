@@ -31,13 +31,17 @@
                     </p>
                 </div>
 
-                <!-- Right Hero Logo 3D HH Maker (Figma Node 2308:8196) -->
-                <img
-                    src="/images/contact/hh_maker_monogram.png"
-                    :alt="tt('HH Maker Logo 3D - From Ideas To Reality')"
-                    class="w-[200px] sm:w-[240px] max-h-[220px] mx-auto mt-6 lg:mt-0 lg:mx-0 lg:max-h-none lg:absolute lg:w-[469px] lg:h-[889px] lg:top-[-172px] lg:left-[877px] object-contain pointer-events-none select-none opacity-20"
-                    loading="eager"
-                />
+                <!-- Right Hero Logo 3D HH Maker (Figma Node 2308:8196: cropped 469x483 visible window at top 0, left 877px) -->
+                <div
+                    class="w-[200px] sm:w-[240px] max-h-[220px] mx-auto mt-6 lg:mt-0 lg:mx-0 lg:max-h-none lg:absolute lg:w-[469px] lg:h-[483px] lg:top-0 lg:left-[877px] lg:overflow-hidden pointer-events-none select-none opacity-20"
+                >
+                    <img
+                        src="/images/contact/hh_maker_monogram.png"
+                        :alt="tt('HH Maker Logo 3D - From Ideas To Reality')"
+                        class="w-full h-full object-contain lg:w-[794px] lg:h-[1136px] lg:max-w-none lg:-ml-[162px] lg:-mt-[179px] lg:object-fill"
+                        loading="eager"
+                    />
+                </div>
             </div>
         </section>
 

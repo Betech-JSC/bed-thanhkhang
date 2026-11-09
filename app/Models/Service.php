@@ -169,13 +169,61 @@ class Service extends BaseModel
 
     public function transform()
     {
+        $locale = function_exists('current_locale') ? current_locale() : app()->getLocale();
+        $isEn = ($locale === 'en');
+        $serviceKey = $this->getServiceKey();
+        $kb = self::getServiceKnowledgeBase($serviceKey, $locale);
+        $kbVi = self::getServiceKnowledgeBase($serviceKey, 'vi');
+
+        $rawTitle = trim((string) ($this->title ?? ''));
+        $title = $rawTitle ?: ($kb['listing_title'] ?? $kb['title'] ?? '');
+        if ($serviceKey === 'lam-do-custom' && in_array($rawTitle, ['', 'Custom'], true)) {
+            $title = $kb['listing_title'] ?? ($isEn ? 'Custom Bespoke Creations' : 'Làm đồ custom');
+        }
+
+        $rawSubtitle = trim((string) ($this->title_content ?? ''));
+        $heroHeadlineVi = trim((string) ($kbVi['hero']['headline'] ?? ''));
+        $heroHeadlineEn = trim((string) ($kb['hero']['headline'] ?? ''));
+        if (!$isEn && $rawSubtitle !== '' && $rawSubtitle !== $heroHeadlineVi && $rawSubtitle !== $heroHeadlineEn) {
+            $subtitle = $rawSubtitle;
+        } else {
+            $subtitle = $kb['subtitle'] ?? $rawSubtitle;
+        }
+
+        $rawDesc = trim((string) ($this->description ?? ''));
+        $overviewVi = trim((string) ($kbVi['overview_description'] ?? ''));
+        $overviewEn = trim((string) ($kb['overview_description'] ?? ''));
+
+        if ($rawDesc === '' || $rawDesc === $overviewVi || $rawDesc === $overviewEn) {
+            $description = $kb['page_description'] ?? $kb['description'] ?? $rawDesc;
+        } else {
+            $description = $rawDesc;
+        }
+
+        $imageDetail = $this->getImageDetail($this->image);
+        if (empty($imageDetail['url'])) {
+            $defaultImgPath = $kb['listing_image'] ?? '/images/services/service-design-3d.png';
+            $imageDetail = $this->getImageDetail(['path' => $defaultImgPath, 'alt' => $title]);
+        }
+
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'slug' => $this->seo_slug ?? $this->slug,
-            'description' => $this->description,
-            'link' => $this->content,
-            'image' => $this->getImageDetail($this->image),
+            'title' => $title,
+            'home_title' => ($rawTitle !== '' && !($serviceKey === 'lam-do-custom' && $rawTitle === 'Làm đồ custom')) ? $rawTitle : ($kb['title'] ?? $title),
+            'slug' => $this->seo_slug ?? $this->slug ?: $serviceKey,
+            'subtitle' => $subtitle,
+            'description' => $description,
+            'overview_description' => $kb['overview_description'] ?? $rawDesc,
+            'link' => $this->content ?: ('/dich-vu/' . ($this->seo_slug ?? $this->slug ?: $serviceKey)),
+            'image' => $imageDetail,
+            'tags' => $kb['tags'] ?? [],
+            'prep_title' => $kb['prep_title'] ?? ($isEn ? 'YOU PREPARE' : 'BẠN CHUẨN BỊ'),
+            'preparation' => $kb['preparation'] ?? '',
+            'comp_title' => $kb['comp_title'] ?? ($isEn ? 'WE CO-CREATE' : 'CÙNG HOÀN THIỆN'),
+            'completion' => $kb['completion'] ?? '',
+            'cta_text' => $kb['cta_text'] ?? ($isEn ? 'Contact for consultation' : 'Liên hệ tư vấn dịch vụ'),
+            'position' => $this->position ?? ($kb['position'] ?? 1),
+            'listing_order' => $kb['listing_order'] ?? ($this->position ?? 1),
         ];
     }
 
@@ -200,9 +248,20 @@ class Service extends BaseModel
             'thiet-ke-3d' => [
                 'vi' => [
                     'title' => 'Thiết kế 3D',
+                    'listing_title' => 'Thiết kế 3D',
                     'position' => 2,
+                    'listing_order' => 1,
+                    'subtitle' => 'Từ phác thảo đến hình khối rõ ràng.',
                     'overview_description' => 'Biến ý tưởng thành mô hình 3D chi tiết, kết hợp tính thẩm mỹ và khả năng chế tác thực tế.',
                     'description' => 'Biến ý tưởng thành mô hình 3D chi tiết, kết hợp tính thẩm mỹ và khả năng chế tác thực tế.',
+                    'page_description' => 'Bạn có ý tưởng nhưng chưa có mô hình? HH Maker cùng bạn làm rõ tỉ lệ, cấu trúc và chi tiết, chuyển hình ảnh tham khảo hoặc bản phác thảo thành thiết kế 3D hướng đến khả năng chế tác thực tế.',
+                    'listing_image' => '/images/services/service-design-3d.png',
+                    'tags' => ['Phát triển ý tưởng', 'Dựng hình', 'Tối ưu để in'],
+                    'prep_title' => 'BẠN CHUẨN BỊ',
+                    'preparation' => 'Ý tưởng, ảnh tham khảo, kích thước dự kiến và mục đích sử dụng.',
+                    'comp_title' => 'CÙNG HOÀN THIỆN',
+                    'completion' => 'Phương án mô hình 3D và các chi tiết cần thống nhất trước khi gia công.',
+                    'cta_text' => 'Liên hệ tư vấn thiết kế 3D',
                     'hero' => [
                         'headline' => 'Thiết kế 3D: Từ phác thảo đến hình khối rõ ràng',
                         'description' => 'Một ý tưởng chưa cần hoàn chỉnh để bắt đầu. Cùng HH Maker làm rõ tỉ lệ, cấu trúc và chi tiết, để mô hình 3D không chỉ dễ hình dung mà còn hướng đến khả năng chế tác thực tế.',
@@ -285,9 +344,20 @@ class Service extends BaseModel
                 ],
                 'en' => [
                     'title' => '3D Design',
+                    'listing_title' => '3D Design',
                     'position' => 2,
+                    'listing_order' => 1,
+                    'subtitle' => 'From sketch to concrete geometry.',
                     'overview_description' => 'Transforming ideas into detailed 3D models, blending aesthetics with practical manufacturability.',
                     'description' => 'Transforming ideas into detailed 3D models, blending aesthetics with practical manufacturability.',
+                    'page_description' => 'Have an idea but no 3D model yet? HH Maker works with you to define proportions, structure, and details, transforming reference photos or sketches into 3D designs tailored for practical manufacturing.',
+                    'listing_image' => '/images/services/service-design-3d.png',
+                    'tags' => ['Concept Development', '3D Modeling', 'Print Optimization'],
+                    'prep_title' => 'YOU PREPARE',
+                    'preparation' => 'Ideas, reference images, intended dimensions, and functional requirements.',
+                    'comp_title' => 'WE CO-CREATE',
+                    'completion' => '3D model blueprint and technical details aligned before production.',
+                    'cta_text' => 'Consult 3D Design',
                     'hero' => [
                         'headline' => '3D Design: From sketch to concrete geometry',
                         'description' => 'An idea does not need to be complete to begin. Together with HH Maker, clarify proportions, structure, and details, ensuring the 3D model is not only easy to visualize but also ready for real-world manufacturing.',
@@ -372,9 +442,20 @@ class Service extends BaseModel
             'gia-cong-3d' => [
                 'vi' => [
                     'title' => 'Gia công 3D',
+                    'listing_title' => 'Gia công 3D',
                     'position' => 1,
+                    'listing_order' => 2,
+                    'subtitle' => 'Đưa bản thiết kế ra ngoài màn hình.',
                     'overview_description' => 'Hiện thực hóa mô hình bằng công nghệ in 3D, chú trọng độ chính xác và chất lượng sản phẩm',
                     'description' => 'Hiện thực hóa mô hình bằng công nghệ in 3D, chú trọng độ chính xác và chất lượng sản phẩm',
+                    'page_description' => 'Từ file 3D đã có, chúng tôi xem xét cấu trúc mô hình, tư vấn vật liệu và cách in phù hợp. Quá trình gia công chú trọng từng lớp in, bề mặt và các chi tiết liên quan đến công năng của sản phẩm.',
+                    'listing_image' => '/images/services/service-manufacturing-3d.png',
+                    'tags' => ['Kiểm tra mô hình', 'Tư vấn vật liệu', 'In & hoàn thiện'],
+                    'prep_title' => 'BẠN CHUẨN BỊ',
+                    'preparation' => 'File 3D, số lượng, kích thước và yêu cầu về bề mặt hoặc lắp ghép.',
+                    'comp_title' => 'CÙNG HOÀN THIỆN',
+                    'completion' => 'Sản phẩm vật lý theo phương án và yêu cầu gia công đã thống nhất.',
+                    'cta_text' => 'Liên hệ tư vấn gia công 3D',
                     'hero' => [
                         'headline' => 'Gia công 3D: Hiện thực hóa mô hình với độ chính xác cao',
                         'description' => 'Đưa bản thiết kế ra ngoài màn hình. Gia công và in 3D chính xác từng milimet với vật liệu và công nghệ tối ưu cho từng mục đích sử dụng.',
@@ -457,9 +538,20 @@ class Service extends BaseModel
                 ],
                 'en' => [
                     'title' => '3D Machining & Printing',
+                    'listing_title' => '3D Machining & Printing',
                     'position' => 1,
+                    'listing_order' => 2,
+                    'subtitle' => 'Bringing digital designs into the physical world.',
                     'overview_description' => 'Realizing models with 3D printing technology, focusing on precision and product quality.',
                     'description' => 'Realizing models with 3D printing technology, focusing on precision and product quality.',
+                    'page_description' => 'From existing 3D files, we review geometry, recommend suitable materials, and select the optimal printing method. Manufacturing focuses on layer resolution, surface finish, and functional mechanical aspects.',
+                    'listing_image' => '/images/services/service-manufacturing-3d.png',
+                    'tags' => ['Model Verification', 'Material Consultation', 'Printing & Finishing'],
+                    'prep_title' => 'YOU PREPARE',
+                    'preparation' => '3D files, quantities, dimensions, and surface or assembly tolerances.',
+                    'comp_title' => 'WE CO-CREATE',
+                    'completion' => 'Physical parts produced to agreed specifications and machining standards.',
+                    'cta_text' => 'Consult 3D Machining',
                     'hero' => [
                         'headline' => '3D Machining & Printing: Bringing digital models into reality with high precision',
                         'description' => 'Bringing digital designs into the physical world. Millimeter-accurate 3D printing and machining with optimal materials and technologies for every application.',
@@ -544,9 +636,20 @@ class Service extends BaseModel
             'lam-do-custom' => [
                 'vi' => [
                     'title' => 'Custom',
+                    'listing_title' => 'Làm đồ custom',
                     'position' => 3,
+                    'listing_order' => 3,
+                    'subtitle' => 'Không chỉ khác biệt. Là của riêng bạn.',
                     'overview_description' => 'Thiết kế và chế tác theo yêu cầu, tạo nên những món đồ độc đáo mang dấu ấn riêng của bạn.',
                     'description' => 'Thiết kế và chế tác theo yêu cầu, tạo nên những món đồ độc đáo mang dấu ấn riêng của bạn.',
+                    'page_description' => 'Cá nhân hoá phụ kiện, đồ trang trí hoặc phát triển một món đồ từ ý tưởng riêng. HH Maker kết hợp thiết kế và gia công để cân nhắc hình dáng, màu sắc, chi tiết chữ và cách sử dụng trong cùng một phương án.',
+                    'listing_image' => '/images/services/service-custom-3d.png',
+                    'tags' => ['Quà tặng cá nhân', 'Phụ kiện', 'Đồ trang trí'],
+                    'prep_title' => 'BẠN CHUẨN BỊ',
+                    'preparation' => 'Câu chuyện hoặc nhu cầu, mẫu tham khảo muốn cá nhân hoá.',
+                    'comp_title' => 'CÙNG HOÀN THIỆN',
+                    'completion' => 'Sản phẩm mang dấu ấn riêng, được phát triển theo nội dung đã trao đổi.',
+                    'cta_text' => 'Liên hệ tư vấn làm đồ custom',
                     'hero' => [
                         'headline' => 'Làm đồ custom: Chế tác cá nhân hóa độc bản theo yêu cầu',
                         'description' => 'Không chỉ khác biệt. Là của riêng bạn. Chế tác các vật phẩm độc bản, quà tặng doanh nghiệp và phụ kiện theo phong cách riêng của bạn.',
@@ -628,9 +731,20 @@ class Service extends BaseModel
                 ],
                 'en' => [
                     'title' => 'Custom',
+                    'listing_title' => 'Custom Bespoke Creations',
                     'position' => 3,
+                    'listing_order' => 3,
+                    'subtitle' => 'Not just different. Exclusively yours.',
                     'overview_description' => 'Custom design and manufacturing on demand, crafting unique pieces with your signature touch.',
                     'description' => 'Custom design and manufacturing on demand, crafting unique pieces with your signature touch.',
+                    'page_description' => 'Personalizing accessories, home decor, or crafting custom items from scratch. HH Maker combines design and machining to balance form, color, typography, and ergonomics in a single unified solution.',
+                    'listing_image' => '/images/services/service-custom-3d.png',
+                    'tags' => ['Personal Gifts', 'Accessories', 'Spatial Decor'],
+                    'prep_title' => 'YOU PREPARE',
+                    'preparation' => 'Story or requirements, sample models you wish to personalize.',
+                    'comp_title' => 'WE CO-CREATE',
+                    'completion' => 'Unique signature product tailored to the discussed concept.',
+                    'cta_text' => 'Consult Custom Creations',
                     'hero' => [
                         'headline' => 'Custom Bespoke Creations: Personalized one-of-a-kind fabrication',
                         'description' => 'Not just different. Exclusively yours. Bespoke keepsakes, personalized corporate gifts, and unique props crafted to reflect your distinct character.',
@@ -978,14 +1092,42 @@ class Service extends BaseModel
 
     public function getImageDetail($image)
     {
+        if (is_string($image)) {
+            $image = ['path' => $image];
+        }
+
+        if (empty($image) || !isset($image['path']) || trim((string) $image['path']) === '') {
+            return [
+                'url' => null,
+                'alt' => $image['alt'] ?? $this->title,
+            ];
+        }
+
+        $path = trim((string) $image['path']);
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            $url = $path;
+        } elseif (
+            str_starts_with($path, '/assets/') ||
+            str_starts_with($path, '/images/') ||
+            str_starts_with($path, 'assets/') ||
+            str_starts_with($path, 'images/') ||
+            (function_exists('public_path') && file_exists(public_path(ltrim($path, '/'))))
+        ) {
+            $url = '/' . ltrim($path, '/');
+        } else {
+            $url = static_url($path);
+        }
+
         return [
-            'url' => isset($image['path']) ? static_url($image['path']) : null,
+            'url' => $url,
+            'path' => $path,
             'alt' => $image['alt'] ?? $this->title,
         ];
     }
 
     public function getImageUrlAttribute()
     {
-        return isset($this->image['path']) ? static_url($this->image['path']) : null;
+        $detail = $this->getImageDetail($this->image);
+        return $detail['url'] ?? null;
     }
 }

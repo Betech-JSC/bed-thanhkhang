@@ -83,7 +83,7 @@
                     </Teleport>
 
                     <!-- Right Column: Products Results (Figma 2346:1015) -->
-                    <div class="w-full lg:w-[867px] shrink-0 min-w-0 space-y-6">
+                    <div id="product-catalog-section" ref="productCatalogTop" class="w-full lg:w-[867px] shrink-0 min-w-0 space-y-6">
                         <!-- Top Toolbar (Figma 2352:9087) -->
                         <div class="min-h-[24px] sm:h-5 flex items-center justify-between gap-2 sm:gap-4 w-full">
                             <!-- Left: Breadcrumb (Figma 2352:9934) -->
@@ -408,7 +408,7 @@ export default {
             }
             return [];
         },
-        displayCategories() {
+        defaultCategories() {
             return [
                 {
                     id: 'all',
@@ -423,8 +423,8 @@ export default {
                     slug: 'moc-khoa-phu-kien',
                     hasChevron: true,
                     subcategories: [
-                        { id: 'moc-khoa-co-khi', name: this.tt('Móc khoá cơ khí') },
-                        { id: 'moc-khoa-the-thao', name: this.tt('Móc khoá thể thao & phụ kiện') },
+                        { id: 'moc-khoa-co-khi', slug: 'moc-khoa-co-khi', name: this.tt('Móc khoá cơ khí') },
+                        { id: 'moc-khoa-the-thao', slug: 'moc-khoa-the-thao', name: this.tt('Móc khoá thể thao & phụ kiện') },
                     ],
                 },
                 {
@@ -433,9 +433,9 @@ export default {
                     slug: 'trang-tri-do-dung',
                     hasChevron: true,
                     subcategories: [
-                        { id: 'ly', name: this.tt('Ly') },
-                        { id: 'lo-cam-hoa-de-ban', name: this.tt('Lọ cắm hoa để bàn') },
-                        { id: 'den', name: this.tt('Đèn') },
+                        { id: 'ly', slug: 'ly', name: this.tt('Ly') },
+                        { id: 'lo-cam-hoa-de-ban', slug: 'lo-cam-hoa-de-ban', name: this.tt('Lọ cắm hoa để bàn') },
+                        { id: 'den', slug: 'den', name: this.tt('Đèn') },
                     ],
                 },
                 {
@@ -444,11 +444,90 @@ export default {
                     slug: 'gia-cong-theo-yeu-cau',
                     hasChevron: true,
                     subcategories: [
-                        { id: 'mo-hinh-resin', name: this.tt('Mô hình Resin & Khớp cử động') },
-                        { id: 'linh-kien-carbon', name: this.tt('Linh kiện cơ khí & Carbon Fiber') },
+                        { id: 'mo-hinh-resin', slug: 'mo-hinh-resin', name: this.tt('Mô hình Resin & Khớp cử động') },
+                        { id: 'linh-kien-carbon', slug: 'linh-kien-carbon', name: this.tt('Linh kiện cơ khí & Carbon Fiber') },
                     ],
                 },
             ];
+        },
+        displayCategories() {
+            if (!Array.isArray(this.categories) || this.categories.length === 0) {
+                return this.defaultCategories;
+            }
+
+            const rawList = this.categories.filter(Boolean);
+            const childMap = {};
+            const roots = [];
+
+            rawList.forEach((item) => {
+                const parentId = item.parent_id || item.default_parent?.id || 0;
+                if (parentId && Number(parentId) > 0) {
+                    if (!childMap[parentId]) childMap[parentId] = [];
+                    childMap[parentId].push(item);
+                } else {
+                    const slug = String(item.slug || '').toLowerCase();
+                    if (slug !== 'trang-tri-khong-gian' && slug !== 'space-decor') {
+                        roots.push(item);
+                    }
+                }
+            });
+
+            if (roots.length === 0) {
+                return this.defaultCategories;
+            }
+
+            const tree = [this.defaultCategories[0]];
+
+            roots.forEach((root) => {
+                const slug = String(root.slug || root.id || '').toLowerCase();
+                const rawTitle = String(root.title || root.name || '').trim();
+
+                let fallback = null;
+                if (slug.includes('moc-khoa') || slug.includes('keychain') || rawTitle.toLowerCase().includes('móc khoá') || rawTitle.toLowerCase().includes('móc khóa')) {
+                    fallback = this.defaultCategories[1];
+                } else if (slug.includes('trang-tri-do-dung') || slug.includes('van-phong-pham') || slug.includes('stationery') || rawTitle.toLowerCase().includes('đồ dùng') || rawTitle.toLowerCase().includes('văn phòng')) {
+                    fallback = this.defaultCategories[2];
+                } else if (slug.includes('gia-cong') || slug.includes('custom') || rawTitle.toLowerCase().includes('gia công')) {
+                    fallback = this.defaultCategories[3];
+                }
+
+                const rawChildren =
+                    (Array.isArray(root.subcategories) && root.subcategories.length > 0 && root.subcategories) ||
+                    (Array.isArray(root.children) && root.children.length > 0 && root.children) ||
+                    (Array.isArray(root.nodes) && root.nodes.length > 0 && root.nodes) ||
+                    childMap[root.id] ||
+                    [];
+
+                const mappedSubs =
+                    rawChildren.length > 0
+                        ? rawChildren.map((sub) => ({
+                              id: sub.slug || String(sub.id),
+                              rawId: sub.id,
+                              slug: sub.slug || String(sub.id),
+                              name: this.tt(sub.title || sub.name || ''),
+                          }))
+                        : fallback
+                        ? fallback.subcategories
+                        : [];
+
+                let displayName = rawTitle ? this.tt(rawTitle) : fallback?.name || '';
+                if (rawTitle === 'Móc khoá & Phụ kiện' || rawTitle === 'Móc khóa & Phụ kiện') {
+                    displayName = this.tt('Móc khoá');
+                } else if (rawTitle === 'Trang trí & Đồ dùng') {
+                    displayName = this.tt('Văn phòng phẩm');
+                }
+
+                tree.push({
+                    id: fallback ? fallback.id : root.slug || String(root.id),
+                    rawId: root.id,
+                    name: displayName,
+                    slug: root.slug || fallback?.slug || String(root.id),
+                    hasChevron: mappedSubs.length > 0,
+                    subcategories: mappedSubs,
+                });
+            });
+
+            return tree;
         },
         hasActiveFilters() {
             return (
@@ -490,8 +569,36 @@ export default {
             // 2. Category filter
             if (this.filters.category && this.filters.category !== 'all') {
                 const targetCat = this.filters.category;
+                const selectedCatObj = this.displayCategories.find(
+                    (c) => c.id === targetCat || c.slug === targetCat || (c.rawId !== undefined && String(c.rawId) === String(targetCat))
+                );
+                const validKeys = new Set([String(targetCat).toLowerCase()]);
+                if (selectedCatObj) {
+                    if (selectedCatObj.id) validKeys.add(String(selectedCatObj.id).toLowerCase());
+                    if (selectedCatObj.slug) validKeys.add(String(selectedCatObj.slug).toLowerCase());
+                    if (selectedCatObj.rawId !== undefined) validKeys.add(String(selectedCatObj.rawId).toLowerCase());
+                    if (Array.isArray(selectedCatObj.subcategories)) {
+                        selectedCatObj.subcategories.forEach((s) => {
+                            if (s.id) validKeys.add(String(s.id).toLowerCase());
+                            if (s.slug) validKeys.add(String(s.slug).toLowerCase());
+                            if (s.rawId !== undefined) validKeys.add(String(s.rawId).toLowerCase());
+                        });
+                    }
+                }
+
                 result = result.filter((p) => {
-                    if (p.categories && Array.isArray(p.categories) && p.categories.some(c => c.id == targetCat || c.slug == targetCat)) {
+                    if (
+                        p.categories &&
+                        Array.isArray(p.categories) &&
+                        p.categories.some(
+                            (c) =>
+                                validKeys.has(String(c.id || '').toLowerCase()) ||
+                                validKeys.has(String(c.slug || '').toLowerCase()) ||
+                                validKeys.has(String(c.parent_id || '').toLowerCase()) ||
+                                validKeys.has(String(c.default_parent?.id || '').toLowerCase()) ||
+                                validKeys.has(String(c.default_parent?.slug || '').toLowerCase())
+                        )
+                    ) {
                         return true;
                     }
                     if (p.categoryId === targetCat || p.category === targetCat) {
@@ -516,17 +623,45 @@ export default {
 
             // 2.5 Subcategory filter
             if (this.filters.subcategory) {
-                const sub = this.filters.subcategory.toLowerCase();
-                result = result.filter((p) => {
-                    const text = ((p.name || '') + ' ' + (p.title || '') + ' ' + (p.description || '')).toLowerCase();
-                    if (sub === 'ly') {
-                        return text.includes('ly') || text.includes('cốc') || text.includes('hộp') || text.includes('bút') || text.includes('khay');
+                const sub = String(this.filters.subcategory).toLowerCase();
+                let subObj = null;
+                for (const cat of this.displayCategories) {
+                    if (Array.isArray(cat.subcategories)) {
+                        const found = cat.subcategories.find(
+                            (s) => String(s.id).toLowerCase() === sub || String(s.slug || '').toLowerCase() === sub || String(s.rawId || '') === sub
+                        );
+                        if (found) {
+                            subObj = found;
+                            break;
+                        }
                     }
-                    if (sub === 'lo-cam-hoa-de-ban') {
+                }
+
+                result = result.filter((p) => {
+                    // Kiểm tra nếu sản phẩm đã được gán trực tiếp vào danh mục con trong CMS
+                    if (
+                        p.categories &&
+                        Array.isArray(p.categories) &&
+                        p.categories.some(
+                            (c) =>
+                                String(c.slug || '').toLowerCase() === sub ||
+                                String(c.id || '').toLowerCase() === sub ||
+                                (subObj?.rawId !== undefined && String(c.id) === String(subObj.rawId)) ||
+                                (subObj?.slug && String(c.slug || '').toLowerCase() === String(subObj.slug).toLowerCase())
+                        )
+                    ) {
+                        return true;
+                    }
+
+                    const text = ((p.name || '') + ' ' + (p.title || '') + ' ' + (p.description || '') + ' ' + (p.slug || '')).toLowerCase();
+                    if (sub === 'ly' || sub.includes('ly-')) {
+                        return text.includes('ly') || text.includes('cốc') || text.includes('hộp') || text.includes('bút') || text.includes('khay') || text.includes('đế đỡ');
+                    }
+                    if (sub === 'lo-cam-hoa-de-ban' || sub.includes('lo-cam-hoa')) {
                         return text.includes('lọ') || text.includes('hoa') || text.includes('chậu') || text.includes('voronoi');
                     }
-                    if (sub === 'den') {
-                        return text.includes('đèn') || text.includes('lamp') || text.includes('led');
+                    if (sub === 'den' || sub.includes('den-')) {
+                        return text.includes('đèn') || text.includes('lamp') || text.includes('led') || text.includes('lithophane');
                     }
                     if (sub === 'moc-khoa-co-khi') {
                         return text.includes('cơ khí') || text.includes('piston') || text.includes('turbine') || text.includes('gear');
@@ -539,6 +674,9 @@ export default {
                     }
                     if (sub === 'linh-kien-carbon') {
                         return text.includes('carbon') || text.includes('khung') || text.includes('bánh răng') || text.includes('bàn phím');
+                    }
+                    if (subObj?.name && text.includes(subObj.name.toLowerCase())) {
+                        return true;
                     }
                     return text.includes(sub);
                 });
@@ -691,9 +829,22 @@ export default {
             this.filters = newFilters;
         },
         handlePageChange(page, direction) {
+            if (page < 1 || page > this.totalPages || page === this.currentPage) {
+                return;
+            }
             this.slideDirection = direction || (page >= this.currentPage ? 'next' : 'prev');
             this.currentPage = page;
             this.slideTick += 1;
+            this.$nextTick(() => {
+                if (typeof window !== 'undefined') {
+                    const el = this.$refs.productCatalogTop || document.getElementById('product-catalog-section');
+                    if (el) {
+                        const rect = el.getBoundingClientRect();
+                        const targetTop = Math.max(0, window.pageYOffset + rect.top - 100);
+                        window.scrollTo({ top: targetTop, behavior: 'smooth' });
+                    }
+                }
+            });
         },
         clearSearch() {
             this.filters.search = '';

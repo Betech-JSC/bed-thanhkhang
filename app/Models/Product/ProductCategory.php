@@ -418,13 +418,51 @@ class ProductCategory extends BaseModel
 
     public function transform()
     {
+        $parentId = (int) ($this->parent_id ?? 0);
+        $children = [];
+
+        if ($parentId === 0) {
+            $rawChildren = $this->relationLoaded('nodes')
+                ? $this->nodes
+                : ($this->relationLoaded('children')
+                    ? $this->children
+                    : $this->children()->active()->sortByPosition()->get());
+
+            $children = collect($rawChildren)
+                ->where('status', self::STATUS_ACTIVE)
+                ->sortBy(fn($item) => ($item->position === null || $item->position === 0) ? PHP_INT_MAX : $item->position)
+                ->values()
+                ->map(fn($child) => [
+                    'id' => $child->id,
+                    'parent_id' => (int) ($child->parent_id ?? $this->id),
+                    'slug' => $child->seo_slug ?? $child->slug,
+                    'title' => $child->title,
+                    'name' => $child->title,
+                    'description' => $child->description,
+                    'position' => $child->position,
+                    'image' => $child->getImageDetail($child->image),
+                    'image_mobile' => $child->getImageDetail($child->image_mobile),
+                    'children' => [],
+                    'nodes' => [],
+                    'subcategories' => [],
+                ])
+                ->all();
+        }
+
         return [
             'id' => $this->id,
+            'parent_id' => $parentId,
             'slug' => $this->seo_slug ?? $this->slug,
             'title' => $this->title,
+            'name' => $this->title,
+            'description' => $this->description,
+            'position' => $this->position,
             'image' => $this->getImageDetail($this->image),
             'image_mobile' => $this->getImageDetail($this->image_mobile),
-            'default_parent' => $this->default_parent
+            'default_parent' => $this->default_parent,
+            'children' => $children,
+            'nodes' => $children,
+            'subcategories' => $children,
         ];
     }
 
@@ -501,8 +539,35 @@ class ProductCategory extends BaseModel
 
     public function getImageDetail($image)
     {
+        if (is_string($image)) {
+            $image = ['path' => $image];
+        }
+
+        if (empty($image) || !isset($image['path'])) {
+            return [
+                'url' => null,
+                'alt' => $image['alt'] ?? $this->title,
+            ];
+        }
+
+        $path = $image['path'];
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            $url = $path;
+        } elseif (
+            str_starts_with($path, '/assets/') ||
+            str_starts_with($path, '/images/') ||
+            str_starts_with($path, 'assets/') ||
+            str_starts_with($path, 'images/') ||
+            (function_exists('public_path') && file_exists(public_path(ltrim($path, '/'))))
+        ) {
+            $url = asset(ltrim($path, '/'));
+        } else {
+            $url = static_url($path);
+        }
+
         return [
-            'url' => isset($image['path']) ? static_url($image['path']) : null,
+            'url' => $url,
+            'path' => $path,
             'alt' => $image['alt'] ?? $this->title,
         ];
     }
@@ -548,8 +613,10 @@ class ProductCategory extends BaseModel
 
     public function scopeWhereParent($query)
     {
-        return $query->whereNull('parent_id')
-            ->orWhere('parent_id', 0);
+        return $query->where(function ($q) {
+            $q->whereNull('parent_id')
+                ->orWhere('parent_id', 0);
+        });
     }
 
     public function scopeWhereMenu($query)

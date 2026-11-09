@@ -166,6 +166,49 @@ class ProcessContentSeeder extends Seeder
             // Ignore settings helper exceptions
         }
 
+        // 1b. Also seed 5 Process Steps into posts (type = 'PROCESS_STEPS') for CMS & HomeController sync
+        foreach ($stepsVi as $idx => $stepItem) {
+            $position = $idx + 1;
+            $stepPost = Post::updateOrCreate(
+                [
+                    'type' => 'PROCESS_STEPS',
+                    'position' => $position,
+                ],
+                [
+                    'status' => Post::STATUS_ACTIVE,
+                    'published_at' => now(),
+                    'is_home' => true,
+                    'is_featured' => false,
+                ]
+            );
+
+            DB::table('post_translations')->updateOrInsert(
+                [
+                    'post_id' => $stepPost->id,
+                    'locale' => 'vi',
+                ],
+                [
+                    'title' => $stepItem['title'],
+                    'slug' => Str::slug('quy-trinh-' . $stepItem['number'] . '-' . $stepItem['title']),
+                    'description' => $stepItem['description'],
+                    'content' => $stepItem['maker_action'] . "\n" . $stepItem['client_prep'],
+                ]
+            );
+
+            DB::table('post_translations')->updateOrInsert(
+                [
+                    'post_id' => $stepPost->id,
+                    'locale' => 'en',
+                ],
+                [
+                    'title' => $stepItem['title_en'],
+                    'slug' => Str::slug('process-' . $stepItem['number'] . '-' . $stepItem['title_en']),
+                    'description' => $stepItem['description_en'],
+                    'content' => $stepItem['maker_action_en'] . "\n" . $stepItem['client_prep_en'],
+                ]
+            );
+        }
+
         // 2. Seed 6 FAQ items into posts & post_translations
         $faqs = [
             [

@@ -44,25 +44,23 @@ class ServiceContentSeeder extends Seeder
             $serviceId = $item['id'];
             $serviceKey = $item['key'];
             $position = $item['position'];
+            $kbVi = Service::getServiceKnowledgeBase($serviceKey, 'vi');
+            $serviceImage = [
+                'path' => $kbVi['listing_image'] ?? '/images/services/service-design-3d.png',
+                'alt' => $kbVi['listing_title'] ?? $kbVi['title'] ?? '',
+            ];
 
+            DB::table('services')->updateOrInsert(
+                ['id' => $serviceId],
+                [
+                    'status' => Service::STATUS_ACTIVE,
+                    'position' => $position,
+                    'image' => json_encode($serviceImage, JSON_UNESCAPED_UNICODE),
+                    'is_content_by_tab' => 1,
+                    'updated_at' => now(),
+                ]
+            );
             $service = Service::find($serviceId);
-            if (!$service) {
-                // Ensure parent record exists
-                $service = Service::create([
-                    'id' => $serviceId,
-                    'status' => Service::STATUS_ACTIVE,
-                    'position' => $position,
-                    'slug' => $serviceKey,
-                    'is_content_by_tab' => 1,
-                ]);
-            } else {
-                $service->update([
-                    'status' => Service::STATUS_ACTIVE,
-                    'position' => $position,
-                    'slug' => $serviceKey,
-                    'is_content_by_tab' => 1,
-                ]);
-            }
 
             foreach ($locales as $locale) {
                 $kb = Service::getServiceKnowledgeBase($serviceKey, $locale);
@@ -72,6 +70,16 @@ class ServiceContentSeeder extends Seeder
                     'toc_items' => $kb['toc_items'],
                     'sections' => $kb['sections'],
                     'steps' => $kb['steps'],
+                    'listing' => [
+                        'subtitle' => $kb['subtitle'] ?? '',
+                        'page_description' => $kb['page_description'] ?? '',
+                        'tags' => $kb['tags'] ?? [],
+                        'prep_title' => $kb['prep_title'] ?? '',
+                        'preparation' => $kb['preparation'] ?? '',
+                        'comp_title' => $kb['comp_title'] ?? '',
+                        'completion' => $kb['completion'] ?? '',
+                        'cta_text' => $kb['cta_text'] ?? '',
+                    ],
                 ];
 
                 $benefits = [

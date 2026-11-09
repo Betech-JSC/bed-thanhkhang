@@ -17,7 +17,9 @@ class ServiceController extends Controller
                 ->active()
                 ->sortByPosition()
                 ->get()
-                ->map(fn($item) => $item->transform());
+                ->map(fn($item) => $item->transform())
+                ->sortBy('listing_order')
+                ->values();
 
             return [
                 'services' => $services,

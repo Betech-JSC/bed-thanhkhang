@@ -118,8 +118,8 @@
                 </button>
             </div>
 
-            <!-- NỘI DUNG CHI TIẾT TABS (FIGMA 2358:3043: 1152x445 px, gap 48px, Locked Height + Simultaneous 1x1 Track Slide) -->
-            <div class="relative min-h-[445px] lg:h-[445px] overflow-hidden">
+            <!-- NỘI DUNG CHI TIẾT TABS (FIGMA 2358:3043: 1152x445 px, gap 48px, Simultaneous 1x1 Track Slide) -->
+            <div class="relative min-h-[445px] overflow-x-hidden">
                 <Transition
                     enter-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform"
                     :enter-from-class="tabSlideDirection === 'next' ? 'translate-x-full' : '-translate-x-full'"
@@ -147,32 +147,39 @@
                             </div>
 
                             <!-- CÁC ĐẶC ĐIỂM SẢN PHẨM -->
-                                <div v-if="feature1Title || feature2Title" class="flex flex-col gap-6">
-                                    <!-- ĐẶC ĐIỂM 1 -->
-                                    <div v-if="feature1Title" class="flex flex-col gap-1">
-                                        <h3 class="text-base font-semibold text-[#FAFAFA] leading-[22px]">
-                                            {{ feature1Title }}
-                                        </h3>
-                                        <p class="text-sm text-[#B9C0D4] leading-5">
-                                            {{ feature1Desc }}
-                                        </p>
-                                    </div>
+                            <div v-if="feature1Title || feature2Title" class="flex flex-col gap-6">
+                                <!-- ĐẶC ĐIỂM 1 -->
+                                <div v-if="feature1Title" class="flex flex-col gap-1">
+                                    <h3 class="text-base font-semibold text-[#FAFAFA] leading-[22px]">
+                                        {{ feature1Title }}
+                                    </h3>
+                                    <p class="text-sm text-[#B9C0D4] leading-5">
+                                        {{ feature1Desc }}
+                                    </p>
+                                </div>
 
-                                    <!-- ĐẶC ĐIỂM 2 -->
-                                    <div v-if="feature2Title" class="flex flex-col gap-1">
-                                        <h3 class="text-base font-semibold text-[#FAFAFA] leading-[22px]">
-                                            {{ feature2Title }}
-                                        </h3>
-                                        <p class="text-sm text-[#B9C0D4] leading-5">
-                                            {{ feature2Desc }}
-                                        </p>
-                                    </div>
+                                <!-- ĐẶC ĐIỂM 2 -->
+                                <div v-if="feature2Title" class="flex flex-col gap-1">
+                                    <h3 class="text-base font-semibold text-[#FAFAFA] leading-[22px]">
+                                        {{ feature2Title }}
+                                    </h3>
+                                    <p class="text-sm text-[#B9C0D4] leading-5">
+                                        {{ feature2Desc }}
+                                    </p>
                                 </div>
                             </div>
 
+                            <!-- FALLBACK BÀI VIẾT CHI TIẾT RICHTEXT TỪ CMS (KHI CHƯA CÓ FEATURE 1 & 2) -->
+                            <div
+                                v-else-if="hasDistinctContent"
+                                class="prose prose-invert max-w-none text-sm sm:text-base text-[#D0D5DD] leading-relaxed space-y-3"
+                                v-html="product.content"
+                            ></div>
+                        </div>
+
                         <!-- BẢNG THÔNG SỐ KỸ THUẬT EMBEDDED BÊN PHẢI (FIGMA 2358:3066: 480x445 px) -->
                         <div class="w-full lg:w-[480px] shrink-0">
-                            <SpecTable :specs="product?.specifications || product?.pdp_metadata?.specifications || []" />
+                            <SpecTable :specs="productSpecifications" />
                         </div>
                     </div>
 
@@ -180,31 +187,37 @@
                     <div
                         v-else-if="activeTab === 'specs'"
                         key="specs"
-                        class="w-full min-h-[445px] space-y-6"
+                        class="w-full min-h-[445px] flex flex-col lg:flex-row gap-8 lg:gap-[48px] items-start justify-between"
                     >
-                        <div class="max-w-3xl space-y-3">
-                            <h2 class="text-2xl font-bold text-[#FAFAFA]">{{ tt('Tiêu chuẩn kỹ thuật công nghệ in 3D FDM & Resin') }}</h2>
-                            <p class="text-base text-[#B9C0D4] leading-relaxed">
-                                {{ tt('Mỗi mô hình xuất xưởng tại xưởng in HH Maker đều trải qua quy trình kiểm soát chất lượng (QC) nghiêm ngặt từ khâu tối ưu lát cắt (slicing) đến khâu hoàn thiện bề mặt.') }}
-                            </p>
+                        <div class="w-full lg:w-[624px] shrink-0 space-y-6">
+                            <div class="space-y-3">
+                                <h2 class="text-2xl font-bold text-[#FAFAFA]">{{ specsTabTitle }}</h2>
+                                <p class="text-base text-[#B9C0D4] leading-relaxed">
+                                    {{ specsTabDesc }}
+                                </p>
+                            </div>
+
+                            <div
+                                v-if="specsTabContent"
+                                class="prose prose-invert max-w-none text-sm sm:text-base text-[#B9C0D4] leading-relaxed"
+                                v-html="specsTabContent"
+                            ></div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                                <div
+                                    v-for="(card, cIdx) in specsTabCards"
+                                    :key="cIdx"
+                                    class="p-5 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2"
+                                >
+                                    <span class="text-xs font-semibold text-[#84ADFF] uppercase">{{ card.label }}</span>
+                                    <h4 class="text-lg font-bold text-white">{{ card.value }}</h4>
+                                    <p class="text-xs sm:text-sm text-[#B9C0D4] leading-relaxed">{{ card.description }}</p>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-                            <div class="p-6 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2">
-                                <span class="text-xs font-semibold text-[#84ADFF] uppercase">{{ tt('Độ chính xác') }}</span>
-                                <h4 class="text-xl font-bold text-white">±0.15 mm</h4>
-                                <p class="text-sm text-[#B9C0D4]">{{ tt('Dung sai kích thước cơ học chuẩn xác, các khớp nối và bề mặt liền mạch.') }}</p>
-                            </div>
-                            <div class="p-6 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2">
-                                <span class="text-xs font-semibold text-[#84ADFF] uppercase">{{ tt('Độ phân giải lớp') }}</span>
-                                <h4 class="text-xl font-bold text-white">0.10 - 0.28 mm</h4>
-                                <p class="text-sm text-[#B9C0D4]">{{ tt('Lựa chọn độ mịn cao phù hợp tượng nghệ thuật decor hoặc tối ưu thời gian.') }}</p>
-                            </div>
-                            <div class="p-6 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2">
-                                <span class="text-xs font-semibold text-[#84ADFF] uppercase">{{ tt('Năng lực sản xuất') }}</span>
-                                <h4 class="text-xl font-bold text-white">{{ tt('Hơn 50+ máy in') }}</h4>
-                                <p class="text-sm text-[#B9C0D4]">{{ tt('Đáp ứng từ mẫu đơn chiếc cá nhân đến đơn hàng số lượng lớn cho sự kiện.') }}</p>
-                            </div>
+                        <div class="w-full lg:w-[480px] shrink-0">
+                            <SpecTable :specs="productSpecifications" />
                         </div>
                     </div>
 
@@ -215,27 +228,27 @@
                         class="w-full min-h-[445px] space-y-6"
                     >
                         <div class="max-w-3xl space-y-3">
-                            <h2 class="text-2xl font-bold text-[#FAFAFA]">{{ tt('Quy trình đặt in tùy chỉnh theo yêu cầu') }}</h2>
+                            <h2 class="text-2xl font-bold text-[#FAFAFA]">{{ customTabTitle }}</h2>
                             <p class="text-base text-[#B9C0D4] leading-relaxed">
-                                {{ tt('HH Maker cung cấp dịch vụ in 3D cá nhân hóa toàn diện. Bạn có thể điều chỉnh tỉ lệ scale, phối màu sợi in đặc biệt hoặc khắc logo thương hiệu riêng.') }}
+                                {{ customTabDesc }}
                             </p>
                         </div>
 
+                        <div
+                            v-if="customTabContent"
+                            class="prose prose-invert max-w-none text-sm sm:text-base text-[#B9C0D4] leading-relaxed"
+                            v-html="customTabContent"
+                        ></div>
+
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-                            <div class="p-6 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2">
-                                <span class="text-xs font-semibold text-[#84ADFF]">{{ tt('Bước 01') }}</span>
-                                <h4 class="text-lg font-bold text-white">{{ tt('Gửi yêu cầu & file mẫu') }}</h4>
-                                <p class="text-sm text-[#B9C0D4]">{{ tt('Chia sẻ ý tưởng, link mô hình 3D hoặc kích thước mong muốn cho HH Maker.') }}</p>
-                            </div>
-                            <div class="p-6 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2">
-                                <span class="text-xs font-semibold text-[#84ADFF]">{{ tt('Bước 02') }}</span>
-                                <h4 class="text-lg font-bold text-white">{{ tt('Tư vấn kỹ thuật & Báo giá') }}</h4>
-                                <p class="text-sm text-[#B9C0D4]">{{ tt('Đội ngũ kỹ sư thẩm định độ dày thành vách, tư vấn vật liệu và gửi báo giá chi tiết.') }}</p>
-                            </div>
-                            <div class="p-6 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2">
-                                <span class="text-xs font-semibold text-[#84ADFF]">{{ tt('Bước 03') }}</span>
-                                <h4 class="text-lg font-bold text-white">{{ tt('Gia công in & Giao hàng') }}</h4>
-                                <p class="text-sm text-[#B9C0D4]">{{ tt('Tiến hành in, xử lý hậu kỳ tỉ mỉ, đóng gói chống sốc an toàn và vận chuyển tận nơi.') }}</p>
+                            <div
+                                v-for="(step, sIdx) in customTabSteps"
+                                :key="sIdx"
+                                class="p-6 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2"
+                            >
+                                <span class="text-xs font-semibold text-[#84ADFF]">{{ step.step }}</span>
+                                <h4 class="text-lg font-bold text-white">{{ step.title }}</h4>
+                                <p class="text-sm text-[#B9C0D4]">{{ step.description }}</p>
                             </div>
                         </div>
 
@@ -246,7 +259,7 @@
                                 class="px-6 py-3 rounded-lg text-white font-medium text-sm flex items-center gap-2 transition-transform duration-150 hover:opacity-95 active:scale-[0.98]"
                                 style="background: linear-gradient(90deg, #2970FF 0%, #00359E 89%);"
                             >
-                                {{ tt('Trao đổi yêu cầu tùy chỉnh với kỹ sư') }}
+                                {{ customTabCtaText }}
                             </button>
                         </div>
                     </div>
@@ -378,14 +391,48 @@ export default {
         currentDescription() {
             return this.product?.description || this.product?.short_description || ''
         },
+        pdpMetadata() {
+            return this.product?.pdp_metadata || {}
+        },
+        productSpecifications() {
+            const specs = this.product?.specifications || this.pdpMetadata?.specifications
+            if (Array.isArray(specs) && specs.length > 0) {
+                return specs
+            }
+            return []
+        },
         productMaterial() {
-            return this.product?.material || this.tt('Nhựa PLA · Công nghệ FDM')
+            if (this.pdpMetadata?.material_label || this.pdpMetadata?.materialLabel) {
+                return this.pdpMetadata.material_label || this.pdpMetadata.materialLabel
+            }
+            if (this.product?.material) {
+                const mat = this.product.material
+                const tech = this.product.print_technology || this.pdpMetadata?.print_technology
+                if (tech && !mat.toLowerCase().includes(tech.toLowerCase()) && !mat.includes('·')) {
+                    return `${mat} · ${tech}`
+                }
+                return mat
+            }
+            return this.tt('Nhựa PLA · Công nghệ FDM')
         },
         productColor() {
-            return this.product?.color || this.tt('Cam')
+            return (
+                this.product?.image_color_label ||
+                this.product?.color ||
+                this.pdpMetadata?.image_color_label ||
+                this.pdpMetadata?.imageColorLabel ||
+                this.pdpMetadata?.color ||
+                this.tt('Cam')
+            )
         },
         productCustomization() {
-            return this.product?.customization || this.tt('Màu sắc · Kích thước · Số lượng')
+            return (
+                this.product?.customization ||
+                this.pdpMetadata?.customization ||
+                this.pdpMetadata?.customizable_label ||
+                this.pdpMetadata?.customizableLabel ||
+                this.tt('Màu sắc · Kích thước · Số lượng')
+            )
         },
         productImages() {
             if (this.product?.images && this.product.images.length > 0) {
@@ -397,22 +444,173 @@ export default {
             return []
         },
         storyTitle() {
-            return this.product?.story_title || this.product?.pdp_metadata?.story_title || (this.currentTitle ? `${this.currentTitle}` : '')
+            return (
+                this.product?.story_title ||
+                this.pdpMetadata?.story_title ||
+                this.pdpMetadata?.storyTitle ||
+                this.tt('Nhỏ gọn. Nhiều điều để khám phá.')
+            )
         },
         storyIntro() {
-            return this.product?.story_intro || this.product?.pdp_metadata?.story_intro || this.currentDescription
+            return (
+                this.product?.story_intro ||
+                this.pdpMetadata?.story_intro ||
+                this.pdpMetadata?.storyIntro ||
+                this.currentDescription
+            )
         },
         feature1Title() {
-            return this.product?.feature1_title || this.product?.pdp_metadata?.feature1_title || ''
+            return (
+                this.product?.feature1_title ||
+                this.pdpMetadata?.feature1_title ||
+                this.pdpMetadata?.feature1Title ||
+                this.tt('Tạo hình Low-Poly sắc nét')
+            )
         },
         feature1Desc() {
-            return this.product?.feature1_desc || this.product?.pdp_metadata?.feature1_desc || ''
+            return (
+                this.product?.feature1_desc ||
+                this.pdpMetadata?.feature1_desc ||
+                this.pdpMetadata?.feature1Desc ||
+                this.tt('Các góc cạnh đa giác được hoàn thiện mượt mà, phản chiếu ánh sáng độc đáo ở từng góc nhìn, thể hiện rõ thế mạnh độ chính xác của công nghệ in 3D FDM.')
+            )
         },
         feature2Title() {
-            return this.product?.feature2_title || this.product?.pdp_metadata?.feature2_title || ''
+            return (
+                this.product?.feature2_title ||
+                this.pdpMetadata?.feature2_title ||
+                this.pdpMetadata?.feature2Title ||
+                this.tt('Tùy chỉnh theo yêu cầu')
+            )
         },
         feature2Desc() {
-            return this.product?.feature2_desc || this.product?.pdp_metadata?.feature2_desc || '';
+            return (
+                this.product?.feature2_desc ||
+                this.pdpMetadata?.feature2_desc ||
+                this.pdpMetadata?.feature2Desc ||
+                this.tt('Bạn có thể trao đổi với HH Maker để thay đổi màu sắc, điều chỉnh kích thước (tỉ lệ scale) hoặc đặt số lượng lớn làm quà tặng, decor sự kiện.')
+            )
+        },
+        hasDistinctContent() {
+            const rawHtml = this.product?.content
+            if (!rawHtml || typeof rawHtml !== 'string') return false
+            const plain = rawHtml.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()
+            if (!plain) return false
+            const introPlain = (this.storyIntro || '').replace(/\s+/g, ' ').trim()
+            const descPlain = (this.currentDescription || '').replace(/\s+/g, ' ').trim()
+            return plain !== introPlain && plain !== descPlain
+        },
+        specsTabTitle() {
+            return (
+                this.product?.specs_title ||
+                this.pdpMetadata?.specs_title ||
+                this.pdpMetadata?.specsTitle ||
+                this.tt('Tiêu chuẩn kỹ thuật công nghệ in 3D FDM & Resin')
+            )
+        },
+        specsTabDesc() {
+            return (
+                this.product?.specs_desc ||
+                this.pdpMetadata?.specs_desc ||
+                this.pdpMetadata?.specsDesc ||
+                this.pdpMetadata?.specs_description ||
+                this.tt('Mỗi mô hình xuất xưởng tại xưởng in HH Maker đều trải qua quy trình kiểm soát chất lượng (QC) nghiêm ngặt từ khâu tối ưu lát cắt (slicing) đến khâu hoàn thiện bề mặt.')
+            )
+        },
+        specsTabContent() {
+            return (
+                this.product?.specs_content ||
+                this.pdpMetadata?.specs_content ||
+                this.pdpMetadata?.specsContent ||
+                ''
+            )
+        },
+        specsTabCards() {
+            const customCards = this.product?.specs_cards || this.pdpMetadata?.specs_cards || this.pdpMetadata?.specsCards
+            if (Array.isArray(customCards) && customCards.length > 0) {
+                return customCards.map((c) => ({
+                    label: this.tt(c.label || c.title || ''),
+                    value: this.tt(c.value || c.heading || ''),
+                    description: this.tt(c.description || c.desc || ''),
+                }))
+            }
+            return [
+                {
+                    label: this.tt('Độ chính xác'),
+                    value: '±0.15 mm',
+                    description: this.tt('Dung sai kích thước cơ học chuẩn xác, các khớp nối và bề mặt liền mạch.'),
+                },
+                {
+                    label: this.tt('Độ phân giải lớp'),
+                    value: '0.10 - 0.28 mm',
+                    description: this.tt('Lựa chọn độ mịn cao phù hợp tượng nghệ thuật decor hoặc tối ưu thời gian.'),
+                },
+                {
+                    label: this.tt('Năng lực sản xuất'),
+                    value: this.tt('Hơn 50+ máy in'),
+                    description: this.tt('Đáp ứng từ mẫu đơn chiếc cá nhân đến đơn hàng số lượng lớn cho sự kiện.'),
+                },
+            ]
+        },
+        customTabTitle() {
+            return (
+                this.product?.custom_title ||
+                this.pdpMetadata?.custom_title ||
+                this.pdpMetadata?.customTitle ||
+                this.tt('Quy trình đặt in tùy chỉnh theo yêu cầu')
+            )
+        },
+        customTabDesc() {
+            return (
+                this.product?.custom_desc ||
+                this.pdpMetadata?.custom_desc ||
+                this.pdpMetadata?.customDesc ||
+                this.pdpMetadata?.custom_description ||
+                this.tt('HH Maker cung cấp dịch vụ in 3D cá nhân hóa toàn diện. Bạn có thể điều chỉnh tỉ lệ scale, phối màu sợi in đặc biệt hoặc khắc logo thương hiệu riêng.')
+            )
+        },
+        customTabContent() {
+            return (
+                this.product?.custom_content ||
+                this.pdpMetadata?.custom_content ||
+                this.pdpMetadata?.customContent ||
+                ''
+            )
+        },
+        customTabSteps() {
+            const customSteps = this.product?.custom_steps || this.pdpMetadata?.custom_steps || this.pdpMetadata?.customSteps
+            if (Array.isArray(customSteps) && customSteps.length > 0) {
+                return customSteps.map((s, idx) => ({
+                    step: this.tt(s.step || s.number || `${this.tt('Bước')} 0${idx + 1}`),
+                    title: this.tt(s.title || s.name || ''),
+                    description: this.tt(s.description || s.desc || ''),
+                }))
+            }
+            return [
+                {
+                    step: this.tt('Bước 01'),
+                    title: this.tt('Gửi yêu cầu & file mẫu'),
+                    description: this.tt('Chia sẻ ý tưởng, link mô hình 3D hoặc kích thước mong muốn cho HH Maker.'),
+                },
+                {
+                    step: this.tt('Bước 02'),
+                    title: this.tt('Tư vấn kỹ thuật & Báo giá'),
+                    description: this.tt('Đội ngũ kỹ sư thẩm định độ dày thành vách, tư vấn vật liệu và gửi báo giá chi tiết.'),
+                },
+                {
+                    step: this.tt('Bước 03'),
+                    title: this.tt('Gia công in & Giao hàng'),
+                    description: this.tt('Tiến hành in, xử lý hậu kỳ tỉ mỉ, đóng gói chống sốc an toàn và vận chuyển tận nơi.'),
+                },
+            ]
+        },
+        customTabCtaText() {
+            return (
+                this.product?.custom_cta_text ||
+                this.pdpMetadata?.custom_cta_text ||
+                this.pdpMetadata?.customCtaText ||
+                this.tt('Trao đổi yêu cầu tùy chỉnh với kỹ sư')
+            )
         },
     },
     methods: {

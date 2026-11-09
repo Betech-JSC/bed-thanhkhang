@@ -56,10 +56,12 @@
 
         <!-- 6. 5-Step Process Section (Figma Node 2261:5723) -->
         <ProcessSection
-            :processImage="'/assets/images/homepage/process-banner.png'"
+            :processImage="'/assets/images/homepage/process-banner-figma.png'"
             :stepCount="'05'"
             :title="tt('BƯỚC TRONG QUY TRÌNH LÀM VIỆC CHUYÊN NGHIỆP & MINH BẠCH TẠI HH MAKER')"
             :description="tt('Khách hàng gửi file 3D hoặc chia sẻ ý tưởng, đội ngũ kỹ thuật của HH Maker sẽ tiến hành phân tích độ khả thi, tư vấn công nghệ in tối ưu, cũng như lựa chọn loại vật liệu phù hợp nhất để đảm bảo sản phẩm đạt độ bền, tính thẩm mỹ và công năng sử dụng đúng như kỳ vọng của bạn.')"
+            :steps="processSteps"
+            :customSteps="processSteps"
         />
 
         <!-- 7. Fast Consultation Form Section (Figma Node 2261:5755) -->
@@ -118,6 +120,10 @@ export default {
             default: () => [],
         },
         feedback: {
+            type: Array,
+            default: () => [],
+        },
+        processSteps: {
             type: Array,
             default: () => [],
         },

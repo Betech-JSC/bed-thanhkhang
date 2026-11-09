@@ -20,12 +20,15 @@ class ProductController extends Controller
             $data = Cache::remember('products_index_' . current_locale(), 3600, function () {
                 $products = Product::query()
                     ->active()
+                    ->with('categories')
                     ->ordered()
                     ->get()
                     ->map(fn($item) => $item->transform());
 
                 $categories = ProductCategory::query()
                     ->active()
+                    ->whereParent()
+                    ->with(['children', 'nodes'])
                     ->sortByPosition()
                     ->get()
                     ->map(fn($item) => $item->transform());

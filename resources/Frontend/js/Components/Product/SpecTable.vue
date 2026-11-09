@@ -3,14 +3,14 @@
     <div class="w-full lg:w-[480px] lg:h-[445px] lg:min-h-[445px] bg-[#30374F] border border-[#30374F] rounded-[12px] p-6 sm:p-[28px] gap-[18px] flex flex-col justify-between font-sans">
         <!-- 1. TIÊU ĐỀ THÔNG SỐ (FIGMA 2358:3067: gap 12px) -->
         <div class="flex items-center gap-3">
-            <h3 class="text-lg sm:text-xl font-semibold text-[#FAFAFA] leading-6 tracking-tight">
-                {{ tt(title) }}
-            </h3>
             <img
                 src="/images/pdp/printer.svg"
                 alt="Printer icon"
                 class="w-5 h-5 object-contain shrink-0"
             />
+            <h3 class="text-lg sm:text-xl font-semibold text-[#FAFAFA] leading-6 tracking-tight">
+                {{ tt(title) }}
+            </h3>
         </div>
 
         <!-- 2. BẢNG THÔNG SỐ (FIGMA 2358:3071: 7 hàng thông số) -->

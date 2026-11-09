@@ -46,6 +46,15 @@ class Product extends BaseModel
         'print_technology',
         'material',
         'lead_time',
+        'sample_size',
+        'layer_height',
+        'nozzle_size',
+        'infill',
+        'support_material',
+        'image_color_label',
+        'customization_label',
+        'specifications',
+        'pdp_metadata',
 
         'inject_head',
         'inject_body_start',
@@ -90,6 +99,8 @@ class Product extends BaseModel
     protected $casts = [
         'images' => 'array',
         'image' => 'array',
+        'specifications' => 'array',
+        'pdp_metadata' => 'array',
     ];
 
     public function rules(): array
@@ -114,6 +125,8 @@ class Product extends BaseModel
                 $model->view_count = request()->input('view_count') ?? 0;
                 $model->checkStatus($model);
             }
+
+            $model->syncSpecificationsAndMetadata();
         });
 
         static::saved(function (self $model) {
@@ -488,20 +501,23 @@ class Product extends BaseModel
             'id' => $this->id,
             'title' => $this->title,
             'slug' => $this->seo_slug ?? $this->slug,
+            'category' => $this->category,
             'categories' => $categories,
-            'image' => $this->image,
+            'image' => $this->getImageDetail($this->image),
             'sku' => $this->sku,
             'price' => $this->price,
             'compare_at_price' => $this->compare_at_price,
             'print_technology' => $this->print_technology,
             'material' => $this->material,
             'lead_time' => $this->lead_time,
+            'sample_size' => $this->sample_size,
+            'image_color_label' => $this->image_color_label,
+            'customization_label' => $this->customization_label,
             'description' => $this->description,
             'is_new' => $this->is_new,
             'is_stock' => $this->is_stock,
             'is_featured' => (bool) $this->is_featured,
             'url' => $this->url,
-            'image' => $this->getImageDetail($this->image),
         ];
 
         return $data;
@@ -553,6 +569,12 @@ class Product extends BaseModel
             });
 
         $specifications = $this->resolveSpecifications();
+        $pdpMeta = $this->resolvePdpMetadata($specifications);
+
+        $categories = $this->categories
+            ->where('status', self::STATUS_ACTIVE)
+            ->values()
+            ->map(fn($item) => $item->transform());
 
         return [
             'id' => $this->id,
@@ -566,22 +588,121 @@ class Product extends BaseModel
             'print_technology' => $this->print_technology,
             'material' => $this->material,
             'lead_time' => $this->lead_time,
+            'sample_size' => $pdpMeta['sample_size'],
+            'layer_height' => $pdpMeta['layer_height'],
+            'nozzle_size' => $pdpMeta['nozzle_size'],
+            'infill' => $pdpMeta['infill'],
+            'support_material' => $pdpMeta['support_material'],
+            'color' => $pdpMeta['image_color_label'],
+            'image_color_label' => $pdpMeta['image_color_label'],
+            'customization' => $pdpMeta['customization_label'],
+            'customization_label' => $pdpMeta['customization_label'],
+            'story_title' => $pdpMeta['story_title'],
+            'story_intro' => $pdpMeta['story_intro'],
+            'feature1_title' => $pdpMeta['feature1_title'],
+            'feature1_desc' => $pdpMeta['feature1_desc'],
+            'feature2_title' => $pdpMeta['feature2_title'],
+            'feature2_desc' => $pdpMeta['feature2_desc'],
+            'manufacturing_info' => $pdpMeta['manufacturing_info'],
+            'care_instructions' => $pdpMeta['care_instructions'],
             'image' => $this->getImageDetail($this->image),
             'images' => $images,
             'category' => $this->category,
+            'categories' => $categories,
             'specifications' => $specifications,
             'filter_attributes' => [
                 'print_technology' => $this->print_technology,
                 'material' => $this->material,
                 'lead_time' => $this->lead_time,
             ],
-            'pdp_metadata' => [
-                'print_technology' => $this->print_technology,
-                'material' => $this->material,
-                'lead_time' => $this->lead_time,
-                'specifications' => $specifications,
-            ],
+            'pdp_metadata' => $pdpMeta,
         ];
+    }
+
+    public function syncSpecificationsAndMetadata(): void
+    {
+        $defaults = static::getDefaultSpecificationsFor($this);
+        $rawSpecs = $this->attributes['specifications'] ?? null;
+        $storedSpecs = is_array($rawSpecs) ? $rawSpecs : (is_string($rawSpecs) ? json_decode($rawSpecs, true) : []);
+        if (!is_array($storedSpecs)) {
+            $storedSpecs = [];
+        }
+
+        // Backfill individual columns from stored specifications or defaults if empty
+        if (empty($this->sample_size)) {
+            $this->sample_size = $storedSpecs[2]['value'] ?? $defaults[2]['value'] ?? null;
+        }
+        if (empty($this->layer_height)) {
+            $this->layer_height = $storedSpecs[3]['value'] ?? $defaults[3]['value'] ?? null;
+        }
+        if (empty($this->nozzle_size)) {
+            $this->nozzle_size = $storedSpecs[4]['value'] ?? $defaults[4]['value'] ?? null;
+        }
+        if (empty($this->infill)) {
+            $this->infill = $storedSpecs[5]['value'] ?? $defaults[5]['value'] ?? null;
+        }
+        if (empty($this->support_material)) {
+            $this->support_material = $storedSpecs[6]['value'] ?? $defaults[6]['value'] ?? null;
+        }
+
+        $defaultMeta = static::getDefaultPdpMetadataFor($this);
+        if (empty($this->image_color_label)) {
+            $this->image_color_label = $defaultMeta['image_color_label'];
+        }
+        if (empty($this->customization_label)) {
+            $this->customization_label = $defaultMeta['customization_label'];
+        }
+
+        $isCmsSave = strpos(request()->getRequestUri(), '/products/store') !== false;
+        $techValue = ($isCmsSave && !empty($this->print_technology))
+            ? $this->print_technology
+            : ($storedSpecs[0]['value'] ?? $this->print_technology ?? $defaults[0]['value']);
+        $matValue = ($isCmsSave && !empty($this->material))
+            ? $this->material
+            : ($storedSpecs[1]['value'] ?? $this->material ?? $defaults[1]['value']);
+
+        $syncedSpecs = [
+            ['label' => 'Công nghệ in', 'value' => $techValue],
+            ['label' => 'Vật liệu', 'value' => $matValue],
+            ['label' => 'Kích thước mẫu', 'value' => $this->sample_size ?: ($defaults[2]['value'] ?? '')],
+            ['label' => 'Chiều cao lớp in', 'value' => $this->layer_height ?: ($defaults[3]['value'] ?? '')],
+            ['label' => 'Đầu phun', 'value' => $this->nozzle_size ?: ($defaults[4]['value'] ?? '')],
+            ['label' => 'Mật độ ruột', 'value' => $this->infill ?: ($defaults[5]['value'] ?? '')],
+            ['label' => 'Vật liệu hỗ trợ', 'value' => $this->support_material ?: ($defaults[6]['value'] ?? '')],
+        ];
+
+        if (\Illuminate\Support\Facades\Schema::hasColumn('products', 'specifications')) {
+            $this->attributes['specifications'] = json_encode($syncedSpecs, JSON_UNESCAPED_UNICODE);
+        } else {
+            unset($this->attributes['specifications']);
+        }
+
+        $rawMeta = $this->attributes['pdp_metadata'] ?? null;
+        $storedMeta = is_array($rawMeta) ? $rawMeta : (is_string($rawMeta) ? json_decode($rawMeta, true) : []);
+        if (!is_array($storedMeta)) {
+            $storedMeta = [];
+        }
+
+        if ($isCmsSave && request()->has('pdp_metadata') && is_array(request()->input('pdp_metadata'))) {
+            $storedMeta = array_merge($storedMeta, request()->input('pdp_metadata'));
+        }
+
+        $syncedMeta = array_merge($defaultMeta, array_filter($storedMeta, fn($v) => $v !== null && $v !== ''), [
+            'image_color_label' => $this->image_color_label ?: $defaultMeta['image_color_label'],
+            'customization_label' => $this->customization_label ?: $defaultMeta['customization_label'],
+        ]);
+
+        if (\Illuminate\Support\Facades\Schema::hasColumn('products', 'pdp_metadata')) {
+            $this->attributes['pdp_metadata'] = json_encode($syncedMeta, JSON_UNESCAPED_UNICODE);
+        } else {
+            unset($this->attributes['pdp_metadata']);
+        }
+
+        foreach (['sample_size', 'layer_height', 'nozzle_size', 'infill', 'support_material', 'image_color_label', 'customization_label'] as $col) {
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('products', $col)) {
+                unset($this->attributes[$col]);
+            }
+        }
     }
 
     public function getSpecificationsAttribute()
@@ -591,15 +712,229 @@ class Product extends BaseModel
 
     public function resolveSpecifications(): array
     {
+        $isEn = (app()->getLocale() === 'en' || (function_exists('current_locale') && current_locale() === 'en'));
+        $defaults = static::getDefaultSpecificationsFor($this);
+
+        if ($isEn) {
+            if (!empty($this->sample_size)) {
+                $defaults[2]['value'] = $this->sample_size;
+            }
+            if (!empty($this->layer_height)) {
+                $defaults[3]['value'] = $this->layer_height;
+            }
+            if (!empty($this->nozzle_size)) {
+                $defaults[4]['value'] = $this->nozzle_size;
+            }
+            return $defaults;
+        }
+
+        $specs = $defaults;
         if (!empty($this->attributes['specifications'])) {
             $raw = $this->attributes['specifications'];
-            $specs = is_array($raw) ? $raw : json_decode($raw, true);
-            if (!empty($specs) && is_array($specs)) {
-                return $specs;
+            $stored = is_array($raw) ? $raw : json_decode($raw, true);
+            if (!empty($stored) && is_array($stored)) {
+                foreach ($stored as $idx => $row) {
+                    if (isset($specs[$idx]) && !empty($row['value'])) {
+                        $specs[$idx]['value'] = $row['value'];
+                    }
+                }
             }
         }
 
-        return static::getDefaultSpecificationsFor($this);
+        if (!empty($this->sample_size)) {
+            $specs[2]['value'] = $this->sample_size;
+        }
+        if (!empty($this->layer_height)) {
+            $specs[3]['value'] = $this->layer_height;
+        }
+        if (!empty($this->nozzle_size)) {
+            $specs[4]['value'] = $this->nozzle_size;
+        }
+        if (!empty($this->infill)) {
+            $specs[5]['value'] = $this->infill;
+        }
+        if (!empty($this->support_material)) {
+            $specs[6]['value'] = $this->support_material;
+        }
+
+        return $specs;
+    }
+
+    public function resolvePdpMetadata(?array $specifications = null): array
+    {
+        $specifications = $specifications ?? $this->resolveSpecifications();
+        $defaults = static::getDefaultPdpMetadataFor($this);
+
+        $rawMeta = $this->attributes['pdp_metadata'] ?? null;
+        $storedMeta = is_array($rawMeta) ? $rawMeta : (is_string($rawMeta) ? json_decode($rawMeta, true) : []);
+        if (!is_array($storedMeta)) {
+            $storedMeta = [];
+        }
+
+        $isEn = (app()->getLocale() === 'en' || (function_exists('current_locale') && current_locale() === 'en'));
+        $merged = $isEn ? $defaults : array_merge($defaults, array_filter($storedMeta, fn($v) => $v !== null && $v !== ''));
+
+        $colorLabel = (!$isEn && !empty($this->image_color_label))
+            ? $this->image_color_label
+            : ($merged['image_color_label'] ?? $defaults['image_color_label']);
+
+        $customLabel = (!$isEn && !empty($this->customization_label))
+            ? $this->customization_label
+            : ($merged['customization_label'] ?? $defaults['customization_label']);
+
+        return [
+            'print_technology' => $this->print_technology ?: ($specifications[0]['value'] ?? 'FDM High-Precision'),
+            'material' => $this->material ?: ($specifications[1]['value'] ?? 'Nhựa PLA Matte Cao Cấp'),
+            'lead_time' => $this->lead_time,
+            'sample_size' => $this->sample_size ?: ($specifications[2]['value'] ?? ''),
+            'layer_height' => $this->layer_height ?: ($specifications[3]['value'] ?? ''),
+            'nozzle_size' => $this->nozzle_size ?: ($specifications[4]['value'] ?? ''),
+            'infill' => $this->infill ?: ($specifications[5]['value'] ?? ''),
+            'support_material' => $this->support_material ?: ($specifications[6]['value'] ?? ''),
+            'color' => $colorLabel,
+            'image_color_label' => $colorLabel,
+            'customization' => $customLabel,
+            'customization_label' => $customLabel,
+            'story_title' => $merged['story_title'] ?? $defaults['story_title'],
+            'story_intro' => $merged['story_intro'] ?? $defaults['story_intro'],
+            'feature1_title' => $merged['feature1_title'] ?? $defaults['feature1_title'],
+            'feature1_desc' => $merged['feature1_desc'] ?? $defaults['feature1_desc'],
+            'feature2_title' => $merged['feature2_title'] ?? $defaults['feature2_title'],
+            'feature2_desc' => $merged['feature2_desc'] ?? $defaults['feature2_desc'],
+            'specifications' => $specifications,
+            'manufacturing_info' => $merged['manufacturing_info'] ?? $defaults['manufacturing_info'],
+            'care_instructions' => $merged['care_instructions'] ?? $defaults['care_instructions'],
+        ];
+    }
+
+    public static function getDefaultPdpMetadataFor(self $product): array
+    {
+        $isEn = (app()->getLocale() === 'en' || (function_exists('current_locale') && current_locale() === 'en'));
+        $slug = $product->slug ?? $product->seo_slug ?? '';
+
+        $colorMapVi = [
+            'mo-hinh-cao-trang-tri' => 'Cam',
+            'iron-man-mark-85-resin-8k' => 'Đỏ - Vàng Metallic',
+            'mo-hinh-iron-man-chibi' => 'Đỏ - Vàng Metallic',
+            'khung-vo-robot-carbon-fiber' => 'Đen Carbon Nhám',
+            'hop-dung-danh-thiep-cyberpunk' => 'Đen Nhám - Vàng Neon',
+            'moc-khoa-turbine-phan-luc' => 'Xám Titan - Xanh',
+            'gia-do-tai-nghe-voronoi' => 'Đen Nhám (Matte Black)',
+            'cum-banh-rang-hanh-tinh' => 'Xám Cơ Khí - Cam',
+            'tuong-cyber-wolf-low-poly' => 'Xám Bạc Ánh Kim',
+            'moc-khoa-dong-co-v8-piston' => 'Xám Kim Loại - Đỏ',
+            'den-ngu-mat-trang-lithophane' => 'Trắng Ngà Ánh Vàng',
+            'khop-noi-cau-bionic-sls' => 'Xám Nylon Kỹ Thuật',
+            'mo-hinh-tau-vu-tru-discovery' => 'Trắng Vũ Trụ - Đen',
+            'khay-to-chuc-day-cap-modular' => 'Đen Nhám - Cam',
+            'moc-khoa-vo-lang-f1-quick-release' => 'Đen Carbon - Đỏ Racing',
+            'den-ban-led-hexagon-to-ong' => 'Đen Nhám - Trắng Khuếch Tán',
+            'vo-case-ban-phim-co-custom' => 'Xám Space Grey',
+            'moc-khoa-trai-tim-co-khi' => 'Đỏ Ruby - Vàng Đồng',
+            'mo-hinh-phi-hanh-gia' => 'Trắng Tuyết - Vàng Gold',
+            'chau-cay-da-giac-mini' => 'Trắng Sữa (Matte White)',
+            'de-do-dien-thoai-mecha' => 'Đen Nhám - Cam',
+            'robot-khop-cu-dong' => 'Cam - Xám Cơ Khí',
+        ];
+
+        $colorMapEn = [
+            'mo-hinh-cao-trang-tri' => 'Orange',
+            'iron-man-mark-85-resin-8k' => 'Metallic Red & Gold',
+            'mo-hinh-iron-man-chibi' => 'Metallic Red & Gold',
+            'khung-vo-robot-carbon-fiber' => 'Matte Carbon Black',
+            'hop-dung-danh-thiep-cyberpunk' => 'Matte Black & Neon Yellow',
+            'moc-khoa-turbine-phan-luc' => 'Titanium Grey & Blue',
+            'gia-do-tai-nghe-voronoi' => 'Matte Black',
+            'cum-banh-rang-hanh-tinh' => 'Mechanical Grey & Orange',
+            'tuong-cyber-wolf-low-poly' => 'Metallic Silver Grey',
+            'moc-khoa-dong-co-v8-piston' => 'Gunmetal Grey & Red',
+            'den-ngu-mat-trang-lithophane' => 'Warm Ivory White',
+            'khop-noi-cau-bionic-sls' => 'Engineering Nylon Grey',
+            'mo-hinh-tau-vu-tru-discovery' => 'Space White & Black',
+            'khay-to-chuc-day-cap-modular' => 'Matte Black & Orange',
+            'moc-khoa-vo-lang-f1-quick-release' => 'Carbon Black & Racing Red',
+            'den-ban-led-hexagon-to-ong' => 'Matte Black & Frosted White',
+            'vo-case-ban-phim-co-custom' => 'Space Grey',
+            'moc-khoa-trai-tim-co-khi' => 'Ruby Red & Brass Gold',
+            'mo-hinh-phi-hanh-gia' => 'Snow White & Gold',
+            'chau-cay-da-giac-mini' => 'Matte White',
+            'de-do-dien-thoai-mecha' => 'Matte Black & Orange',
+            'robot-khop-cu-dong' => 'Orange & Mechanical Grey',
+        ];
+
+        $isIronMan = in_array($slug, ['mo-hinh-iron-man-chibi', 'iron-man-mark-85-resin-8k'], true);
+
+        if ($isEn) {
+            return [
+                'image_color_label' => $colorMapEn[$slug] ?? 'Orange',
+                'customization_label' => 'Color · Dimensions · Quantity',
+                'story_title' => $isIronMan
+                    ? 'Technological Legend. Sharp Down to Every Detail.'
+                    : 'Compact. Full of Wonders to Explore.',
+                'story_intro' => $product->description ?: 'The low-poly fox sculpture is a modern statement piece for living and working spaces. Crafted with crisp faceted geometry and a warm orange hue, it brings refined energy and creativity to any corner.',
+                'feature1_title' => 'Sharp Low-Poly Contours',
+                'feature1_desc' => 'Faceted edges are smoothly finished to catch light uniquely from every angle, showcasing the dimensional precision of FDM 3D printing.',
+                'feature2_title' => 'Customizable on Request',
+                'feature2_desc' => 'Work with HH Maker to customize colors, adjust scale dimensions, or order in bulk for corporate gifts and event decor.',
+                'manufacturing_info' => [
+                    [
+                        'title' => 'Tailored Per-Model Fabrication',
+                        'desc' => 'Each piece is 3D printed with slicing parameters optimized for its specific geometry, ensuring structural durability and crisp surface aesthetics.',
+                    ],
+                    [
+                        'title' => 'Hand-Inspected Post-Processing',
+                        'desc' => 'After printing, every model is carefully inspected, support structures are removed, and fine details are cleaned before protective packaging.',
+                    ],
+                    [
+                        'title' => 'Authentic 3D Printed Surface Texture',
+                        'desc' => 'FDM 3D printed products feature subtle characteristic layer lines—a signature hallmark of additive manufacturing rather than a surface defect.',
+                    ],
+                ],
+                'care_instructions' => [
+                    'Avoid placing the product in environments exceeding 55°C (such as car trunks, direct intense window sunlight, or near heat sources) to prevent softening or warping.',
+                    'Clean gently using a soft brush, dry microfiber cloth, or damp cloth wrung dry. Do not use harsh chemical solvents or high-concentration alcohol.',
+                    'Ideal for indoor display on work desks, bookshelves, studio setups, or living spaces.',
+                    'Avoid dropping from height or applying excessive impact force to thin or pointed geometric edges.',
+                ],
+            ];
+        }
+
+        $defaultFoxIntro = 'Mô hình chú cáo low-poly là điểm nhấn hiện đại cho không gian sống và làm việc. Thiết kế tạo hình từ các mặt cắt đa giác sắc sảo, kết hợp cùng gam màu cam ấm áp mang đến cảm giác tinh tế, sáng tạo và đầy năng lượng';
+
+        return [
+            'image_color_label' => $colorMapVi[$slug] ?? 'Cam',
+            'customization_label' => 'Màu sắc · Kích thước · Số lượng',
+            'story_title' => $isIronMan
+                ? 'Huyền thoại công nghệ. Sắc nét đến từng chi tiết.'
+                : 'Nhỏ gọn. Nhiều điều để khám phá.',
+            'story_intro' => ($slug === 'mo-hinh-cao-trang-tri')
+                ? $defaultFoxIntro
+                : ($product->description ?: $defaultFoxIntro),
+            'feature1_title' => 'Tạo hình Low-Poly sắc nét',
+            'feature1_desc' => 'Các góc cạnh đa giác được hoàn thiện mượt mà, phản chiếu ánh sáng độc đáo ở từng góc nhìn, thể hiện rõ thế mạnh độ chính xác của công nghệ in 3D FDM.',
+            'feature2_title' => 'Tùy chỉnh theo yêu cầu',
+            'feature2_desc' => 'Bạn có thể trao đổi với HH Maker để thay đổi màu sắc, điều chỉnh kích thước (tỉ lệ scale) hoặc đặt số lượng lớn làm quà tặng, decor sự kiện.',
+            'manufacturing_info' => [
+                [
+                    'title' => 'Gia công theo từng mẫu',
+                    'desc' => 'Sản phẩm được in 3D theo thông số kỹ thuật tối ưu cho từng hình khối, đảm bảo độ bền kết cấu và tính thẩm mỹ của bề mặt.',
+                ],
+                [
+                    'title' => 'Hoàn thiện thủ công',
+                    'desc' => 'Sau khi in, mẫu được kiểm tra, xử lý phần hỗ trợ (support) và làm sạch các chi tiết thừa trước khi đóng gói.',
+                ],
+                [
+                    'title' => 'Đặc trưng bề mặt in 3D',
+                    'desc' => 'Sản phẩm in 3D FDM sẽ có các đường vân lớp in (layer lines) mảnh đặc trưng. Đây là nét riêng của công nghệ chế tác bồi đắp, không phải lỗi sản phẩm.',
+                ],
+            ],
+            'care_instructions' => [
+                'Tránh đặt sản phẩm ở nơi có nhiệt độ cao trên 55°C (như cốp xe hơi, sát cửa sổ nắng gắt trực tiếp hoặc gần nguồn nhiệt) để tránh làm mềm hoặc biến dạng nhựa PLA.',
+                'Vệ sinh nhẹ nhàng bằng chổi lông mềm, khăn khô hoặc khăn ẩm vắt kiệt nước. Không dùng hóa chất tẩy rửa mạnh hoặc cồn nồng độ cao.',
+                'Phù hợp trưng bày trong nhà, bàn làm việc, kệ sách hoặc không gian studio.',
+                'Hạn chế làm rơi từ độ cao hoặc tác động lực mạnh vào các chi tiết mảnh/nhọn của mô hình.',
+            ],
+        ];
     }
 
     public static function getDefaultSpecificationsFor(self $product): array

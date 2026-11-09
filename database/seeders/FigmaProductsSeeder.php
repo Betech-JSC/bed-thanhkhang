@@ -115,6 +115,153 @@ class FigmaProductsSeeder extends Seeder
                 $categoryMap[$key] = $catId;
             }
 
+            // 1.5 Seed / Update Child Categories (Subcategories matching Figma Sidebar)
+            $subCategoriesConfig = [
+                'moc-khoa-co-khi' => [
+                    'parent_key' => 'keychains',
+                    'vi_slug' => 'moc-khoa-co-khi',
+                    'en_slug' => 'moc-khoa-co-khi',
+                    'vi_title' => 'Móc khoá cơ khí',
+                    'en_title' => 'Mechanical Keychains',
+                    'vi_desc' => 'Móc khoá cơ khí chuyển động in 3D liền khối.',
+                    'en_desc' => 'Print-in-place mechanical moving 3D printed keychains.',
+                    'position' => 1,
+                ],
+                'moc-khoa-the-thao' => [
+                    'parent_key' => 'keychains',
+                    'vi_slug' => 'moc-khoa-the-thao',
+                    'en_slug' => 'moc-khoa-the-thao',
+                    'vi_title' => 'Móc khoá thể thao & phụ kiện',
+                    'en_title' => 'Sports & Accessory Keychains',
+                    'vi_desc' => 'Móc khoá thể thao, vô lăng F1 và phụ kiện cá nhân.',
+                    'en_desc' => 'Sports keychains, F1 steering wheels, and personal accessories.',
+                    'position' => 2,
+                ],
+                'ly' => [
+                    'parent_key' => 'stationery',
+                    'vi_slug' => 'ly',
+                    'en_slug' => 'ly',
+                    'vi_title' => 'Ly',
+                    'en_title' => 'Cups & Desk Holders',
+                    'vi_desc' => 'Ly, hộp đựng bút, khay bàn làm việc và phụ kiện văn phòng.',
+                    'en_desc' => 'Cups, pen holders, desk trays, and workspace organizers.',
+                    'position' => 1,
+                ],
+                'lo-cam-hoa-de-ban' => [
+                    'parent_key' => 'stationery',
+                    'vi_slug' => 'lo-cam-hoa-de-ban',
+                    'en_slug' => 'lo-cam-hoa-de-ban',
+                    'vi_title' => 'Lọ cắm hoa để bàn',
+                    'en_title' => 'Tabletop Vases & Planters',
+                    'vi_desc' => 'Lọ cắm hoa để bàn, chậu cây mini đa giác và cấu trúc Voronoi.',
+                    'en_desc' => 'Tabletop vases, polygonal mini planters, and Voronoi structures.',
+                    'position' => 2,
+                ],
+                'den' => [
+                    'parent_key' => 'stationery',
+                    'vi_slug' => 'den',
+                    'en_slug' => 'den',
+                    'vi_title' => 'Đèn',
+                    'en_title' => '3D Lamps',
+                    'vi_desc' => 'Đèn ngủ mặt trăng 3D Lithophane và đèn trang trí bàn làm việc.',
+                    'en_desc' => '3D Lithophane moon lamps and desktop decorative lighting.',
+                    'position' => 3,
+                ],
+                'mo-hinh-resin' => [
+                    'parent_key' => 'custom',
+                    'vi_slug' => 'mo-hinh-resin',
+                    'en_slug' => 'mo-hinh-resin',
+                    'vi_title' => 'Mô hình Resin & Khớp cử động',
+                    'en_title' => 'Resin & Articulated Models',
+                    'vi_desc' => 'Mô hình Resin 8K siêu nét và robot khớp cử động.',
+                    'en_desc' => 'Ultra-detailed 8K Resin figures and articulated robots.',
+                    'position' => 1,
+                ],
+                'linh-kien-carbon' => [
+                    'parent_key' => 'custom',
+                    'vi_slug' => 'linh-kien-carbon',
+                    'en_slug' => 'linh-kien-carbon',
+                    'vi_title' => 'Linh kiện cơ khí & Carbon Fiber',
+                    'en_title' => 'Mechanical & Carbon Fiber Parts',
+                    'vi_desc' => 'Khung vỏ Carbon Fiber, bánh răng hành tinh và vỏ case custom.',
+                    'en_desc' => 'Carbon Fiber frames, planetary gears, and custom mechanical cases.',
+                    'position' => 2,
+                ],
+            ];
+
+            $subCategoryMap = [];
+            foreach ($subCategoriesConfig as $subKey => $subConfig) {
+                $parentCatId = $categoryMap[$subConfig['parent_key']] ?? 0;
+                $subTrans = DB::table('product_category_translations')
+                    ->where('slug', $subConfig['vi_slug'])
+                    ->first();
+
+                if ($subTrans) {
+                    $subCatId = $subTrans->product_category_id;
+                    DB::table('product_categories')->where('id', $subCatId)->update([
+                        'parent_id' => $parentCatId,
+                        'status' => 'ACTIVE',
+                        'position' => $subConfig['position'],
+                        'updated_at' => now(),
+                    ]);
+                } else {
+                    $subCatId = DB::table('product_categories')->insertGetId([
+                        'parent_id' => $parentCatId,
+                        'status' => 'ACTIVE',
+                        'position' => $subConfig['position'],
+                        'view_count' => rand(20, 80),
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+
+                DB::table('product_category_translations')->updateOrInsert(
+                    ['product_category_id' => $subCatId, 'locale' => 'vi'],
+                    [
+                        'title' => $subConfig['vi_title'],
+                        'slug' => $subConfig['vi_slug'],
+                        'seo_slug' => $subConfig['vi_slug'],
+                        'description' => $subConfig['vi_desc'],
+                        'seo_meta_title' => $subConfig['vi_title'] . ' - HH Maker',
+                        'seo_meta_description' => $subConfig['vi_desc'],
+                    ]
+                );
+
+                DB::table('product_category_translations')->updateOrInsert(
+                    ['product_category_id' => $subCatId, 'locale' => 'en'],
+                    [
+                        'title' => $subConfig['en_title'],
+                        'slug' => $subConfig['en_slug'],
+                        'seo_slug' => $subConfig['en_slug'],
+                        'description' => $subConfig['en_desc'],
+                        'seo_meta_title' => $subConfig['en_title'] . ' - HH Maker',
+                        'seo_meta_description' => $subConfig['en_desc'],
+                    ]
+                );
+
+                $subCategoryMap[$subKey] = $subCatId;
+            }
+
+            $productSubCategoryBySlug = [
+                'moc-khoa-turbine-phan-luc' => 'moc-khoa-co-khi',
+                'moc-khoa-dong-co-v8-piston' => 'moc-khoa-co-khi',
+                'moc-khoa-trai-tim-co-khi' => 'moc-khoa-co-khi',
+                'moc-khoa-vo-lang-f1-quick-release' => 'moc-khoa-the-thao',
+                'hop-dung-danh-thiep-cyberpunk' => 'ly',
+                'khay-to-chuc-day-cap-modular' => 'ly',
+                'de-do-dien-thoai-mecha' => 'ly',
+                'mo-hinh-tau-vu-tru-discovery' => 'ly',
+                'gia-do-tai-nghe-voronoi' => 'lo-cam-hoa-de-ban',
+                'chau-cay-da-giac-mini' => 'lo-cam-hoa-de-ban',
+                'den-ngu-mat-trang-lithophane' => 'den',
+                'iron-man-mark-85-resin-8k' => 'mo-hinh-resin',
+                'khop-noi-cau-bionic-sls' => 'mo-hinh-resin',
+                'robot-khop-cu-dong' => 'mo-hinh-resin',
+                'khung-vo-robot-carbon-fiber' => 'linh-kien-carbon',
+                'cum-banh-rang-hanh-tinh' => 'linh-kien-carbon',
+                'vo-case-ban-phim-co-custom' => 'linh-kien-carbon',
+            ];
+
             // 2. Define Products List (21 items: Model Cáo ID 1 + 16 catalog items + 4 related items)
             // Featured items are strictly 4 per category:
             // - space_decor: Mô hình Cáo trang trí, Mô hình Phi hành gia, Tượng Cyber Wolf, Đèn LED Hexagon
@@ -139,13 +286,13 @@ class FigmaProductsSeeder extends Seeder
                     'content_vi' => '<h3>Quy cách in 3D & Thông số kỹ thuật</h3><p>Mô hình chú cáo phong cách Low-Poly tối giản là điểm nhấn hiện đại cho bàn làm việc hoặc kệ sách. Được in bằng công nghệ FDM độ chính xác cao với các mặt cắt đa giác chuẩn xác, phản chiếu ánh sáng độc đáo ở từng góc nhìn.</p><ul><li><strong>Vật liệu:</strong> Nhựa PLA Matte cao cấp, chống bám vân tay, thân thiện môi trường.</li><li><strong>Độ dày lớp in (Layer Height):</strong> 0.16mm siêu mịn.</li><li><strong>Độ cứng (Infill):</strong> 20% cấu trúc Gyroid chịu lực vững chắc.</li><li><strong>Kích thước tiêu chuẩn:</strong> 120 x 85 x 140 mm.</li><li><strong>Thời gian gia công:</strong> 1-2 ngày làm việc.</li></ul>',
                     'content_en' => '<h3>3D Printing Specifications & Details</h3><p>The minimal Low-Poly fox model brings modern charm to any workspace or bookshelf. Fabricated via high-precision FDM technology with crisp polygonal facets that catch light beautifully from all angles.</p><ul><li><strong>Material:</strong> Premium Matte PLA, anti-fingerprint, eco-friendly.</li><li><strong>Layer Height:</strong> Ultra-fine 0.16mm.</li><li><strong>Infill:</strong> 20% structural Gyroid infill.</li><li><strong>Dimensions:</strong> 120 x 85 x 140 mm.</li><li><strong>Lead Time:</strong> 1-2 business days.</li></ul>',
                     'specifications' => [
-                        ['label' => 'Công nghệ in', 'value' => 'FDM High-Precision'],
-                        ['label' => 'Vật liệu', 'value' => 'Nhựa PLA Matte Cao Cấp'],
-                        ['label' => 'Kích thước mẫu', 'value' => '120 x 85 x 140 mm'],
-                        ['label' => 'Chiều cao lớp in', 'value' => '0.16 mm'],
-                        ['label' => 'Đầu phun', 'value' => '0.40 mm Hardened Steel'],
-                        ['label' => 'Mật độ ruột', 'value' => '20% Gyroid'],
-                        ['label' => 'Vật liệu hỗ trợ', 'value' => 'Không cần (Zero-support)'],
+                        ['label' => 'Công nghệ in', 'value' => 'FDM'],
+                        ['label' => 'Vật liệu', 'value' => 'PLA'],
+                        ['label' => 'Kích thước mẫu', 'value' => '60 × 31 × 48 mm'],
+                        ['label' => 'Chiều cao lớp in', 'value' => '0,20 mm'],
+                        ['label' => 'Đầu phun', 'value' => '0,40 mm'],
+                        ['label' => 'Mật độ ruột', 'value' => '15%'],
+                        ['label' => 'Vật liệu hỗ trợ', 'value' => 'Không cần'],
                     ],
                 ],
 
@@ -706,6 +853,48 @@ class FigmaProductsSeeder extends Seeder
                     'alt' => $pData['title_vi'],
                 ]);
 
+                $specs = $pData['specifications'] ?? [];
+                $colorBySlug = [
+                    'mo-hinh-cao-trang-tri' => 'Cam',
+                    'iron-man-mark-85-resin-8k' => 'Đỏ - Vàng Metallic',
+                    'khung-vo-robot-carbon-fiber' => 'Đen Carbon Nhám',
+                    'hop-dung-danh-thiep-cyberpunk' => 'Đen Nhám - Vàng Neon',
+                    'moc-khoa-turbine-phan-luc' => 'Xám Titan - Xanh',
+                    'gia-do-tai-nghe-voronoi' => 'Đen Nhám (Matte Black)',
+                    'cum-banh-rang-hanh-tinh' => 'Xám Cơ Khí - Cam',
+                    'tuong-cyber-wolf-low-poly' => 'Xám Bạc Ánh Kim',
+                    'moc-khoa-dong-co-v8-piston' => 'Xám Kim Loại - Đỏ',
+                    'den-ngu-mat-trang-lithophane' => 'Trắng Ngà Ánh Vàng',
+                    'khop-noi-cau-bionic-sls' => 'Xám Nylon Kỹ Thuật',
+                    'mo-hinh-tau-vu-tru-discovery' => 'Trắng Vũ Trụ - Đen',
+                    'khay-to-chuc-day-cap-modular' => 'Đen Nhám - Cam',
+                    'moc-khoa-vo-lang-f1-quick-release' => 'Đen Carbon - Đỏ Racing',
+                    'den-ban-led-hexagon-to-ong' => 'Đen Nhám - Trắng Khuếch Tán',
+                    'vo-case-ban-phim-co-custom' => 'Xám Space Grey',
+                    'moc-khoa-trai-tim-co-khi' => 'Đỏ Ruby - Vàng Đồng',
+                    'mo-hinh-phi-hanh-gia' => 'Trắng Tuyết - Vàng Gold',
+                    'chau-cay-da-giac-mini' => 'Trắng Sữa (Matte White)',
+                    'de-do-dien-thoai-mecha' => 'Đen Nhám - Cam',
+                    'robot-khop-cu-dong' => 'Cam - Xám Cơ Khí',
+                ];
+                $colorLabel = $colorBySlug[$pData['slug']] ?? 'Cam';
+                $customLabel = 'Màu sắc · Kích thước · Số lượng';
+                $isIronMan = ($pData['slug'] === 'iron-man-mark-85-resin-8k');
+                $foxIntro = 'Mô hình chú cáo low-poly là điểm nhấn hiện đại cho không gian sống và làm việc. Thiết kế tạo hình từ các mặt cắt đa giác sắc sảo, kết hợp cùng gam màu cam ấm áp mang đến cảm giác tinh tế, sáng tạo và đầy năng lượng';
+
+                $pdpMetadataPayload = [
+                    'image_color_label' => $colorLabel,
+                    'customization_label' => $customLabel,
+                    'story_title' => $isIronMan
+                        ? 'Huyền thoại công nghệ. Sắc nét đến từng chi tiết.'
+                        : 'Nhỏ gọn. Nhiều điều để khám phá.',
+                    'story_intro' => ($pData['slug'] === 'mo-hinh-cao-trang-tri') ? $foxIntro : $pData['desc_vi'],
+                    'feature1_title' => 'Tạo hình Low-Poly sắc nét',
+                    'feature1_desc' => 'Các góc cạnh đa giác được hoàn thiện mượt mà, phản chiếu ánh sáng độc đáo ở từng góc nhìn, thể hiện rõ thế mạnh độ chính xác của công nghệ in 3D FDM.',
+                    'feature2_title' => 'Tùy chỉnh theo yêu cầu',
+                    'feature2_desc' => 'Bạn có thể trao đổi với HH Maker để thay đổi màu sắc, điều chỉnh kích thước (tỉ lệ scale) hoặc đặt số lượng lớn làm quà tặng, decor sự kiện.',
+                ];
+
                 $productPayload = [
                     'status' => 'ACTIVE',
                     'is_featured' => $pData['is_featured'],
@@ -723,8 +912,26 @@ class FigmaProductsSeeder extends Seeder
                     'deleted_at' => null,
                 ];
 
+                $optionalSpecCols = [
+                    'sample_size' => $specs[2]['value'] ?? '120 x 85 x 140 mm',
+                    'layer_height' => $specs[3]['value'] ?? '0.16 mm',
+                    'nozzle_size' => $specs[4]['value'] ?? '0.40 mm Hardened Steel',
+                    'infill' => $specs[5]['value'] ?? '20% Gyroid',
+                    'support_material' => $specs[6]['value'] ?? 'Không cần (Zero-support)',
+                    'image_color_label' => $colorLabel,
+                    'customization_label' => $customLabel,
+                ];
+                foreach ($optionalSpecCols as $colName => $colVal) {
+                    if (Schema::hasColumn('products', $colName)) {
+                        $productPayload[$colName] = $colVal;
+                    }
+                }
+
                 if (Schema::hasColumn('products', 'specifications') && isset($pData['specifications'])) {
-                    $productPayload['specifications'] = json_encode($pData['specifications']);
+                    $productPayload['specifications'] = json_encode($pData['specifications'], JSON_UNESCAPED_UNICODE);
+                }
+                if (Schema::hasColumn('products', 'pdp_metadata')) {
+                    $productPayload['pdp_metadata'] = json_encode($pdpMetadataPayload, JSON_UNESCAPED_UNICODE);
                 }
 
                 if ($existingProduct) {
@@ -767,12 +974,20 @@ class FigmaProductsSeeder extends Seeder
                     ]
                 );
 
-                // Attach exact category in product_ref_categories
+                // Attach parent and child categories in product_ref_categories
                 DB::table('product_ref_categories')->where('product_id', $productId)->delete();
                 DB::table('product_ref_categories')->updateOrInsert(
                     ['product_id' => $productId, 'product_category_id' => $catId],
                     []
                 );
+
+                $subKey = $productSubCategoryBySlug[$pData['slug']] ?? null;
+                if ($subKey && isset($subCategoryMap[$subKey])) {
+                    DB::table('product_ref_categories')->updateOrInsert(
+                        ['product_id' => $productId, 'product_category_id' => $subCategoryMap[$subKey]],
+                        []
+                    );
+                }
 
                 $position++;
             }

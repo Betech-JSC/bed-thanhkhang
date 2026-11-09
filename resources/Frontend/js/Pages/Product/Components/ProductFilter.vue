@@ -223,8 +223,7 @@ export default {
                 this.tt('Quà tặng cá nhân'),
             ]
         },
-        categoryTree() {
-            // Chuẩn hóa 4 mục danh mục theo đúng bản Figma chuẩn (Node 2701:5295) kèm danh mục con
+        defaultCategoryTree() {
             return [
                 {
                     id: 'all',
@@ -239,8 +238,8 @@ export default {
                     slug: 'moc-khoa-phu-kien',
                     hasChevron: true,
                     subcategories: [
-                        { id: 'moc-khoa-co-khi', name: this.tt('Móc khoá cơ khí') },
-                        { id: 'moc-khoa-the-thao', name: this.tt('Móc khoá thể thao & phụ kiện') },
+                        { id: 'moc-khoa-co-khi', slug: 'moc-khoa-co-khi', name: this.tt('Móc khoá cơ khí') },
+                        { id: 'moc-khoa-the-thao', slug: 'moc-khoa-the-thao', name: this.tt('Móc khoá thể thao & phụ kiện') },
                     ],
                 },
                 {
@@ -249,9 +248,9 @@ export default {
                     slug: 'trang-tri-do-dung',
                     hasChevron: true,
                     subcategories: [
-                        { id: 'ly', name: this.tt('Ly') },
-                        { id: 'lo-cam-hoa-de-ban', name: this.tt('Lọ cắm hoa để bàn') },
-                        { id: 'den', name: this.tt('Đèn') },
+                        { id: 'ly', slug: 'ly', name: this.tt('Ly') },
+                        { id: 'lo-cam-hoa-de-ban', slug: 'lo-cam-hoa-de-ban', name: this.tt('Lọ cắm hoa để bàn') },
+                        { id: 'den', slug: 'den', name: this.tt('Đèn') },
                     ],
                 },
                 {
@@ -260,11 +259,96 @@ export default {
                     slug: 'gia-cong-theo-yeu-cau',
                     hasChevron: true,
                     subcategories: [
-                        { id: 'mo-hinh-resin', name: this.tt('Mô hình Resin & Khớp cử động') },
-                        { id: 'linh-kien-carbon', name: this.tt('Linh kiện cơ khí & Carbon Fiber') },
+                        { id: 'mo-hinh-resin', slug: 'mo-hinh-resin', name: this.tt('Mô hình Resin & Khớp cử động') },
+                        { id: 'linh-kien-carbon', slug: 'linh-kien-carbon', name: this.tt('Linh kiện cơ khí & Carbon Fiber') },
                     ],
                 },
             ]
+        },
+        categoryTree() {
+            if (!Array.isArray(this.categories) || this.categories.length === 0) {
+                return this.defaultCategoryTree
+            }
+
+            // Nếu prop categories đã được chuẩn hóa sẵn từ Product/Index.vue (có mục 'all' và subcategories)
+            if (this.categories[0]?.id === 'all' && Array.isArray(this.categories[0]?.subcategories)) {
+                return this.categories
+            }
+
+            // Dựng cây danh mục động từ dữ liệu CMS (hỗ trợ cả cấu trúc lồng children/nodes và danh sách phẳng parent_id/default_parent)
+            const rawList = this.categories.filter(Boolean)
+            const childMap = {}
+            const roots = []
+
+            rawList.forEach((item) => {
+                const parentId = item.parent_id || item.default_parent?.id || 0
+                if (parentId && Number(parentId) > 0) {
+                    if (!childMap[parentId]) childMap[parentId] = []
+                    childMap[parentId].push(item)
+                } else {
+                    const slug = String(item.slug || '').toLowerCase()
+                    if (slug !== 'trang-tri-khong-gian' && slug !== 'space-decor') {
+                        roots.push(item)
+                    }
+                }
+            })
+
+            if (roots.length === 0) {
+                return this.defaultCategoryTree
+            }
+
+            const tree = [this.defaultCategoryTree[0]]
+
+            roots.forEach((root) => {
+                const slug = String(root.slug || root.id || '').toLowerCase()
+                const rawTitle = String(root.title || root.name || '').trim()
+
+                let fallback = null
+                if (slug.includes('moc-khoa') || slug.includes('keychain') || rawTitle.toLowerCase().includes('móc khoá') || rawTitle.toLowerCase().includes('móc khóa')) {
+                    fallback = this.defaultCategoryTree[1]
+                } else if (slug.includes('trang-tri-do-dung') || slug.includes('van-phong-pham') || slug.includes('stationery') || rawTitle.toLowerCase().includes('đồ dùng') || rawTitle.toLowerCase().includes('văn phòng')) {
+                    fallback = this.defaultCategoryTree[2]
+                } else if (slug.includes('gia-cong') || slug.includes('custom') || rawTitle.toLowerCase().includes('gia công')) {
+                    fallback = this.defaultCategoryTree[3]
+                }
+
+                const rawChildren =
+                    (Array.isArray(root.subcategories) && root.subcategories.length > 0 && root.subcategories) ||
+                    (Array.isArray(root.children) && root.children.length > 0 && root.children) ||
+                    (Array.isArray(root.nodes) && root.nodes.length > 0 && root.nodes) ||
+                    childMap[root.id] ||
+                    []
+
+                const mappedSubs =
+                    rawChildren.length > 0
+                        ? rawChildren.map((sub) => ({
+                              id: sub.slug || String(sub.id),
+                              rawId: sub.id,
+                              slug: sub.slug || String(sub.id),
+                              name: this.tt(sub.title || sub.name || ''),
+                          }))
+                        : fallback
+                        ? fallback.subcategories
+                        : []
+
+                let displayName = rawTitle ? this.tt(rawTitle) : fallback?.name || ''
+                if (rawTitle === 'Móc khoá & Phụ kiện' || rawTitle === 'Móc khóa & Phụ kiện') {
+                    displayName = this.tt('Móc khoá')
+                } else if (rawTitle === 'Trang trí & Đồ dùng') {
+                    displayName = this.tt('Văn phòng phẩm')
+                }
+
+                tree.push({
+                    id: fallback ? fallback.id : root.slug || String(root.id),
+                    rawId: root.id,
+                    name: displayName,
+                    slug: root.slug || fallback?.slug || String(root.id),
+                    hasChevron: mappedSubs.length > 0,
+                    subcategories: mappedSubs,
+                })
+            })
+
+            return tree
         },
     },
     watch: {
@@ -285,7 +369,11 @@ export default {
         isCategorySelected(cat) {
             const current = this.filters.category
             if (!current || current === 'all') return cat.id === 'all' || cat.slug === 'all'
-            return current === cat.id || current === cat.slug
+            return (
+                current === cat.id ||
+                current === cat.slug ||
+                (cat.rawId !== undefined && String(current) === String(cat.rawId))
+            )
         },
         isCategoryExpanded(catId) {
             return this.expandedCategories.includes(catId)

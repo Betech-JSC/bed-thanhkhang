@@ -8,10 +8,10 @@
             type="button"
             :disabled="currentPage <= 1"
             @click="changePage(currentPage - 1, 'prev')"
-            class="group inline-flex items-center gap-[8px] h-[17px] text-[14px] font-normal leading-[17px] text-[#B9C0D4] transition-colors duration-200 select-none shrink-0"
+            class="group inline-flex items-center gap-[8px] h-[17px] text-[14px] font-normal leading-[17px] text-[#B9C0D4] transition-colors duration-200 select-none shrink-0 disabled:opacity-40 disabled:pointer-events-none disabled:cursor-not-allowed"
             :class="[
                 currentPage <= 1
-                    ? 'cursor-default'
+                    ? 'opacity-40 cursor-not-allowed pointer-events-none'
                     : 'hover:text-[#FAFAFA] active:scale-95 cursor-pointer'
             ]"
             :aria-disabled="currentPage <= 1"
@@ -39,10 +39,10 @@
             type="button"
             :disabled="currentPage >= totalPages"
             @click="changePage(currentPage + 1, 'next')"
-            class="group inline-flex items-center gap-[8px] h-[17px] text-[14px] font-normal leading-[17px] text-[#B9C0D4] transition-colors duration-200 select-none shrink-0"
+            class="group inline-flex items-center gap-[8px] h-[17px] text-[14px] font-normal leading-[17px] text-[#B9C0D4] transition-colors duration-200 select-none shrink-0 disabled:opacity-40 disabled:pointer-events-none disabled:cursor-not-allowed"
             :class="[
                 currentPage >= totalPages
-                    ? 'cursor-default'
+                    ? 'opacity-40 cursor-not-allowed pointer-events-none'
                     : 'hover:text-[#FAFAFA] active:scale-95 cursor-pointer'
             ]"
             :aria-disabled="currentPage >= totalPages"

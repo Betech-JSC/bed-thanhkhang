@@ -5,14 +5,34 @@
                 <div class="card-header font-bold text-slate-800">
                     {{ tt('models.setting.general_information') }}
                 </div>
-                <div class="card-body">
+                <div class="card-body space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Field
+                            v-model="form.title"
+                            :field="{
+                                type: 'text',
+                                name: 'title',
+                                label: 'Tên dịch vụ',
+                                placeholder: 'VD: Thiết kế 3D / Gia công 3D / Custom',
+                            }"
+                        />
+                        <Field
+                            v-model="form.slug"
+                            :field="{
+                                type: 'text',
+                                name: 'slug',
+                                label: 'Slug đường dẫn',
+                                placeholder: 'VD: thiet-ke-3d',
+                            }"
+                        />
+                    </div>
                     <Field
-                        v-model="form.title"
+                        v-model="form.title_content"
                         :field="{
                             type: 'text',
-                            name: 'title',
-                            label: 'Tên dịch vụ',
-                            placeholder: 'VD: Gia công in 3D FDM & SLA chính xác cao',
+                            name: 'title_content',
+                            label: 'Tiêu đề phụ / Headline dịch vụ',
+                            placeholder: 'VD: Từ phác thảo đến hình khối rõ ràng.',
                         }"
                     />
                     <Field
@@ -23,6 +43,15 @@
                             label: 'Mô tả ngắn dịch vụ',
                             rows: 3,
                             placeholder: 'Tóm tắt quy mô, năng lực gia công và ứng dụng thực tế...',
+                        }"
+                    />
+                    <Field
+                        v-model="form.benefit_title"
+                        :field="{
+                            type: 'text',
+                            name: 'benefit_title',
+                            label: 'Tiêu đề phần chuẩn bị thông tin (Section 03)',
+                            placeholder: 'VD: Bạn cần chuẩn bị gì?',
                         }"
                     />
                     <Field
@@ -77,6 +106,8 @@ export default {
         return {
             formData: {
                 ...this.item,
+                title_content: this.item.title_content ?? '',
+                benefit_title: this.item.benefit_title ?? '',
                 status: this.item.status ?? 'ACTIVE',
                 position: this.item.position ?? 0,
             },
@@ -86,6 +117,8 @@ export default {
         item() {
             this.formData = {
                 ...this.item,
+                title_content: this.item.title_content ?? '',
+                benefit_title: this.item.benefit_title ?? '',
                 status: this.item.status ?? 'ACTIVE',
                 position: this.item.position ?? 0,
             }

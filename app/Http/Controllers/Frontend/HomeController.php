@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Models\Config;
 use App\Models\Keyword;
 use App\Models\KeywordRefDate;
 use Inertia\Inertia;
@@ -20,7 +21,7 @@ class HomeController extends Controller
     {
         try {
             $locale = current_locale();
-            $data = Cache::remember('home_page_data_' . $locale, 3600, function () {
+            $data = Cache::remember('home_page_data_' . $locale, 3600, function () use ($locale) {
                 try {
                     // Get Home Slider
                     $sliders = Slider::getByPosition('HOME_SLIDER');
@@ -31,7 +32,57 @@ class HomeController extends Controller
                         ->active()
                         ->sortByPosition()
                         ->get()
-                        ->map(fn($service) => $service->transform());
+                        ->map(function ($service) {
+                            $item = $service->transform();
+                            $item['title'] = $item['home_title'] ?? $item['title'];
+                            $item['description'] = $item['overview_description'] ?? $item['description'];
+                            $item['image'] = ['url' => null, 'alt' => $item['title']];
+                            return $item;
+                        });
+
+                    // Fetch 5 Process Steps (CMS PROCESS_STEPS posts with fallback to Config::getProcessSteps)
+                    $configSteps = Config::getProcessSteps($locale);
+                    $processPosts = Post::query()
+                        ->where('type', 'PROCESS_STEPS')
+                        ->active()
+                        ->orderBy('position')
+                        ->orderBy('id')
+                        ->get();
+
+                    if ($processPosts->count() >= 5) {
+                        $processSteps = $processPosts->take(5)->values()->map(function ($post, $index) use ($configSteps) {
+                            $fallback = $configSteps[$index] ?? [];
+                            $stepNum = $fallback['number'] ?? str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT);
+                            $rawContent = strip_tags($post->content ?? '');
+                            $items = array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $rawContent))));
+                            if (empty($items) && !empty($post->description)) {
+                                $items = [$post->description];
+                            }
+                            $imgDetail = $post->getImageDetail($post->image);
+
+                            return array_merge($fallback, [
+                                'step' => $stepNum,
+                                'number' => $stepNum,
+                                'title' => $post->title ?: ($fallback['title'] ?? ''),
+                                'description' => $post->description ?: ($fallback['description'] ?? ''),
+                                'detail' => $post->description ?: ($fallback['description'] ?? ($items[0] ?? '')),
+                                'items' => $items,
+                                'image' => $imgDetail['url'] ?? ('/images/home/process-step-' . ($index + 1) . '.png'),
+                            ]);
+                        })->toArray();
+                    } else {
+                        $processSteps = collect($configSteps)
+                            ->map(function ($step, $index) {
+                                $stepNum = $step['number'] ?? str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT);
+                                return array_merge($step, [
+                                    'step' => $stepNum,
+                                    'number' => $stepNum,
+                                    'detail' => $step['detail'] ?? $step['description'] ?? '',
+                                ]);
+                            })
+                            ->values()
+                            ->toArray();
+                    }
 
                     // Fetch Featured Products
                     $products = Product::query()
@@ -87,6 +138,7 @@ class HomeController extends Controller
                         'sliders' => $sliders,
                         'announcements' => $announcements,
                         'services' => $services,
+                        'processSteps' => $processSteps,
                         'categories' => $categories,
                         'products' => $products,
                         'featured_posts' => $featured_posts,
@@ -97,6 +149,7 @@ class HomeController extends Controller
                         'sliders' => [],
                         'announcements' => [],
                         'services' => [],
+                        'processSteps' => Config::getProcessSteps($locale),
                         'categories' => [],
                         'products' => [],
                         'featured_posts' => [],

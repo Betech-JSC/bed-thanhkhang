@@ -7,19 +7,24 @@
     >
         <!-- Centered Main Canvas matching Figma Node 2701:1425 (1440px x 892px) -->
         <div
-            class="relative z-10 w-full max-w-[1440px] mx-auto min-h-[600px] lg:h-[892px] flex flex-col lg:flex-row items-stretch overflow-hidden"
+            class="relative z-10 w-full max-w-[1440px] mx-auto min-h-[600px] lg:h-[892px] flex flex-col lg:flex-row items-stretch"
         >
             <!-- Left Column: 3D Wave Graphic + 05 Hero Headline (Figma Node 2701:1426 & 2701:1429: width 639px) -->
             <div
-                class="w-full lg:w-[639px] shrink-0 relative min-h-[460px] sm:min-h-[520px] lg:h-full flex flex-col justify-center px-6 sm:px-12 lg:pl-[144px] lg:pr-10 py-12 overflow-hidden"
+                class="w-full lg:w-[639px] shrink-0 relative min-h-[460px] sm:min-h-[520px] lg:h-full flex flex-col justify-center px-6 sm:px-12 lg:pl-[144px] lg:pr-10 py-12"
             >
-                <!-- Background 3D Wave Graphic flush with left edge -->
-                <img
-                    :src="processImage"
-                    alt="HH Maker 3D Layer Graphic"
-                    class="absolute inset-0 w-full h-full object-cover object-left-center select-none pointer-events-none"
-                    loading="lazy"
-                />
+                <!-- Background 3D Wave Graphic flush with left viewport edge up to divider -->
+                <div
+                    class="absolute inset-y-0 left-0 right-0 overflow-hidden pointer-events-none select-none"
+                    style="left: min(0px, calc((1440px - 100vw) / 2));"
+                >
+                    <img
+                        :src="processImage"
+                        alt="HH Maker 3D Layer Graphic"
+                        class="w-full h-full object-cover object-left-center select-none pointer-events-none"
+                        loading="lazy"
+                    />
+                </div>
 
                 <!-- Giant 05 & Headline directly overlaid on 3D Graphic (Figma Node 2701:1429) -->
                 <div class="relative z-10 max-w-[435px]">
@@ -56,9 +61,9 @@
                     </p>
 
                     <!-- 5 Steps Minimalist Rows (Figma Node 2701:1434 Frame 245) -->
-                    <div v-if="steps.length > 0" class="mt-8 sm:mt-10 lg:mt-0 max-w-[616px] w-full">
+                    <div v-if="displaySteps.length > 0" class="mt-8 sm:mt-10 lg:mt-0 max-w-[616px] w-full">
                         <div
-                            v-for="(step, idx) in steps"
+                            v-for="(step, idx) in displaySteps"
                             :key="step.number || idx"
                             class="border-t border-[#B5B5B5] transition-colors duration-200 group hover:bg-white/[0.05]"
                         >
@@ -136,6 +141,10 @@ export default {
             default:
                 'Khách hàng gửi file 3D hoặc chia sẻ ý tưởng, đội ngũ kỹ thuật của HH Maker sẽ tiến hành phân tích độ khả thi, tư vấn công nghệ in tối ưu, cũng như lựa chọn loại vật liệu phù hợp nhất để đảm bảo sản phẩm đạt độ bền, tính thẩm mỹ và công năng sử dụng đúng như kỳ vọng của bạn.',
         },
+        steps: {
+            type: Array,
+            default: () => [],
+        },
         customSteps: {
             type: Array,
             default: null,
@@ -174,11 +183,33 @@ export default {
         };
     },
     computed: {
-        steps() {
-            if (this.customSteps && this.customSteps.length > 0) {
-                return this.customSteps;
-            }
-            return this.defaultSteps;
+        displaySteps() {
+            const rawList =
+                Array.isArray(this.steps) && this.steps.length > 0
+                    ? this.steps
+                    : Array.isArray(this.customSteps) && this.customSteps.length > 0
+                    ? this.customSteps
+                    : this.defaultSteps;
+
+            const homeTitleMap = {
+                'liên hệ': 'Tiếp nhận & Tư vấn',
+                'báo giá': 'Phân tích & Báo giá',
+                'gia công 3d': 'Gia công In 3D',
+                'đóng gói': 'Đóng gói chuẩn quy cách',
+                'gửi hàng': 'Giao hàng tận nơi',
+            };
+
+            return rawList.map((item, idx) => {
+                const fallback = this.defaultSteps[idx] || {};
+                const rawTitle = String(item.title || item.name || fallback.title || '').trim();
+                const cleanTitle = rawTitle.replace(/^(?:(?:Bước|Step)\s*\d+\s*[:.\-–]?\s*|\d+\s*[.:\-–]\s*)+/i, '').trim();
+                const mappedTitle = homeTitleMap[cleanTitle.toLowerCase()] || cleanTitle;
+                return {
+                    number: item.number || String(idx + 1).padStart(2, '0'),
+                    title: mappedTitle || rawTitle || fallback.title || '',
+                    detail: item.detail || item.description || item.content || fallback.detail || '',
+                };
+            });
         },
         titleParts() {
             const rawTitle = typeof this.tt === 'function' ? this.tt(this.title) : this.title;

@@ -192,7 +192,7 @@ class Agency extends BaseModel
 
     public function scopeSortByPosition($query)
     {
-        return $query->orderByRaw('ISNULL(position) OR position = 0, position ASC')
+        return $query->orderByRaw('(position IS NULL OR position = 0), position ASC')
             ->orderBy('id', 'desc');
     }
 
