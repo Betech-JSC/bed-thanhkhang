@@ -284,26 +284,6 @@
 
         <!-- 4. KẾT NỐI DỰ ÁN - LỜI MỜI SÁNG TẠO (FIGMA 2352:9972) -->
         <ProductCtaBanner />
-
-        <!-- NOTIFICATION TOAST -->
-        <Teleport to="body">
-            <Transition
-                enter-active-class="transition-transform duration-200 ease-out"
-                enter-from-class="translate-y-3"
-                enter-to-class="translate-y-0"
-                leave-active-class="transition-transform duration-150 ease-in"
-                leave-from-class="translate-y-0"
-                leave-to-class="translate-y-3"
-            >
-                <div
-                    v-if="toastMessage"
-                    class="fixed bottom-6 right-6 z-50 py-3 px-5 rounded-xl bg-[#1E2B45] text-white border border-[#2970FF] shadow-2xl flex items-center gap-3"
-                >
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-                    <span class="text-sm font-medium">{{ toastMessage }}</span>
-                </div>
-            </Transition>
-        </Teleport>
     </div>
 </template>
 
@@ -343,7 +323,6 @@ export default {
         return {
             activeTab: 'overview',
             tabSlideDirection: 'next',
-            toastMessage: '',
         }
     },
     computed: {
@@ -696,34 +675,19 @@ export default {
             this.activeTab = tabKey
         },
         handleRequestQuote() {
-            const redirectToast = this.isEn
-                ? `Redirecting to consultation page for "${this.currentTitle}"...`
-                : `${this.tt('Đang chuyển hướng đến trang liên hệ tư vấn sản phẩm')} "${this.currentTitle}"...`
-            this.showToast(redirectToast)
-
-            if (typeof window !== 'undefined') {
-                setTimeout(() => {
-                    const contactUrl = this.route('contact')
-                    if (this.$inertia) {
-                        this.$inertia.visit(contactUrl, {
-                            data: {
-                                product: this.currentTitle,
-                                category: this.currentCategory,
-                                material: this.productMaterial,
-                                color: this.productColor,
-                            },
-                        })
-                    } else {
-                        window.location.href = contactUrl
-                    }
-                }, 800)
+            const contactUrl = this.route('contact')
+            if (this.$inertia) {
+                this.$inertia.visit(contactUrl, {
+                    data: {
+                        product: this.currentTitle,
+                        category: this.currentCategory,
+                        material: this.productMaterial,
+                        color: this.productColor,
+                    },
+                })
+            } else if (typeof window !== 'undefined') {
+                window.location.href = contactUrl
             }
-        },
-        showToast(msg) {
-            this.toastMessage = msg
-            setTimeout(() => {
-                this.toastMessage = ''
-            }, 3000)
         },
     },
 }
