@@ -162,7 +162,10 @@ export default {
     props: ['item', 'schema'],
     data() {
         return {
-            formData: this.item,
+            formData: {
+                id: 'general',
+                ...this.item,
+            },
         }
     },
 }

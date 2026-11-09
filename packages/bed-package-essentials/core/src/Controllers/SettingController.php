@@ -50,6 +50,7 @@ class SettingController extends Controller
         ];
 
         $item = settings()->group($id)->all();
+        $item['id'] = $id;
 
         if (request()->wantsJson()) {
             return response()->json($item);
@@ -65,6 +66,7 @@ class SettingController extends Controller
 
     public function store(Request $request, $id = null)
     {
+        $id = $id ?: $request->input('id');
         $this->checkAuthorize($id ? 'update' : 'store');
 
         $rules = $this->model::rules($id);
