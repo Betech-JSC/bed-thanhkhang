@@ -33,17 +33,39 @@ class ProductController extends Controller
                     ->get()
                     ->map(fn($item) => $item->transform());
 
+                $seoData = [
+                    'title' => current_locale() === 'en'
+                        ? '3D Printed Products Catalog - HH Maker | FDM, SLA, SLS Technology'
+                        : 'Danh mục Sản phẩm in 3D - HH Maker | Công nghệ FDM, SLA, SLS',
+                    'description' => current_locale() === 'en'
+                        ? 'Explore high-tech 3D printed products by HH Maker. Diverse materials including 8K Resin, PLA+, PETG, Carbon Fiber with micron precision.'
+                        : 'Khám phá bộ sưu tập sản phẩm in 3D công nghệ cao từ HH Maker. Đa dạng vật liệu Resin 8K, PLA+, PETG, Carbon Fiber chính xác từng micron.',
+                    'seo_schemas' => [
+                        [
+                            '@context' => 'https://schema.org',
+                            '@type' => 'BreadcrumbList',
+                            'itemListElement' => [
+                                [
+                                    '@type' => 'ListItem',
+                                    'position' => 1,
+                                    'name' => current_locale() === 'en' ? 'Home' : 'Trang chủ',
+                                    'item' => url(current_locale() === 'en' ? '/en' : '/'),
+                                ],
+                                [
+                                    '@type' => 'ListItem',
+                                    'position' => 2,
+                                    'name' => current_locale() === 'en' ? 'Products' : 'Sản phẩm',
+                                    'item' => url(current_locale() === 'en' ? '/en/products' : '/san-pham'),
+                                ],
+                            ],
+                        ],
+                    ],
+                ];
+
                 return [
                     'products' => $products,
                     'categories' => $categories,
-                    'seo' => [
-                        'title' => current_locale() === 'en'
-                            ? '3D Printed Products Catalog - HH Maker | FDM, SLA, SLS Technology'
-                            : 'Danh mục Sản phẩm in 3D - HH Maker | Công nghệ FDM, SLA, SLS',
-                        'description' => current_locale() === 'en'
-                            ? 'Explore high-tech 3D printed products by HH Maker. Diverse materials including 8K Resin, PLA+, PETG, Carbon Fiber with micron precision.'
-                            : 'Khám phá bộ sưu tập sản phẩm in 3D công nghệ cao từ HH Maker. Đa dạng vật liệu Resin 8K, PLA+, PETG, Carbon Fiber chính xác từng micron.',
-                    ],
+                    'seo' => $seoData,
                 ];
             });
 
@@ -93,10 +115,95 @@ class ProductController extends Controller
                 $details['print_technology'] = $product->print_technology ?? null;
                 $details['lead_time'] = $product->lead_time ?? null;
 
+                $seo = $product->transformSeo();
+
+                // Sinh dữ liệu có cấu trúc Schema Product & Offer chuẩn Schema.org
+                $productUrl = url()->current();
+                $productImages = [];
+                if (!empty($details['images']) && is_array($details['images'])) {
+                    foreach ($details['images'] as $img) {
+                        $imgUrl = is_array($img) ? ($img['url'] ?? $img['path'] ?? null) : $img;
+                        if ($imgUrl) {
+                            $productImages[] = \Illuminate\Support\Str::startsWith($imgUrl, ['http://', 'https://']) ? $imgUrl : url($imgUrl);
+                        }
+                    }
+                }
+                if (empty($productImages)) {
+                    $productImages[] = url('/images/pdp/product_main.png');
+                }
+
+                $rawPrice = $product->price ?? $details['price'] ?? 0;
+                $numericPrice = preg_replace('/[^0-9]/', '', (string)$rawPrice);
+                if (empty($numericPrice) || (int)$numericPrice <= 0) {
+                    $numericPrice = "250000";
+                }
+
+                $productSchema = [
+                    '@context' => 'https://schema.org',
+                    '@type' => 'Product',
+                    'name' => $product->title ?? $details['title'] ?? 'Sản phẩm HH Maker',
+                    'image' => $productImages,
+                    'description' => strip_tags($product->description ?? $details['description'] ?? $seo['seo_meta_description'] ?? 'Sản phẩm in 3D công nghệ cao từ HH Maker.'),
+                    'sku' => $product->sku ?? ('HHM-PRD-' . str_pad($product->id, 3, '0', STR_PAD_LEFT)),
+                    'brand' => [
+                        '@type' => 'Brand',
+                        'name' => 'HH Maker',
+                    ],
+                    'offers' => [
+                        '@type' => 'Offer',
+                        'url' => $productUrl,
+                        'priceCurrency' => 'VND',
+                        'price' => (string) $numericPrice,
+                        'priceValidUntil' => '2028-12-31',
+                        'itemCondition' => 'https://schema.org/NewCondition',
+                        'availability' => 'https://schema.org/InStock',
+                        'seller' => [
+                            '@type' => 'Organization',
+                            'name' => 'HH Maker',
+                        ],
+                    ],
+                ];
+
+                $isEn = current_locale() === 'en';
+                $breadcrumbSchema = [
+                    '@context' => 'https://schema.org',
+                    '@type' => 'BreadcrumbList',
+                    'itemListElement' => [
+                        [
+                            '@type' => 'ListItem',
+                            'position' => 1,
+                            'name' => $isEn ? 'Home' : 'Trang chủ',
+                            'item' => url($isEn ? '/en' : '/'),
+                        ],
+                        [
+                            '@type' => 'ListItem',
+                            'position' => 2,
+                            'name' => $isEn ? 'Products' : 'Sản phẩm',
+                            'item' => url($isEn ? '/en/products' : '/san-pham'),
+                        ],
+                        [
+                            '@type' => 'ListItem',
+                            'position' => 3,
+                            'name' => $product->title ?? $details['title'] ?? 'Chi tiết sản phẩm',
+                            'item' => $productUrl,
+                        ],
+                    ],
+                ];
+
+                $existingSchemas = $seo['seo_schemas'] ?? [];
+                if (is_string($existingSchemas)) {
+                    $existingSchemas = json_decode($existingSchemas, true) ?: [];
+                }
+                if (!is_array($existingSchemas)) {
+                    $existingSchemas = [];
+                }
+
+                $seo['seo_schemas'] = array_merge($existingSchemas, [$productSchema, $breadcrumbSchema]);
+
                 return [
                     'product' => $details,
                     'related_products' => $product->related(['limit' => 4]),
-                    'seo' => $product->transformSeo(),
+                    'seo' => $seo,
                 ];
             });
 

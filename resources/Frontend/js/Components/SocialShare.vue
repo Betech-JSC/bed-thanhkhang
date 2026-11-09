@@ -15,7 +15,10 @@ export default {
     },
     computed: {
         pageUrl() {
-            return `${'https://funkystyle.vn'}/tai-nguyen/${this.slug}`
+            if (typeof window !== 'undefined') {
+                return window.location.href
+            }
+            return `https://hhmaker.vn/tin-tuc/${this.slug}`
         },
         facebookShareUrl() {
             return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(this.pageUrl)}`

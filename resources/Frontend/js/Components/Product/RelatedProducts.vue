@@ -47,9 +47,11 @@
                             <img
                                 :src="item.image"
                                 :alt="item.title"
+                                width="273"
+                                height="352"
                                 class="w-full h-full object-cover select-none"
-                                loading="eager"
-                                decoding="sync"
+                                loading="lazy"
+                                decoding="async"
                                 @error="handleImageError($event, item)"
                             />
                             <!-- Subtle highlight sheen on hover -->

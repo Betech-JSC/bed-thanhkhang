@@ -18,9 +18,11 @@
                 <img
                     :src="productImageSrc"
                     :alt="productImageAlt"
+                    width="273"
+                    height="335"
                     class="w-full h-full object-cover select-none group-hover:scale-105 transition-transform duration-500 ease-out"
-                    loading="eager"
-                    decoding="sync"
+                    loading="lazy"
+                    decoding="async"
                     @error="onImageError"
                 />
             </div>

@@ -59,9 +59,13 @@
 </template>
 
 <script>
+import CardBlog from '@/Components/CardBlog.vue'
+
 export default {
     props: ['related_posts', 'post'],
-    components: {},
+    components: {
+        CardBlog,
+    },
     data() {
         const homeBreadcrumb = { name: this.tt('Trang chủ'), url: '/' }
         let breadcrumbs = [homeBreadcrumb]

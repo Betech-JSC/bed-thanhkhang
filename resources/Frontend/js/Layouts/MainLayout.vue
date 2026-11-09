@@ -32,7 +32,7 @@ export default {
             const seo_meta_description = seo?.seo_meta_description ?? global?.seo_meta_description ?? this.tt('Hiện thực hóa mọi ý tưởng với công nghệ in 3D hiện đại.')
             const seo_meta_robots = seo?.seo_meta_robots ?? global?.seo_meta_robots ?? 'robots.txt'
             const seo_meta_keywords = seo?.seo_meta_keywords ?? global?.seo_meta_keywords ?? 'HH Maker, in 3D, FDM, SLA'
-            const seo_image = seo?.seo_image ?? global?.seo_image ?? '/cover.jpg?v=2'
+            const seo_image = seo?.seo_image ?? (global?.seo_image && !global.seo_image.includes('funkystyle') && !global.seo_image.includes('khoqua') ? global.seo_image : '/og-image.jpg?v=20261109')
 
             const titleEl = document.querySelector('title')
             if (titleEl) titleEl.innerHTML = seo_meta_title

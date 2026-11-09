@@ -50,9 +50,11 @@
                                 <img
                                     :src="item.image"
                                     :alt="item.name"
+                                    width="264"
+                                    height="335"
                                     class="w-full h-full object-cover object-center select-none"
-                                    loading="eager"
-                                    decoding="sync"
+                                    loading="lazy"
+                                    decoding="async"
                                 />
                                 <!-- Subtle highlight sheen on hover -->
                                 <div class="absolute inset-0 bg-primary/10 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 pointer-events-none z-10"></div>

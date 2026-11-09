@@ -20,21 +20,64 @@ class Sitemap
 
     public function addStaticRoutes(): static
     {
+        // 1. Always add homepage with highest priority 1.0
+        $this->tags[] = [
+            'url' => url('/'),
+            'name' => 'home',
+            'lastModificationDate' => now()->toAtomString(),
+            'changeFrequency' => self::CHANGE_FREQUENCY_DAILY,
+            'priority' => 1.0,
+        ];
+
+        $excludedPatterns = [
+            'sitemap.xml',
+            'robots.txt',
+            'error',
+            'search',
+            'tim-kiem',
+            'api/search',
+            'search-v2',
+            'ho-so-ca-nhan',
+            'about',
+            'about-us',
+            've-chung-toi',
+            'dang-nhap',
+            'dang-ky',
+            'quen-mat-khau',
+            'dat-lai-mat-khau',
+            'dashboard',
+            'demo',
+            'test',
+        ];
+
         foreach (Route::getRoutes() as $route) {
             if ($route->getName() === 'dynamic-redirect') continue;
 
-            if (isset($route->getAction()['middleware']) && $route->methods()[0] == 'GET') {
-                $middleware = $route->getAction()['middleware'];
-                $uri = $route->uri;
+            $action = $route->getAction();
+            $controller = $action['controller'] ?? '';
+            if (str_contains($controller, 'RedirectController')) continue;
+
+            if (isset($action['middleware']) && in_array('GET', $route->methods())) {
+                $middleware = $action['middleware'];
+                $uri = trim($route->uri, '/');
                 if (is_array($middleware)) {
                     if (
                         in_array('frontend', $middleware) &&
                         !str_contains($uri, '{') &&
                         !str_contains($uri, '}') &&
-                        $uri !== 'sitemap.xml' &&
-                        $uri !== '/'
+                        $uri !== ''
                     ) {
-                        $this->add(url($uri));
+                        $isExcluded = false;
+                        foreach ($excludedPatterns as $pattern) {
+                            if ($uri === $pattern || str_starts_with($uri, $pattern . '/') || str_ends_with($uri, '/' . $pattern)) {
+                                $isExcluded = true;
+                                break;
+                            }
+                        }
+
+                        if (!$isExcluded) {
+                            $this->add(url($uri));
+                        }
                     }
                 }
             }
@@ -78,8 +121,8 @@ class Sitemap
             ->whereNotNull('url')
             ->unique('url')
             ->filter()
-            ->sortBy('priority')
-            ->sortBy('url');
+            ->sortByDesc('priority')
+            ->values();
 
         return response()
             ->view('sitemap::sitemap', ['items' => $items])

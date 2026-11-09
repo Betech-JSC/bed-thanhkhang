@@ -16,6 +16,13 @@ class MetaSeo
     }
     public function handle($request, Closure $next)
     {
+        if (function_exists('current_locale')) {
+            $locale = current_locale();
+            if (in_array($locale, config('app.locales', ['vi', 'en']))) {
+                app()->setLocale($locale);
+            }
+        }
+
         $relativeUrl = $request->path() != '/' ? '/' . $request->path() : $request->path();
 
         try {

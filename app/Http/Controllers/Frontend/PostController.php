@@ -15,7 +15,8 @@ class PostController extends Controller
     public function index()
     {
         try {
-            $data = Cache::remember('posts_index_' . app()->getLocale(), 3600, function () {
+            $locale = current_locale();
+            $data = Cache::remember('posts_index_' . $locale, 3600, function () {
                 $posts = Post::query()
                     ->active()
                     ->activeCategories()
@@ -24,29 +25,35 @@ class PostController extends Controller
                     ->get()
                     ->map(fn($item) => $item->transform());
 
-                $courses = Post::query()
-                    ->active()
-                    ->whereCourses()
-                    ->activeCategories()
-                    ->orderBy('id', 'desc')
-                    ->take(3)
-                    ->get()
-                    ->map(fn($item) => $item->transform());
-
                 return [
                     'posts' => $posts,
-                    'courses' => $courses,
+                    'courses' => [],
                 ];
             });
 
+            $seo = [
+                'title' => $locale === 'en'
+                    ? 'News & Articles - HH Maker | 3D Printing Insights'
+                    : 'Tin tức & Bài viết - HH Maker | Kiến thức công nghệ in 3D',
+                'description' => $locale === 'en'
+                    ? 'Explore the latest insights, updates, and knowledge on 3D printing and custom fabrication from HH Maker.'
+                    : 'Tổng hợp các bài viết, tin tức công nghệ in 3D và giải pháp chế tác cơ khí, mô hình từ HH Maker.',
+                'image' => '/og-image.jpg?v=20261109',
+                'seo_image' => '/og-image.jpg?v=20261109',
+            ];
+
             if (request()->wantsJson()) {
-                return response()->json($data);
+                return response()->json(array_merge($data, ['seo' => $seo]));
             }
 
-            return Inertia::render('Posts/Index', $data);
+            return Inertia::render('Posts/Index', array_merge($data, ['seo' => $seo]))
+                ->withViewData(['seo' => $seo]);
         } catch (\Throwable $th) {
             report($th);
-            return response()->json(['error' => 'Something went wrong.'], 500);
+            if (request()->wantsJson()) {
+                return response()->json(['error' => 'Something went wrong.'], 500);
+            }
+            return abort(500);
         }
     }
 
@@ -80,7 +87,10 @@ class PostController extends Controller
                 ]);
         } catch (\Throwable $th) {
             report($th);
-            return response()->json(['error' => 'Something went wrong.'], 500);
+            if (request()->wantsJson()) {
+                return response()->json(['error' => 'Something went wrong.'], 500);
+            }
+            abort(404);
         }
     }
 

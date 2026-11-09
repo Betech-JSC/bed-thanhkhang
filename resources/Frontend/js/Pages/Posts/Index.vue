@@ -12,9 +12,9 @@
                     <div class="absolute lg:top-[160px] top-[100px] space-y-3 w-full grid grid-cols-12 gap-2">
                         <div class="col-span-full md:col-span-9">
                             <div>
-                                <h1 class="display-2 text-[#18191E] font-bold font-display">Funky Blog</h1>
+                                <h1 class="display-2 text-[#18191E] font-bold font-display">{{ tt('HH Maker Blog') }}</h1>
                                 <p class="body-1 font-sans font-normal text-[#18191E]">
-                                    {{ tt('Nơi chia sẻ các tin tức, thông tin mới nhất từ Funky') }}
+                                    {{ tt('Nơi chia sẻ các tin tức, kiến thức in 3D và thông tin mới nhất từ HH Maker') }}
                                 </p>
                             </div>
                         </div>
@@ -110,10 +110,11 @@
 <script>
 import JamBreadcrumb from '@/Components/Jam/Breadcrumb.vue'
 import Pagination from '@/Components/Paginate.vue'
+import CardBlog from '@/Components/CardBlog.vue'
 import axios from 'axios'
 
 export default {
-    components: { JamBreadcrumb, Pagination },
+    components: { JamBreadcrumb, Pagination, CardBlog },
 
     props: ['posts', 'courses'],
 

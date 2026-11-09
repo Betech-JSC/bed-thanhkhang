@@ -7,13 +7,20 @@
             >
                 <!-- Background Image (Figma Node 2701:1180) -->
                 <div class="absolute inset-0 z-0 overflow-hidden rounded-[16px]">
-                    <img
-                        :src="currentBannerImage"
-                        alt="HH Maker 3D Printing Technology"
-                        class="w-full h-full object-cover object-right md:object-center select-none"
-                        loading="eager"
-                        @error="handleImageError"
-                    />
+                    <picture>
+                        <source :srcset="currentBannerWebp" type="image/webp" />
+                        <img
+                            :src="currentBannerImage"
+                            alt="HH Maker 3D Printing Technology"
+                            class="w-full h-full object-cover object-right md:object-center select-none"
+                            width="1279"
+                            height="616"
+                            loading="eager"
+                            decoding="async"
+                            fetchpriority="high"
+                            @error="handleImageError"
+                        />
+                    </picture>
                     <!-- Subtle mobile gradient only on small screens; on desktop the 3D artwork is clear -->
                     <div
                         class="absolute inset-0 bg-gradient-to-r from-[#080C14]/90 via-[#080C14]/60 to-transparent md:hidden"
@@ -134,6 +141,13 @@ export default {
                 return this.bannerImage.replace(/^https?:\/\/[^\/]+/, '').replace('/static/', '/');
             }
             return this.bannerImage;
+        },
+        currentBannerWebp() {
+            const img = this.currentBannerImage;
+            if (typeof img === 'string' && img.endsWith('.png')) {
+                return img.replace(/\.png$/, '.webp');
+            }
+            return '/assets/images/homepage/hero-banner.webp';
         },
     },
     watch: {

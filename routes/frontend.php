@@ -21,6 +21,9 @@ Route::get('sitemap.xml', [SitemapController::class, 'index']);
 Route::redirect('/ho-so-ca-nhan', '/', 301);
 Route::redirect('/about', '/gioi-thieu', 301);
 Route::redirect('/about-us', '/gioi-thieu', 301);
+Route::redirect('/ve-chung-toi', '/gioi-thieu', 301);
+Route::redirect('/en/about', '/en/about-us', 301);
+Route::redirect('/en/ve-chung-toi', '/en/about-us', 301);
 Route::redirect('/search', '/tim-kiem', 301);
 Route::redirect('/dang-nhap', '/', 301)->name('user.login');
 Route::redirect('/dang-ky', '/', 301)->name('user.register');
@@ -44,7 +47,6 @@ Route::middleware(['meta_seo', 'opening'])->group(function () {
 
         Route::controller(HistoryController::class)->group(function () {
             Route::get(Lang::uri('about-us'), 'index')->name('histories.index');
-            Route::get('about', 'index')->name('about');
             Route::get(Lang::uri('histories') . '/{slug}', 'show')->name('histories.show');
         });
 
@@ -65,8 +67,6 @@ Route::middleware(['meta_seo', 'opening'])->group(function () {
 
         // quy trình gia công 3D
         Route::get(Lang::uri('quy-trinh'), [ProcessController::class, 'index'])->name('process.index');
-
-        Route::get('ve-chung-toi', [HistoryController::class, 'index']);
 
         Route::post(Lang::uri('contacts'), [ContactController::class, 'store'])->name('contact.store');
 

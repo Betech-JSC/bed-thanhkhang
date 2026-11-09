@@ -83,9 +83,11 @@
                                         <img
                                             :src="item.image"
                                             :alt="item.title"
+                                            width="264"
+                                            height="335"
                                             class="w-full h-full object-cover object-center select-none"
-                                            loading="eager"
-                                            decoding="sync"
+                                            loading="lazy"
+                                            decoding="async"
                                         />
 
                                         <!-- Subtle Sheen Overlay on Hover -->

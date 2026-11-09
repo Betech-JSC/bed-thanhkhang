@@ -8,6 +8,16 @@
             <meta property="og:description" :content="currentDescription" />
             <meta property="og:image" :content="productImages[0]?.url || '/images/pdp/product_main.png'" />
             <meta property="og:type" content="product" />
+            <component
+                :is="'script'"
+                type="application/ld+json"
+                v-html="JSON.stringify(productJsonLd)"
+            />
+            <component
+                :is="'script'"
+                type="application/ld+json"
+                v-html="JSON.stringify(breadcrumbJsonLd)"
+            />
         </Head>
 
         <!-- 1. BREADCRUMBS & SECTION TỔNG QUAN SẢN PHẨM (FIGMA 2358:2979: 1440x713 px, padding 24px 144px 40px) -->
@@ -611,6 +621,70 @@ export default {
                 this.pdpMetadata?.customCtaText ||
                 this.tt('Trao đổi yêu cầu tùy chỉnh với kỹ sư')
             )
+        },
+        productJsonLd() {
+            const rawPrice = this.product?.price || this.product?.min_price || 250000
+            const numericPrice = String(rawPrice).replace(/[^0-9]/g, '') || '250000'
+            const currentUrl = typeof window !== 'undefined' ? window.location.href : 'https://hhmaker.vn/san-pham'
+            const images = Array.isArray(this.productImages)
+                ? this.productImages.map((img) => img.url).filter(Boolean)
+                : []
+
+            return {
+                '@context': 'https://schema.org',
+                '@type': 'Product',
+                name: this.currentTitle,
+                image: images.length > 0 ? images : ['https://hhmaker.vn/images/pdp/product_main.png'],
+                description: this.currentDescription,
+                sku: this.product?.sku || `HHM-PRD-${this.product?.id || 1}`,
+                brand: {
+                    '@type': 'Brand',
+                    name: 'HH Maker',
+                },
+                offers: {
+                    '@type': 'Offer',
+                    url: currentUrl,
+                    priceCurrency: 'VND',
+                    price: numericPrice,
+                    priceValidUntil: '2028-12-31',
+                    itemCondition: 'https://schema.org/NewCondition',
+                    availability: 'https://schema.org/InStock',
+                    seller: {
+                        '@type': 'Organization',
+                        name: 'HH Maker',
+                    },
+                },
+            }
+        },
+        breadcrumbJsonLd() {
+            const homeUrl = this.isEn ? 'https://hhmaker.vn/en' : 'https://hhmaker.vn'
+            const productsUrl = this.isEn ? 'https://hhmaker.vn/en/products' : 'https://hhmaker.vn/san-pham'
+            const currentUrl = typeof window !== 'undefined' ? window.location.href : `${productsUrl}/${this.product?.slug || ''}`
+
+            return {
+                '@context': 'https://schema.org',
+                '@type': 'BreadcrumbList',
+                itemListElement: [
+                    {
+                        '@type': 'ListItem',
+                        position: 1,
+                        name: this.isEn ? 'Home' : 'Trang chủ',
+                        item: homeUrl,
+                    },
+                    {
+                        '@type': 'ListItem',
+                        position: 2,
+                        name: this.isEn ? 'Products' : 'Sản phẩm',
+                        item: productsUrl,
+                    },
+                    {
+                        '@type': 'ListItem',
+                        position: 3,
+                        name: this.currentTitle,
+                        item: currentUrl,
+                    },
+                ],
+            }
         },
     },
     methods: {

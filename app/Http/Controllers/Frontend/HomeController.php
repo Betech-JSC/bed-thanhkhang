@@ -23,9 +23,10 @@ class HomeController extends Controller
             $locale = current_locale();
             $data = Cache::remember('home_page_data_' . $locale, 3600, function () use ($locale) {
                 try {
-                    // Get Home Slider
+                    // Get Home Slider & Banners
                     $sliders = Slider::getByPosition('HOME_SLIDER');
                     $announcements = Slider::getByPosition('HOME_ANNOUNCEMENT_TICKER');
+                    $founderBanner = Slider::getByPosition('BANNER_HOME_FOUNDER');
 
                     // Fetch Active Services
                     $services = Service::query()
@@ -137,6 +138,7 @@ class HomeController extends Controller
                     return [
                         'sliders' => $sliders,
                         'announcements' => $announcements,
+                        'founderBanner' => $founderBanner,
                         'services' => $services,
                         'processSteps' => $processSteps,
                         'categories' => $categories,
@@ -148,6 +150,7 @@ class HomeController extends Controller
                     return [
                         'sliders' => [],
                         'announcements' => [],
+                        'founderBanner' => null,
                         'services' => [],
                         'processSteps' => Config::getProcessSteps($locale),
                         'categories' => [],
@@ -165,6 +168,8 @@ class HomeController extends Controller
                 'description' => $locale === 'en'
                     ? 'No limits to creative space, HH Maker breathes life into each creation through modern 3D printing and precise machining.'
                     : 'Không giới hạn không gian sáng tạo, HH Maker thổi hồn vào từng sản phẩm thông qua công nghệ in và gia công 3D hiện đại.',
+                'image' => '/og-image.jpg?v=20261109',
+                'seo_image' => '/og-image.jpg?v=20261109',
             ];
 
             // Return JSON or Inertia View
