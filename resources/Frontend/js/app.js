@@ -40,6 +40,7 @@ axios.defaults.withCredentials = true
 axios.defaults.xsrfCookieName = 'XSRF-TOKEN'
 axios.defaults.xsrfHeaderName = 'X-XSRF-TOKEN'
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
+window.axios = axios
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || import.meta.env.VITE_APP_NAME
 const rawMerged = { ...messages, ...i18nMessages }
