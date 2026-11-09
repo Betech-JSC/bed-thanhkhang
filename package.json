@@ -1,16 +1,16 @@
 {
   "private": true,
   "scripts": {
-    "dev": "node init && vite --config vite.frontend.config.js",
+    "dev": "vite --config vite.frontend.config.js",
     "frontend:build": "node --max-old-space-size=4096 ./node_modules/vite/bin/vite.js build --config vite.frontend.config.js && node --max-old-space-size=4096 ./node_modules/vite/bin/vite.js build --ssr --config vite.frontend.config.js",
-    "build:frontend": "node init && node --max-old-space-size=4096 ./node_modules/vite/bin/vite.js build --config vite.frontend.config.js && node --max-old-space-size=4096 ./node_modules/vite/bin/vite.js build --ssr --config vite.frontend.config.js",
+    "build:frontend": "node --max-old-space-size=4096 ./node_modules/vite/bin/vite.js build --config vite.frontend.config.js && node --max-old-space-size=4096 ./node_modules/vite/bin/vite.js build --ssr --config vite.frontend.config.js",
     "route": "php artisan vue-i18n:generate && php artisan ziggy:generate public/build/ziggy.frontend.js --group=frontend",
     "backend": "vite --config vite.backend.config.ts",
     "backend:build": "node --max-old-space-size=4096 ./node_modules/vite/bin/vite.js build --config vite.backend.config.ts",
-    "build:backend": "node init && node --max-old-space-size=4096 ./node_modules/vite/bin/vite.js build --config vite.backend.config.ts",
-    "start": "node init && node bootstrap/ssr/ssr.mjs",
+    "build:backend": "node --max-old-space-size=4096 ./node_modules/vite/bin/vite.js build --config vite.backend.config.ts",
+    "start": "node bootstrap/ssr/ssr.mjs",
     "heroku-postbuild": "php artisan migrate:fresh --seed --force && yarn && yarn route && yarn frontend:build && yarn backend:build",
-    "build": "node init && yarn && yarn route && yarn frontend:build && yarn backend:build && php artisan optimize:clear && systemctl restart php8.3-fpm",
+    "build": "yarn && yarn route && yarn frontend:build && yarn backend:build && php artisan optimize:clear && systemctl restart php8.3-fpm",
     "setup": "sh setup.sh",
     "fix": "prettier --write '**/*.{js,vue,scss}'"
   },

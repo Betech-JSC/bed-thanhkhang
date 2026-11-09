@@ -14,6 +14,7 @@ auth.json
 npm-debug.log
 yarn-error.log
 /.idea
+/.vscode
 .DS_Store
 config.bat
 build.log
@@ -47,3 +48,4 @@ __pycache__/
 /scratch/*.mjs
 /scratch/hub-qa-screenshots/
 /public/assets/images/process_figma/
+.env
