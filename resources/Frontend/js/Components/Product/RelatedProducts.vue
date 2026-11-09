@@ -140,25 +140,36 @@ export default {
         },
         getProductUrl(item) {
             if (!item) return '/san-pham'
-            if (item.url) return item.url
+            const isEn = (this.$page?.props?.locale?.current || '').toLowerCase() === 'en'
+            const prefix = isEn ? '/en/products' : '/san-pham'
+
             if (item.slug) {
+                return `${prefix}/${item.slug}`
+            }
+            if (typeof item.url === 'string' && item.url) {
                 try {
-                    if (typeof this.route === 'function') {
-                        return this.route('products.show', { slug: item.slug })
-                    }
+                    const parsed = new URL(item.url, typeof window !== 'undefined' ? window.location.origin : 'http://localhost')
+                    return parsed.pathname
                 } catch (e) {
-                    // Fallback to relative URL
+                    return item.url
                 }
-                return `/san-pham/${item.slug}`
             }
-            try {
-                if (typeof this.route === 'function') {
-                    return this.route('products.index')
+            if (item.url && typeof item.url === 'object') {
+                const locKey = isEn ? 'EN' : 'VI'
+                const matched = item.url[locKey] || Object.values(item.url)[0]
+                if (matched && typeof matched === 'string') {
+                    try {
+                        const parsed = new URL(matched, typeof window !== 'undefined' ? window.location.origin : 'http://localhost')
+                        return parsed.pathname
+                    } catch (e) {
+                        return matched
+                    }
                 }
-            } catch (e) {
-                // Fallback
             }
-            return '/san-pham'
+            if (item.id) {
+                return `${prefix}/${item.id}`
+            }
+            return prefix
         },
         preloadImages() {
             if (typeof window === 'undefined') return

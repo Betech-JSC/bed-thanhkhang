@@ -133,11 +133,11 @@
                                             </h4>
                                             <div class="flex items-center gap-2 mt-0.5 text-xs text-[#84ADFF]/80">
                                                 <span v-if="product.category_name || (product.category && (product.category.name || product.category.title))" class="truncate max-w-[140px]">
-                                                    {{ product.category_name || (product.category && (product.category.name || product.category.title)) }}
+                                                    {{ tt(product.category_name || (product.category && (product.category.name || product.category.title))) }}
                                                 </span>
                                                 <span v-if="(product.category_name || product.category) && (product.material || product.print_technology)" class="text-[#404968]">•</span>
                                                 <span v-if="product.material || product.print_technology" class="text-[#B9C0D4] truncate max-w-[130px]">
-                                                    {{ product.material || product.print_technology }}
+                                                    {{ tt(product.material) || tt(product.print_technology) }}
                                                 </span>
                                             </div>
                                         </div>
@@ -197,11 +197,11 @@
                                         </h4>
                                         <div class="flex items-center gap-2 mt-0.5 text-xs text-[#84ADFF]/80">
                                             <span v-if="product.category_name || (product.category && (product.category.name || product.category.title))" class="truncate max-w-[140px]">
-                                                {{ product.category_name || (product.category && (product.category.name || product.category.title)) }}
+                                                {{ tt(product.category_name || (product.category && (product.category.name || product.category.title))) }}
                                             </span>
                                             <span v-if="(product.category_name || product.category) && (product.material || product.print_technology)" class="text-[#404968]">•</span>
                                             <span v-if="product.material || product.print_technology" class="text-[#B9C0D4] truncate max-w-[130px]">
-                                                {{ product.material || product.print_technology }}
+                                                {{ tt(product.material) || tt(product.print_technology) }}
                                             </span>
                                         </div>
                                     </div>
@@ -258,25 +258,36 @@ export default {
             isLoading: false,
             results: [],
             debounceTimer: null,
-            popularTags: [
-                { label: this.tt('In 3D SLA'), keyword: 'SLA' },
-                { label: this.tt('Nhựa PLA+'), keyword: 'PLA' },
-                { label: this.tt('In Resin 8K'), keyword: 'Resin' },
-                { label: 'Carbon Fiber', keyword: 'Carbon Fiber' },
-                { label: this.tt('Móc khoá F1'), keyword: this.tt('Móc khoá') },
-                { label: this.tt('Khung robot'), keyword: 'Robot' },
-                { label: 'Voronoi', keyword: 'Voronoi' },
-                { label: this.tt('Thiết kế 3D'), keyword: this.tt('Thiết kế') },
-                { label: this.tt('Quà tặng lưu niệm'), keyword: this.tt('Quà tặng') },
-            ],
+            lastLoadedLocale: '',
         }
     },
     computed: {
         currentLocale() {
             return this.$page?.props?.locale?.current || 'vi'
         },
+        popularTags() {
+            return [
+                { label: this.tt('In 3D SLA'), keyword: 'SLA' },
+                { label: this.tt('Nhựa PLA+'), keyword: 'PLA' },
+                { label: this.tt('In Resin 8K'), keyword: 'Resin' },
+                { label: 'Carbon Fiber', keyword: 'Carbon Fiber' },
+                { label: this.tt('Móc khoá F1'), keyword: this.currentLocale === 'en' ? 'Keychain' : 'Móc khoá' },
+                { label: this.tt('Khung robot'), keyword: 'Robot' },
+                { label: 'Voronoi', keyword: 'Voronoi' },
+                { label: this.tt('Thiết kế 3D'), keyword: this.currentLocale === 'en' ? 'Design' : 'Thiết kế' },
+                { label: this.tt('Quà tặng lưu niệm'), keyword: this.currentLocale === 'en' ? 'Gift' : 'Quà tặng' },
+            ]
+        },
     },
     watch: {
+        currentLocale(newLocale, oldLocale) {
+            if (newLocale !== oldLocale) {
+                this.results = []
+                if (this.isOpen) {
+                    this.fetchResults(this.keyword || '')
+                }
+            }
+        },
         isOpen(val) {
             if (val) {
                 this.$nextTick(() => {
@@ -285,9 +296,9 @@ export default {
                 if (typeof document !== 'undefined') {
                     document.body.classList.add('overflow-hidden')
                 }
-                // Nếu chưa có kết quả nào, nạp sản phẩm gợi ý ban đầu
-                if (this.results.length === 0) {
-                    this.fetchResults('')
+                // Nếu chưa có kết quả nào hoặc locale thay đổi, nạp sản phẩm gợi ý ban đầu
+                if (this.results.length === 0 || this.lastLoadedLocale !== this.currentLocale) {
+                    this.fetchResults(this.keyword || '')
                 }
             } else {
                 if (typeof document !== 'undefined') {
@@ -324,6 +335,8 @@ export default {
         },
         async fetchResults(searchTerm) {
             this.isLoading = true
+            const activeLocale = this.currentLocale || 'vi'
+            this.lastLoadedLocale = activeLocale
             try {
                 let apiUrl = '/search-v2'
                 try {
@@ -336,6 +349,8 @@ export default {
                     params: {
                         keyword: searchTerm ? searchTerm.trim() : '',
                         limit: 8,
+                        locale: activeLocale,
+                        use_locale: activeLocale,
                     },
                 })
 
@@ -358,15 +373,37 @@ export default {
             return new Intl.NumberFormat('vi-VN').format(val) + ' ' + this.tt('đ')
         },
         getProductUrl(product) {
+            if (!product) return '/san-pham'
+            const isEn = (this.currentLocale || this.$page?.props?.locale?.current || '').toLowerCase() === 'en'
+            const prefix = isEn ? '/en/products' : '/san-pham'
+
             if (product.slug) {
+                return `${prefix}/${product.slug}`
+            }
+            if (typeof product.url === 'string' && product.url) {
                 try {
-                    return this.route('products.show', { slug: product.slug })
+                    const parsed = new URL(product.url, typeof window !== 'undefined' ? window.location.origin : 'http://localhost')
+                    return parsed.pathname
                 } catch (e) {
-                    const locale = this.currentLocale || 'vi'
-                    return locale === 'en' ? `/en/products/${product.slug}` : `/san-pham/${product.slug}`
+                    return product.url
                 }
             }
-            return '/san-pham'
+            if (product.url && typeof product.url === 'object') {
+                const locKey = isEn ? 'EN' : 'VI'
+                const matched = product.url[locKey] || Object.values(product.url)[0]
+                if (matched && typeof matched === 'string') {
+                    try {
+                        const parsed = new URL(matched, typeof window !== 'undefined' ? window.location.origin : 'http://localhost')
+                        return parsed.pathname
+                    } catch (e) {
+                        return matched
+                    }
+                }
+            }
+            if (product.id) {
+                return `${prefix}/${product.id}`
+            }
+            return prefix
         },
         goToProduct(product) {
             const url = this.getProductUrl(product)
@@ -380,11 +417,14 @@ export default {
         viewAllResults() {
             const kw = this.keyword.trim()
             this.close()
-            let targetUrl = '/san-pham'
+            const locale = this.currentLocale || 'vi'
+            let targetUrl = locale === 'en' ? '/en/products' : '/san-pham'
             try {
                 targetUrl = this.route('products.index', kw ? { search: kw } : {})
             } catch (e) {
-                targetUrl = kw ? `/san-pham?search=${encodeURIComponent(kw)}` : '/san-pham'
+                targetUrl = kw
+                    ? `${targetUrl}?search=${encodeURIComponent(kw)}`
+                    : targetUrl
             }
 
             if (this.$inertia) {

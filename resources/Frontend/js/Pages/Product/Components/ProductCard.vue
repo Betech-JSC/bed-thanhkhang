@@ -33,7 +33,7 @@
 
         <!-- Bottom Info Bar (Locked Height 84px, Figma 2283:6515) -->
         <div class="relative h-[84px] w-full bg-[#30374F] overflow-hidden shrink-0">
-            <div class="w-full h-full px-6 py-3 flex flex-col justify-between gap-1">
+            <div class="w-full h-full px-2 py-3 flex flex-col justify-between gap-1">
                 <h3
                     class="text-base font-bold text-[#F5F8FF] line-clamp-1 h-[22px] leading-[22px] font-sans group-hover:text-[#84ADFF] transition-colors"
                     :title="tt(product.name || product.title)"

@@ -123,7 +123,7 @@ export default {
                     name: it.name || it.title || '',
                     description: it.description || it.short_description || '',
                     image: it.image?.url ? it.image.url : (typeof it.image === 'string' ? it.image : (it.thumbnail?.url || it.thumbnail || '')),
-                    url: it.url || (it.slug ? `/san-pham/${it.slug}` : (it.id ? `/san-pham/${it.id}` : '/san-pham')),
+                    url: this.resolveProductUrl(it),
                 })).filter(it => it.name);
             }
             return [];
@@ -143,6 +143,39 @@ export default {
     methods: {
         tt(s) {
             return this.$root?.tt ? this.$root.tt(s) : tt(s);
+        },
+        resolveProductUrl(it) {
+            if (!it) return '/san-pham';
+            const isEn = (this.$page?.props?.locale?.current || '').toLowerCase() === 'en';
+            const prefix = isEn ? '/en/products' : '/san-pham';
+
+            if (it.slug) {
+                return `${prefix}/${it.slug}`;
+            }
+            if (typeof it.url === 'string' && it.url) {
+                try {
+                    const parsed = new URL(it.url, typeof window !== 'undefined' ? window.location.origin : 'http://localhost');
+                    return parsed.pathname;
+                } catch (e) {
+                    return it.url;
+                }
+            }
+            if (it.url && typeof it.url === 'object') {
+                const locKey = isEn ? 'EN' : 'VI';
+                const matched = it.url[locKey] || Object.values(it.url)[0];
+                if (matched && typeof matched === 'string') {
+                    try {
+                        const parsed = new URL(matched, typeof window !== 'undefined' ? window.location.origin : 'http://localhost');
+                        return parsed.pathname;
+                    } catch (e) {
+                        return matched;
+                    }
+                }
+            }
+            if (it.id) {
+                return `${prefix}/${it.id}`;
+            }
+            return prefix;
         },
         preloadImages() {
             if (typeof window === 'undefined') return;

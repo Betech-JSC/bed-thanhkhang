@@ -175,8 +175,10 @@ class ContactController extends Controller
                 $contact['images'] = $images;
             }
 
+            // Ưu tiên số 1: Lưu dữ liệu liên hệ an toàn vào database
             $created = Contact::create($contact);
 
+            // Phản hồi tương thích: Nếu không phải Inertia và là API/Ajax -> trả lời JSON
             if (!$request->header('X-Inertia') && ($request->wantsJson() || $request->ajax())) {
                 return response()->json([
                     'success'    => true,
@@ -184,120 +186,137 @@ class ContactController extends Controller
                 ]);
             }
 
+            // Nếu là Inertia request -> redirect back kèm flash success
             return redirect()->back()->withSuccess('success');
         } catch (\Throwable $th) {
-            report($th);
-            if ($request->wantsJson() || $request->ajax()) {
+            \Log::error('ContactController store error: ' . $th->getMessage(), [
+                'exception' => $th,
+            ]);
+
+            // Tuyệt đối không trả JSON cho Inertia request vì sẽ làm Inertia modal crash
+            if (!$request->header('X-Inertia') && ($request->wantsJson() || $request->ajax())) {
                 return response()->json(['success' => false, 'message' => $th->getMessage()], 500);
             }
+
             return redirect()->back()->withErrors(['error' => $th->getMessage()]);
         }
     }
 
     public function sendEmail($contact, $mailNotification = null)
     {
-        if ($contact->status === Contact::STATUS_IS_SPAM) {
-            $emails = explode(',', config('contact.mail_spam'));
+        try {
+            if ($contact->status === Contact::STATUS_IS_SPAM) {
+                $emails = explode(',', config('contact.mail_spam'));
 
-            $data['mail_title'] = config('contact.message.new_spam', 'Thông báo nhận được Spam');
-            $data = array_merge($data, $contact->data ?? []);
-            $route = config('contact.types.' . $contact->type . '.route', 'contacts');
-            $data['url'] = route(current_locale() . '.admin.' . $route . '.form', ['id' => $contact->id]);
+                $data['mail_title'] = config('contact.message.new_spam', 'Thông báo nhận được Spam');
+                $data = array_merge($data, $contact->data ?? []);
+                $route = config('contact.types.' . $contact->type . '.route', 'contacts');
+                $data['url'] = route(current_locale() . '.admin.' . $route . '.form', ['id' => $contact->id]);
 
-            foreach ($emails as $email) {
-                Notification::route('mail', $email)
+                foreach ($emails as $email) {
+                    if (!empty(trim($email))) {
+                        Notification::route('mail', trim($email))
+                            ->notify(new CommonNotification($data));
+                    }
+                }
+            } else {
+                $emails = empty($mailNotification) ? explode(',', notification_to()) : explode(',', $mailNotification);
+                $contactData = $contact->data ?? [];
+                $emailData = [
+                    'mail_title' => config('contact.message.new_contact')
+                ];
+
+                if ($contact->type == 'CONTACT_FORM') {
+                    $emailData = array_merge($emailData, [
+                        'Name' => $contactData['Họ và tên'] ?? '',
+                        'Phone' => $contactData['Số điện thoại'] ?? '',
+                        'Email' => $contactData['Email'] ?? '',
+                        'Note' => $contactData['Nội dung cần hỗ trợ'] ?? '',
+                        'Service' => $contactData['Service']['title'] ?? '',
+                        'Service link' => isset($contactData['Service']['slug']) ? route(current_locale() . '.services.show', ['slug' => $contactData['Service']['slug']]) : '',
+                        'url' => route(current_locale() . '.admin.contacts.form', ['id' => $contact->id])
+                    ]);
+                } else if ($contact->type == 'APPLY_FORM') {
+                    $files = [];
+
+                    if (isset($contactData['File CV']) && is_array($contactData['File CV'])) {
+                        foreach ($contactData['File CV'] as $index => $cv) {
+                            $link = str_replace(' ', '%20', str_replace("/static/", "/storage/", config('app.url') . $cv));
+                            $files['File CV ' . ($index + 1)] = 'File CV: <a href="' . $link . '">' . $link . '</a>';
+                        }
+                    }
+
+                    $emailData = array_merge($emailData, [
+                        'Name' => $contactData['Họ và tên'] ?? '',
+                        'Phone' => $contactData['Phone'] ?? '',
+                        'Email' => $contactData['Email'] ?? '',
+                        'Job' => $contactData['Job']['title'] ?? '',
+                        'Job link' => isset($contactData['Job']['slug']) ? route(current_locale() . '.jobs.show', ['slug' => $contactData['Job']['slug']]) : '',
+                        'File cv' => $files,
+                        'url' => route(current_locale() . '.admin.applies.form', ['id' => $contact->id])
+                    ]);
+                }
+
+                foreach ($emails as $email) {
+                    if (!empty(trim($email))) {
+                        Notification::route('mail', trim($email))
+                            ->notify(new CommonNotification($emailData));
+                    }
+                }
+            }
+
+            // send customer
+            $data = $contact->data ?? [];
+            if (method_exists($contact, 'transformEmailDetails')) {
+                $transformedData = $contact->transformEmailDetails();
+                if (is_array($transformedData)) {
+                    $data = array_merge($data, $transformedData);
+                }
+
+                if (isset($data['File CV']['CV 1'])) {
+                    $data['File CV']['CV 1'] = 'File CV: <a href="' . $data['File CV']['CV 1'] . '">' . $data['File CV']['CV 1'] . '</a>';
+                }
+            }
+
+            $emailTo = $data['Email'] ?? $data['email'] ?? null;
+            if (!empty($emailTo)) {
+                $template = EmailTemplate::active()
+                    ->where('type', $contact->type)
+                    ->first();
+
+                if ($template) {
+                    $subject = $template->subject;
+                    $content = $template->content;
+
+                    // Map common aliases
+                    $data['Name'] = $data['Name'] ?? $data['Họ và tên'] ?? $data['name'] ?? '';
+                    $data['Email'] = $data['Email'] ?? $data['email'] ?? '';
+                    $data['Phone'] = $data['Phone'] ?? $data['Số điện thoại'] ?? $data['phone'] ?? '';
+                    $data['Note'] = $data['Note'] ?? $data['Nội dung cần hỗ trợ'] ?? $data['note'] ?? '';
+                    $data['Service'] = $data['Service'] ?? $data['Dịch vụ'] ?? '';
+                    $data['Job'] = $data['Job'] ?? $data['Công việc'] ?? '';
+
+                    foreach ($data as $key => $value) {
+                        if (is_string($value)) {
+                            $subject = str_replace('{{' . $key . '}}', $value, $subject);
+                            $content = str_replace('{{' . $key . '}}', $value, $content);
+                        }
+                    }
+
+                    $data['mail_title'] = $subject;
+                    $data['custom_body'] = $content;
+                } else {
+                    $data['mail_title'] = config('contact.message.success_form');
+                }
+
+                Notification::route('mail', $emailTo)
                     ->notify(new CommonNotification($data));
             }
-        } else {
-            $emails = empty($mailNotification) ? explode(',', notification_to()) : explode(',', $mailNotification);
-            $contactData = $contact->data ?? [];
-            $emailData = [
-                'mail_title' => config('contact.message.new_contact')
-            ];
-
-            if ($contact->type == 'CONTACT_FORM') {
-                $emailData = array_merge($emailData, [
-                    'Name' => $contactData['Họ và tên'] ?? '',
-                    'Phone' => $contactData['Số điện thoại'] ?? '',
-                    'Email' => $contactData['Email'] ?? '',
-                    'Note' => $contactData['Nội dung cần hỗ trợ'] ?? '',
-                    'Service' => $contactData['Service']['title'] ?? '',
-                    'Service link' => isset($contactData['Service']['slug']) ? route(current_locale() . '.services.show', ['slug' => $contactData['Service']['slug']]) : '',
-                    'url' => route(current_locale() . '.admin.contacts.form', ['id' => $contact->id])
-                ]);
-            } else if ($contact->type == 'APPLY_FORM') {
-                $files = [];
-
-                if (isset($contactData['File CV']) && is_array($contactData['File CV'])) {
-                    foreach ($contactData['File CV'] as $index => $cv) {
-                        $link = str_replace(' ', '%20', str_replace("/static/", "/storage/", config('app.url') . $cv));
-                        $files['File CV ' . ($index + 1)] = 'File CV: <a href="' . $link . '">' . $link . '</a>';
-                    }
-                }
-
-                $emailData = array_merge($emailData, [
-                    'Name' => $contactData['Họ và tên'] ?? '',
-                    'Phone' => $contactData['Phone'] ?? '',
-                    'Email' => $contactData['Email'] ?? '',
-                    'Job' => $contactData['Job']['title'] ?? '',
-                    'Job link' => isset($contactData['Job']['slug']) ? route(current_locale() . '.jobs.show', ['slug' => $contactData['Job']['slug']]) : '',
-                    'File cv' => $files,
-                    'url' => route(current_locale() . '.admin.applies.form', ['id' => $contact->id])
-                ]);
-            }
-
-            foreach ($emails as $email) {
-                Notification::route('mail', $email)
-                    ->notify(new CommonNotification($emailData));
-            }
-        }
-
-        // send customer
-        $data = $contact->data ?? [];
-        if (method_exists($contact, 'transformEmailDetails')) {
-            $transformedData = $contact->transformEmailDetails();
-            if (is_array($transformedData)) {
-                $data = array_merge($data, $transformedData);
-            }
-
-            if (isset($data['File CV']['CV 1'])) {
-                $data['File CV']['CV 1'] = 'File CV: <a href="' . $data['File CV']['CV 1'] . '">' . $data['File CV']['CV 1'] . '</a>';
-            }
-        }
-
-        $emailTo = $data['Email'] ?? $data['email'] ?? null;
-        if (!empty($emailTo)) {
-            $template = EmailTemplate::active()
-                ->where('type', $contact->type)
-                ->first();
-
-            if ($template) {
-                $subject = $template->subject;
-                $content = $template->content;
-
-                // Map common aliases
-                $data['Name'] = $data['Name'] ?? $data['Họ và tên'] ?? $data['name'] ?? '';
-                $data['Email'] = $data['Email'] ?? $data['email'] ?? '';
-                $data['Phone'] = $data['Phone'] ?? $data['Số điện thoại'] ?? $data['phone'] ?? '';
-                $data['Note'] = $data['Note'] ?? $data['Nội dung cần hỗ trợ'] ?? $data['note'] ?? '';
-                $data['Service'] = $data['Service'] ?? $data['Dịch vụ'] ?? '';
-                $data['Job'] = $data['Job'] ?? $data['Công việc'] ?? '';
-
-                foreach ($data as $key => $value) {
-                    if (is_string($value)) {
-                        $subject = str_replace('{{' . $key . '}}', $value, $subject);
-                        $content = str_replace('{{' . $key . '}}', $value, $content);
-                    }
-                }
-
-                $data['mail_title'] = $subject;
-                $data['custom_body'] = $content;
-            } else {
-                $data['mail_title'] = config('contact.message.success_form');
-            }
-
-            Notification::route('mail', $emailTo)
-                ->notify(new CommonNotification($data));
+        } catch (\Throwable $e) {
+            \Log::error('ContactController sendEmail failed: ' . $e->getMessage(), [
+                'contact_id' => $contact->id ?? null,
+                'exception'  => $e,
+            ]);
         }
     }
 }

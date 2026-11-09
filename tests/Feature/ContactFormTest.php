@@ -59,7 +59,57 @@ class ContactFormTest extends TestCase
     }
 
     /**
-     * Case 1b: Gửi thành công qua AJAX / JSON API.
+     * Case 1b: Gửi form qua Inertia request (kèm header X-Inertia: true).
+     * BẮT BUỘC nhận về Inertia Redirect 302 kèm session flash, TUYỆT ĐỐI không trả plain JSON response.
+     */
+    public function test_submit_contact_form_successfully_via_inertia_request()
+    {
+        Notification::fake();
+
+        $payload = [
+            'name' => 'Nguyễn Văn Inertia',
+            'phone' => '0901234567',
+            'email' => 'inertia@example.com',
+            'service' => 'Thiết kế 3D',
+            'content' => 'Gửi yêu cầu thiết kế qua Inertia form useForm.',
+            'contact' => [
+                'type' => 'CONTACT_FORM',
+                'data' => [
+                    'Họ và tên' => 'Nguyễn Văn Inertia',
+                    'Số điện thoại' => '0901234567',
+                    'Email' => 'inertia@example.com',
+                    'Dịch vụ quan tâm' => 'Thiết kế 3D',
+                    'Service' => [
+                        'title' => 'Thiết kế 3D'
+                    ],
+                    'Nội dung cần hỗ trợ' => 'Gửi yêu cầu thiết kế qua Inertia form useForm.',
+                ]
+            ]
+        ];
+
+        $response = $this->from('/contact')->post('/contacts', $payload, [
+            'X-Inertia' => 'true',
+            'X-Requested-With' => 'XMLHttpRequest',
+        ]);
+
+        // Kiểm tra trả về 302 redirect (giao thức Inertia), KHÔNG trả plain JSON
+        $response->assertStatus(302);
+        $response->assertRedirect('/contact');
+        $response->assertSessionHas('success', 'success');
+
+        // Kiểm tra DB đã lưu thành công
+        $this->assertDatabaseHas('contacts', [
+            'type' => 'CONTACT_FORM',
+            'status' => 'NEW',
+        ]);
+
+        $contact = Contact::where('data->Email', 'inertia@example.com')->first();
+        $this->assertNotNull($contact);
+        $this->assertEquals('Nguyễn Văn Inertia', $contact->data['Họ và tên']);
+    }
+
+    /**
+     * Case 1c: Gửi thành công qua AJAX / JSON API (axios.post).
      * Kiểm tra HTTP status 200, JSON success=true, contact_id và bản ghi trong DB.
      */
     public function test_submit_contact_form_successfully_via_json_api()
@@ -108,7 +158,7 @@ class ContactFormTest extends TestCase
     }
 
     /**
-     * Case 1c: Gửi dạng phẳng (flat payload) tương thích ContactSection ở trang chủ.
+     * Case 1d: Gửi dạng phẳng (flat payload) tương thích ContactSection ở trang chủ.
      */
     public function test_submit_contact_form_flat_payload_compatibility()
     {
@@ -136,16 +186,69 @@ class ContactFormTest extends TestCase
     }
 
     /**
-     * Case 2a: Kiểm tra khi email sai định dạng qua Web Form Submit.
-     * Khi hệ thống gửi thông báo tới email không hợp lệ, Controller bắt lỗi và chuyển hướng kèm flash error.
+     * Case 2a: Nguyên tắc an toàn tuyệt đối khi lỗi SMTP (530 5.7.0 Authentication required).
+     * Khi SMTP mailer fail, lead BẮT BUỘC vẫn được lưu vào DB an toàn và khách hàng vẫn nhận thông báo thành công.
      */
-    public function test_validation_error_when_email_is_malformed_via_web()
+    public function test_contact_submission_resilient_when_smtp_fails()
+    {
+        // Giả lập Notification::route ném ngoại lệ mô phỏng SMTP 530 Authentication required
+        Notification::shouldReceive('route')
+            ->andReturnUsing(function () {
+                throw new \Exception('Expected response code "250" but got code "530", with message "530 5.7.0 Authentication required"');
+            });
+
+        $payload = [
+            'name' => 'Khách Hàng Thử Thách SMTP',
+            'phone' => '0933112233',
+            'email' => 'khachhang.smtp@example.com',
+            'service' => 'Gia công 3D',
+            'content' => 'Kiểm tra hệ thống có bị sập khi SMTP không gửi được mail hay không.',
+            'contact' => [
+                'type' => 'CONTACT_FORM',
+                'data' => [
+                    'Họ và tên' => 'Khách Hàng Thử Thách SMTP',
+                    'Số điện thoại' => '0933112233',
+                    'Email' => 'khachhang.smtp@example.com',
+                    'Dịch vụ quan tâm' => 'Gia công 3D',
+                    'Nội dung cần hỗ trợ' => 'Kiểm tra hệ thống có bị sập khi SMTP không gửi được mail hay không.',
+                ]
+            ]
+        ];
+
+        // 1. Kiểm tra qua luồng Inertia request
+        $response = $this->from('/contact')->post('/contacts', $payload, [
+            'X-Inertia' => 'true',
+            'X-Requested-With' => 'XMLHttpRequest',
+        ]);
+
+        // Vẫn redirect 302 về trang trước với thông báo thành công, KHÔNG crash modal Inertia
+        $response->assertStatus(302);
+        $response->assertRedirect('/contact');
+        $response->assertSessionHas('success', 'success');
+
+        // BẮT BUỘC bản ghi liên hệ phải được lưu thành công trong database
+        $this->assertDatabaseHas('contacts', [
+            'type' => 'CONTACT_FORM',
+            'status' => 'NEW',
+        ]);
+
+        $savedContact = Contact::where('data->Email', 'khachhang.smtp@example.com')->first();
+        $this->assertNotNull($savedContact);
+        $this->assertEquals('Khách Hàng Thử Thách SMTP', $savedContact->data['Họ và tên']);
+        $this->assertEquals('0933112233', $savedContact->data['Số điện thoại']);
+    }
+
+    /**
+     * Case 2b: Nguyên tắc an toàn khi email khách hàng có định dạng không hợp lệ cho mailer.
+     * Hệ thống ghi log nhưng không crash request của khách và vẫn lưu lead an toàn.
+     */
+    public function test_contact_submission_resilient_when_email_address_is_malformed()
     {
         $payload = [
             'contact' => [
                 'type' => 'CONTACT_FORM',
                 'data' => [
-                    'Họ và tên' => 'Khách Hàng Lỗi Email',
+                    'Họ và tên' => 'Khách Hàng Email Lạ',
                     'Số điện thoại' => '0906636425',
                     'Email' => 'email-khong-hop-le@@',
                     'Nội dung cần hỗ trợ' => 'Cần in 3D chi tiết nhựa',
@@ -155,37 +258,12 @@ class ContactFormTest extends TestCase
 
         $response = $this->from('/lien-he')->post('/contacts', $payload);
 
-        // Chuyển hướng lại trang form kèm error session
+        // Vẫn lưu vào database thành công
         $response->assertStatus(302);
         $response->assertRedirect('/lien-he');
-        $response->assertSessionHasErrors(['error']);
-    }
-
-    /**
-     * Case 2b: Kiểm tra khi email sai định dạng qua API JSON.
-     * API trả về HTTP 500 kèm success=false và thông điệp lỗi định dạng RFC 2822.
-     */
-    public function test_validation_error_when_email_is_malformed_via_json()
-    {
-        $payload = [
-            'contact' => [
-                'type' => 'CONTACT_FORM',
-                'data' => [
-                    'Họ và tên' => 'Khách Hàng Lỗi Email',
-                    'Số điện thoại' => '0906636425',
-                    'Email' => 'invalid-email-format',
-                    'Nội dung cần hỗ trợ' => 'Cần in 3D',
-                ]
-            ]
-        ];
-
-        $response = $this->postJson('/contacts', $payload);
-
-        $response->assertStatus(500);
-        $response->assertJson([
-            'success' => false,
+        $this->assertDatabaseHas('contacts', [
+            'type' => 'CONTACT_FORM',
         ]);
-        $this->assertStringContainsString('RFC 2822', $response->json('message'));
     }
 
     /**
