@@ -112,7 +112,7 @@ jobs:
           ssh -p ${{ secrets.VPS_PORT || 22 }} ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
             set -e
             cd /var/www/bed-hhmaker
-            git config core.sshCommand "ssh -i ~/.ssh/id_ed25519 -i ~/.ssh/id_rsa -F /dev/null -o BatchMode=yes -o StrictHostKeyChecking=accept-new"
+            git config core.sshCommand "ssh -i ~/.ssh/bed_hhmaker_deploy -i ~/.ssh/id_ed25519 -i ~/.ssh/id_rsa -F /dev/null -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=15 -o ServerAliveInterval=10"
             git config core.fileMode false
             git fetch origin main </dev/null
             git reset --hard origin/main
