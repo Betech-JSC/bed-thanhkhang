@@ -145,7 +145,7 @@
             if (!empty($globalImage) && !Str::contains($globalImage, ['funkystyle', 'khoqua', 'copy.jpg'])) {
                 $rawImage = $globalImage;
             } else {
-                $rawImage = '/og-image.jpg?v=20261109';
+                $rawImage = '/hhmaker-og-2026.jpg?v=20261110';
             }
         }
 
@@ -165,7 +165,7 @@
         if (isset($parsed['query'])) {
             $image .= '?' . $parsed['query'];
         } elseif (!str_contains($image, '?')) {
-            $image .= '?v=20261109';
+            $image .= '?v=20261110';
         }
 
         $keywords = $seo['seo_meta_keywords'] ?? ($global['seo_meta_keywords'] ?? null);
@@ -252,7 +252,7 @@
             'alternateName' => 'HH Maker 3D Printing',
             'url' => 'https://hhmaker.vn',
             'logo' => 'https://hhmaker.vn/assets/images/header/figma-header-logo.svg',
-            'image' => 'https://hhmaker.vn/og-image.jpg?v=20261109',
+            'image' => 'https://hhmaker.vn/hhmaker-og-2026.jpg?v=20261110',
             'description' => 'Xưởng thiết kế và gia công in 3D công nghệ FDM, SLA Resin 8K, SLS chuyên nghiệp tại TP.HCM.',
             'telephone' => '0906636425',
             'email' => 'info@hhmaker.vn',

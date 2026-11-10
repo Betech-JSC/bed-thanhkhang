@@ -27,6 +27,7 @@ class SeoPhase2Test extends TestCase
         $this->assertStringContainsString('Bình Tân', $content);
         $this->assertStringContainsString('info@hhmaker.vn', $content);
         $this->assertStringContainsString('https://hhmaker.vn', $content);
+        $this->assertStringContainsString('/hhmaker-og-2026.jpg', $content);
         $this->assertStringContainsString('OpeningHoursSpecification', $content);
         $this->assertStringContainsString('$$', $content);
     }

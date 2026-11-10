@@ -38,8 +38,8 @@ class PostController extends Controller
                 'description' => $locale === 'en'
                     ? 'Explore the latest insights, updates, and knowledge on 3D printing and custom fabrication from HH Maker.'
                     : 'Tổng hợp các bài viết, tin tức công nghệ in 3D và giải pháp chế tác cơ khí, mô hình từ HH Maker.',
-                'image' => '/og-image.jpg?v=20261109',
-                'seo_image' => '/og-image.jpg?v=20261109',
+                'image' => '/hhmaker-og-2026.jpg?v=20261110',
+                'seo_image' => '/hhmaker-og-2026.jpg?v=20261110',
             ];
 
             if (request()->wantsJson()) {

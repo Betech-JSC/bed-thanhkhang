@@ -168,8 +168,8 @@ class HomeController extends Controller
                 'description' => $locale === 'en'
                     ? 'No limits to creative space, HH Maker breathes life into each creation through modern 3D printing and precise machining.'
                     : 'Không giới hạn không gian sáng tạo, HH Maker thổi hồn vào từng sản phẩm thông qua công nghệ in và gia công 3D hiện đại.',
-                'image' => '/og-image.jpg?v=20261109',
-                'seo_image' => '/og-image.jpg?v=20261109',
+                'image' => '/hhmaker-og-2026.jpg?v=20261110',
+                'seo_image' => '/hhmaker-og-2026.jpg?v=20261110',
             ];
 
             // Return JSON or Inertia View

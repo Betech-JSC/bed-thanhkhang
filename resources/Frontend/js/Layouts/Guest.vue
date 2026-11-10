@@ -47,7 +47,7 @@ export default {
             let seo_meta_description = seo?.seo_meta_description ?? global?.seo_meta_description ?? this.tt('Hiện thực hóa mọi ý tưởng với công nghệ in 3D hiện đại.')
             let seo_meta_robots = seo?.seo_meta_robots ?? global?.seo_meta_robots ?? 'robots.txt'
             let seo_meta_keywords = seo?.seo_meta_keywords ?? global?.seo_meta_keywords ?? 'HH Maker, in 3D, FDM, SLA'
-            let seo_image = seo?.seo_image ?? (global?.seo_image && !global.seo_image.includes('funkystyle') && !global.seo_image.includes('khoqua') ? global.seo_image : '/og-image.jpg?v=20261109')
+            let seo_image = seo?.seo_image ?? (global?.seo_image && !global.seo_image.includes('funkystyle') && !global.seo_image.includes('khoqua') && !global.seo_image.includes('copy.jpg') ? global.seo_image : '/hhmaker-og-2026.jpg?v=20261110')
 
             document.querySelector('title').innerHTML = seo_meta_title
             document.querySelector('meta[property="og:title"]')?.setAttribute('content', seo_meta_title)

@@ -107,7 +107,7 @@ class SeoPhase1FixesTest extends TestCase
     {
         $appBlade = file_get_contents(resource_path('Frontend/views/app.blade.php'));
 
-        $this->assertStringContainsString('/og-image.jpg', $appBlade);
+        $this->assertStringContainsString('/hhmaker-og-2026.jpg', $appBlade);
         $this->assertStringContainsString('hh-maker-icon.svg', $appBlade);
         $this->assertStringContainsString('og:image', $appBlade);
         $this->assertStringContainsString('twitter:image', $appBlade);
