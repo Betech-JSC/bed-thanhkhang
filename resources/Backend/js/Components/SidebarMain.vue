@@ -18,6 +18,15 @@
         <span>Bảng điều khiển</span>
     </Link>
 
+    <Link
+        :href="route('admin.user-guide.index')"
+        :class="{ active: isUrl('admin.user-guide.*') }"
+        class="item"
+    >
+        <ph:book-open-light />
+        <span>Hướng dẫn sử dụng</span>
+    </Link>
+
     <!-- 2. VẬN HÀNH XƯỞNG IN 3D -->
     <div class="sidebar-section-header">
         <span>🟢 VẬN HÀNH XƯỞNG IN 3D</span>

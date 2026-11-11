@@ -12,10 +12,19 @@
                     Tổng quan hiệu suất yêu cầu báo giá in 3D, cơ cấu dịch vụ chế tác và đơn hàng.
                 </p>
             </div>
-            <div class="text-right bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm">
-                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Hôm nay</div>
-                <div class="text-slate-700 font-bold text-sm">
-                    {{ toDate(new Date(), 'dddd, DD/MM/YYYY') }}
+            <div class="flex items-center gap-3">
+                <Link
+                    :href="route('admin.user-guide.index')"
+                    class="inline-flex items-center gap-2 px-3.5 py-2.5 bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 font-semibold text-sm rounded-xl border border-slate-200 shadow-sm transition-all"
+                >
+                    <i class="pi pi-book text-blue-600"></i>
+                    <span>Hướng dẫn sử dụng CMS</span>
+                </Link>
+                <div class="text-right bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Hôm nay</div>
+                    <div class="text-slate-700 font-bold text-sm">
+                        {{ toDate(new Date(), 'dddd, DD/MM/YYYY') }}
+                    </div>
                 </div>
             </div>
         </div>

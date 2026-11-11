@@ -47,5 +47,8 @@ Route::localized(function () {
 
         // Quản lý đơn hàng
         Route::module(\App\Http\Controllers\Backend\OrderController::class);
+
+        // Hướng dẫn sử dụng Admin CMS
+        Route::get('user-guide', [DashboardController::class, 'userGuide'])->name('user-guide.index');
     });
 });

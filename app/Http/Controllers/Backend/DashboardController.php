@@ -252,4 +252,9 @@ class DashboardController extends Controller
 
         return 'Tư vấn kỹ thuật khác';
     }
+
+    public function userGuide()
+    {
+        return Inertia::render('UserGuide');
+    }
 }
