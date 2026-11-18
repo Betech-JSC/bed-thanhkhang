@@ -182,7 +182,12 @@ echo "   - MySQL Database '${DB_NAME}' và User '${DB_USER}' sẵn sàng."
 
 echo "==> [2/6] Chuẩn bị mã nguồn tại ${PROJECT_PATH}..."
 mkdir -p /var/www
-VPS_GIT_SSH="ssh -i ~/.ssh/id_ed25519 -i ~/.ssh/id_rsa -F /dev/null -o BatchMode=yes -o StrictHostKeyChecking=accept-new"
+DEPLOY_KEY_CANDIDATE="${HOME}/.ssh/$(printf "%s" "${PROJECT_SLUG}" | tr '-' '_')_deploy"
+DEPLOY_KEY_OPT=""
+if [ -f "${DEPLOY_KEY_CANDIDATE}" ]; then
+  DEPLOY_KEY_OPT="-i ${DEPLOY_KEY_CANDIDATE}"
+fi
+VPS_GIT_SSH="ssh ${DEPLOY_KEY_OPT} -i ~/.ssh/id_ed25519 -i ~/.ssh/id_rsa -F /dev/null -o BatchMode=yes -o StrictHostKeyChecking=accept-new"
 export GIT_SSH_COMMAND="${VPS_GIT_SSH}"
 EFFECTIVE_REPO_URL="${GIT_REPO_URL}"
 if printf "%s" "${GIT_REPO_URL}" | grep -Eq '^https://github\.com/'; then

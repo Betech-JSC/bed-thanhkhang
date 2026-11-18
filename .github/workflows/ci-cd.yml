@@ -38,8 +38,8 @@ jobs:
           sed -i 's/DB_CONNECTION=mysql/DB_CONNECTION=sqlite/' .env
           sed -i '/^DB_DATABASE=/d' .env
           sed -i 's/^OPCACHE_SECRET=.*/OPCACHE_SECRET=ci-test-secret/' .env || true
-          sed -i 's|^APP_URL=.*|APP_URL=https://hhmaker.betech-digital.com|' .env
-          grep -q '^FRONTEND_URL=' .env && sed -i 's|^FRONTEND_URL=.*|FRONTEND_URL=https://hhmaker.betech-digital.com|' .env || echo "FRONTEND_URL=https://hhmaker.betech-digital.com" >> .env
+          sed -i 's|^APP_URL=.*|APP_URL=https://thanhkhang.betech-digital.com|' .env
+          grep -q '^FRONTEND_URL=' .env && sed -i 's|^FRONTEND_URL=.*|FRONTEND_URL=https://thanhkhang.betech-digital.com|' .env || echo "FRONTEND_URL=https://thanhkhang.betech-digital.com" >> .env
           composer install --no-interaction --prefer-dist
           composer dump-autoload --optimize
           php artisan key:generate
@@ -111,8 +111,8 @@ jobs:
         run: |
           ssh -p ${{ secrets.VPS_PORT || 22 }} ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
             set -e
-            cd /var/www/bed-hhmaker
-            git config core.sshCommand "ssh -i ~/.ssh/bed_hhmaker_deploy -i ~/.ssh/id_ed25519 -i ~/.ssh/id_rsa -F /dev/null -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=15 -o ServerAliveInterval=10"
+            cd /var/www/bed-thanhkhang
+            git config core.sshCommand "ssh -i ~/.ssh/bed_thanhkhang_deploy -i ~/.ssh/id_ed25519 -i ~/.ssh/id_rsa -F /dev/null -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=15 -o ServerAliveInterval=10"
             git config core.fileMode false
             git fetch origin main </dev/null
             git reset --hard origin/main
@@ -124,15 +124,15 @@ jobs:
       - name: 4. Rsync Compiled Assets (public/build & bootstrap/ssr) to VPS
         run: |
           rsync -avz --delete -e "ssh -p ${{ secrets.VPS_PORT || 22 }}" \
-            public/build/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/bed-hhmaker/public/build/
+            public/build/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/bed-thanhkhang/public/build/
           rsync -avz --delete -e "ssh -p ${{ secrets.VPS_PORT || 22 }}" \
-            bootstrap/ssr/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/bed-hhmaker/bootstrap/ssr/
+            bootstrap/ssr/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/bed-thanhkhang/bootstrap/ssr/
 
       - name: 5. Run Migrations, Clear Cache & Reload PHP-FPM
         run: |
           ssh -p ${{ secrets.VPS_PORT || 22 }} ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
             set -e
-            cd /var/www/bed-hhmaker
+            cd /var/www/bed-thanhkhang
             PHP_BIN=$(command -v php8.3 || command -v php)
             "$PHP_BIN" artisan migrate --force
             "$PHP_BIN" artisan storage:link || true
