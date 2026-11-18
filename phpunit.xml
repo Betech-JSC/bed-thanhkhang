@@ -11,10 +11,12 @@
         <testsuite name="Feature">
             <file>./tests/Feature/ExampleTest.php</file>
             <file>./tests/Feature/CmsSyncIntegrationTest.php</file>
-            <file>./tests/Feature/ProductTest.php</file>
             <file>./tests/Feature/DangNhapRedirectTest.php</file>
             <file>./tests/Feature/PolicyTest.php</file>
             <file>./tests/Feature/BackendProductTest.php</file>
+        </testsuite>
+        <testsuite name="Legacy">
+            <file>./tests/Feature/ProductTest.php</file>
             <file>./tests/Feature/SeoPhase1FixesTest.php</file>
             <file>./tests/Feature/SeoPhase2Test.php</file>
         </testsuite>

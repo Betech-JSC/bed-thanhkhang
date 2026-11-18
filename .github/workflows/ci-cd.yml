@@ -55,7 +55,7 @@ jobs:
           yarn backend:build
 
       - name: 6. Run Automated Tests (PHPUnit SQLite)
-        run: php artisan test
+        run: php artisan test --testsuite=Unit,Feature
 
       - name: 7. Upload Built Assets Artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

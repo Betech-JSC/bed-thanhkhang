@@ -322,7 +322,7 @@ class Config extends Model
         $enSiteName = $pickNonEmpty([
             $raw['general_site_name_en'] ?? null,
             $raw['site_name_en'] ?? null,
-        ], 'Thanh Khang Tecsat - Industrial Equipment & Escalator Spare Parts');
+        ], '');
         $siteName = ($isEn && $enSiteName !== '') ? $enSiteName : $viSiteName;
 
         $phone = $raw['general_phone']
@@ -349,8 +349,8 @@ class Config extends Model
             $raw['general_address_en'] ?? null,
             $raw['address_en'] ?? null,
             $raw['showroom_address_en'] ?? null,
-        ], '25th Floor, TNR Tower, 54A Nguyen Chi Thanh, Lang Thuong Ward, Dong Da District, Hanoi');
-        $address = ($isEn && $enAddress !== '') ? $enAddress : $viAddress;
+        ], '');
+        $address = ($isEn && $enAddress !== '') ? $enAddress : ($viAddress ?: '25th Floor, TNR Tower, 54A Nguyen Chi Thanh, Lang Thuong Ward, Dong Da District, Hanoi');
 
         $viWorkingHours = $pickNonEmpty([
             $raw['general_working_hours_vi'] ?? null,
@@ -360,8 +360,8 @@ class Config extends Model
         $enWorkingHours = $pickNonEmpty([
             $raw['general_working_hours_en'] ?? null,
             $raw['working_hours_en'] ?? null,
-        ], 'Mon - Sat: 08:00 - 17:30');
-        $workingHours = ($isEn && $enWorkingHours !== '') ? $enWorkingHours : $viWorkingHours;
+        ], '');
+        $workingHours = ($isEn && $enWorkingHours !== '') ? $enWorkingHours : ($viWorkingHours ?: 'Mon - Sat: 08:00 - 17:30');
 
         $facebook = $raw['facebook']
             ?? $raw['social_facebook']
