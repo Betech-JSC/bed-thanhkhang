@@ -29,26 +29,26 @@ export default {
     props: {
         material: {
             type: String,
-            default: tt('Nhựa PLA · Công nghệ FDM'),
+            default: tt('Thép hợp kim 40Cr · Tiêu chuẩn ISO/DIN'),
         },
         color: {
             type: String,
-            default: tt('Cam'),
+            default: tt('Thép tôi đen / Mạ kẽm công nghiệp'),
         },
         customization: {
             type: String,
-            default: tt('Màu sắc · Kích thước · Số lượng'),
+            default: tt('Bước xích · Tải trọng · Bản vẽ OEM'),
         },
     },
     computed: {
         currentMaterial() {
-            return this.material || this.tt('Nhựa PLA · Công nghệ FDM')
+            return this.material || this.tt('Thép hợp kim 40Cr · Tiêu chuẩn ISO/DIN')
         },
         currentColor() {
-            return this.color || this.tt('Cam')
+            return this.color || this.tt('Thép tôi đen / Mạ kẽm công nghiệp')
         },
         currentCustomization() {
-            return this.customization || this.tt('Màu sắc · Kích thước · Số lượng')
+            return this.customization || this.tt('Bước xích · Tải trọng · Bản vẽ OEM')
         },
     },
 }

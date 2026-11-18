@@ -19,7 +19,7 @@ Trước khi mở bất kỳ OpenSpec change nào, xác định đúng 1 trong 3
 
 ---
 
-## 2. Năm Quy Tắc Cứng Bắt Buộc (Non-Negotiable Rules)
+## 2. Bảy Quy Tắc Cứng Bắt Buộc (Non-Negotiable Rules)
 
 1. **Graphify AST First (Chống tạo trùng Component)**:
    - Trước khi tạo bất kỳ component, composable hay layout mới nào, **BẮT BUỘC** đọc `graphify-out/graph.json` (và `GRAPH_REPORT.md` nếu có) theo skill `graphify`.
@@ -35,9 +35,26 @@ Trước khi mở bất kỳ OpenSpec change nào, xác định đúng 1 trong 3
    - Đảm bảo các thẻ `<button>`, `<input>`, `<select>`, `<textarea>` kế thừa đúng `font-family` chủ đạo của thiết kế (tránh rơi về font mặc định trình duyệt hoặc bị thư viện UI như PrimeVue ghi đè).
 4. **Anti-UI-Slop & Web Interface Guidelines**:
    - Áp dụng nghiêm ngặt `.agents/skills/anti-ui-slop/SKILL.md` (*Quiet & High-Trust UI*: cấm tự ý nhồi nhét icon trang trí vô nghĩa, cấm chèn emoji vào nút/tiêu đề, xử lý đủ trạng thái loading/empty/error/disabled/hover/focus) và `.agents/skills/web-design-guidelines/SKILL.md`.
-5. **Multi-Agent Build Gate, Playwright Visual QA & Archive Safe Guard**:
+5. **CMS-First Binding (Zero Hardcoded Mock in Phase 1)**:
+   - **Tuyệt đối cấm gán cứng mảng mock** (`const products = [...]`) trong `<script>` hoặc hardcode text danh sách/thông tin liên hệ trong `<template>` khi dựng UI từ Figma.
+   - **Quy trình kết nối dữ liệu sống ngay từ Phase đầu**:
+     1. Khảo sát `app/Models/`, `routes/frontend.php` và `app/Http/Controllers/Frontend/*Controller.php` để xác định Model & Controller tương ứng với từng Section trong Figma.
+     2. Controller Backend query Eloquent thật (hoặc lấy từ `Config`/`Setting`) và truyền trực tiếp qua Inertia props.
+     3. Component Vue khai báo `defineProps<{ ... }>()` nhận props và render thẳng `props.xxx`.
+     4. Để có dữ liệu render chuẩn giống Figma trong lúc dev: tạo/chạy ngay **Seeder Idempotent thật** (`updateOrCreate`) nạp đúng tên, giá, ảnh từ Figma vào Database. UI render dữ liệu thật 100% ngay từ ngày đầu tiên!
+6. **Khóa Tỷ Lệ Banner Aspect-Ratio & Spacing Chuẩn Figma (Desktop & Mobile)**:
+   - **Bắt buộc đo đạc và gán `aspect-ratio` trực tiếp từ Frame Figma**:
+     - Mọi Banner (Hero Slider, Page Title Banner, Promo/CTA Banner, Category Banner) bắt buộc tính tỷ lệ:
+       - **Desktop**: Lấy $W_{dt} \times H_{dt}$ từ Figma $\rightarrow$ gán `md:aspect-[W/H]` (ví dụ `md:aspect-[1440/500]`).
+       - **Mobile**: Lấy $W_{mb} \times H_{mb}$ từ Figma $\rightarrow$ gán `aspect-[W/H]` (ví dụ `aspect-[375/250]`).
+     - Ảnh thẻ banner bên trong bắt buộc có class: `w-full h-full object-cover object-center`. Tuyệt đối cấm gán chiều cao cứng `h-[500px]` hay `h-auto` thiếu tỷ lệ gây méo ảnh hoặc giật màn hình (CLS).
+   - **Spacing Chuẩn Mobile**:
+     - Khoảng cách dọc Section trên mobile: `py-8` hoặc `py-10` (tối đa 40px), lên desktop mới `md:py-16` / `lg:py-20`. Cấm để `py-20` không có tiền tố responsive.
+     - Đệm mép 2 bên container: `px-4` hoặc `px-5` trên mobile; cấm `px-0` (chữ chạm kính) hoặc `px-12` (bóp nghẹt nội dung).
+     - Khoảng cách giữa các thẻ (Grid/Card Gap): `gap-3` (12px) hoặc `gap-4` (16px) trên mobile, `md:gap-6 lg:gap-8` trên desktop.
+7. **Multi-Agent Build Gate, Playwright Visual QA & Archive Safe Guard**:
    - `Frontend Worker` code + chạy lệnh build thật của dự án đảm bảo **0 lỗi biên dịch**.
-   - `QA Verifier` mở trình duyệt thật qua **Playwright MCP**, kiểm tra ở cả Desktop (`1440x900`) và Mobile (`375x812`), xác nhận 0 lỗi console, 0 ảnh vỡ, 0 tràn ngang (`overflow-x`), chụp screenshot làm bằng chứng.
+   - `QA Verifier` mở trình duyệt thật qua **Playwright MCP**, kiểm tra ở cả Desktop (`1440x900`) và Mobile (`375x812`), xác nhận 0 lỗi console, 0 ảnh vỡ, 0 tràn ngang (`overflow-x`), kiểm tra tỷ lệ banner không bị méo và chụp screenshot làm bằng chứng.
    - Chỉ chạy `openspec archive` sau khi có đủ bằng chứng PASS và được người dùng xác nhận.
 
 ---

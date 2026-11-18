@@ -35,7 +35,7 @@ class DashboardController extends Controller
         $lastMonth = Carbon::now()->subMonth()->startOfMonth();
         $year = (int) ($request->get('year') ?? now()->year);
 
-        // 1. Thống kê Báo giá In 3D (CONTACT_FORM)
+        // 1. Thống kê Yêu cầu báo giá B2B (CONTACT_FORM)
         $todayQuotes = 0;
         $thisMonthQuotes = 0;
         $lastMonthQuotes = 0;
@@ -80,13 +80,13 @@ class DashboardController extends Controller
         $orderGrowth = $lastMonthOrders > 0 ? (($thisMonthOrders - $lastMonthOrders) / $lastMonthOrders) * 100 : 0;
         $conversionRate = $thisMonthQuotes > 0 ? ($thisMonthOrders / $thisMonthQuotes) * 100 : 0;
 
-        // 4. Cơ cấu Dịch vụ In 3D quan tâm
+        // 4. Cơ cấu Nhu cầu kỹ thuật B2B quan tâm
         $serviceStats = $this->getServiceDistribution($year);
 
         // 5. Thống kê Báo giá theo tháng trong năm
         $quoteStats = $this->getQuoteStats($year);
 
-        // 6. Danh sách Báo giá in 3D gần đây
+        // 6. Danh sách Yêu cầu báo giá gần đây
         $recentQuotes = collect();
         try {
             if (Schema::hasTable('contacts')) {
@@ -102,9 +102,9 @@ class DashboardController extends Controller
                         $name = $d['Họ và tên'] ?? $d['Họ tên'] ?? $d['name'] ?? $d['full_name'] ?? 'Khách hàng';
                         $phone = $d['Số điện thoại'] ?? $d['Số ĐT'] ?? $d['phone'] ?? $d['telephone'] ?? '-';
                         $email = $d['Email'] ?? $d['email'] ?? ($c->data_contact->email ?? '-');
-                        $service = $d['Dịch vụ quan tâm'] ?? $d['Dịch vụ'] ?? ($d['Service']['title'] ?? null) ?? $d['service'] ?? 'Tư vấn in 3D';
+                        $service = $d['Dịch vụ quan tâm'] ?? $d['Dịch vụ'] ?? ($d['Service']['title'] ?? null) ?? $d['service'] ?? 'Tư vấn kỹ thuật';
                         if (is_array($service)) {
-                            $service = $service['title'] ?? 'Tư vấn in 3D';
+                            $service = $service['title'] ?? 'Tư vấn kỹ thuật';
                         }
 
                         $hasCad = !empty($c->images) || !empty($d['File đính kèm']) || !empty($d['files']);
@@ -184,7 +184,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Phân loại cơ cấu dịch vụ in 3D theo từ khóa
+     * Phân loại cơ cấu nhu cầu kỹ thuật B2B theo từ khóa
      */
     private function getServiceDistribution(int $year): array
     {
@@ -200,9 +200,9 @@ class DashboardController extends Controller
         }
 
         $distribution = [
-            'Gia công in 3D' => 0,
-            'Thiết kế 3D & CAD' => 0,
-            'Làm đồ custom & Quà tặng' => 0,
+            'Linh kiện thang cuốn & Thang nâng' => 0,
+            'Xích tải & Băng tải công nghiệp' => 0,
+            'Quạt BLDC & Tiết kiệm điện' => 0,
             'Tư vấn kỹ thuật khác' => 0,
         ];
 
@@ -240,14 +240,14 @@ class DashboardController extends Controller
                 ($data['customer_note'] ?? '');
         $text = mb_strtolower($text);
 
-        if (preg_match('/thiết kế|cad|dựng hình|scan 3d|reverse|tạo mẫu 3d/u', $text)) {
-            return 'Thiết kế 3D & CAD';
+        if (preg_match('/thang cuốn|escalator|thang nâng|bãi đỗ xe|tay vịn|bậc thang/u', $text)) {
+            return 'Linh kiện thang cuốn & Thang nâng';
         }
-        if (preg_match('/custom|quà tặng|decor|cá nhân|móc khóa|đồ chơi|mô hình/u', $text)) {
-            return 'Làm đồ custom & Quà tặng';
+        if (preg_match('/xích|chain|băng tải|conveyor|hành lý|đóng gói/u', $text)) {
+            return 'Xích tải & Băng tải công nghiệp';
         }
-        if (preg_match('/gia công|in 3d|fdm|sla|nhựa|resin|in sợi|sls|in mẫu/u', $text)) {
-            return 'Gia công in 3D';
+        if (preg_match('/quạt|bldc|hvls|tiết kiệm điện/u', $text)) {
+            return 'Quạt BLDC & Tiết kiệm điện';
         }
 
         return 'Tư vấn kỹ thuật khác';

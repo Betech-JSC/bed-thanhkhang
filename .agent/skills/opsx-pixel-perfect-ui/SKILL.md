@@ -38,8 +38,8 @@ Skill này đóng gói toàn bộ 7 quy chuẩn kỹ thuật để biến một 
 
 #### Bước 2 — Trình Bày Bảng Quyết Định `[+] THÊM GÌ / [-] BỎ GÌ / [=] GIỮ LẠI GÌ` Của Page Đó & Dừng Chờ Confirm
 Hiển thị rõ ranh giới file `[ALLOWED TO EDIT IN THIS TAB]` kèm 3 bảng quyết định của riêng Page đó:
-- **`[+] THÊM GÌ (ADD)`**: Khóa kích thước khung/thẻ (`width`, `height`, `aspect-square`), công thức `Section_Padding_Top = Figma_Y - Header_Height`, typography, padding/gap chuẩn Figma.
-- **`[-] BỎ GÌ (REMOVE)`**: Các section/khối tự chế không có trong Frame Figma của Page đó, class `overflow-x-hidden` trên thẻ root của Page.
+- **`[+] THÊM GÌ (ADD)`**: Khóa kích thước khung/thẻ (`width`, `height`, `aspect-square`), tỷ lệ **Banner Aspect-Ratio** (`aspect-[W_mb/H_mb] md:aspect-[W_dt/H_dt]` kèm `object-cover`), công thức `Section_Padding_Top = Figma_Y - Header_Height`, typography, padding/gap chuẩn Figma.
+- **`[-] BỎ GÌ (REMOVE)`**: Các section/khối tự chế không có trong Frame Figma của Page đó, class `overflow-x-hidden` trên thẻ root của Page, chiều cao cố định `h-[500px]` trên banner gây méo ảnh mobile, padding dọc `py-20+` không responsive.
 - **`[=] GIỮ LẠI GÌ (KEEP)`**: Các section và component con của Page đó đã khớp 100% thông số Figma.
 
 > **🛑 CHỐT CHẶN BẮT BUỘC TẠI BƯỚC 2**:
@@ -82,7 +82,7 @@ Khi người dùng gõ `/opsx-pixel-perfect` không truyền tên Page:
 
 ## 3. Bộ Công Cụ Đi Kèm (`scripts/` & `references/`)
 
-- **Tài liệu 7 Quy Tắc Vàng**: [references/pixel-perfect-7-golden-rules.md](./references/pixel-perfect-7-golden-rules.md)
+- **Tài liệu 8 Quy Tắc Vàng**: [references/pixel-perfect-7-golden-rules.md](./references/pixel-perfect-7-golden-rules.md)
 - **Script quét tự động Read-Only & Parallel-Safe**:
   ```bash
   python3 .agents/skills/opsx-pixel-perfect-ui/scripts/scan-pixel-perfect-traps.py . [--page Home|About|Products/Index|Products/Show|Layout]

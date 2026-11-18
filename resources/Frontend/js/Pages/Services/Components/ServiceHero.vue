@@ -19,7 +19,7 @@
                 </Link>
                 <span class="text-[14px] leading-[17px] text-[#84ADFF]">/</span>
                 <span class="text-[14px] leading-[17px] font-normal text-[#84ADFF] truncate max-w-[240px] sm:max-w-none">
-                    {{ title ? tt(title) : tt('Thiết kế 3D') }}
+                    {{ title ? tt(title) : tt('Giải pháp kỹ thuật công nghiệp') }}
                 </span>
             </nav>
 
@@ -46,7 +46,7 @@
                         <div class="relative w-[220px] h-[220px] sm:w-[260px] sm:h-[260px] lg:w-[280px] lg:h-[280px] flex items-center justify-center shrink-0">
                             <img
                                 :src="imageSrc"
-                                :alt="title ? tt(title) : tt('Thiết kế 3D')"
+                                :alt="title ? tt(title) : tt('Giải pháp kỹ thuật công nghiệp Thành Khang Tecsat')"
                                 class="w-full h-full object-contain drop-shadow-[0_16px_32px_rgba(0,0,0,0.6)] transition-transform duration-500 hover:scale-105"
                                 loading="eager"
                             />
@@ -142,8 +142,8 @@ const servicesUrl = computed(() => {
 
 const defaultDescription = computed(() =>
     isEn.value
-        ? 'An idea does not need to be complete to begin. Together with HH Maker, clarify proportions, structure, and details, ensuring the 3D model is not only easy to visualize but also ready for real-world manufacturing.'
-        : i18n.tt('Một ý tưởng chưa cần hoàn chỉnh để bắt đầu. Cùng HH Maker làm rõ tỉ lệ, cấu trúc và chi tiết, để mô hình 3D không chỉ dễ hình dung mà còn hướng đến khả năng chế tác thực tế.')
+        ? 'Together with Thành Khang Tecsat, verify technical specifications, material durability, and OEM standards so every escalator or conveyor component operates reliably in real-world service.'
+        : i18n.tt('Cùng Thành Khang Tecsat đối chiếu chính xác thông số kỹ thuật, vật liệu chịu tải và chuẩn OEM để mọi linh kiện thang cuốn, xích tải vận hành an toàn, bền bỉ.')
 )
 
 const displayHeadline = computed(() => {
@@ -151,24 +151,24 @@ const displayHeadline = computed(() => {
         return i18n.tt(props.headline.trim())
     }
 
-    const baseTitle = props.title || i18n.tt('Thiết kế 3D')
+    const baseTitle = props.title || i18n.tt('Giải pháp kỹ thuật công nghiệp')
     const rawTitle = (
         (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(baseTitle) : baseTitle) || ''
     ).trim()
 
     if (isEn.value) {
-        if (!rawTitle) return '3D Design: From sketch to concrete geometry'
+        if (!rawTitle) return 'Industrial Equipment & Spare Parts: Precision OEM Standards'
         if (rawTitle.includes(':')) return rawTitle
-        return `${rawTitle}: From sketch to concrete geometry`
+        return `${rawTitle}: Precision OEM Standards`
     }
 
-    if (!rawTitle) return i18n.tt('Thiết kế 3D: Từ phác thảo đến hình khối rõ ràng')
+    if (!rawTitle) return i18n.tt('Giải pháp kỹ thuật công nghiệp: Chuẩn xác từng thông số vận hành')
     if (rawTitle.includes(':')) return rawTitle
-    return `${rawTitle}: ${i18n.tt('Từ phác thảo đến hình khối rõ ràng')}`
+    return `${rawTitle}: ${i18n.tt('Chuẩn xác từng thông số vận hành')}`
 })
 
 const imageSrc = computed(() => {
-    return props.image || '/assets/images/services/hero-3d-illustration.png'
+    return props.image || '/images/products/thanhkhang/xich-bac-thang-thuong-mai/commercial-type.webp'
 })
 
 const displayInputItems = computed(() => {

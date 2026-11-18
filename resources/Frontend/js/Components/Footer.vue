@@ -5,16 +5,18 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
                 <!-- Column 1: Brand Info (5 cols / 361px) (Figma I2701:1522;2226:3251) -->
                 <div class="lg:col-span-5 space-y-5">
-                    <Link :href="route('home')" class="inline-flex items-center">
-                        <img
-                            src="/assets/images/header/figma-header-logo.svg"
-                            alt="HH Maker Logo"
-                            class="w-[180px] h-[60px] object-contain object-left"
-                        />
+                    <Link :href="route('home')" class="inline-flex items-center gap-3 group">
+                        <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[#2970FF] to-[#00359E] text-white font-black text-base tracking-wider shadow-md">
+                            TK
+                        </span>
+                        <span class="flex flex-col leading-none">
+                            <span class="text-white font-extrabold text-lg tracking-wider uppercase group-hover:text-[#84ADFF] transition-colors">THÀNH KHANG</span>
+                            <span class="text-[#84ADFF] font-semibold text-xs tracking-[0.24em] uppercase mt-1">TECSAT</span>
+                        </span>
                     </Link>
                     <div class="space-y-2 max-w-[361px]">
-                        <h3 class="text-xl lg:text-[24px] font-medium text-[#F5F8FF] tracking-normal leading-[34px]">
-                            {{ tt('CÔNG TY IN ẤN 3D HH MAKER') }}
+                        <h3 class="text-xl lg:text-[22px] font-semibold text-[#F5F8FF] tracking-normal leading-[30px]">
+                            {{ tt('CÔNG TY TNHH DỊCH VỤ KỸ THUẬT THÀNH KHANG TECSAT') }}
                         </h3>
                         <p class="text-sm sm:text-base text-[#D1E0FF] leading-[22px] font-medium">
                             {{ tt(displayAddress) }}
@@ -54,17 +56,17 @@
                     <ul class="space-y-4 text-sm">
                         <li>
                             <Link :href="route('services.index')" class="text-[#F5F8FF] hover:text-[#2970FF] transition-colors leading-[20px] font-medium">
-                                {{ tt('Thiết kế 3D') }}
+                                {{ tt('Linh kiện Thang cuốn - Thang máy') }}
                             </Link>
                         </li>
                         <li>
                             <Link :href="route('services.index')" class="text-[#F5F8FF] hover:text-[#2970FF] transition-colors leading-[20px] font-medium">
-                                {{ tt('Gia công 3D') }}
+                                {{ tt('Xích tải & Băng tải Công nghiệp') }}
                             </Link>
                         </li>
                         <li>
                             <Link :href="route('services.index')" class="text-[#F5F8FF] hover:text-[#2970FF] transition-colors leading-[20px] font-medium">
-                                {{ tt('Custom 3D') }}
+                                {{ tt('Quạt công nghiệp BLDC HVLS') }}
                             </Link>
                         </li>
                     </ul>
@@ -94,15 +96,6 @@
                             </svg>
                             <span>{{ displayEmail }}</span>
                         </a>
-                        <a
-                            href="mailto:lamhonghai123@gmail.com"
-                            class="group flex items-center gap-2 text-[#F5F8FF] hover:text-[#2970FF] transition-colors leading-[20px]"
-                        >
-                            <svg class="w-6 h-6 p-0.5 text-[#F5F8FF] group-hover:text-[#2970FF] transition-colors shrink-0" viewBox="0 0 48 48" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M42.9999 36L29.7143 24M18.2857 24L5.00007 36M4 14L20.3298 25.4309C21.6522 26.3565 22.3134 26.8193 23.0325 26.9986C23.6678 27.157 24.3322 27.157 24.9675 26.9986C25.6866 26.8193 26.3478 26.3565 27.6702 25.4309L44 14M13.6 40H34.4C37.7603 40 39.4405 40 40.7239 39.346C41.8529 38.7708 42.7708 37.8529 43.346 36.7239C44 35.4405 44 33.7603 44 30.4V17.6C44 14.2397 44 12.5595 43.346 11.2761C42.7708 10.1471 41.8529 9.2292 40.7239 8.65396C39.4405 8 37.7603 8 34.4 8H13.6C10.2397 8 8.55953 8 7.27606 8.65396C6.14708 9.2292 5.2292 10.1471 4.65396 11.2761C4 12.5595 4 14.2397 4 17.6V30.4C4 33.7603 4 35.4405 4.65396 36.7239C5.2292 37.8529 6.14708 38.7708 7.27606 39.346C8.55953 40 10.2397 40 13.6 40Z" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span>lamhonghai123@gmail.com</span>
-                        </a>
                     </div>
                 </div>
             </div>
@@ -111,7 +104,7 @@
             <div
                 class="pt-6 border-t border-[#F5F8FF] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs leading-[20px] text-[#D1E0FF]"
             >
-                <p class="font-normal">© {{ tt('Bản quyền') }} {{ currentYear }} HH MAKER</p>
+                <p class="font-normal">© {{ tt('Bản quyền') }} {{ currentYear }} THÀNH KHANG TECSAT</p>
                 <div class="flex flex-wrap items-center justify-center sm:justify-end gap-6 sm:gap-10 font-medium">
                     <Link
                         v-for="(item, index) in policyLinks"
@@ -166,12 +159,12 @@ export default {
                     slug: isEn ? 'privacy-policy' : 'chinh-sach-bao-mat',
                 },
                 {
-                    title: this.tt('Điều khoản dịch vụ'),
-                    slug: isEn ? 'terms-of-service' : 'dieu-khoan-dich-vu',
+                    title: this.tt('Chính sách bán hàng & Thanh toán'),
+                    slug: isEn ? 'sales-policy' : 'chinh-sach-ban-hang',
                 },
                 {
-                    title: this.tt('Chính sách bảo hành & đổi trả'),
-                    slug: isEn ? 'warranty-return-policy' : 'chinh-sach-bao-hanh-doi-tra',
+                    title: this.tt('Chính sách bảo hành'),
+                    slug: isEn ? 'warranty-policy' : 'chinh-sach-bao-hanh',
                 },
             ]
             return policies.map((item) => ({
@@ -180,14 +173,14 @@ export default {
             }))
         },
         displayAddress() {
-            const raw = this.address || this.$page.props.global?.general_address || this.tt('Số 65 đường số 9, khu dân cư Hương Lộ 5, Phường An Lạc, Thành phố Hồ Chí Minh')
+            const raw = this.address || this.$page.props.global?.general_address || this.tt('Tầng 25, Tòa nhà TNR, 54A Nguyễn Chí Thanh, Phường Láng Thượng, Quận Đống Đa, Hà Nội')
             return this.tt(raw)
         },
         displayHotline() {
-            return this.hotline || this.$page.props.global?.general_phone || '0906636425'
+            return this.hotline || this.$page.props.global?.general_phone || '0967 732 665'
         },
         displayEmail() {
-            return this.email || this.$page.props.global?.general_email || 'info@hhmaker.vn'
+            return this.email || this.$page.props.global?.general_email || 'info@dvktthanhkhang.vn'
         },
     },
     methods: {

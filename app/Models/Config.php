@@ -307,66 +307,66 @@ class Config extends Model
             $raw['general_business_name_vi'] ?? null,
             $raw['general_business_name'] ?? null,
             $raw['company_name'] ?? null,
-        ], 'HH Maker');
+        ], 'Thành Khang Tecsat');
         $enBusinessName = $pickNonEmpty([
             $raw['general_business_name_en'] ?? null,
             $raw['company_name_en'] ?? null,
-        ]);
+        ], 'Thanh Khang Tecsat');
         $businessName = ($isEn && $enBusinessName !== '') ? $enBusinessName : $viBusinessName;
 
         $viSiteName = $pickNonEmpty([
             $raw['general_site_name_vi'] ?? null,
             $raw['general_site_name'] ?? null,
             $raw['site_name'] ?? null,
-        ], 'HH Maker - Dịch vụ Thiết kế & Gia công In 3D');
+        ], 'Thành Khang Tecsat - Thiết bị công nghiệp & Phụ tùng thang cuốn');
         $enSiteName = $pickNonEmpty([
             $raw['general_site_name_en'] ?? null,
             $raw['site_name_en'] ?? null,
-        ]);
+        ], 'Thanh Khang Tecsat - Industrial Equipment & Escalator Spare Parts');
         $siteName = ($isEn && $enSiteName !== '') ? $enSiteName : $viSiteName;
 
         $phone = $raw['general_phone']
             ?? $raw['phone']
             ?? $raw['hotline']
-            ?? '0906636425';
+            ?? '0967732665';
 
         $email = $raw['general_email']
             ?? $raw['email']
-            ?? 'info@hhmaker.vn';
+            ?? 'info@dvktthanhkhang.vn';
 
         $zalo = $raw['general_zalo']
             ?? $raw['zalo']
             ?? $raw['social_zalo']
-            ?? 'https://zalo.me/0906636425';
+            ?? 'https://zalo.me/0967732665';
 
         $viAddress = $pickNonEmpty([
             $raw['general_address_vi'] ?? null,
             $raw['general_address'] ?? null,
             $raw['address'] ?? null,
             $raw['showroom_address'] ?? null,
-        ], 'Số 65 đường số 9, khu dân cư Hương Lộ 5, Phường An Lạc, Thành phố Hồ Chí Minh');
+        ], 'Tầng 25, Tòa nhà TNR, 54A Nguyễn Chí Thanh, Phường Láng Thượng, Quận Đống Đa, Hà Nội');
         $enAddress = $pickNonEmpty([
             $raw['general_address_en'] ?? null,
             $raw['address_en'] ?? null,
             $raw['showroom_address_en'] ?? null,
-        ]);
+        ], '25th Floor, TNR Tower, 54A Nguyen Chi Thanh, Lang Thuong Ward, Dong Da District, Hanoi');
         $address = ($isEn && $enAddress !== '') ? $enAddress : $viAddress;
 
         $viWorkingHours = $pickNonEmpty([
             $raw['general_working_hours_vi'] ?? null,
             $raw['general_working_hours'] ?? null,
             $raw['working_hours'] ?? null,
-        ], 'Thứ 2 - Thứ 7: 08:00 - 18:00');
+        ], 'Thứ 2 - Thứ 7: 08:00 - 17:30');
         $enWorkingHours = $pickNonEmpty([
             $raw['general_working_hours_en'] ?? null,
             $raw['working_hours_en'] ?? null,
-        ]);
+        ], 'Mon - Sat: 08:00 - 17:30');
         $workingHours = ($isEn && $enWorkingHours !== '') ? $enWorkingHours : $viWorkingHours;
 
         $facebook = $raw['facebook']
             ?? $raw['social_facebook']
             ?? $raw['general_facebook']
-            ?? 'https://www.facebook.com/hhmaker';
+            ?? 'https://www.facebook.com/thanhkhangtecsat';
 
         $messenger = $raw['messenger']
             ?? $raw['social_messenger']
@@ -452,11 +452,6 @@ class Config extends Model
         return self::getGeneralSettings();
     }
 
-    public static function getLuxiBrandSettings(): array
-    {
-        return self::getGeneralSettings();
-    }
-
     public static function getProcessSteps($rawSettingsOrLocale = null, ?string $locale = null): array
     {
         if (is_string($rawSettingsOrLocale)) {
@@ -474,67 +469,67 @@ class Config extends Model
         $defaultStepsVi = [
             [
                 'number' => '01',
-                'title' => 'Liên hệ',
-                'subtitle' => 'Tiếp nhận & làm rõ nhu cầu',
-                'description' => 'Mọi sản phẩm bắt đầu bằng một cuộc trao đổi. HH Maker tiếp nhận ý tưởng và làm rõ nhu cầu trước khi đề xuất hướng thực hiện.',
-                'client_prep' => 'Gửi ý tưởng, ảnh tham khảo hoặc file 3D; nêu mục đích sử dụng, kích thước và số lượng dự kiến.',
-                'clientPrep' => 'Gửi ý tưởng, ảnh tham khảo hoặc file 3D; nêu mục đích sử dụng, kích thước và số lượng dự kiến.',
-                'maker_action' => 'Xem xét tính khả thi, đặt câu hỏi để hiểu yêu cầu và tư vấn hướng thiết kế, vật liệu, cách gia công.',
-                'makerAction' => 'Xem xét tính khả thi, đặt câu hỏi để hiểu yêu cầu và tư vấn hướng thiết kế, vật liệu, cách gia công.',
-                'deliverables' => 'Tư vấn giải pháp kỹ thuật & định hướng vật liệu',
-                'quality_standard' => 'Phản hồi nhanh chóng, nắm bắt đúng trọng tâm ý tưởng',
+                'title' => 'Tiếp nhận yêu cầu',
+                'subtitle' => 'Tiếp nhận thông số & mã phụ tùng',
+                'description' => 'Khách hàng gửi mã phụ tùng, bản vẽ kỹ thuật hoặc thông số chi tiết cần thay thế. Kỹ sư Thành Khang Tecsat tiếp nhận và phân tích yêu cầu kỹ thuật.',
+                'client_prep' => 'Cung cấp mã phụ tùng, thông số kỹ thuật (bước xích, tải trọng, kích thước) hoặc hình ảnh linh kiện thực tế.',
+                'clientPrep' => 'Cung cấp mã phụ tùng, thông số kỹ thuật (bước xích, tải trọng, kích thước) hoặc hình ảnh linh kiện thực tế.',
+                'maker_action' => 'Kỹ sư kỹ thuật Thành Khang đối chiếu bản vẽ tiêu chuẩn công nghiệp, kiểm tra khả năng lắp ghép và tư vấn giải pháp tối ưu.',
+                'makerAction' => 'Kỹ sư kỹ thuật Thành Khang đối chiếu bản vẽ tiêu chuẩn công nghiệp, kiểm tra khả năng lắp ghép và tư vấn giải pháp tối ưu.',
+                'deliverables' => 'Bản xác nhận thông số kỹ thuật & giải pháp phụ tùng phù hợp',
+                'quality_standard' => 'Phản hồi trong 2-4 giờ làm việc, chính xác 100% theo tiêu chuẩn lắp ráp',
                 'isLast' => false,
             ],
             [
                 'number' => '02',
-                'title' => 'Báo giá',
-                'subtitle' => 'Phương án & chi phí minh bạch',
-                'description' => 'Thống nhất những điều quan trọng trước khi bắt tay vào chế tác: phạm vi công việc, yêu cầu sản phẩm và phương án thực hiện.',
-                'client_prep' => 'Xác nhận thiết kế, kích thước, số lượng và các yêu cầu hoàn thiện; phản hồi những điểm cần điều chỉnh.',
-                'clientPrep' => 'Xác nhận thiết kế, kích thước, số lượng và các yêu cầu hoàn thiện; phản hồi những điểm cần điều chỉnh.',
-                'maker_action' => 'Tổng hợp phương án và báo giá theo yêu cầu thực tế. Trao đổi các hạng mục trước khi khách hàng xác nhận triển khai.',
-                'makerAction' => 'Tổng hợp phương án và báo giá theo yêu cầu thực tế. Trao đổi các hạng mục trước khi khách hàng xác nhận triển khai.',
-                'deliverables' => 'Bảng báo giá chi tiết & tiến độ dự kiến',
-                'quality_standard' => 'Minh bạch hạng mục, tối ưu chi phí theo nhu cầu thực tế',
+                'title' => 'Báo giá kỹ thuật',
+                'subtitle' => 'Báo giá minh bạch & tiến độ cung ứng',
+                'description' => 'Thống nhất chủng loại vật liệu, tiêu chuẩn cơ khí và phương án giao nhận trước khi triển khai đơn hàng.',
+                'client_prep' => 'Xác nhận số lượng đặt hàng, địa điểm công trình/nhà máy nhận hàng và yêu cầu hồ sơ CO/CQ nếu có.',
+                'clientPrep' => 'Xác nhận số lượng đặt hàng, địa điểm công trình/nhà máy nhận hàng và yêu cầu hồ sơ CO/CQ nếu có.',
+                'maker_action' => 'Lập bảng báo giá chi tiết, dự toán chi phí tối ưu theo số lượng B2B và cam kết tiến độ giao hàng chuẩn xác.',
+                'makerAction' => 'Lập bảng báo giá chi tiết, dự toán chi phí tối ưu theo số lượng B2B và cam kết tiến độ giao hàng chuẩn xác.',
+                'deliverables' => 'Bảng báo giá RFQ chính thức & tiến độ cung ứng dự kiến',
+                'quality_standard' => 'Giá gốc nhà máy cạnh tranh nhất, minh bạch chi phí vận chuyển & thuế VAT',
                 'isLast' => false,
             ],
             [
                 'number' => '03',
-                'title' => 'Gia công 3D',
-                'subtitle' => 'Chế tác & hoàn thiện chi tiết',
-                'description' => 'Từ mô hình số đến sản phẩm vật lý. Thiết kế, vật liệu và quy trình in được kết nối trong từng chi tiết.',
-                'client_prep' => 'Xác nhận các điều chỉnh kỹ thuật nếu có để phương án gia công phù hợp với nhu cầu đã trao đổi.',
-                'clientPrep' => 'Xác nhận các điều chỉnh kỹ thuật nếu có để phương án gia công phù hợp với nhu cầu đã trao đổi.',
-                'maker_action' => 'Chuẩn bị mô hình, thực hiện in 3D và hoàn thiện theo phương án đã chốt; kiểm tra hình dáng, bề mặt và chi tiết sản phẩm.',
-                'makerAction' => 'Chuẩn bị mô hình, thực hiện in 3D và hoàn thiện theo phương án đã chốt; kiểm tra hình dáng, bề mặt và chi tiết sản phẩm.',
-                'deliverables' => 'Sản phẩm hoàn thiện theo đúng thông số đã duyệt',
-                'quality_standard' => 'Chuẩn xác kích thước, bề mặt mịn và kết cấu vững chắc',
+                'title' => 'Ký kết hợp đồng',
+                'subtitle' => 'Xác nhận đơn hàng & bảo lãnh cung ứng',
+                'description' => 'Hoàn thiện thủ tục hợp đồng kinh tế, cam kết pháp lý về tiêu chuẩn chất lượng sản phẩm và bảo hành.',
+                'client_prep' => 'Cung cấp thông tin pháp nhân công ty, ký kết hợp đồng mua bán và thực hiện tạm ứng theo thỏa thuận.',
+                'clientPrep' => 'Cung cấp thông tin pháp nhân công ty, ký kết hợp đồng mua bán và thực hiện tạm ứng theo thỏa thuận.',
+                'maker_action' => 'Phát hành hợp đồng mua bán B2B, lên lệnh xuất kho hoặc điều phối sản xuất theo đúng thông số đã chốt.',
+                'makerAction' => 'Phát hành hợp đồng mua bán B2B, lên lệnh xuất kho hoặc điều phối sản xuất theo đúng thông số đã chốt.',
+                'deliverables' => 'Hợp đồng kinh tế B2B & kế hoạch giao hàng chi tiết',
+                'quality_standard' => 'Hợp đồng pháp lý rõ ràng, bảo vệ tối đa quyền lợi khách hàng doanh nghiệp',
                 'isLast' => false,
             ],
             [
                 'number' => '04',
-                'title' => 'Đóng gói',
-                'subtitle' => 'Kiểm định & bảo vệ an toàn',
-                'description' => 'Sản phẩm sau gia công được kiểm tra và chuẩn bị cho hành trình vận chuyển.',
-                'client_prep' => 'Cung cấp thông tin người nhận và lưu ý về việc giao nhận hoặc cách đóng gói nếu có yêu cầu riêng.',
-                'clientPrep' => 'Cung cấp thông tin người nhận và lưu ý về việc giao nhận hoặc cách đóng gói nếu có yêu cầu riêng.',
-                'maker_action' => 'Kiểm tra sản phẩm, sắp xếp các chi tiết và lựa chọn cách bảo vệ, đóng gói phù hợp với hình dáng của từng món đồ.',
-                'makerAction' => 'Kiểm tra sản phẩm, sắp xếp các chi tiết và lựa chọn cách bảo vệ, đóng gói phù hợp với hình dáng của từng món đồ.',
-                'deliverables' => 'Kiện hàng đóng gói chống sốc tiêu chuẩn',
-                'quality_standard' => 'Bảo vệ tối đa các chi tiết mảnh và bề mặt hoàn thiện',
+                'title' => 'Kiểm định & Đóng gói',
+                'subtitle' => 'Kiểm định QC nghiêm ngặt & đóng kiện công nghiệp',
+                'description' => 'Toàn bộ linh kiện được kiểm tra kích thước, tải trọng thử nghiệm, tra dầu bảo quản và đóng thùng kiện gỗ an toàn.',
+                'client_prep' => 'Sắp xếp nhân sự hoặc kỹ thuật viên tiếp nhận hàng hóa tại công trình/nhà xưởng.',
+                'clientPrep' => 'Sắp xếp nhân sự hoặc kỹ thuật viên tiếp nhận hàng hóa tại công trình/nhà xưởng.',
+                'maker_action' => 'Kiểm tra chất lượng (QC) từng chi tiết, đóng gói chống sốc chống ẩm và hoàn thiện bộ chứng chỉ chất lượng CO/CQ.',
+                'makerAction' => 'Kiểm tra chất lượng (QC) từng chi tiết, đóng gói chống sốc chống ẩm và hoàn thiện bộ chứng chỉ chất lượng CO/CQ.',
+                'deliverables' => 'Kiện hàng nguyên đai nguyên kiện & bộ hồ sơ CO/CQ xuất xưởng',
+                'quality_standard' => 'Đạt 100% tiêu chuẩn xuất xưởng, bảo vệ hoàn hảo trong vận chuyển',
                 'isLast' => false,
             ],
             [
                 'number' => '05',
-                'title' => 'Gửi hàng',
-                'subtitle' => 'Bàn giao & đồng hành sau nhận hàng',
-                'description' => 'Khép lại quá trình chế tác, mở đầu trải nghiệm sử dụng sản phẩm của bạn.',
-                'client_prep' => 'Xác nhận địa chỉ, số điện thoại nhận hàng; kiểm tra sản phẩm khi nhận và trao đổi nếu cần hỗ trợ.',
-                'clientPrep' => 'Xác nhận địa chỉ, số điện thoại nhận hàng; kiểm tra sản phẩm khi nhận và trao đổi nếu cần hỗ trợ.',
-                'maker_action' => 'Bàn giao kiện hàng để vận chuyển, cung cấp thông tin gửi hàng và tiếp nhận phản hồi sau khi khách hàng nhận sản phẩm.',
-                'makerAction' => 'Bàn giao kiện hàng để vận chuyển, cung cấp thông tin gửi hàng và tiếp nhận phản hồi sau khi khách hàng nhận sản phẩm.',
-                'deliverables' => 'Bàn giao sản phẩm & mã vận đơn theo dõi',
-                'quality_standard' => 'Giao hàng đúng hẹn, hỗ trợ tận tâm sau bàn giao',
+                'title' => 'Bàn giao & Bảo hành',
+                'subtitle' => 'Giao nhận tại chân công trình & hỗ trợ kỹ thuật',
+                'description' => 'Bàn giao vật tư tại hiện trường, hướng dẫn lắp đặt căn chỉnh và kích hoạt chính sách bảo hành kỹ thuật chính hãng.',
+                'client_prep' => 'Kiểm tra niêm phong, đối chiếu danh mục hàng hóa theo phiếu xuất kho và ký biên bản giao nhận.',
+                'clientPrep' => 'Kiểm tra niêm phong, đối chiếu danh mục hàng hóa theo phiếu xuất kho và ký biên bản giao nhận.',
+                'maker_action' => 'Giao hàng đúng hẹn, hướng dẫn kỹ thuật bảo trì định kỳ và sẵn sàng hỗ trợ kỹ thuật 24/7 khi vận hành.',
+                'makerAction' => 'Giao hàng đúng hẹn, hướng dẫn kỹ thuật bảo trì định kỳ và sẵn sàng hỗ trợ kỹ thuật 24/7 khi vận hành.',
+                'deliverables' => 'Biên bản nghiệm thu bàn giao & phiếu bảo hành chính hãng',
+                'quality_standard' => 'Bảo hành 12 - 24 tháng chính hãng, hỗ trợ kỹ thuật trọn vòng đời sản phẩm',
                 'isLast' => true,
             ],
         ];
@@ -542,67 +537,67 @@ class Config extends Model
         $defaultStepsEn = [
             [
                 'number' => '01',
-                'title' => 'Contact',
-                'subtitle' => 'Initial Consultation & Requirement Clarification',
-                'description' => 'Every product begins with a conversation. HH Maker receives your idea and clarifies requirements before proposing an execution direction.',
-                'client_prep' => 'Send your idea, reference images or 3D files; state intended use, dimensions, and estimated quantity.',
-                'clientPrep' => 'Send your idea, reference images or 3D files; state intended use, dimensions, and estimated quantity.',
-                'maker_action' => 'Evaluate feasibility, ask clarifying questions, and advise on design direction, materials, and fabrication methods.',
-                'makerAction' => 'Evaluate feasibility, ask clarifying questions, and advise on design direction, materials, and fabrication methods.',
-                'deliverables' => 'Technical consultation & material direction',
-                'quality_standard' => 'Prompt response & accurate understanding of your concept',
+                'title' => 'Technical Intake',
+                'subtitle' => 'Part Number & Specs Survey',
+                'description' => 'Clients provide part numbers, technical drawings, or physical dimensions. Our engineers review and verify technical specifications.',
+                'client_prep' => 'Provide part numbers, dimensional drawings, pitch/tensile specs, or photos of existing components.',
+                'clientPrep' => 'Provide part numbers, dimensional drawings, pitch/tensile specs, or photos of existing components.',
+                'maker_action' => 'Thanh Khang engineers cross-check industrial standards, verify dimensional fitment, and advise optimal part specifications.',
+                'makerAction' => 'Thanh Khang engineers cross-check industrial standards, verify dimensional fitment, and advise optimal part specifications.',
+                'deliverables' => 'Technical verification datasheet & optimal part selection',
+                'quality_standard' => 'Response within 2-4 hours, 100% dimensional accuracy',
                 'isLast' => false,
             ],
             [
                 'number' => '02',
-                'title' => 'Quotation',
-                'subtitle' => 'Transparent Plan & Pricing',
-                'description' => 'Align on key details before crafting begins: scope of work, product specifications, and execution plan.',
-                'client_prep' => 'Confirm design, dimensions, quantity, and finishing requirements; provide feedback on any needed adjustments.',
-                'clientPrep' => 'Confirm design, dimensions, quantity, and finishing requirements; provide feedback on any needed adjustments.',
-                'maker_action' => 'Compile the execution plan and quotation based on actual requirements. Discuss all items before confirming production.',
-                'makerAction' => 'Compile the execution plan and quotation based on actual requirements. Discuss all items before confirming production.',
-                'deliverables' => 'Detailed quotation & estimated timeline',
-                'quality_standard' => 'Transparent breakdown, cost-optimized for actual needs',
+                'title' => 'Technical RFQ Quotation',
+                'subtitle' => 'Transparent Pricing & Lead Time',
+                'description' => 'Align on metallurgy, industrial standards, and logistics options prior to commercial confirmation.',
+                'client_prep' => 'Confirm required quantities, delivery site, and compliance documentation requirements (CO/CQ).',
+                'clientPrep' => 'Confirm required quantities, delivery site, and compliance documentation requirements (CO/CQ).',
+                'maker_action' => 'Prepare detailed commercial quotation, tiered volume pricing, and committed delivery schedules.',
+                'makerAction' => 'Prepare detailed commercial quotation, tiered volume pricing, and committed delivery schedules.',
+                'deliverables' => 'Official B2B quotation & committed fulfillment schedule',
+                'quality_standard' => 'Competitive factory pricing, transparent freight & VAT terms',
                 'isLast' => false,
             ],
             [
                 'number' => '03',
-                'title' => '3D Fabrication',
-                'subtitle' => 'Precision Printing & Finishing',
-                'description' => 'From digital model to physical product. Design, materials, and printing processes come together in every detail.',
-                'client_prep' => 'Confirm any technical adjustments so the fabrication plan matches the agreed requirements.',
-                'clientPrep' => 'Confirm any technical adjustments so the fabrication plan matches the agreed requirements.',
-                'maker_action' => 'Prepare the model, execute 3D printing and post-processing per the approved plan; inspect shape, surface, and fine details.',
-                'makerAction' => 'Prepare the model, execute 3D printing and post-processing per the approved plan; inspect shape, surface, and fine details.',
-                'deliverables' => 'Finished product matching approved specifications',
-                'quality_standard' => 'Dimensional accuracy, smooth surface, and structural integrity',
+                'title' => 'Contract & Order Confirmation',
+                'subtitle' => 'Formal Agreement & Procurement',
+                'description' => 'Finalize commercial sales contract with strict legal warranties on quality and delivery milestones.',
+                'client_prep' => 'Provide legal corporate profile, execute purchase contract, and process initial deposit.',
+                'clientPrep' => 'Provide legal corporate profile, execute purchase contract, and process initial deposit.',
+                'maker_action' => 'Issue sales agreement, place warehouse dispatch orders or initiate specialized manufacturing.',
+                'makerAction' => 'Issue sales agreement, place warehouse dispatch orders or initiate specialized manufacturing.',
+                'deliverables' => 'Executed purchase contract & dispatch milestone schedule',
+                'quality_standard' => 'Transparent legal terms safeguarding customer interests',
                 'isLast' => false,
             ],
             [
                 'number' => '04',
-                'title' => 'Packaging',
-                'subtitle' => 'Inspection & Protective Packaging',
-                'description' => 'Fabricated products are carefully inspected and prepared for safe transit.',
-                'client_prep' => 'Provide recipient details and any special delivery or packaging notes if needed.',
-                'clientPrep' => 'Provide recipient details and any special delivery or packaging notes if needed.',
-                'maker_action' => 'Inspect the product, arrange components, and select protective packaging tailored to each item\'s geometry.',
-                'makerAction' => 'Inspect the product, arrange components, and select protective packaging tailored to each item\'s geometry.',
-                'deliverables' => 'Shock-resistant packaged parcel',
-                'quality_standard' => 'Maximum protection for delicate parts and finished surfaces',
+                'title' => 'QC & Industrial Packaging',
+                'subtitle' => 'Rigorous Inspection & Industrial Crating',
+                'description' => 'All components undergo dimensional verification, proof-load testing, anti-rust oiling, and heavy-duty wooden crating.',
+                'client_prep' => 'Arrange receiving personnel or engineering staff at the job site or warehouse.',
+                'clientPrep' => 'Arrange receiving personnel or engineering staff at the job site or warehouse.',
+                'maker_action' => 'Perform QC checks, pack with moisture and shock protection, and prepare CO/CQ certificates.',
+                'makerAction' => 'Perform QC checks, pack with moisture and shock protection, and prepare CO/CQ certificates.',
+                'deliverables' => 'Factory-sealed crates & complete certification dossier',
+                'quality_standard' => '100% factory inspection pass rate, zero transit damage',
                 'isLast' => false,
             ],
             [
                 'number' => '05',
-                'title' => 'Delivery',
-                'subtitle' => 'Handover & Post-Delivery Support',
-                'description' => 'Completing the crafting journey and beginning your experience with the product.',
-                'client_prep' => 'Confirm shipping address and phone number; inspect the product upon arrival and reach out if support is needed.',
-                'clientPrep' => 'Confirm shipping address and phone number; inspect the product upon arrival and reach out if support is needed.',
-                'maker_action' => 'Hand over the parcel for shipping, provide tracking details, and follow up after you receive the product.',
-                'makerAction' => 'Hand over the parcel for shipping, provide tracking details, and follow up after you receive the product.',
-                'deliverables' => 'Product handover & tracking information',
-                'quality_standard' => 'On-time delivery & dedicated post-handover support',
+                'title' => 'Handover & Warranty Support',
+                'subtitle' => 'Site Delivery & Technical Support',
+                'description' => 'Site delivery, alignment and installation guidance, and activation of genuine technical warranty.',
+                'client_prep' => 'Inspect seals, verify packing list against delivery docket, and sign handover acceptance report.',
+                'clientPrep' => 'Inspect seals, verify packing list against delivery docket, and sign handover acceptance report.',
+                'maker_action' => 'Deliver on schedule, provide preventive maintenance instructions, and deliver 24/7 engineering support.',
+                'makerAction' => 'Deliver on schedule, provide preventive maintenance instructions, and deliver 24/7 engineering support.',
+                'deliverables' => 'Acceptance handover protocol & official warranty certificate',
+                'quality_standard' => '12 to 24-month warranty, lifetime technical advisory',
                 'isLast' => true,
             ],
         ];

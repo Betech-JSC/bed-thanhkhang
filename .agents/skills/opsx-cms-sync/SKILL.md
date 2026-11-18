@@ -18,6 +18,9 @@ Skill này biến đoạn hội thoại hiện tại thành **Đoạn Hội Tho�
 1. **CẤM TỰ Ý XÓA FILE VẬT LÝ**: Tuyệt đối không dùng `rm`, `rm -rf` hay xóa bất kỳ file nào. Trong mọi script `.sh` đi kèm cũng tuyệt đối không có lệnh `rm`.
 2. **CẤM PHÁ HỦY DATABASE**: Không chạy `php artisan migrate:fresh`, `db:seed` ghi đè dữ liệu thật, `DROP TABLE` hay `TRUNCATE`. Mọi seeder phải viết theo chuẩn **Idempotent (`updateOrCreate` / `firstOrCreate`)**.
 3. **NGHIÊM CẤM TỰ Ý SỬA CODE KHI CHƯA CONFIRM**: Ở Giai đoạn 1 và Giai đoạn 2, Đoạn Hội Thoại Trung Tâm hoạt động ở chế độ **100% `Strict Read-Only`** đối với mã nguồn dự án.
+4. **CHÍNH SÁCH ZERO-FALLBACK & ZERO-DEFAULT TUYỆT ĐỐI**:
+   - **Backend**: Cấm các hàm `getFallback*()`, `getDefault*()` tự sinh data giả. Cấm toán tử fallback text `?? 'chuỗi mẫu'` trong Controller Inertia render (nếu thiếu data trả về `null` hoặc rỗng `[]` chuẩn). Cấm đệm mảng vòng lặp (padding/slice) để ép đủ số card.
+   - **Frontend**: Cấm `props.items || defaultMock`, cấm default prop dạng mảng mock. Khi DB trống, bắt buộc hiển thị `EmptyState.vue` hoặc ẩn section tùy chọn; tuyệt đối không hiển thị dữ liệu giả che giấu CMS.
 
 ---
 
@@ -48,7 +51,7 @@ Từ kết quả ở `scratch/cms-sync-audit-report.md`, Agent **BẮT BUỘC** 
 3. **Bảng 3 — Danh Sách Toàn Bộ Lỗi ĐIỀU HƯỚNG Trên UI** (`DEAD_LINK`, `DEAD_MENU_ITEM`, `ROUTE_MISMATCH`, `UNLINKED_CMS_CARD`, `UNWIRED_BUTTON` kèm gợi ý route đích trong `routes/frontend.php`).
 4. **Bảng 4 — Bảng Quyết Định `[+] THÊM GÌ / [-] BỎ GÌ / [=] GIỮ NGUYÊN GÌ`**:
    - **`[+] THÊM (ADD)`**: Các kết nối từ UI vào Model CMS sẵn có, các điều hướng `<Link :href="route(...)">` cần gắn, các khóa `Cache::forget` còn thiếu.
-   - **`[-] BỎ (REMOVE)`**: Các mảng dữ liệu tĩnh (`const ... = [...]`) trên Vue đang chặn dữ liệu CMS, các link chết `href="#"`, các trường thừa trên Form Admin.
+   - **`[-] BỎ (REMOVE)`**: Các mảng dữ liệu tĩnh (`const ... = [...]`) trên Vue đang chặn dữ liệu CMS, các hàm mock/fallback (`getFallback*()`, `getDefault*()`), các toán tử fallback string `?? 'chuỗi mẫu'` trong Controller để trả về `null`/`[]` chuẩn, các link chết `href="#"`, các trường thừa trên Form Admin.
    - **`[=] GIỮ NGUYÊN (KEEP)`**: Các hệ thống Model/Migration/Admin Controller đã có sẵn bên CMS và dữ liệu thật trong Database.
 
 > 🛑 **ĐIỂM DỪNG BẮT BUỘC (MANDATORY CONFIRMATION GATE)**:

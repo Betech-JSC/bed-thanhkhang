@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (\App\Models\Policy\Policy::count() === 0) {
-            (new \Database\Seeders\PolicySeeder())->run();
+        if (\App\Models\Policy\Policy::count() === 0 && class_exists(\Database\Seeders\ThanhKhangPolicySeeder::class)) {
+            (new \Database\Seeders\ThanhKhangPolicySeeder())->run();
         }
     }
 

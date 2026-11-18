@@ -20,7 +20,7 @@
                 >
                     <img
                         :src="processImage"
-                        alt="HH Maker 3D Layer Graphic"
+                        alt="Thành Khang Tecsat Industrial Process"
                         class="w-full h-full object-cover object-left-center select-none pointer-events-none"
                         loading="lazy"
                     />
@@ -134,12 +134,12 @@ export default {
         },
         title: {
             type: String,
-            default: 'BƯỚC TRONG QUY TRÌNH LÀM VIỆC CHUYÊN NGHIỆP & MINH BẠCH TẠI HH MAKER',
+            default: 'BƯỚC TRONG QUY TRÌNH CUNG ỨNG CHUYÊN NGHIỆP & MINH BẠCH TẠI THÀNH KHANG TECSAT',
         },
         description: {
             type: String,
             default:
-                'Khách hàng gửi file 3D hoặc chia sẻ ý tưởng, đội ngũ kỹ thuật của HH Maker sẽ tiến hành phân tích độ khả thi, tư vấn công nghệ in tối ưu, cũng như lựa chọn loại vật liệu phù hợp nhất để đảm bảo sản phẩm đạt độ bền, tính thẩm mỹ và công năng sử dụng đúng như kỳ vọng của bạn.',
+                'Đối tác gửi mã linh kiện, thông số bước xích hoặc bản vẽ kỹ thuật, đội ngũ kỹ sư Thành Khang Tecsat sẽ đối chiếu chuẩn OEM, tư vấn vật liệu và giải pháp vận hành tối ưu cùng chứng chỉ CO/CQ đầy đủ.',
         },
         steps: {
             type: Array,
@@ -156,28 +156,28 @@ export default {
             defaultSteps: [
                 {
                     number: '01',
-                    title: 'Tiếp nhận & Tư vấn',
-                    detail: 'Tiếp nhận file mô hình 3D (STL, OBJ, STEP, 3MF) hoặc bản vẽ 2D phác thảo từ khách hàng; tư vấn công nghệ in và vật liệu phù hợp nhất.',
+                    title: 'Tiếp nhận & Khảo sát',
+                    detail: 'Tiếp nhận thông số kỹ thuật, mã linh kiện OEM, bản vẽ CAD (.STEP, .DWG) hoặc khảo sát thực tế hệ thống thang cuốn, băng tải, nhà xưởng.',
                 },
                 {
                     number: '02',
-                    title: 'Phân tích & Báo giá',
-                    detail: 'Kỹ sư kiểm tra tính toàn vẹn cấu trúc lưới mesh, slice mô hình, tính toán thời gian in, chi phí tối ưu và gửi bảng báo giá chi tiết.',
+                    title: 'Đối chiếu & Báo giá',
+                    detail: 'Kỹ sư đối chiếu tiêu chuẩn Universal Chains / EN 115 / DIN, đề xuất vật liệu (40Cr, Inox 304/316, POM, EPDM) và gửi báo giá chi tiết.',
                 },
                 {
                     number: '03',
-                    title: 'Gia công In 3D',
-                    detail: 'Vận hành dây chuyền in 3D công nghiệp với thông số cài đặt chuẩn xác, kiểm soát nhiệt độ buồng và độ phân giải từng lớp in 0.05mm.',
+                    title: 'Chuẩn bị & Kiểm định',
+                    detail: 'Xuất kho linh kiện chính hãng hoặc gia công OEM chuẩn dung sai, kiểm định cơ tính và hoàn thiện hồ sơ chứng từ CO/CQ.',
                 },
                 {
                     number: '04',
-                    title: 'Đóng gói chuẩn quy cách',
-                    detail: 'Gọt bỏ support, làm sạch siêu âm, xử lý bề mặt hoàn thiện mịn đẹp, kiểm tra kích thước dung sai và đóng gói chống sốc an toàn.',
+                    title: 'Đóng gói & Bàn giao',
+                    detail: 'Đóng gói kiện gỗ/pallet chuẩn công nghiệp chống ẩm va đập và vận chuyển an toàn đến tận công trình, nhà máy trên toàn quốc.',
                 },
                 {
                     number: '05',
-                    title: 'Giao hàng tận nơi',
-                    detail: 'Bàn giao tận tay khách hàng qua mạng lưới vận chuyển hỏa tốc toàn quốc, kèm chính sách bảo hành và hướng dẫn sử dụng chu đáo.',
+                    title: 'Lắp đặt & Bảo hành',
+                    detail: 'Hỗ trợ kỹ thuật nghiệm thu lắp đặt, chạy thử ổn định và áp dụng chính sách bảo hành chính hãng dài hạn.',
                 },
             ],
         };
@@ -192,11 +192,11 @@ export default {
                     : this.defaultSteps;
 
             const homeTitleMap = {
-                'liên hệ': 'Tiếp nhận & Tư vấn',
-                'báo giá': 'Phân tích & Báo giá',
-                'gia công 3d': 'Gia công In 3D',
-                'đóng gói': 'Đóng gói chuẩn quy cách',
-                'gửi hàng': 'Giao hàng tận nơi',
+                'liên hệ': 'Tiếp nhận & Khảo sát',
+                'báo giá': 'Đối chiếu & Báo giá',
+                'chuẩn bị': 'Chuẩn bị & Kiểm định',
+                'đóng gói': 'Đóng gói & Bàn giao',
+                'gửi hàng': 'Lắp đặt & Bảo hành',
             };
 
             return rawList.map((item, idx) => {

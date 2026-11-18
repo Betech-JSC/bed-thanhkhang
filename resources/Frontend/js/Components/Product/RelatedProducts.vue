@@ -184,7 +184,7 @@ export default {
         },
         handleImageError(event, item) {
             if (!event || !event.target) return
-            const fallback = '/images/pdp/related_1.png'
+            const fallback = '/images/products/thanhkhang/xich-bac-thang-thuong-mai/commercial-type.webp'
             if (event.target.src !== fallback && !event.target.src.endsWith(fallback)) {
                 event.target.src = fallback
             }

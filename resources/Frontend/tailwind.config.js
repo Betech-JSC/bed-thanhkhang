@@ -905,9 +905,8 @@ module.exports = {
                 dim: '#475467',
 
                 /**
-                 * @deprecated LEGACY FUNKYSTYLE COLORS (FKS)
-                 * Do NOT use in new HH-Maker components. Kept strictly for backward compatibility with unmigrated pages.
-                 * Scheduled for removal after full design audit.
+                 * @deprecated LEGACY COLOR ALIASES
+                 * Kept strictly for backward compatibility with unmigrated styling classes.
                  */
                 'red-fks': '#D34000',
                 'black-fks': '#18191E',

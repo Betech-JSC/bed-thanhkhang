@@ -63,11 +63,11 @@ class ProcessController extends Controller
             $locale = current_locale();
             $seo = [
                 'title' => $locale === 'en'
-                    ? 'Professional 3D Printing & Manufacturing Process - HH Maker'
-                    : 'Quy Trình Gia Công & Chế Tác 3D Chuyên Nghiệp - HH Maker',
+                    ? 'B2B Technical Ordering & Supply Process - Thanh Khang Tecsat'
+                    : 'Quy Trình Cung Cấp Phụ Tùng B2B Chuyên Nghiệp - Thành Khang Tecsat',
                 'description' => $locale === 'en'
-                    ? 'Explore HH Maker\'s 5-step professional 3D printing and design process: From contact, detailed quotation, precise fabrication, careful packaging to safe delivery.'
-                    : 'Khám phá quy trình 5 bước in 3D và thiết kế chuyên nghiệp tại HH Maker: Từ liên hệ, báo giá chi tiết, gia công chuẩn xác, đóng gói cẩn thận đến giao hàng an toàn.',
+                    ? 'Explore Thanh Khang Tecsat\'s 5-step professional industrial supply process: Technical consultation, RFQ quotation, manufacturing & quality control, packing, and safe delivery.'
+                    : 'Khám phá quy trình 5 bước cung cấp thiết bị và phụ tùng công nghiệp chuyên nghiệp tại Thành Khang Tecsat: Từ tiếp nhận yêu cầu kỹ thuật, báo giá RFQ, kiểm soát chất lượng, đóng gói đến giao hàng an toàn.',
             ];
 
             if (request()->wantsJson()) {

@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="card-header font-bold text-slate-800 flex items-center gap-2">
                     <i class="pi pi-user text-blue-600"></i>
-                    <span>Thông tin Báo giá In 3D</span>
+                    <span>Thông tin Yêu cầu Báo giá (RFQ)</span>
                 </div>
                 <div class="card-body">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -63,14 +63,14 @@
                 </div>
             </div>
 
-            <!-- File CAD & Mô hình 3D -->
+            <!-- File CAD & Tài liệu kỹ thuật -->
             <div class="card mt-6" v-if="cadAndDocumentFiles.length > 0">
                 <div class="card-header flex items-center justify-between">
                     <span class="font-bold text-slate-800 flex items-center gap-2">
                         <i class="pi pi-box text-blue-600"></i>
-                        Tệp mô hình 3D & Bản vẽ CAD ({{ cadAndDocumentFiles.length }})
+                        Bản vẽ CAD & Tài liệu kỹ thuật ({{ cadAndDocumentFiles.length }})
                     </span>
-                    <span class="text-xs text-slate-400 font-medium">Định dạng file sản xuất HH Maker</span>
+                    <span class="text-xs text-slate-400 font-medium">Bản vẽ kỹ thuật &amp; Tài liệu thông số</span>
                 </div>
                 <div class="card-body">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -93,7 +93,7 @@
                                         {{ getFileName(file.path) }}
                                     </div>
                                     <div class="text-xs text-slate-400">
-                                        Tệp mô hình 3D / CAD
+                                        Bản vẽ kỹ thuật / Tài liệu CAD
                                     </div>
                                 </div>
                             </div>
@@ -169,7 +169,7 @@
                             type: 'textarea',
                             name: 'internal_notes',
                             label: 'Ghi chú nội bộ (Internal Notes)',
-                            placeholder: 'Ghi chú kỹ thuật in, vật liệu, lưu ý file 3D...',
+                            placeholder: 'Ghi chú thông số kỹ thuật, bước xích, vật liệu, tiến độ giao hàng...',
                             rows: 4,
                         }"
                     />

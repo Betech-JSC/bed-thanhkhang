@@ -128,7 +128,7 @@ const serviceData = computed(() => {
 
 const pageTitle = computed(() => {
     if (props.seo?.title) return props.seo.title
-    const suffix = currentLocale.value === 'en' ? 'HH Maker Services' : i18n.tt('Dịch Vụ HH Maker')
+    const suffix = currentLocale.value === 'en' ? 'Thành Khang Tecsat Services' : i18n.tt('Dịch Vụ Thành Khang Tecsat')
     return `${serviceData.value.title} - ${suffix}`
 })
 
@@ -140,9 +140,9 @@ const pageDescription = computed(() => {
 const heroImage = computed(() => {
     if (props.service?.benefit_image?.url) return props.service.benefit_image.url
     if (props.service?.image?.url) return props.service.image.url
-    if (serviceData.value.slug === 'gia-cong-3d') return '/assets/images/services/service-gia-cong-3d.png'
-    if (serviceData.value.slug === 'lam-do-custom') return '/assets/images/services/service-lam-do-custom.png'
-    return '/assets/images/services/hero-3d-illustration.png'
+    if (serviceData.value.slug === 'xich-tai-cong-nghiep') return '/images/products/thanhkhang/xich-dan-dong-chinh/drive-chain.webp'
+    if (serviceData.value.slug === 'quat-cong-nghiep-bldc') return '/images/products/thanhkhang/xich-bai-do-xe/vertical-circulation-photo.webp'
+    return '/images/products/thanhkhang/xich-bac-thang-thuong-mai/commercial-type.webp'
 })
 
 const heroData = computed(() => {
@@ -167,54 +167,54 @@ const tocItems = computed(() => {
     if (Array.isArray(props.service?.tocItems) && props.service.tocItems.length > 0) return props.service.tocItems
 
     const slug = serviceData.value.slug
-    if (slug === 'gia-cong-3d') {
+    if (slug === 'xich-tai-cong-nghiep') {
         if (currentLocale.value === 'en') {
             return [
-                { id: 'section-01', number: '01', title: 'When do you need 3D machining & printing?', shortTitle: 'When need machining?' },
-                { id: 'section-02', number: '02', title: 'Precision fabrication workflow', shortTitle: 'Workflow' },
-                { id: 'section-03', number: '03', title: 'Technical specifications to prepare', shortTitle: 'Specs to prepare' },
-                { id: 'section-04', number: '04', title: 'Post-processing & finishing standards', shortTitle: 'Finishing standards' },
+                { id: 'section-01', number: '01', title: 'Application & Operating Conditions', shortTitle: 'Applications' },
+                { id: 'section-02', number: '02', title: 'OEM Chain Selection & Matching Process', shortTitle: 'Workflow' },
+                { id: 'section-03', number: '03', title: 'Technical Specifications to Prepare', shortTitle: 'Specs to prepare' },
+                { id: 'section-04', number: '04', title: 'CO/CQ Inspection & Maintenance Standards', shortTitle: 'QC & Maintenance' },
             ]
         }
         return [
-            { id: 'section-01', number: '01', title: i18n.tt('Khi nào bạn cần gia công 3D?'), shortTitle: i18n.tt('Khi nào cần gia công?') },
-            { id: 'section-02', number: '02', title: i18n.tt('Quy trình gia công chuẩn xác'), shortTitle: i18n.tt('Quy trình') },
+            { id: 'section-01', number: '01', title: i18n.tt('Phạm vi ứng dụng & Tải trọng'), shortTitle: i18n.tt('Ứng dụng') },
+            { id: 'section-02', number: '02', title: i18n.tt('Quy trình đối chiếu chuẩn OEM'), shortTitle: i18n.tt('Quy trình') },
             { id: 'section-03', number: '03', title: i18n.tt('Thông số kỹ thuật cần chuẩn bị'), shortTitle: i18n.tt('Thông số cần có') },
-            { id: 'section-04', number: '04', title: i18n.tt('Hậu kỳ & Tiêu chuẩn hoàn thiện'), shortTitle: i18n.tt('Tiêu chuẩn hoàn thiện') },
+            { id: 'section-04', number: '04', title: i18n.tt('Kiểm định CO/CQ & Bảo trì'), shortTitle: i18n.tt('Tiêu chuẩn QC') },
         ]
     }
 
-    if (slug === 'lam-do-custom') {
+    if (slug === 'quat-cong-nghiep-bldc') {
         if (currentLocale.value === 'en') {
             return [
-                { id: 'section-01', number: '01', title: 'Who is custom fabrication for?', shortTitle: 'Who is it for?' },
-                { id: 'section-02', number: '02', title: 'Bespoke creation process', shortTitle: 'Creation process' },
-                { id: 'section-03', number: '03', title: 'What information to prepare?', shortTitle: 'Info to prepare' },
-                { id: 'section-04', number: '04', title: 'Delivery & product care', shortTitle: 'Delivery & care' },
+                { id: 'section-01', number: '01', title: 'Which Facilities Benefit from BLDC Fans?', shortTitle: 'Who is it for?' },
+                { id: 'section-02', number: '02', title: 'Site Survey & Airflow Simulation', shortTitle: 'Survey process' },
+                { id: 'section-03', number: '03', title: 'What Facility Data to Prepare?', shortTitle: 'Info to prepare' },
+                { id: 'section-04', number: '04', title: 'Installation & Warranty Commitment', shortTitle: 'Installation & care' },
             ]
         }
         return [
-            { id: 'section-01', number: '01', title: i18n.tt('Đồ custom dành cho ai?'), shortTitle: i18n.tt('Đồ custom cho ai?') },
-            { id: 'section-02', number: '02', title: i18n.tt('Các bước chế tác độc bản'), shortTitle: i18n.tt('Quy trình chế tác') },
+            { id: 'section-01', number: '01', title: i18n.tt('Giải pháp quạt BLDC phù hợp công trình nào?'), shortTitle: i18n.tt('Phạm vi công trình') },
+            { id: 'section-02', number: '02', title: i18n.tt('Khảo sát & Tối ưu tiết kiệm điện'), shortTitle: i18n.tt('Quy trình khảo sát') },
             { id: 'section-03', number: '03', title: i18n.tt('Bạn chuẩn bị thông tin gì?'), shortTitle: i18n.tt('Thông tin chuẩn bị') },
-            { id: 'section-04', number: '04', title: i18n.tt('Bàn giao & Bảo quản sản phẩm'), shortTitle: i18n.tt('Bàn giao & bảo quản') },
+            { id: 'section-04', number: '04', title: i18n.tt('Lắp đặt & Bảo hành động cơ'), shortTitle: i18n.tt('Lắp đặt & bảo hành') },
         ]
     }
 
-    // Default thiet-ke-3d
+    // Default industrial-engineering / phu-tung-thang-cuon
     if (currentLocale.value === 'en') {
         return [
-            { id: 'section-01', number: '01', title: 'When do you need 3D design?', shortTitle: 'When need 3D?' },
-            { id: 'section-02', number: '02', title: 'From concept to 3D model', shortTitle: 'From concept' },
-            { id: 'section-03', number: '03', title: 'What should you prepare?', shortTitle: 'What to prepare?' },
-            { id: 'section-04', number: '04', title: 'Completing together before machining', shortTitle: 'Completion' },
+            { id: 'section-01', number: '01', title: 'When to Replace Escalator & Conveyor Parts?', shortTitle: 'When needed?' },
+            { id: 'section-02', number: '02', title: 'From Technical Specs to OEM Delivery', shortTitle: 'Workflow' },
+            { id: 'section-03', number: '03', title: 'What Should You Prepare?', shortTitle: 'What to prepare?' },
+            { id: 'section-04', number: '04', title: 'Inspection & Handover Standards', shortTitle: 'Handover' },
         ]
     }
     return [
-        { id: 'section-01', number: '01', title: i18n.tt('Khi nào cần thiết kế 3D?'), shortTitle: i18n.tt('Khi nào cần 3D?') },
-        { id: 'section-02', number: '02', title: i18n.tt('Từ ý tưởng tới mô hình'), shortTitle: i18n.tt('Quy trình') },
+        { id: 'section-01', number: '01', title: i18n.tt('Khi nào cần thay thế phụ tùng & nâng cấp hệ thống?'), shortTitle: i18n.tt('Phạm vi kỹ thuật') },
+        { id: 'section-02', number: '02', title: i18n.tt('Từ thông số đến cung ứng chuẩn OEM'), shortTitle: i18n.tt('Quy trình') },
         { id: 'section-03', number: '03', title: i18n.tt('Bạn cần chuẩn bị gì?'), shortTitle: i18n.tt('Chuẩn bị gì?') },
-        { id: 'section-04', number: '04', title: i18n.tt('Kết quả cùng hoàn thiện'), shortTitle: i18n.tt('Hoàn thiện') },
+        { id: 'section-04', number: '04', title: i18n.tt('Nghiệm thu & Đồng hành bảo trì'), shortTitle: i18n.tt('Hoàn thiện') },
     ]
 })
 

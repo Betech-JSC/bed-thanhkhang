@@ -106,7 +106,7 @@ export default {
             if (this.product.image && typeof this.product.image === 'object' && this.product.image.alt) {
                 return this.product.image.alt;
             }
-            return this.product.name || this.product.title || this.tt('Mẫu in 3D HH Maker');
+            return this.product.name || this.product.title || this.tt('Sản phẩm Thành Khang Tecsat');
         },
     },
     methods: {

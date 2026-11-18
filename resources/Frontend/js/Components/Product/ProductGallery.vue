@@ -137,8 +137,8 @@ export default {
                         };
                     }
                     return {
-                        url: item.url || item.path || '/images/pdp/product_main.png',
-                        thumb: item.thumb || item.url || item.path || '/images/pdp/product_main.png',
+                        url: item.url || item.path || '/images/products/thanhkhang/xich-bac-thang-thuong-mai/commercial-type.webp',
+                        thumb: item.thumb || item.url || item.path || '/images/products/thanhkhang/xich-bac-thang-thuong-mai/commercial-type.webp',
                         alt: item.alt || item.title || `${this.tt(this.productTitle)} - ${this.tt('Góc nhìn ')}${idx + 1}`,
                         tag: item.tag || null,
                     };
@@ -147,8 +147,8 @@ export default {
 
             return [
                 {
-                    url: '/images/pdp/product_main.png',
-                    thumb: '/images/pdp/thumb_1.png',
+                    url: '/images/products/thanhkhang/xich-bac-thang-thuong-mai/commercial-type.webp',
+                    thumb: '/images/products/thanhkhang/xich-bac-thang-thuong-mai/commercial-type.webp',
                     alt: this.tt(this.productTitle),
                     tag: null,
                 },

@@ -13,14 +13,14 @@
 <section v-scroll-reveal class="relative pt-10 pb-8 lg:pt-10 lg:pb-10 bg-[#111322]">
             <div class="app-container">
                 <div class="flex flex-col gap-6">
-                    <!-- Eyebrow (Figma 2346:703) -->
+                    <!-- Eyebrow -->
                     <span class="text-sm font-normal text-[#84ADFF] uppercase leading-5">
-                        {{ tt('BỘ SƯU TẬP HH MAKER') }}
+                        {{ tt('DANH MỤC THÀNH KHANG TECSAT') }}
                     </span>
 
-                    <!-- Tiêu đề chính (Figma 2346:705) -->
+                    <!-- Tiêu đề chính -->
                     <h1 class="text-3xl sm:text-[38px] font-bold text-[#FAFAFA] leading-tight sm:leading-[46px] font-sans">
-                        {{ tt('Ý TƯỞNG THÀNH HÌNH') }}
+                        {{ tt('THIẾT BỊ & PHỤ TÙNG CÔNG NGHIỆP') }}
                     </h1>
                 </div>
             </div>
@@ -383,13 +383,13 @@ export default {
         },
         pageTitle() {
             return this.currentLocale === 'en'
-                ? '3D Printed Products Catalog - HH Maker | Ideas Brought To Life'
-                : this.tt('Danh mục Sản phẩm in 3D - HH Maker | Bộ sưu tập ý tưởng thành hình')
+                ? 'Industrial Equipment & Escalator Parts Catalog - Thành Khang Tecsat'
+                : this.tt('Danh mục Sản phẩm & Phụ tùng Công nghiệp - Thành Khang Tecsat')
         },
         pageDescription() {
             return this.currentLocale === 'en'
-                ? 'Explore exquisite 3D printed products by HH Maker. Keychains, stationery, models, and custom manufacturing.'
-                : this.tt('Khám phá bộ sưu tập sản phẩm in 3D tinh xảo từ HH Maker. Móc khoá, văn phòng phẩm, mô hình và gia công theo yêu cầu.')
+                ? 'Explore industrial chains, escalator spare parts, car parking elevator chains, and baggage conveyor systems by Thành Khang Tecsat.'
+                : this.tt('Khám phá danh mục linh kiện thang cuốn, thang nâng ô tô, xích tải công nghiệp Universal Chains và hệ thống băng tải từ Thành Khang Tecsat.')
         },
         sortOptions() {
             return [
@@ -418,35 +418,39 @@ export default {
                     subcategories: [],
                 },
                 {
-                    id: 'moc-khoa',
-                    name: this.tt('Móc khoá'),
-                    slug: 'moc-khoa-phu-kien',
+                    id: 'linh-kien-thang-cuon',
+                    name: this.tt('Linh kiện thang cuốn'),
+                    slug: 'linh-kien-thang-cuon',
                     hasChevron: true,
                     subcategories: [
-                        { id: 'moc-khoa-co-khi', slug: 'moc-khoa-co-khi', name: this.tt('Móc khoá cơ khí') },
-                        { id: 'moc-khoa-the-thao', slug: 'moc-khoa-the-thao', name: this.tt('Móc khoá thể thao & phụ kiện') },
+                        { id: 'xich-bac-thang-cuon', slug: 'xich-bac-thang-cuon', name: this.tt('Xích bậc thang cuốn') },
+                        { id: 'xich-bang-tai-hanh-khach', slug: 'xich-bang-tai-hanh-khach', name: this.tt('Xích băng tải hành khách') },
+                        { id: 'xich-dan-dong-chinh-thang-cuon', slug: 'xich-dan-dong-chinh-thang-cuon', name: this.tt('Xích dẫn động chính') },
                     ],
                 },
                 {
-                    id: 'van-phong-pham',
-                    name: this.tt('Văn phòng phẩm'),
-                    slug: 'trang-tri-do-dung',
+                    id: 'linh-kien-thang-nang-o-to',
+                    name: this.tt('Linh kiện thang nâng ô tô'),
+                    slug: 'linh-kien-thang-nang-o-to',
                     hasChevron: true,
                     subcategories: [
-                        { id: 'ly', slug: 'ly', name: this.tt('Ly') },
-                        { id: 'lo-cam-hoa-de-ban', slug: 'lo-cam-hoa-de-ban', name: this.tt('Lọ cắm hoa để bàn') },
-                        { id: 'den', slug: 'den', name: this.tt('Đèn') },
+                        { id: 'xich-bai-do-xe-tieu-chuan-lt', slug: 'xich-bai-do-xe-tieu-chuan-lt', name: this.tt('Xích bãi đỗ xe tiêu chuẩn LT') },
+                        { id: 'xich-bai-do-xe-tuan-hoan-dung', slug: 'xich-bai-do-xe-tuan-hoan-dung', name: this.tt('Xích tuần hoàn đứng') },
                     ],
                 },
                 {
-                    id: 'gia-cong-theo-yeu-cau',
-                    name: this.tt('Gia công theo yêu cầu'),
-                    slug: 'gia-cong-theo-yeu-cau',
-                    hasChevron: true,
-                    subcategories: [
-                        { id: 'mo-hinh-resin', slug: 'mo-hinh-resin', name: this.tt('Mô hình Resin & Khớp cử động') },
-                        { id: 'linh-kien-carbon', slug: 'linh-kien-carbon', name: this.tt('Linh kiện cơ khí & Carbon Fiber') },
-                    ],
+                    id: 'he-thong-bang-tai-hanh-ly',
+                    name: this.tt('Hệ thống băng tải hành lý'),
+                    slug: 'he-thong-bang-tai-hanh-ly',
+                    hasChevron: false,
+                    subcategories: [],
+                },
+                {
+                    id: 'linh-kien-day-chuyen-dong-goi',
+                    name: this.tt('Linh kiện dây chuyền đóng gói'),
+                    slug: 'linh-kien-day-chuyen-dong-goi',
+                    hasChevron: false,
+                    subcategories: [],
                 },
             ];
         },
@@ -483,12 +487,14 @@ export default {
                 const rawTitle = String(root.title || root.name || '').trim();
 
                 let fallback = null;
-                if (slug.includes('moc-khoa') || slug.includes('keychain') || rawTitle.toLowerCase().includes('móc khoá') || rawTitle.toLowerCase().includes('móc khóa')) {
+                if (slug.includes('thang-cuon') || slug.includes('escalator') || rawTitle.toLowerCase().includes('thang cuốn')) {
                     fallback = this.defaultCategories[1];
-                } else if (slug.includes('trang-tri-do-dung') || slug.includes('van-phong-pham') || slug.includes('stationery') || rawTitle.toLowerCase().includes('đồ dùng') || rawTitle.toLowerCase().includes('văn phòng')) {
+                } else if (slug.includes('thang-nang') || slug.includes('parking') || rawTitle.toLowerCase().includes('thang nâng')) {
                     fallback = this.defaultCategories[2];
-                } else if (slug.includes('gia-cong') || slug.includes('custom') || rawTitle.toLowerCase().includes('gia công')) {
+                } else if (slug.includes('bang-tai') || slug.includes('baggage') || rawTitle.toLowerCase().includes('băng tải')) {
                     fallback = this.defaultCategories[3];
+                } else if (slug.includes('dong-goi') || slug.includes('packaging') || rawTitle.toLowerCase().includes('đóng gói')) {
+                    fallback = this.defaultCategories[4];
                 }
 
                 const rawChildren =
@@ -605,17 +611,17 @@ export default {
                         return true;
                     }
                     const catStr = (typeof p.category === 'string' ? p.category : (p.category?.title || p.category?.name || '')).toLowerCase();
-                    if (targetCat === 'moc-khoa' || targetCat === 'moc-khoa-phu-kien' || targetCat === 'keychains-accessories' || targetCat === 'keychains') {
-                        return p.categoryId === 'keychains' || catStr.includes('móc khoá') || catStr.includes('móc khóa') || catStr.includes('keychain');
+                    if (targetCat === 'linh-kien-thang-cuon' || targetCat.includes('thang-cuon')) {
+                        return p.categoryId === 'linh-kien-thang-cuon' || catStr.includes('thang cuốn') || catStr.includes('escalator');
                     }
-                    if (targetCat === 'van-phong-pham' || targetCat === 'trang-tri-do-dung' || targetCat === 'decor-lifestyle' || targetCat === 'stationery') {
-                        return p.categoryId === 'stationery' || catStr.includes('đồ dùng') || catStr.includes('decor') || catStr.includes('stationery') || catStr.includes('văn phòng');
+                    if (targetCat === 'linh-kien-thang-nang-o-to' || targetCat.includes('thang-nang')) {
+                        return p.categoryId === 'linh-kien-thang-nang-o-to' || catStr.includes('thang nâng') || catStr.includes('ô tô') || catStr.includes('parking');
                     }
-                    if (targetCat === 'gia-cong-theo-yeu-cau' || targetCat === 'custom-manufacturing' || targetCat === 'custom') {
-                        return p.categoryId === 'custom' || catStr.includes('gia công') || catStr.includes('custom');
+                    if (targetCat === 'he-thong-bang-tai-hanh-ly' || targetCat.includes('bang-tai')) {
+                        return p.categoryId === 'he-thong-bang-tai-hanh-ly' || catStr.includes('băng tải') || catStr.includes('hành lý') || catStr.includes('conveyor');
                     }
-                    if (targetCat === 'trang-tri-khong-gian' || targetCat === 'space-decor') {
-                        return p.purposeKey === 'space_decor' || p.categoryId === 'space_decor' || catStr.includes('không gian') || catStr.includes('space');
+                    if (targetCat === 'linh-kien-day-chuyen-dong-goi' || targetCat.includes('dong-goi')) {
+                        return p.categoryId === 'linh-kien-day-chuyen-dong-goi' || catStr.includes('đóng gói') || catStr.includes('packaging');
                     }
                     return false;
                 });
@@ -654,26 +660,23 @@ export default {
                     }
 
                     const text = ((p.name || '') + ' ' + (p.title || '') + ' ' + (p.description || '') + ' ' + (p.slug || '')).toLowerCase();
-                    if (sub === 'ly' || sub.includes('ly-')) {
-                        return text.includes('ly') || text.includes('cốc') || text.includes('hộp') || text.includes('bút') || text.includes('khay') || text.includes('đế đỡ');
+                    if (sub.includes('bac-thang')) {
+                        return text.includes('bậc') || text.includes('step') || text.includes('thương mại') || text.includes('công cộng');
                     }
-                    if (sub === 'lo-cam-hoa-de-ban' || sub.includes('lo-cam-hoa')) {
-                        return text.includes('lọ') || text.includes('hoa') || text.includes('chậu') || text.includes('voronoi');
+                    if (sub.includes('bang-tai-hanh-khach')) {
+                        return text.includes('hành khách') || text.includes('walkway');
                     }
-                    if (sub === 'den' || sub.includes('den-')) {
-                        return text.includes('đèn') || text.includes('lamp') || text.includes('led') || text.includes('lithophane');
+                    if (sub.includes('dan-dong')) {
+                        return text.includes('dẫn động') || text.includes('drive');
                     }
-                    if (sub === 'moc-khoa-co-khi') {
-                        return text.includes('cơ khí') || text.includes('piston') || text.includes('turbine') || text.includes('gear');
+                    if (sub.includes('bai-do-xe') || sub.includes('lt')) {
+                        return text.includes('bãi đỗ') || text.includes('lt') || text.includes('parking');
                     }
-                    if (sub === 'moc-khoa-the-thao') {
-                        return text.includes('vô lăng') || text.includes('thể thao') || text.includes('f1') || text.includes('phụ kiện');
+                    if (sub.includes('tuan-hoan')) {
+                        return text.includes('tuần hoàn') || text.includes('vertical');
                     }
-                    if (sub === 'mo-hinh-resin') {
-                        return text.includes('resin') || text.includes('robot') || text.includes('iron man') || text.includes('khớp');
-                    }
-                    if (sub === 'linh-kien-carbon') {
-                        return text.includes('carbon') || text.includes('khung') || text.includes('bánh răng') || text.includes('bàn phím');
+                    if (sub.includes('chot-rong')) {
+                        return text.includes('chốt rỗng') || text.includes('hollow');
                     }
                     if (subObj?.name && text.includes(subObj.name.toLowerCase())) {
                         return true;

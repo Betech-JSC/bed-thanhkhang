@@ -395,7 +395,7 @@
                                         Số điện thoại (Zalo) <span class="text-red-600 text-xs font-bold font-sans">*</span>
                                     </label>
                                     <div class="relative group">
-                                        <input v-model="form.phone" type="text" placeholder="Ví dụ: 0938039170..."
+                                        <input v-model="form.phone" type="text" placeholder="Ví dụ: 0967732665..."
                                             class="w-full px-6 py-4 rounded-2xl border-gray-100 border bg-gray-50 focus:bg-white focus:ring-4 focus:ring-red-fks/5 focus:border-red-fks transition-all outline-none font-bold text-gray-warm-800 font-sans"
                                             :class="errors.phone ? 'border-red-600 ring-red-600/10' : ''" />
                                     </div>

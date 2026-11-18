@@ -1,6 +1,6 @@
 <template>
     <Head>
-        <title>{{ (status || 404) + ' - ' + tt('Không tìm thấy trang') + ' | HH Maker' }}</title>
+        <title>{{ (status || 404) + ' - ' + tt('Không tìm thấy trang') + ' | Thành Khang Tecsat' }}</title>
         <meta name="robots" content="noindex, nofollow" head-key="robots" />
         <meta name="googlebot" content="noindex, nofollow" />
     </Head>
@@ -8,8 +8,8 @@
         <main class="flex flex-col justify-center flex-grow w-full px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <JPageError
                 :title="tt('KHÔNG TÌM THẤY TRANG (404)')"
-                :description="tt('Địa chỉ truy cập không tồn tại hoặc đã bị thay đổi. Quý khách vui lòng liên hệ hotline HH Maker: ')"
-                phone="0906 636 425"
+                :description="tt('Địa chỉ truy cập không tồn tại hoặc đã bị thay đổi. Quý khách vui lòng liên hệ hotline Thành Khang Tecsat: ')"
+                phone="0967 732 665"
                 :link="route('home')"
             >
             </JPageError>

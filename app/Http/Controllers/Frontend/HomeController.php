@@ -68,7 +68,7 @@ class HomeController extends Controller
                                 'description' => $post->description ?: ($fallback['description'] ?? ''),
                                 'detail' => $post->description ?: ($fallback['description'] ?? ($items[0] ?? '')),
                                 'items' => $items,
-                                'image' => $imgDetail['url'] ?? ('/images/home/process-step-' . ($index + 1) . '.png'),
+                                'image' => $imgDetail['url'] ?? '/images/process/process_hero_bg.webp',
                             ]);
                         })->toArray();
                     } else {
@@ -163,13 +163,13 @@ class HomeController extends Controller
 
             $seo = [
                 'title' => $locale === 'en'
-                    ? 'HH Maker - Turning Every Idea into Reality with 3D Printing'
-                    : 'HH Maker - Hiện Thực Hóa Mọi Ý Tưởng Với Công Nghệ In 3D',
+                    ? 'Thanh Khang Tecsat - Premium Industrial Spare Parts & Escalator Components'
+                    : 'Thành Khang Tecsat - Phụ Tùng Thang Cuốn & Xích Tải Công Nghiệp Cao Cấp',
                 'description' => $locale === 'en'
-                    ? 'No limits to creative space, HH Maker breathes life into each creation through modern 3D printing and precise machining.'
-                    : 'Không giới hạn không gian sáng tạo, HH Maker thổi hồn vào từng sản phẩm thông qua công nghệ in và gia công 3D hiện đại.',
-                'image' => '/hhmaker-og-2026.jpg?v=20261110',
-                'seo_image' => '/hhmaker-og-2026.jpg?v=20261110',
+                    ? 'Thanh Khang Tecsat specializes in supplying high-durability escalator components, heavy conveyor chains, and industrial energy-saving solutions with nationwide B2B service.'
+                    : 'Công ty TNHH Kỹ thuật Thành Khang Tecsat chuyên cung cấp linh kiện thang cuốn, xích tải công nghiệp, giải pháp tiết kiệm điện và dịch vụ kỹ thuật B2B toàn quốc.',
+                'image' => '/og-image.jpg',
+                'seo_image' => '/og-image.jpg',
             ];
 
             // Return JSON or Inertia View
@@ -267,7 +267,7 @@ class HomeController extends Controller
                     $imageDetail = $product->getImageDetail($product->image);
                     $imageUrl = $imageDetail['url'] ?? null;
                     if (empty($imageUrl)) {
-                        $imageUrl = '/assets/images/products/figma-sample-1.png';
+                        $imageUrl = '/images/products/thanhkhang/xich-bac-thang-thuong-mai/commercial-type.webp';
                     }
 
                     $material = $this->translateTerm($product->material, $locale);
@@ -315,24 +315,12 @@ class HomeController extends Controller
     protected function getTermDictionary(): array
     {
         return [
-            // Materials
-            'Nhựa PLA Matte Cao Cấp' => 'Premium Matte PLA',
-            'PETG Gia Cường 20% Carbon Fiber (PETG-CF)' => '20% Carbon Fiber Reinforced PETG (PETG-CF)',
-            'Nylon PA12 Kỹ Thuật Tự Bôi Trơn' => 'Self-Lubricating Engineering Nylon PA12',
-            'Polyamide 12 (Nylon PA12) Bột Thiêu Kết' => 'Sintered Powder Polyamide 12 (Nylon PA12)',
-            'PLA Matte Tuyết Trắng & Visor Mạ Vàng' => 'Snow White Matte PLA & Gold-Plated Visor',
-            'PETG Waterproof Chống Thấm 100%' => '100% Waterproof PETG',
-            'PLA+ Tough Gia Cường Chịu Lực' => 'Reinforced Heavy-Duty PLA+ Tough',
-            'PETG Tough Kháng Gãy Khớp' => 'Anti-Fracture Joint PETG Tough',
-            'Nhựa PLA · Công nghệ FDM' => 'PLA Plastic · FDM Technology',
-
-            // Print Technologies
-            'FDM Print-in-Place Khớp Liền Khối' => 'FDM Print-in-Place Integrated Joint',
-            'FDM Lithophane Độ Phân Giải 0.12mm' => '0.12mm High-Resolution FDM Lithophane',
-            'SLS (Selective Laser Sintering) Công Nghiệp' => 'Industrial SLS (Selective Laser Sintering)',
-            'FDM Print-in-Place Siêu Mịn 0.12mm' => '0.12mm Ultra-Fine FDM Print-in-Place',
-            'FDM Watertight In Chống Rò Rỉ' => 'FDM Leak-Proof Watertight Printing',
-            'FDM Print-in-Place 14 Khớp Linh Hoạt' => 'FDM Print-in-Place 14-Joint Articulation',
+            // Materials & Supply Terms
+            'Thép hợp kim / Thép carbon nhiệt luyện (Universal Chains)' => 'Heat-Treated Alloy / Carbon Steel (Universal Chains)',
+            'Thép hợp kim cường độ cao' => 'High-Tensile Alloy Steel',
+            'Thép carbon nhiệt luyện' => 'Heat-Treated Carbon Steel',
+            'Thép không gỉ công nghiệp' => 'Industrial Stainless Steel',
+            'Liên hệ đặt hàng & báo giá B2B' => 'Contact for B2B Order & Quotation',
         ];
     }
 

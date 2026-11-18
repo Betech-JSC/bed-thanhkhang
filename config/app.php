@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'HH Maker'),
+    'name' => env('APP_NAME', 'THANH KHANG Tecsat'),
 
     /*
     |--------------------------------------------------------------------------

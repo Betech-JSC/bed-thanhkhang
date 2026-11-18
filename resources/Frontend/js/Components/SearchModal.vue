@@ -28,7 +28,7 @@
                         v-model="keyword"
                         type="text"
                         class="w-full bg-transparent text-[#FAFAFA] placeholder-[#5D6B98] text-base sm:text-lg focus:outline-none py-4 sm:py-4.5 pr-2 font-normal"
-                        :placeholder="tt('Tìm kiếm sản phẩm 3D, vật liệu, dịch vụ...')"
+                        :placeholder="tt('Tìm kiếm xích tải, phụ tùng thang cuốn, quạt BLDC...')"
                         @keydown.esc="close"
                         @keydown.enter="handleEnterKey"
                     />
@@ -267,15 +267,14 @@ export default {
         },
         popularTags() {
             return [
-                { label: this.tt('In 3D SLA'), keyword: 'SLA' },
-                { label: this.tt('Nhựa PLA+'), keyword: 'PLA' },
-                { label: this.tt('In Resin 8K'), keyword: 'Resin' },
-                { label: 'Carbon Fiber', keyword: 'Carbon Fiber' },
-                { label: this.tt('Móc khoá F1'), keyword: this.currentLocale === 'en' ? 'Keychain' : 'Móc khoá' },
-                { label: this.tt('Khung robot'), keyword: 'Robot' },
-                { label: 'Voronoi', keyword: 'Voronoi' },
-                { label: this.tt('Thiết kế 3D'), keyword: this.currentLocale === 'en' ? 'Design' : 'Thiết kế' },
-                { label: this.tt('Quà tặng lưu niệm'), keyword: this.currentLocale === 'en' ? 'Gift' : 'Quà tặng' },
+                { label: this.tt('Xích bậc thang cuốn'), keyword: this.currentLocale === 'en' ? 'Escalator' : 'Thang cuốn' },
+                { label: 'Universal Chains', keyword: 'Universal' },
+                { label: this.tt('Xích thang nâng ô tô'), keyword: this.currentLocale === 'en' ? 'Car Elevator' : 'Thang nâng' },
+                { label: this.tt('Xích băng tải hành lý'), keyword: this.currentLocale === 'en' ? 'Baggage' : 'Hành lý' },
+                { label: this.tt('Xích chốt rỗng'), keyword: this.currentLocale === 'en' ? 'Hollow Pin' : 'Chốt rỗng' },
+                { label: this.tt('Quạt công nghiệp BLDC'), keyword: 'BLDC' },
+                { label: this.tt('Thép hợp kim 40Cr'), keyword: '40Cr' },
+                { label: 'Inox 304 / 316', keyword: '304' },
             ]
         },
     },

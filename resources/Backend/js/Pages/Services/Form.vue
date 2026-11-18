@@ -13,7 +13,7 @@
                                 type: 'text',
                                 name: 'title',
                                 label: 'Tên dịch vụ',
-                                placeholder: 'VD: Thiết kế 3D / Gia công 3D / Custom',
+                                placeholder: 'VD: Phụ tùng Thang cuốn / Xích tải Công nghiệp / Quạt BLDC',
                             }"
                         />
                         <Field
@@ -22,7 +22,7 @@
                                 type: 'text',
                                 name: 'slug',
                                 label: 'Slug đường dẫn',
-                                placeholder: 'VD: thiet-ke-3d',
+                                placeholder: 'VD: phu-tung-thang-cuon',
                             }"
                         />
                     </div>
@@ -32,7 +32,7 @@
                             type: 'text',
                             name: 'title_content',
                             label: 'Tiêu đề phụ / Headline dịch vụ',
-                            placeholder: 'VD: Từ phác thảo đến hình khối rõ ràng.',
+                            placeholder: 'VD: Vận hành bền bỉ chuẩn kỹ thuật công nghiệp.',
                         }"
                     />
                     <Field
@@ -90,7 +90,7 @@
                         :field="{
                             type: 'file_upload',
                             name: 'image',
-                            label: 'Icon 3D / Hình đại diện dịch vụ',
+                            label: 'Icon / Hình đại diện dịch vụ',
                             multiple: false,
                         }"
                     />

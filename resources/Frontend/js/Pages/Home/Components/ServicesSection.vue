@@ -118,7 +118,7 @@ export default {
             }
         },
         getServiceGradient(service, index) {
-            // Thẻ giữa (index 1: Thiết kế 3D) bắt buộc dùng nền Slate Dark #30374F theo chuẩn Figma Node 2261:5549
+            // Thẻ giữa (index 1) dùng nền Slate Dark #30374F theo chuẩn giao diện
             if (index === 1) {
                 return 'linear-gradient(180deg, #111322 20%, #30374F 100%)';
             }
@@ -138,24 +138,24 @@ export default {
         },
         getServiceUrl(service) {
             const slugMap = {
-                'Gia công 3D': 'gia-cong-3d',
-                '3D Machining & Printing': 'gia-cong-3d',
-                '3D Manufacturing': 'gia-cong-3d',
-                [this.tt('Gia công 3D')]: 'gia-cong-3d',
-                'Thiết kế 3D': 'thiet-ke-3d',
-                '3D Design': 'thiet-ke-3d',
-                [this.tt('Thiết kế 3D')]: 'thiet-ke-3d',
-                'Custom': 'lam-do-custom',
-                'Custom Bespoke Creations': 'lam-do-custom',
-                [this.tt('Custom')]: 'lam-do-custom',
-                [this.tt('Làm đồ custom')]: 'lam-do-custom',
-                [this.tt('Làm đồ Custom')]: 'lam-do-custom',
+                'Linh kiện Thang cuốn': 'phu-tung-thang-cuon',
+                'Escalator Spare Parts': 'phu-tung-thang-cuon',
+                [this.tt('Linh kiện Thang cuốn')]: 'phu-tung-thang-cuon',
+                'Xích tải & Băng tải': 'xich-tai-cong-nghiep',
+                'Industrial Chains & Conveyors': 'xich-tai-cong-nghiep',
+                [this.tt('Xích tải & Băng tải')]: 'xich-tai-cong-nghiep',
+                'Quạt công nghiệp BLDC': 'quat-cong-nghiep-bldc',
+                'BLDC Industrial Fans': 'quat-cong-nghiep-bldc',
+                [this.tt('Quạt công nghiệp BLDC')]: 'quat-cong-nghiep-bldc',
+                'Dịch vụ kỹ thuật công nghiệp': 'industrial-engineering',
+                'Industrial Engineering Services': 'industrial-engineering',
+                [this.tt('Dịch vụ kỹ thuật công nghiệp')]: 'industrial-engineering',
             };
             const title = service?.title || '';
             const slug = service?.slug || slugMap[title] || (
-                title.toLowerCase().includes('custom') || title.toLowerCase().includes('làm đồ') ? 'lam-do-custom' :
-                title.toLowerCase().includes('gia công') || title.toLowerCase().includes('machin') ? 'gia-cong-3d' :
-                'thiet-ke-3d'
+                title.toLowerCase().includes('quạt') || title.toLowerCase().includes('bldc') || title.toLowerCase().includes('fan') ? 'quat-cong-nghiep-bldc' :
+                title.toLowerCase().includes('xích') || title.toLowerCase().includes('băng tải') || title.toLowerCase().includes('chain') ? 'xich-tai-cong-nghiep' :
+                'industrial-engineering'
             );
             try {
                 if (typeof route === 'function') {

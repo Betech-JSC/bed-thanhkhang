@@ -34,11 +34,11 @@ class HistoryController extends Controller
             $locale = current_locale();
             $seo = [
                 'title' => $locale === 'en'
-                    ? 'About Us - HH Maker | Turning Creativity Beyond the Screen'
-                    : 'Giới thiệu - HH Maker | Đưa sáng tạo vượt ra khỏi màn hình',
+                    ? 'About Us - Thanh Khang Tecsat | Industrial Equipment & Escalator Spare Parts'
+                    : 'Giới thiệu - Thành Khang Tecsat | Thiết bị công nghiệp & Phụ tùng thang cuốn',
                 'description' => $locale === 'en'
-                    ? 'HH Maker connects 3D art with modern manufacturing technology, transforming initial ideas into physical products you can hold in your hands.'
-                    : 'HH Maker kết nối nghệ thuật 3D với công nghệ chế tác hiện đại, để một ý tưởng sơ khai có thể trở thành sản phẩm vật lý bạn cầm trên tay.',
+                    ? 'Thanh Khang Tecsat specializes in supplying genuine escalator spare parts, airport baggage conveyors, industrial chains, and energy-saving BLDC fans.'
+                    : 'Thành Khang Tecsat chuyên cung ứng phụ tùng thang cuốn, xích tải công nghiệp, băng chuyền hành lý sân bay và giải pháp quạt trần công nghiệp BLDC.',
             ];
 
             if (request()->wantsJson()) {

@@ -42,13 +42,11 @@ export default {
         return {
             logos: [
                 { title: 'DK', link: '/assets/svg/logo/dk.svg' },
-                { title: 'Cute Room', link: '/assets/svg/logo/cuteroom.svg' },
                 { title: 'Funify', link: '/assets/svg/logo/funify.svg' },
                 { title: 'Me Too', link: '/assets/svg/logo/metoo.svg' },
                 { title: 'QL', link: '/assets/svg/logo/ql.svg' },
                 { title: 'So Fun', link: '/assets/svg/logo/sofun.svg' },
                 { title: 'DK', link: '/assets/svg/logo/dk.svg' },
-                { title: 'Cute Room', link: '/assets/svg/logo/cuteroom.svg' },
                 { title: 'Funify', link: '/assets/svg/logo/funify.svg' },
                 { title: 'Me Too', link: '/assets/svg/logo/metoo.svg' },
                 { title: 'QL', link: '/assets/svg/logo/ql.svg' },

@@ -33,15 +33,13 @@
 
                         <!-- TIÊU ĐỀ THÔNG SỐ (FIGMA 2390:5389) -->
                         <div class="flex items-center gap-3 pr-8">
-                            <div class="w-6 h-6 flex items-center justify-center shrink-0">
-                                <img
-                                    src="/images/pdp/printer.svg"
-                                    alt="Printer icon"
-                                    class="w-5 h-5 object-contain"
-                                />
+                            <div class="w-6 h-6 flex items-center justify-center shrink-0 text-[#84ADFF]">
+                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                                </svg>
                             </div>
                             <h3 class="text-[#FAFAFA] font-semibold text-xl tracking-tight font-sans">
-                                Thông số in tham khảo
+                                Thông số kỹ thuật tham khảo
                             </h3>
                         </div>
 
@@ -60,16 +58,16 @@
                         <!-- THÔNG TIN BỔ SUNG NÂNG CAO -->
                         <div class="bg-[#1E2B45] rounded-lg p-3 text-xs space-y-1.5 border border-[#4A5578]/50">
                             <div class="flex justify-between text-slate-300">
-                                <span>Dung sai kích thước:</span>
-                                <span class="text-white font-medium">±0.15 mm</span>
+                                <span>Dung sai gia công:</span>
+                                <span class="text-white font-medium">±0.05 mm (ISO/DIN)</span>
                             </div>
                             <div class="flex justify-between text-slate-300">
-                                <span>Khối lượng in ước tính:</span>
-                                <span class="text-white font-medium">~ 42 gam</span>
+                                <span>Tiêu chuẩn kiểm định:</span>
+                                <span class="text-white font-medium">EN 115 / ISO 9001 / CO-CQ</span>
                             </div>
                             <div class="flex justify-between text-slate-300">
-                                <span>Thời gian in ước tính:</span>
-                                <span class="text-white font-medium">~ 2 giờ 45 phút</span>
+                                <span>Xử lý bề mặt:</span>
+                                <span class="text-white font-medium">Tôi cao tần / Mạ chống ăn mòn</span>
                             </div>
                         </div>
 
@@ -121,13 +119,13 @@ export default {
                 return this.customSpecs
             }
             return [
-                { label: 'Công nghệ in', value: 'FDM' },
-                { label: 'Vật liệu', value: 'PLA' },
-                { label: 'Kích thước mẫu', value: '60 × 31 × 48 mm' },
-                { label: 'Chiều cao lớp in', value: '0,20 mm' },
-                { label: 'Đầu phun', value: '0,40 mm' },
-                { label: 'Mật độ ruột', value: '15%' },
-                { label: 'Vật liệu hỗ trợ', value: 'Không cần' },
+                { label: 'Tiêu chuẩn / Công nghệ', value: 'Universal Chains / ISO' },
+                { label: 'Vật liệu', value: 'Thép hợp kim 40Cr / Inox 304' },
+                { label: 'Bước xích tiêu chuẩn', value: '133.33 mm / 135.47 mm' },
+                { label: 'Tải trọng kéo đứt tối thiểu', value: '≥ 70 kN - 130 kN' },
+                { label: 'Nhiệt độ vận hành', value: '-10°C đến +80°C' },
+                { label: 'Chứng chỉ đi kèm', value: 'Đầy đủ CO / CQ' },
+                { label: 'Gia công theo yêu cầu', value: 'OEM / ODM theo bản vẽ' },
             ]
         },
     },

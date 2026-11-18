@@ -33,13 +33,13 @@ class PostController extends Controller
 
             $seo = [
                 'title' => $locale === 'en'
-                    ? 'News & Articles - HH Maker | 3D Printing Insights'
-                    : 'Tin tức & Bài viết - HH Maker | Kiến thức công nghệ in 3D',
+                    ? 'News & Technical Insights - Thanh Khang Tecsat'
+                    : 'Tin tức & Kiến thức Kỹ thuật - Thành Khang Tecsat',
                 'description' => $locale === 'en'
-                    ? 'Explore the latest insights, updates, and knowledge on 3D printing and custom fabrication from HH Maker.'
-                    : 'Tổng hợp các bài viết, tin tức công nghệ in 3D và giải pháp chế tác cơ khí, mô hình từ HH Maker.',
-                'image' => '/hhmaker-og-2026.jpg?v=20261110',
-                'seo_image' => '/hhmaker-og-2026.jpg?v=20261110',
+                    ? 'Explore technical guides, escalator maintenance knowledge, and industrial automation news from Thanh Khang Tecsat.'
+                    : 'Tổng hợp các bài viết chuyên ngành, cẩm nang bảo trì thang cuốn, xích công nghiệp và giải pháp tiết kiệm điện từ Thành Khang Tecsat.',
+                'image' => '/storage/images/logo.png',
+                'seo_image' => '/storage/images/logo.png',
             ];
 
             if (request()->wantsJson()) {

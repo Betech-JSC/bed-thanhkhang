@@ -122,7 +122,7 @@
                                 <textarea
                                     v-model="form.note"
                                     rows="3"
-                                    :placeholder="tt('Chia sẻ ý tưởng của bạn đến với HH Maker')"
+                                    :placeholder="tt('Chia sẻ mã linh kiện, thông số kỹ thuật hoặc yêu cầu dự án với Thành Khang Tecsat')"
                                     required
                                     class="w-full h-24 px-4 py-3 rounded-[8px] bg-white/20 border border-[#5D6B98] text-white placeholder-[#B9C0D4] focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white text-sm sm:text-base transition-colors duration-200 resize-none"
                                 ></textarea>
@@ -138,7 +138,7 @@
                                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/>
                                 </svg>
-                                <span>{{ tt('Gửi yêu cầu thành công! HH Maker sẽ liên hệ hỗ trợ bạn.') }}</span>
+                                <span>{{ tt('Gửi yêu cầu thành công! Đội ngũ kỹ thuật Thành Khang Tecsat sẽ liên hệ hỗ trợ bạn.') }}</span>
                             </div>
 
                             <!-- Dòng 4: Nút "Gửi yêu cầu" (nền đen #111322, bo góc 8px) (Figma Node 2261:5816) -->
@@ -173,11 +173,11 @@ export default {
     props: {
         title: {
             type: String,
-            default: tt('KẾT NỐI VỚI HH MAKER'),
+            default: tt('KẾT NỐI VỚI THÀNH KHANG TECSAT'),
         },
         description: {
             type: String,
-            default: tt('Bạn cần tư vấn về in 3D? Hãy chia sẻ nhu cầu & ý tưởng của bạn với HH MAKER qua các kênh bên dưới'),
+            default: tt('Bạn cần tư vấn phụ tùng thang cuốn, xích công nghiệp hay quạt BLDC? Hãy gửi thông tin yêu cầu cho chúng tôi qua các kênh bên dưới'),
         },
     },
     data() {
@@ -197,8 +197,8 @@ export default {
             return [
                 {
                     id: 'facebook',
-                    label: 'Facebook HH Maker',
-                    url: this.$page.props.global?.general_facebook || 'https://facebook.com',
+                    label: 'Facebook Thành Khang Tecsat',
+                    url: this.$page.props.global?.general_facebook || 'https://www.facebook.com/thanhkhangtecsat',
                 },
                 {
                     id: 'instagram',
@@ -207,7 +207,7 @@ export default {
                 },
                 {
                     id: 'tiktok',
-                    label: 'TikTok HH Maker',
+                    label: 'TikTok Thành Khang Tecsat',
                     url: this.$page.props.global?.general_tiktok || 'https://tiktok.com',
                 },
             ];
@@ -230,7 +230,7 @@ export default {
                         [this.tt('Số điện thoại')]: this.form.phone,
                         'Email': this.form.email,
                         [this.tt('Nội dung cần hỗ trợ')]: this.form.note,
-                        [this.tt('Dịch vụ quan tâm')]: this.tt('Tư vấn in 3D'),
+                        [this.tt('Dịch vụ quan tâm')]: this.tt('Tư vấn Thiết bị Công nghiệp'),
                     },
                 };
                 if (window.axios) {

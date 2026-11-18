@@ -43,11 +43,11 @@ export default {
             const seo = this.$page.props?.seo
             const global = this.$page.props?.global
 
-            let seo_meta_title = seo?.seo_meta_title ?? global?.seo_meta_title ?? this.tt('HH Maker - In 3D & Chế Tác Theo Yêu Cầu')
-            let seo_meta_description = seo?.seo_meta_description ?? global?.seo_meta_description ?? this.tt('Hiện thực hóa mọi ý tưởng với công nghệ in 3D hiện đại.')
+            let seo_meta_title = seo?.seo_meta_title ?? global?.seo_meta_title ?? this.tt('Thành Khang Tecsat - Thiết bị công nghiệp & Phụ tùng thang cuốn')
+            let seo_meta_description = seo?.seo_meta_description ?? global?.seo_meta_description ?? this.tt('Cung cấp linh kiện thang cuốn, thang nâng ô tô, xích công nghiệp Universal Chains, hệ thống băng tải và quạt trần công nghiệp BLDC HVLS.')
             let seo_meta_robots = seo?.seo_meta_robots ?? global?.seo_meta_robots ?? 'robots.txt'
-            let seo_meta_keywords = seo?.seo_meta_keywords ?? global?.seo_meta_keywords ?? 'HH Maker, in 3D, FDM, SLA'
-            let seo_image = seo?.seo_image ?? (global?.seo_image && !global.seo_image.includes('funkystyle') && !global.seo_image.includes('khoqua') && !global.seo_image.includes('copy.jpg') ? global.seo_image : '/hhmaker-og-2026.jpg?v=20261110')
+            let seo_meta_keywords = seo?.seo_meta_keywords ?? global?.seo_meta_keywords ?? 'Thành Khang Tecsat, phụ tùng thang cuốn, xích công nghiệp, Universal Chains, quạt BLDC'
+            let seo_image = seo?.seo_image ?? (global?.seo_image && !global.seo_image.includes('funkystyle') && !global.seo_image.includes('khoqua') && !global.seo_image.includes('copy.jpg') && !global.seo_image.includes('hhmaker') ? global.seo_image : '/og-image.jpg')
 
             document.querySelector('title').innerHTML = seo_meta_title
             document.querySelector('meta[property="og:title"]')?.setAttribute('content', seo_meta_title)

@@ -16,7 +16,7 @@
                             :field="{
                                 label: 'Tên doanh nghiệp (EN)',
                                 name: 'general_business_name_en',
-                                placeholder: 'VD: HH Maker (Để trống tự động lấy Tiếng Việt)',
+                                placeholder: 'VD: Thanh Khang Tecsat (Để trống tự động lấy Tiếng Việt)',
                             }"
                         />
                         <Field
@@ -30,7 +30,7 @@
                             :field="{
                                 label: 'Tên website (EN)',
                                 name: 'general_site_name_en',
-                                placeholder: 'VD: HH Maker - 3D Design & Printing Service',
+                                placeholder: 'VD: Thanh Khang Tecsat - Industrial Equipment & Escalator Spare Parts',
                             }"
                         />
                         <Field
@@ -52,7 +52,7 @@
                             :field="{
                                 label: 'Địa chỉ (EN)',
                                 name: 'general_address_en',
-                                placeholder: 'VD: No. 65 Street 9, Huong Lo 5 Residential Area, An Lac Ward, Ho Chi Minh City',
+                                placeholder: 'VD: 25th Floor, TNR Tower, 54A Nguyen Chi Thanh, Dong Da District, Hanoi',
                             }"
                         />
                         <Field
@@ -67,23 +67,23 @@
                             :field="{
                                 label: 'Số / Link Zalo tư vấn kỹ thuật',
                                 name: 'general_zalo',
-                                placeholder: 'VD: 0906636425 hoặc https://zalo.me/0906636425',
+                                placeholder: 'VD: 0967732665 hoặc https://zalo.me/0967732665',
                             }"
                         />
                         <Field
                             v-model="form.general_working_hours"
                             :field="{
-                                label: 'Giờ làm việc xưởng',
+                                label: 'Giờ làm việc',
                                 name: 'general_working_hours',
-                                placeholder: 'VD: Thứ 2 - Thứ 7: 08:00 - 18:00',
+                                placeholder: 'VD: Thứ 2 - Thứ 7: 08:00 - 17:30',
                             }"
                         />
                         <Field
                             v-model="form.general_working_hours_en"
                             :field="{
-                                label: 'Giờ làm việc xưởng (EN)',
+                                label: 'Giờ làm việc (EN)',
                                 name: 'general_working_hours_en',
-                                placeholder: 'VD: Mon - Sat: 08:00 - 18:00',
+                                placeholder: 'VD: Mon - Sat: 08:00 - 17:30',
                             }"
                         />
                         <Field
@@ -91,7 +91,7 @@
                             :field="{
                                 label: 'Link Fanpage Facebook',
                                 name: 'general_facebook',
-                                placeholder: 'https://facebook.com/hhmaker3d',
+                                placeholder: 'https://www.facebook.com/thanhkhangtecsat',
                             }"
                         />
                         <Field
@@ -99,7 +99,7 @@
                             :field="{
                                 label: 'Link Kênh TikTok',
                                 name: 'general_tiktok',
-                                placeholder: 'https://tiktok.com/@hhmaker3d',
+                                placeholder: 'https://tiktok.com/@thanhkhangtecsat',
                             }"
                         />
                         <Field

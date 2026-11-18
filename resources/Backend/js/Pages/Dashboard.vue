@@ -1,15 +1,15 @@
 <template>
-    <Head title="Bảng điều khiển - HH Maker" />
+    <Head title="Bảng điều khiển - Thành Khang Tecsat" />
     <div class="px-6 py-8 bg-[#F8FAFC] min-h-screen">
         <!-- Dashboard Header -->
         <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
             <div>
                 <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
                     <span class="w-2.5 h-6 bg-blue-600 rounded-full inline-block"></span>
-                    Bảng điều khiển HH Maker 3D
+                    Bảng điều khiển Thành Khang Tecsat
                 </h2>
                 <p class="text-slate-500 text-sm mt-1">
-                    Tổng quan hiệu suất yêu cầu báo giá in 3D, cơ cấu dịch vụ chế tác và đơn hàng.
+                    Tổng quan hiệu suất yêu cầu báo giá kỹ thuật (RFQ), cơ cấu thiết bị phụ tùng công nghiệp và đơn hàng.
                 </p>
             </div>
             <div class="flex items-center gap-3">
@@ -141,7 +141,7 @@
                                 <i class="pi pi-chart-bar"></i>
                             </span>
                             <span class="font-bold uppercase tracking-tight">
-                                YÊU CẦU BÁO GIÁ IN 3D NĂM {{ filterYear }}
+                                YÊU CẦU BÁO GIÁ KỸ THUẬT (RFQ) NĂM {{ filterYear }}
                             </span>
                         </div>
                         <div class="filter-group">
@@ -179,7 +179,7 @@
                                 <span class="header-icon bg-cyan-100 text-cyan-700">
                                     <i class="pi pi-chart-pie"></i>
                                 </span>
-                                <span class="font-bold uppercase tracking-tight">CƠ CẤU DỊCH VỤ IN 3D</span>
+                                <span class="font-bold uppercase tracking-tight">CƠ CẤU THIẾT BỊ & PHỤ TÙNG CÔNG NGHIỆP</span>
                             </div>
                         </div>
                         <div class="card-body">
@@ -190,6 +190,7 @@
                                     :data="servicePieData"
                                     :options="servicePieOptions"
                                     class="h-full w-full"
+                                    aria-label="Cơ cấu thiết bị và phụ tùng công nghiệp"
                                 />
                                 <div v-else class="empty-chart">
                                     <p>Chưa có dữ liệu dịch vụ</p>
@@ -219,14 +220,14 @@
             </div>
         </div>
 
-        <!-- Bottom Section: Recent Quotes (Báo giá in 3D gần đây) -->
+        <!-- Bottom Section: Recent Quotes (Báo giá kỹ thuật gần đây) -->
         <div class="dashboard-card">
             <div class="card-header">
                 <div class="flex items-center gap-2">
                     <span class="header-icon bg-indigo-100 text-indigo-700">
                         <i class="pi pi-list"></i>
                     </span>
-                    <span class="font-bold uppercase tracking-tight">YÊU CẦU BÁO GIÁ IN 3D GẦN ĐÂY</span>
+                    <span class="font-bold uppercase tracking-tight">YÊU CẦU BÁO GIÁ KỸ THUẬT GẦN ĐÂY (RFQ)</span>
                 </div>
                 <Link
                     v-if="can('admin.contacts.index')"
@@ -313,7 +314,7 @@
                         </tr>
                         <tr v-if="!recentQuotes.length">
                             <td colspan="8" class="py-8 text-center text-slate-400 text-sm italic">
-                                Chưa có yêu cầu báo giá in 3D nào được ghi nhận.
+                                Chưa có yêu cầu báo giá kỹ thuật nào được ghi nhận.
                             </td>
                         </tr>
                     </tbody>
@@ -345,10 +346,12 @@ export default {
             filterYear: currentYear,
             yearOptions: Array.from({ length: 5 }, (_, i) => currentYear - i),
             serviceColors: {
-                'Gia công in 3D': '#2970FF',
-                'Thiết kế 3D & CAD': '#06B6D4',
-                'Làm đồ custom & Quà tặng': '#F59E0B',
-                'Tư vấn kỹ thuật khác': '#64748B',
+                'Linh kiện thang cuốn': '#2970FF',
+                'Linh kiện thang nâng ô tô': '#06B6D4',
+                'Hệ thống băng tải hành lý': '#10B981',
+                'Linh kiện dây chuyền đóng gói': '#F59E0B',
+                'Giải pháp tiết kiệm điện': '#8B5CF6',
+                'Khác': '#64748B',
             },
         }
     },

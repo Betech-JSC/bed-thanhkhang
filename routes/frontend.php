@@ -65,7 +65,7 @@ Route::middleware(['meta_seo', 'opening'])->group(function () {
             Route::get(Lang::uri('products') . '/{slug}', 'show')->name('products.show');
         });
 
-        // quy trình gia công 3D
+        // quy trình cung ứng & hỗ trợ kỹ thuật
         Route::get(Lang::uri('quy-trinh'), [ProcessController::class, 'index'])->name('process.index');
 
         Route::post(Lang::uri('contacts'), [ContactController::class, 'store'])->name('contact.store');

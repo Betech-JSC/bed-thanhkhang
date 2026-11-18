@@ -14,21 +14,20 @@
             <!-- Section 1: Hero / Mở đầu (Figma Node 2352:10097) -->
             <section v-scroll-reveal class="py-10">
                 <div class="max-w-[626px] flex flex-col gap-6">
-                    <!-- Badge chuyên mục (Node 2352:10098) -->
                     <span class="inline-block text-xs sm:text-[14px] sm:leading-[20px] font-normal text-[#84ADFF] uppercase select-none font-sans">
-                        {{ tt('CÁC DỊCH VỤ IN ẤN TẠI HH MAKER') }}
+                        {{ tt('GIẢI PHÁP & DỊCH VỤ TẠI THÀNH KHANG TECSAT') }}
                     </span>
 
-                    <!-- Cụm Tiêu đề + Dẫn nhập (Node 2352:10099) -->
+                    <!-- Cụm Tiêu đề + Dẫn nhập -->
                     <div class="flex flex-col gap-2">
-                        <!-- Tiêu đề H1 (Node 2352:10100) -->
+                        <!-- Tiêu đề H1 -->
                         <h1 class="text-2xl sm:text-3xl lg:text-display-hero lg:whitespace-nowrap font-bold text-[#FAFAFA] font-sans">
-                            {{ tt('MỘT Ý TƯỞNG - NHIỀU KHẢ NĂNG') }}
+                            {{ tt('CHUẨN KỸ THUẬT - VẬN HÀNH BỀN BỈ') }}
                         </h1>
 
-                        <!-- Lời dẫn (Node 2352:10102) -->
+                        <!-- Lời dẫn -->
                         <p class="text-sm sm:text-[16px] text-[#B9C0D4] leading-relaxed sm:leading-[26px] font-normal font-sans">
-                            {{ tt('Bạn có thể bắt đầu bằng một file 3D, một bản vẽ hay chỉ một hình dung. HH Maker đồng hành từ việc làm rõ ý tưởng đến lựa chọn cách tạo ra sản phẩm.') }}
+                            {{ tt('Bạn có thể bắt đầu từ mã linh kiện OEM, thông số bước xích hoặc bài toán mặt bằng nhà xưởng. Thành Khang Tecsat đồng hành từ tư vấn kỹ thuật đến bàn giao thiết bị hoàn chỉnh.') }}
                         </p>
                     </div>
                 </div>
@@ -74,69 +73,69 @@ const currentLocale = computed(() => page.props.value?.locale?.current || 'vi')
 
 const pageTitle = computed(() =>
     currentLocale.value === 'en'
-        ? 'On-Demand 3D Printing & Design Services - HH Maker'
-        : i18n.tt('Dịch Vụ In Ấn & Thiết Kế 3D Theo Yêu Cầu - HH Maker')
+        ? 'Industrial Equipment & Technical Services - Thành Khang Tecsat'
+        : i18n.tt('Giải Pháp Thiết Bị Công Nghiệp & Kỹ Thuật - Thành Khang Tecsat')
 )
 
 const pageDescription = computed(() =>
     currentLocale.value === 'en'
-        ? 'HH Maker accompanies you from clarifying concepts to choosing fabrication methods: 3D Design, 3D Machining, and Custom Creations with the highest finishing standards.'
-        : i18n.tt('HH Maker đồng hành từ làm rõ ý tưởng đến lựa chọn cách tạo ra sản phẩm: Thiết kế 3D, Gia công 3D, và Làm đồ custom với tiêu chuẩn hoàn thiện cao nhất.')
+        ? 'Thành Khang Tecsat supplies OEM escalator spare parts, Universal Chains industrial conveyors, and energy-saving BLDC HVLS ceiling fans.'
+        : i18n.tt('Thành Khang Tecsat cung cấp phụ tùng thang cuốn - thang máy, hệ thống băng tải & xích công nghiệp Universal Chains, và quạt trần công nghiệp BLDC HVLS chuẩn OEM.')
 )
 
 const fallbackServicesVi = [
     {
         id: 'service-01',
-        serviceKey: 'design',
-        slug: 'thiet-ke-3d',
-        category: '01 / DỊCH VỤ',
-        title: 'Thiết kế 3D',
-        subtitle: 'Từ phác thảo đến hình khối rõ ràng.',
+        serviceKey: 'escalator',
+        slug: 'phu-tung-thang-cuon',
+        category: '01 / GIẢI PHÁP',
+        title: 'Linh kiện Thang cuốn - Thang máy',
+        subtitle: 'Vận hành an toàn chuẩn EN 115.',
         description:
-            'Bạn có ý tưởng nhưng chưa có mô hình? HH Maker cùng bạn làm rõ tỉ lệ, cấu trúc và chi tiết, chuyển hình ảnh tham khảo hoặc bản phác thảo thành thiết kế 3D hướng đến khả năng chế tác thực tế.',
-        image: '/images/services/service-design-3d.png',
-        tags: ['Phát triển ý tưởng', 'Dựng hình', 'Tối ưu để in'],
+            'Cung cấp xích bậc thang cuốn, xích dẫn động chính, tay vịn cao su/kháng khuẩn, bánh xe và con lăn chịu tải cao tương thích đa dạng các hãng thang cuốn thương mại & công cộng.',
+        image: '/images/products/thanhkhang/xich-bac-thang-thuong-mai/commercial-type.webp',
+        tags: ['Xích bậc thang cuốn', 'Chứng chỉ CO/CQ', 'Chuẩn EN 115'],
         prepTitle: 'BẠN CHUẨN BỊ',
-        preparation: 'Ý tưởng, ảnh tham khảo, kích thước dự kiến và mục đích sử dụng.',
+        preparation: 'Model thang cuốn, mã linh kiện OEM, bước xích hoặc hình ảnh thực tế tại công trình.',
         compTitle: 'CÙNG HOÀN THIỆN',
-        completion: 'Phương án mô hình 3D và các chi tiết cần thống nhất trước khi gia công.',
-        ctaText: 'Liên hệ tư vấn thiết kế 3D',
+        completion: 'Phương án thay thế đồng bộ, kiểm định kỹ thuật và lịch giao hàng tận công trình.',
+        ctaText: 'Tư vấn phụ tùng thang cuốn',
         reverse: false,
     },
     {
         id: 'service-02',
-        serviceKey: 'print',
-        slug: 'gia-cong-3d',
-        category: '02 / DỊCH VỤ',
-        title: 'Gia công 3D',
-        subtitle: 'Đưa bản thiết kế ra ngoài màn hình.',
+        serviceKey: 'chains',
+        slug: 'xich-tai-cong-nghiep',
+        category: '02 / GIẢI PHÁP',
+        title: 'Hệ thống Băng tải & Xích tải Công nghiệp',
+        subtitle: 'Độ bền truyền động chuẩn Universal Chains.',
         description:
-            'Từ file 3D đã có, chúng tôi xem xét cấu trúc mô hình, tư vấn vật liệu và cách in phù hợp. Quá trình gia công chú trọng từng lớp in, bề mặt và các chi tiết liên quan đến công năng của sản phẩm.',
-        image: '/images/services/service-print-3d.png',
-        tags: ['Kiểm tra mô hình', 'Tư vấn vật liệu', 'In & hoàn thiện'],
+            'Giải pháp xích tải hành lý sân bay, xích thang nâng ô tô bãi đỗ xe thông minh, xích chốt rỗng và dây chuyền đóng gói chịu tải nặng với thép hợp kim tôi cao tần & Inox 304/316.',
+        image: '/images/products/thanhkhang/xich-dan-dong-chinh/drive-chain.webp',
+        tags: ['Xích tải nặng', 'Bãi đỗ xe thông minh', 'Băng tải hành lý'],
         prepTitle: 'BẠN CHUẨN BỊ',
-        preparation: 'File 3D, số lượng, kích thước và yêu cầu về bề mặt hoặc lắp ghép.',
+        preparation: 'Thông số bước xích, tải trọng kéo đứt, môi trường làm việc và bản vẽ tuyến băng tải.',
         compTitle: 'CÙNG HOÀN THIỆN',
-        completion: 'Sản phẩm vật lý theo phương án và yêu cầu gia công đã thống nhất.',
-        ctaText: 'Liên hệ tư vấn gia công 3D',
+        completion: 'Bộ xích tải và phụ kiện khớp nối đúng dung sai kỹ thuật, sẵn sàng lắp đặt.',
+        ctaText: 'Tư vấn xích & băng tải',
         reverse: true,
     },
     {
         id: 'service-03',
-        serviceKey: 'custom',
-        slug: 'lam-do-custom',
-        category: '03 / DỊCH VỤ',
-        title: 'Làm đồ custom',
-        subtitle: 'Không chỉ khác biệt. Là của riêng bạn.',
+        serviceKey: 'fans',
+        slug: 'quat-cong-nghiep-bldc',
+        category: '03 / GIẢI PHÁP',
+        title: 'Giải pháp Tiết kiệm Điện & Quạt BLDC HVLS',
+        subtitle: 'Lưu lượng gió lớn, tiết kiệm điện vượt trội.',
         description:
-            'Cá nhân hoá phụ kiện, đồ trang trí hoặc phát triển một món đồ từ ý tưởng riêng. HH Maker kết hợp thiết kế và gia công để cân nhắc hình dáng, màu sắc, chi tiết chữ và cách sử dụng trong cùng một phương án.',
-        image: '/images/services/service-custom-3d.png',
-        tags: ['Quà tặng cá nhân', 'Phụ kiện', 'Đồ trang trí'],
+            'Triển khai hệ thống quạt trần công nghiệp sải cánh lớn động cơ nam châm vĩnh cửu không chổi than (BLDC) cho nhà xưởng, kho vận logistics và trung tâm thương mại.',
+        image: '/images/products/thanhkhang/xich-bai-do-xe/vertical-circulation-photo.webp',
+        tags: ['Động cơ BLDC', 'Tiết kiệm điện', 'Làm mát nhà xưởng'],
         prepTitle: 'BẠN CHUẨN BỊ',
-        preparation: 'Câu chuyện hoặc nhu cầu, mẫu tham khảo muốn cá nhân hoá.',
+        preparation: 'Diện tích mặt bằng, chiều cao trần nhà xưởng và bản vẽ bố trí kết cấu mái.',
         compTitle: 'CÙNG HOÀN THIỆN',
-        completion: 'Sản phẩm mang dấu ấn riêng, được phát triển theo nội dung đã trao đổi.',
-        ctaText: 'Liên hệ tư vấn làm đồ custom',
+        completion: 'Phương án bố trí số lượng quạt tối ưu luồng khí và bài toán hoàn vốn điện năng.',
+        ctaText: 'Tư vấn giải pháp BLDC',
         reverse: false,
     },
 ]
@@ -144,56 +143,56 @@ const fallbackServicesVi = [
 const fallbackServicesEn = [
     {
         id: 'service-01',
-        serviceKey: 'design',
-        slug: 'thiet-ke-3d',
-        category: '01 / SERVICE',
-        title: '3D Design',
-        subtitle: 'From sketch to concrete geometry.',
+        serviceKey: 'escalator',
+        slug: 'phu-tung-thang-cuon',
+        category: '01 / SOLUTION',
+        title: 'Escalator & Elevator Spare Parts',
+        subtitle: 'Safe operation compliant with EN 115.',
         description:
-            'Have an idea but no 3D model yet? HH Maker works with you to define proportions, structure, and details, transforming reference photos or sketches into 3D designs tailored for practical manufacturing.',
-        image: '/images/services/service-design-3d.png',
-        tags: ['Concept Development', '3D Modeling', 'Print Optimization'],
+            'Supplying escalator step chains, main drive chains, antibacterial handrails, and heavy-duty rollers compatible with major commercial and public-transit escalator brands.',
+        image: '/images/products/thanhkhang/xich-bac-thang-thuong-mai/commercial-type.webp',
+        tags: ['Step Chains', 'CO/CQ Certified', 'EN 115 Standard'],
         prepTitle: 'YOU PREPARE',
-        preparation: 'Ideas, reference images, intended dimensions, and functional requirements.',
-        compTitle: 'WE CO-CREATE',
-        completion: '3D model blueprint and technical details aligned before production.',
-        ctaText: 'Consult 3D Design',
+        preparation: 'Escalator model, OEM part number, chain pitch, or on-site inspection photos.',
+        compTitle: 'WE DELIVER',
+        completion: 'Matched OEM replacement plan, technical inspection, and scheduled site delivery.',
+        ctaText: 'Consult Escalator Parts',
         reverse: false,
     },
     {
         id: 'service-02',
-        serviceKey: 'print',
-        slug: 'gia-cong-3d',
-        category: '02 / SERVICE',
-        title: '3D Machining & Printing',
-        subtitle: 'Bringing digital designs into the physical world.',
+        serviceKey: 'chains',
+        slug: 'xich-tai-cong-nghiep',
+        category: '02 / SOLUTION',
+        title: 'Conveyor Systems & Industrial Chains',
+        subtitle: 'Universal Chains transmission durability.',
         description:
-            'From existing 3D files, we review geometry, recommend suitable materials, and select the optimal printing method. Manufacturing focuses on layer resolution, surface finish, and functional mechanical aspects.',
-        image: '/images/services/service-print-3d.png',
-        tags: ['Model Verification', 'Material Consultation', 'Printing & Finishing'],
+            'Airport baggage handling chains, automated car-lift parking chains, hollow-pin chains, and packaging conveyor lines crafted from heat-treated alloy steel and SUS304/316.',
+        image: '/images/products/thanhkhang/xich-dan-dong-chinh/drive-chain.webp',
+        tags: ['Heavy-Duty Chains', 'Car Parking Lift', 'Baggage Conveyor'],
         prepTitle: 'YOU PREPARE',
-        preparation: '3D files, quantities, dimensions, and surface or assembly tolerances.',
-        compTitle: 'WE CO-CREATE',
-        completion: 'Physical parts produced to agreed specifications and machining standards.',
-        ctaText: 'Consult 3D Machining',
+        preparation: 'Chain pitch specs, breaking load, operating environment, and conveyor layout drawings.',
+        compTitle: 'WE DELIVER',
+        completion: 'Precision-matched industrial chain assembly ready for installation.',
+        ctaText: 'Consult Chains & Conveyors',
         reverse: true,
     },
     {
         id: 'service-03',
-        serviceKey: 'custom',
-        slug: 'lam-do-custom',
-        category: '03 / SERVICE',
-        title: 'Custom Bespoke Creations',
-        subtitle: 'Not just different. Exclusively yours.',
+        serviceKey: 'fans',
+        slug: 'quat-cong-nghiep-bldc',
+        category: '03 / SOLUTION',
+        title: 'Energy Saving & BLDC HVLS Fans',
+        subtitle: 'High airflow volume with superior energy savings.',
         description:
-            'Personalizing accessories, home decor, or crafting custom items from scratch. HH Maker combines design and machining to balance form, color, typography, and ergonomics in a single unified solution.',
-        image: '/images/services/service-custom-3d.png',
-        tags: ['Personal Gifts', 'Accessories', 'Spatial Decor'],
+            'Deploying large-diameter High-Volume Low-Speed industrial ceiling fans powered by brushless DC (BLDC) motors for factories, logistics hubs, and commercial halls.',
+        image: '/images/products/thanhkhang/xich-bai-do-xe/vertical-circulation-photo.webp',
+        tags: ['BLDC Motor', 'Energy Saving', 'Factory Ventilation'],
         prepTitle: 'YOU PREPARE',
-        preparation: 'Story or requirements, sample models you wish to personalize.',
-        compTitle: 'WE CO-CREATE',
-        completion: 'Unique signature product tailored to the discussed concept.',
-        ctaText: 'Consult Custom Creations',
+        preparation: 'Floor area, ceiling clearance height, and roof truss layout drawings.',
+        compTitle: 'WE DELIVER',
+        completion: 'Optimized airflow layout plan and power-saving ROI calculation.',
+        ctaText: 'Consult BLDC Solutions',
         reverse: false,
     },
 ]
@@ -205,13 +204,13 @@ const fallbackServices = computed(() =>
 const resolveFallbackForItem = (item, idx, defaults) => {
     const slug = String(item?.slug || '').toLowerCase()
     const title = String(item?.title || '').toLowerCase()
-    if (slug.includes('thiet-ke') || slug.includes('design') || title.includes('thiết kế') || title.includes('design')) {
+    if (slug.includes('thang-cuon') || slug.includes('escalator') || title.includes('thang cuốn')) {
         return defaults[0]
     }
-    if (slug.includes('gia-cong') || slug.includes('machining') || slug.includes('print') || title.includes('gia công') || title.includes('machining')) {
+    if (slug.includes('xich') || slug.includes('bang-tai') || slug.includes('chain') || title.includes('xích') || title.includes('băng tải')) {
         return defaults[1]
     }
-    if (slug.includes('custom') || title.includes('custom')) {
+    if (slug.includes('quat') || slug.includes('bldc') || title.includes('quạt') || title.includes('tiết kiệm')) {
         return defaults[2]
     }
     return defaults[idx] || defaults[0]
@@ -256,8 +255,8 @@ const serviceList = computed(() => {
         }
     })
 
-    // Chuẩn hóa thứ tự hiển thị chuẩn Figma: Thiết kế 3D -> Gia công 3D -> Làm đồ custom
-    const orderMap = { 'thiet-ke-3d': 1, 'gia-cong-3d': 2, 'lam-do-custom': 3 }
+    // Chuẩn hóa thứ tự hiển thị 3 giải pháp cốt lõi Thành Khang Tecsat
+    const orderMap = { 'phu-tung-thang-cuon': 1, 'xich-tai-cong-nghiep': 2, 'quat-cong-nghiep-bldc': 3, 'industrial-engineering': 4 }
     mapped.sort((a, b) => (orderMap[a.slug] || 99) - (orderMap[b.slug] || 99))
 
     return mapped.map((item, idx) => ({

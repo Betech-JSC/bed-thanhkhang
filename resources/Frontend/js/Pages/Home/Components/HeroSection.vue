@@ -11,7 +11,7 @@
                         <source :srcset="currentBannerWebp" type="image/webp" />
                         <img
                             :src="currentBannerImage"
-                            alt="HH Maker 3D Printing Technology"
+                            alt="Thành Khang Tecsat - Thiết bị công nghiệp & Phụ tùng thang cuốn"
                             class="w-full h-full object-cover object-right md:object-center select-none"
                             width="1279"
                             height="616"
@@ -103,11 +103,11 @@ export default {
         },
         title: {
             type: String,
-            default: tt('HIỆN THỰC HÓA MỌI Ý TƯỞNG VỚI CÔNG NGHỆ IN 3D'),
+            default: tt('GIẢI PHÁP THIẾT BỊ CÔNG NGHIỆP & PHỤ TÙNG THANG CUỐN CHUẨN OEM'),
         },
         description: {
             type: String,
-            default: tt('Không giới hạn không gian sáng tạo, HH Maker thổi hồn vào từng sản phẩm thông qua công nghệ in và gia công 3D hiện đại'),
+            default: tt('Thành Khang Tecsat cung cấp linh kiện thang cuốn, xích công nghiệp Universal Chains, hệ thống băng tải và quạt trần công nghiệp BLDC HVLS với đầy đủ chứng từ CO/CQ'),
         },
         primaryCtaText: {
             type: String,

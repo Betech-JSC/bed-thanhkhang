@@ -132,19 +132,18 @@ const detailUrl = computed(() => {
         return props.href
     }
     const slugMap = {
-        [key.tt('Gia công 3D')]: 'gia-cong-3d',
-        [key.tt('Thiết kế 3D')]: 'thiet-ke-3d',
-        Custom: 'lam-do-custom',
-        [key.tt('Làm đồ custom')]: 'lam-do-custom',
-        [key.tt('Làm đồ Custom')]: 'lam-do-custom',
-        '3D Design': 'thiet-ke-3d',
-        '3D Machining & Printing': 'gia-cong-3d',
-        'Custom Bespoke Creations': 'lam-do-custom',
+        [key.tt('Linh kiện Thang cuốn')]: 'phu-tung-thang-cuon',
+        [key.tt('Xích tải & Băng tải')]: 'xich-tai-cong-nghiep',
+        [key.tt('Quạt công nghiệp BLDC')]: 'quat-cong-nghiep-bldc',
+        [key.tt('Dịch vụ kỹ thuật công nghiệp')]: 'industrial-engineering',
+        'Escalator Spare Parts': 'phu-tung-thang-cuon',
+        'Industrial Chains & Conveyors': 'xich-tai-cong-nghiep',
+        'BLDC Industrial Fans': 'quat-cong-nghiep-bldc',
     }
     const slug = props.service.slug || slugMap[props.service.title] || (
-        props.service.serviceKey === 'print' ? 'gia-cong-3d' :
-        props.service.serviceKey === 'custom' ? 'lam-do-custom' :
-        'thiet-ke-3d'
+        props.service.serviceKey === 'chains' ? 'xich-tai-cong-nghiep' :
+        props.service.serviceKey === 'fans' ? 'quat-cong-nghiep-bldc' :
+        'industrial-engineering'
     )
     const isEn = page.props.value?.locale?.current === 'en'
     try {

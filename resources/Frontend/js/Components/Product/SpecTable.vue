@@ -3,11 +3,9 @@
     <div class="w-full lg:w-[480px] lg:h-[445px] lg:min-h-[445px] bg-[#30374F] border border-[#30374F] rounded-[12px] p-6 sm:p-[28px] gap-[18px] flex flex-col justify-between font-sans">
         <!-- 1. TIÊU ĐỀ THÔNG SỐ (FIGMA 2358:3067: gap 12px) -->
         <div class="flex items-center gap-3">
-            <img
-                src="/images/pdp/printer.svg"
-                alt="Printer icon"
-                class="w-5 h-5 object-contain shrink-0"
-            />
+            <svg class="w-5 h-5 text-[#84ADFF] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+            </svg>
             <h3 class="text-lg sm:text-xl font-semibold text-[#FAFAFA] leading-6 tracking-tight">
                 {{ tt(title) }}
             </h3>
@@ -46,7 +44,7 @@ export default {
     props: {
         title: {
             type: String,
-            default: tt('Thông số in tham khảo'),
+            default: tt('Thông số kỹ thuật'),
         },
         specs: {
             type: Array,

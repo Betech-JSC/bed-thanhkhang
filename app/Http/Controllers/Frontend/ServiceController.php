@@ -28,11 +28,11 @@ class ServiceController extends Controller
 
         $seo = [
             'title' => $locale === 'en'
-                ? 'On-Demand 3D Printing & Design Services - HH Maker'
-                : 'Dịch Vụ In Ấn & Thiết Kế 3D Theo Yêu Cầu - HH Maker',
+                ? 'Industrial Engineering Services & Energy Saving Solutions - Thanh Khang Tecsat'
+                : 'Dịch Vụ Kỹ Thuật & Giải Pháp Tiết Kiệm Điện - Thành Khang Tecsat',
             'description' => $locale === 'en'
-                ? 'HH Maker accompanies you from clarifying concepts to choosing fabrication methods: 3D Design, 3D Machining, and Custom Creations with the highest finishing standards.'
-                : 'HH Maker đồng hành từ làm rõ ý tưởng đến lựa chọn cách tạo ra sản phẩm: Thiết kế 3D, Gia công 3D, và Làm đồ custom với tiêu chuẩn hoàn thiện cao nhất.',
+                ? 'Thanh Khang Tecsat provides technical survey, precision mechanical manufacturing, escalator maintenance parts, and industrial BLDC fan energy-saving solutions.'
+                : 'Thành Khang Tecsat cung cấp dịch vụ khảo sát kỹ thuật, chế tạo cơ khí phụ tùng, cung ứng linh kiện thang cuốn và giải pháp tiết kiệm điện quạt BLDC công nghiệp.',
         ];
 
         if (request()->wantsJson()) {

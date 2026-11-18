@@ -11,20 +11,20 @@
                         name: 'title',
                         label: 'Tiêu đề chính',
                         size: 'sm',
-                        placeholder: 'VD: HIỆN THỰC HÓA MỌI Ý TƯỞNG VỚI CÔNG NGHỆ IN 3D',
+                        placeholder: 'VD: GIẢI PHÁP THIẾT BỊ CÔNG NGHIỆP & PHỤ TÙNG THANG CUỐN CHUẨN OEM',
                     }" />
                     <Field v-model="form.subtitle" :field="{
                         type: 'text',
                         name: 'subtitle',
                         label: 'Phụ đề (Subtitle / Tagline)',
-                        placeholder: 'VD: VỀ CHÚNG TÔI / GIẢI PHÁP GIA CÔNG 3D',
+                        placeholder: 'VD: VỀ CHÚNG TÔI / GIẢI PHÁP TRUYỀN ĐỘNG & TIẾT KIỆM ĐIỆN',
                     }" />
                     <Field v-model="form.description" :field="{
                         type: 'textarea',
                         name: 'description',
                         label: 'Mô tả ngắn',
                         rows: 3,
-                        placeholder: 'Không giới hạn không gian sáng tạo, HH Maker thổi hồn vào từng sản phẩm...',
+                        placeholder: 'Cung cấp linh kiện thang cuốn, xích tải công nghiệp và giải pháp tiết kiệm điện hàng đầu...',
                     }" />
 
                     <!-- Cụm CTA Buttons -->

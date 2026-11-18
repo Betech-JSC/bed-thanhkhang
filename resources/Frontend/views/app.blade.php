@@ -14,7 +14,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <!-- Favicon & Brand Icons -->
-    <link rel="icon" type="image/svg+xml" href="/assets/images/header/hh-maker-icon.svg?v=20261109">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=20261109">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=20261109">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=20261109">
@@ -37,7 +36,7 @@
             'quy-trinh' => ['vi' => 'quy-trinh', 'en' => 'en/process'],
         ];
 
-        $appUrl = rtrim(config('app.url') ?: 'https://hhmaker.vn', '/');
+        $appUrl = rtrim(config('app.url') ?: 'https://dvktthanhkhang.vn', '/');
         
         $viPath = null;
         $enPath = null;
@@ -119,18 +118,18 @@
     @php
         $url = url()->current();
 
-        $businessName = $global['general_business_name'] ?? 'HH Maker';
+        $businessName = $global['general_business_name'] ?? 'Thành Khang Tecsat';
         $separator = $global['seo_title_separator'] ?? '|';
 
-        $site = $global['seo_site_name'] ?? 'HH Maker';
+        $site = $global['seo_site_name'] ?? 'Thành Khang Tecsat';
         $canonical = $seo['seo_canonical'] ?? $url;
 
         // Kiểm tra trang lỗi
         $isError = (isset($status) && in_array($status, [404, 500, 503, 403])) || request()->is('error*');
 
         if ($isError) {
-            $title = ($status ?? 404) . ' - Không tìm thấy trang | HH Maker';
-            $description = 'Địa chỉ truy cập không tồn tại hoặc đã bị thay đổi trên hệ thống HH Maker.';
+            $title = ($status ?? 404) . ' - Không tìm thấy trang | Thành Khang Tecsat';
+            $description = 'Địa chỉ truy cập không tồn tại hoặc đã bị thay đổi trên hệ thống Thành Khang Tecsat.';
             $robots = 'noindex, nofollow';
         } else {
             $title = $seo['seo_meta_title'] ?? $seo['title'] ?? ($global['seo_meta_title'] ?? env('APP_NAME'));
@@ -138,20 +137,20 @@
             $robots = $seo['seo_meta_robots'] ?? ($global['seo_meta_robots'] ?? 'index');
         }
 
-        // Ưu tiên ảnh từ $seo; nếu lấy từ $global, phải lọc sạch không dính funkystyle cũ
+        // Ưu tiên ảnh từ $seo; nếu lấy từ $global, phải lọc sạch không dính domain/asset cũ
         $rawImage = $seo['seo_image'] ?? $seo['image'] ?? null;
         if (empty($rawImage)) {
             $globalImage = $global['seo_image'] ?? null;
-            if (!empty($globalImage) && !Str::contains($globalImage, ['funkystyle', 'khoqua', 'copy.jpg'])) {
+            if (!empty($globalImage) && !Str::contains($globalImage, ['funkystyle', 'khoqua', 'copy.jpg', 'hhmaker'])) {
                 $rawImage = $globalImage;
             } else {
-                $rawImage = '/hhmaker-og-2026.jpg?v=20261110';
+                $rawImage = '/og-image.jpg';
             }
         }
 
         // Nếu là đường dẫn tương đối (bắt đầu bằng "/"), nối domain từ request thực tế
         if (!Str::startsWith($rawImage, ['http://', 'https://'])) {
-            $hostDomain = request()->getSchemeAndHttpHost() ?: (config('app.url') ?: 'https://hhmaker.vn');
+            $hostDomain = request()->getSchemeAndHttpHost() ?: (config('app.url') ?: 'https://dvktthanhkhang.vn');
             $rawImage = rtrim($hostDomain, '/') . '/' . ltrim($rawImage, '/');
         }
 
@@ -160,7 +159,7 @@
 
         $encodedPath = implode('/', array_map('rawurlencode', explode('/', $parsed['path'] ?? '')));
 
-        $image = ($parsed['scheme'] ?? 'https') . '://' . ($parsed['host'] ?? 'hhmaker.vn') . $encodedPath;
+        $image = ($parsed['scheme'] ?? 'https') . '://' . ($parsed['host'] ?? 'dvktthanhkhang.vn') . $encodedPath;
 
         if (isset($parsed['query'])) {
             $image .= '?' . $parsed['query'];
@@ -228,7 +227,7 @@
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="{{ $title }}">
-    <meta property="og:site_name" content="{{ $site ?? 'HH Maker' }}">
+    <meta property="og:site_name" content="{{ $site ?? 'Thành Khang Tecsat' }}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $title }}">
     <meta name="twitter:description" content="{{ $description }}">
@@ -247,37 +246,31 @@
         $localBusinessSchema = [
             '@context' => 'https://schema.org',
             '@type' => 'LocalBusiness',
-            '@id' => 'https://hhmaker.vn/#organization',
-            'name' => 'Công ty In ấn 3D HH Maker',
-            'alternateName' => 'HH Maker 3D Printing',
-            'url' => 'https://hhmaker.vn',
-            'logo' => 'https://hhmaker.vn/assets/images/header/figma-header-logo.svg',
-            'image' => 'https://hhmaker.vn/hhmaker-og-2026.jpg?v=20261110',
-            'description' => 'Xưởng thiết kế và gia công in 3D công nghệ FDM, SLA Resin 8K, SLS chuyên nghiệp tại TP.HCM.',
-            'telephone' => '0906636425',
-            'email' => 'info@hhmaker.vn',
+            '@id' => 'https://dvktthanhkhang.vn/#organization',
+            'name' => 'Công ty TNHH Dịch vụ Kỹ thuật Thành Khang Tecsat',
+            'alternateName' => 'Thành Khang Tecsat',
+            'url' => 'https://dvktthanhkhang.vn',
+            'logo' => 'https://dvktthanhkhang.vn/og-image.jpg',
+            'image' => 'https://dvktthanhkhang.vn/og-image.jpg',
+            'description' => 'Nhà cung cấp giải pháp & thiết bị công nghiệp B2B: linh kiện thang cuốn, thang nâng ô tô, xích tải Universal Chains, hệ thống băng tải và quạt trần công nghiệp BLDC HVLS.',
+            'telephone' => '0967732665',
+            'email' => 'info@dvktthanhkhang.vn',
             'address' => [
                 '@type' => 'PostalAddress',
-                'streetAddress' => 'Số 65 đường số 9, KDC Hương Lộ 5, Phường An Lạc',
-                'addressLocality' => 'Quận Bình Tân',
-                'addressRegion' => 'Thành phố Hồ Chí Minh',
-                'postalCode' => '700000',
+                'streetAddress' => 'Tầng 25, Tòa nhà TNR, 54A Nguyễn Chí Thanh, Phường Láng Thượng',
+                'addressLocality' => 'Quận Đống Đa',
+                'addressRegion' => 'Hà Nội',
                 'addressCountry' => 'VN',
-            ],
-            'geo' => [
-                '@type' => 'GeoCoordinates',
-                'latitude' => 10.74123,
-                'longitude' => 106.60845,
             ],
             'openingHoursSpecification' => [
                 '@type' => 'OpeningHoursSpecification',
                 'dayOfWeek' => ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-                'opens' => '08:30',
-                'closes' => '18:00',
+                'opens' => '08:00',
+                'closes' => '17:30',
             ],
             'priceRange' => '$$',
             'sameAs' => [
-                'https://www.facebook.com/hhmaker',
+                'https://www.facebook.com/thanhkhangtecsat',
             ],
         ];
 
@@ -370,7 +363,7 @@
                 $items[] = [
                     '@type' => 'ListItem',
                     'position' => 2,
-                    'name' => $isEn ? 'Process' : 'Quy trình gia công 3D',
+                    'name' => $isEn ? 'Process' : 'Quy trình cung ứng',
                     'item' => $appUrl . ($isEn ? '/en/process' : '/quy-trinh'),
                 ];
             } elseif (Str::startsWith($currentPath, ['lien-he', 'en/contact'])) {

@@ -2,11 +2,11 @@
     <div class="bg-[#111322] min-h-screen text-[#FAFAFA] font-sans antialiased selection:bg-[#2970FF] selection:text-white">
         <!-- SEO HEAD -->
         <Head>
-            <title>{{ currentTitle }} - HH Maker</title>
+            <title>{{ currentTitle }} - Thành Khang Tecsat</title>
             <meta name="description" :content="currentDescription" />
             <meta property="og:title" :content="currentTitle" />
             <meta property="og:description" :content="currentDescription" />
-            <meta property="og:image" :content="productImages[0]?.url || '/images/pdp/product_main.png'" />
+            <meta property="og:image" :content="productImages[0]?.url || '/images/products/thanhkhang/xich-bac-thang-thuong-mai/commercial-type.webp'" />
             <meta property="og:type" content="product" />
             <component
                 :is="'script'"
@@ -63,10 +63,10 @@
                         <!-- PHÂN LOẠI BADGES (FIGMA 2358:3007: gap 8px) -->
                         <div class="flex items-center gap-2">
                             <span class="inline-flex items-center justify-center h-[33px] px-3 py-2 rounded-[4px] text-xs font-normal leading-[17px] border border-[#5D6B98] text-[#84ADFF]">
-                                {{ tt('Mô hình in 3D') }}
+                                {{ tt('Chuẩn OEM / ISO') }}
                             </span>
                             <span class="inline-flex items-center justify-center h-[33px] px-3 py-2 rounded-[4px] text-xs font-normal leading-[17px] border border-[#5D6B98] text-[#84ADFF]">
-                                {{ tt('In theo yêu cầu') }}
+                                {{ tt('Cung ứng theo thông số') }}
                             </span>
                         </div>
 
@@ -95,9 +95,9 @@
                             {{ tt('Nhận tư vấn sản phẩm') }}
                         </button>
 
-                        <!-- LƯU Ý TƯ VẤN (FIGMA 2358:3031) -->
+                        <!-- LƯU Ý TƯ VẤN -->
                         <p class="text-xs text-[#B9C0D4] leading-[19px]">
-                            {{ tt('Chia sẻ màu sắc, kích thước và số lượng mong muốn. HH Maker sẽ tư vấn phương án và báo giá phù hợp.') }}
+                            {{ tt('Chia sẻ mã linh kiện, bước xích và số lượng cần cung ứng. Thành Khang Tecsat sẽ tư vấn phương án kỹ thuật và báo giá B2B phù hợp.') }}
                         </p>
                     </div>
                 </div>
@@ -193,7 +193,7 @@
                         </div>
                     </div>
 
-                    <!-- TAB 2: THÔNG SỐ IN 3D MỞ RỘNG -->
+                    <!-- TAB 2: THÔNG SỐ KỸ THUẬT MỞ RỘNG -->
                     <div
                         v-else-if="activeTab === 'specs'"
                         key="specs"
@@ -335,8 +335,8 @@ export default {
         tabs() {
             return [
                 { id: 'overview', key: 'overview', name: this.tt('Tổng quan') },
-                { id: 'specs', key: 'specs', name: this.tt('Thông số in 3D') },
-                { id: 'custom', key: 'custom', name: this.tt('Tuỳ chỉnh sản phẩm') },
+                { id: 'specs', key: 'specs', name: this.tt('Thông số kỹ thuật') },
+                { id: 'custom', key: 'custom', name: this.tt('Gia công theo bản vẽ') },
             ]
         },
         currentTitle() {
@@ -347,7 +347,7 @@ export default {
             if (rawCat) {
                 return this.tt(rawCat)
             }
-            return this.isEn ? 'Space Decor' : this.tt('Trang trí không gian')
+            return this.isEn ? 'Escalator Components' : this.tt('Linh kiện thang cuốn')
         },
         currentCategorySlug() {
             if (this.product?.category?.slug) {
@@ -357,17 +357,17 @@ export default {
                 return this.product.category_slug;
             }
             const cat = (this.currentCategory || '').toLowerCase();
-            if (cat.includes('không gian') || cat.includes('space')) {
-                return 'trang-tri-khong-gian';
+            if (cat.includes('thang cuốn') || cat.includes('escalator')) {
+                return 'linh-kien-thang-cuon';
             }
-            if (cat.includes('móc khoá') || cat.includes('móc khóa') || cat.includes('keychain') || cat.includes('phụ kiện') || cat.includes('accessories')) {
-                return 'moc-khoa-phu-kien';
+            if (cat.includes('thang nâng') || cat.includes('ô tô') || cat.includes('parking')) {
+                return 'linh-kien-thang-nang-o-to';
             }
-            if (cat.includes('đồ dùng') || cat.includes('lifestyle') || cat.includes('stationery') || cat.includes('văn phòng phẩm') || cat.includes('decor')) {
-                return 'trang-tri-do-dung';
+            if (cat.includes('băng tải') || cat.includes('hành lý') || cat.includes('conveyor')) {
+                return 'he-thong-bang-tai-hanh-ly';
             }
-            if (cat.includes('gia công') || cat.includes('custom') || cat.includes('manufacturing')) {
-                return 'gia-cong-theo-yeu-cau';
+            if (cat.includes('đóng gói') || cat.includes('packaging')) {
+                return 'linh-kien-day-chuyen-dong-goi';
             }
             return 'all';
         },
@@ -402,7 +402,7 @@ export default {
                 }
                 return mat
             }
-            return this.tt('Nhựa PLA · Công nghệ FDM')
+            return this.tt('Thép hợp kim 40Cr · Tiêu chuẩn ISO/DIN')
         },
         productColor() {
             return (
@@ -437,7 +437,7 @@ export default {
                 this.product?.story_title ||
                 this.pdpMetadata?.story_title ||
                 this.pdpMetadata?.storyTitle ||
-                this.tt('Nhỏ gọn. Nhiều điều để khám phá.')
+                this.tt('Độ bền chuẩn công nghiệp cho vận hành liên tục.')
             )
         },
         storyIntro() {
@@ -453,7 +453,7 @@ export default {
                 this.product?.feature1_title ||
                 this.pdpMetadata?.feature1_title ||
                 this.pdpMetadata?.feature1Title ||
-                this.tt('Tạo hình Low-Poly sắc nét')
+                this.tt('Chịu tải cao & chống mài mòn vượt trội')
             )
         },
         feature1Desc() {
@@ -461,7 +461,7 @@ export default {
                 this.product?.feature1_desc ||
                 this.pdpMetadata?.feature1_desc ||
                 this.pdpMetadata?.feature1Desc ||
-                this.tt('Các góc cạnh đa giác được hoàn thiện mượt mà, phản chiếu ánh sáng độc đáo ở từng góc nhìn, thể hiện rõ thế mạnh độ chính xác của công nghệ in 3D FDM.')
+                this.tt('Các chi tiết trục chốt, con lăn và má xích được gia công chính xác, nhiệt luyện tôi cao tần nhằm giảm độ dãn dài và tăng tuổi thọ vận hành.')
             )
         },
         feature2Title() {
@@ -469,7 +469,7 @@ export default {
                 this.product?.feature2_title ||
                 this.pdpMetadata?.feature2_title ||
                 this.pdpMetadata?.feature2Title ||
-                this.tt('Tùy chỉnh theo yêu cầu')
+                this.tt('Tùy chỉnh theo thông số bản vẽ OEM')
             )
         },
         feature2Desc() {
@@ -477,7 +477,7 @@ export default {
                 this.product?.feature2_desc ||
                 this.pdpMetadata?.feature2_desc ||
                 this.pdpMetadata?.feature2Desc ||
-                this.tt('Bạn có thể trao đổi với HH Maker để thay đổi màu sắc, điều chỉnh kích thước (tỉ lệ scale) hoặc đặt số lượng lớn làm quà tặng, decor sự kiện.')
+                this.tt('Bạn có thể trao đổi với kỹ sư Thành Khang Tecsat để chọn bước xích, vật liệu thép hợp kim / Inox 304-316 hoặc gia công khớp nối theo bản vẽ riêng.')
             )
         },
         hasDistinctContent() {
@@ -494,7 +494,7 @@ export default {
                 this.product?.specs_title ||
                 this.pdpMetadata?.specs_title ||
                 this.pdpMetadata?.specsTitle ||
-                this.tt('Tiêu chuẩn kỹ thuật công nghệ in 3D FDM & Resin')
+                this.tt('Tiêu chuẩn kỹ thuật & Kiểm định công nghiệp')
             )
         },
         specsTabDesc() {
@@ -503,7 +503,7 @@ export default {
                 this.pdpMetadata?.specs_desc ||
                 this.pdpMetadata?.specsDesc ||
                 this.pdpMetadata?.specs_description ||
-                this.tt('Mỗi mô hình xuất xưởng tại xưởng in HH Maker đều trải qua quy trình kiểm soát chất lượng (QC) nghiêm ngặt từ khâu tối ưu lát cắt (slicing) đến khâu hoàn thiện bề mặt.')
+                this.tt('Mỗi lô thiết bị & linh kiện do Thành Khang Tecsat cung ứng đều được kiểm định thông số tải trọng, dung sai kích thước và kèm đầy đủ chứng chỉ CO/CQ.')
             )
         },
         specsTabContent() {
@@ -525,19 +525,19 @@ export default {
             }
             return [
                 {
-                    label: this.tt('Độ chính xác'),
-                    value: '±0.15 mm',
-                    description: this.tt('Dung sai kích thước cơ học chuẩn xác, các khớp nối và bề mặt liền mạch.'),
+                    label: this.tt('Dung sai gia công'),
+                    value: '±0.05 mm',
+                    description: this.tt('Đảm bảo ăn khớp chính xác tuyệt đối với nhông truyền động và rãnh dẫn hướng.'),
                 },
                 {
-                    label: this.tt('Độ phân giải lớp'),
-                    value: '0.10 - 0.28 mm',
-                    description: this.tt('Lựa chọn độ mịn cao phù hợp tượng nghệ thuật decor hoặc tối ưu thời gian.'),
+                    label: this.tt('Tiêu chuẩn quốc tế'),
+                    value: 'EN 115 / ISO / DIN',
+                    description: this.tt('Đáp ứng các yêu cầu an toàn khắt khe cho thang cuốn thương mại & công nghiệp.'),
                 },
                 {
-                    label: this.tt('Năng lực sản xuất'),
-                    value: this.tt('Hơn 50+ máy in'),
-                    description: this.tt('Đáp ứng từ mẫu đơn chiếc cá nhân đến đơn hàng số lượng lớn cho sự kiện.'),
+                    label: this.tt('Năng lực cung ứng'),
+                    value: this.tt('Sẵn kho & Đặt OEM'),
+                    description: this.tt('Hỗ trợ cấp lẻ thay thế bảo trì định kỳ hoặc cung ứng số lượng lớn cho dự án.'),
                 },
             ]
         },
@@ -546,7 +546,7 @@ export default {
                 this.product?.custom_title ||
                 this.pdpMetadata?.custom_title ||
                 this.pdpMetadata?.customTitle ||
-                this.tt('Quy trình đặt in tùy chỉnh theo yêu cầu')
+                this.tt('Quy trình đặt hàng & gia công theo thông số OEM')
             )
         },
         customTabDesc() {
@@ -555,7 +555,7 @@ export default {
                 this.pdpMetadata?.custom_desc ||
                 this.pdpMetadata?.customDesc ||
                 this.pdpMetadata?.custom_description ||
-                this.tt('HH Maker cung cấp dịch vụ in 3D cá nhân hóa toàn diện. Bạn có thể điều chỉnh tỉ lệ scale, phối màu sợi in đặc biệt hoặc khắc logo thương hiệu riêng.')
+                this.tt('Thành Khang Tecsat hỗ trợ đặt hàng theo bước xích, tải trọng kéo đứt, vật liệu chống ăn mòn (Inox 304/316) hoặc phụ kiện gá lắp theo bản vẽ kỹ thuật riêng.')
             )
         },
         customTabContent() {
@@ -578,18 +578,18 @@ export default {
             return [
                 {
                     step: this.tt('Bước 01'),
-                    title: this.tt('Gửi yêu cầu & file mẫu'),
-                    description: this.tt('Chia sẻ ý tưởng, link mô hình 3D hoặc kích thước mong muốn cho HH Maker.'),
+                    title: this.tt('Gửi thông số & bản vẽ'),
+                    description: this.tt('Chia sẻ mã linh kiện OEM, thông số bước xích hoặc bản vẽ CAD cho Thành Khang Tecsat.'),
                 },
                 {
                     step: this.tt('Bước 02'),
-                    title: this.tt('Tư vấn kỹ thuật & Báo giá'),
-                    description: this.tt('Đội ngũ kỹ sư thẩm định độ dày thành vách, tư vấn vật liệu và gửi báo giá chi tiết.'),
+                    title: this.tt('Đối chiếu kỹ thuật & Báo giá'),
+                    description: this.tt('Đội ngũ kỹ sư kiểm tra tiêu chuẩn lắp đặt, tư vấn vật liệu phù hợp và gửi báo giá B2B.'),
                 },
                 {
                     step: this.tt('Bước 03'),
-                    title: this.tt('Gia công in & Giao hàng'),
-                    description: this.tt('Tiến hành in, xử lý hậu kỳ tỉ mỉ, đóng gói chống sốc an toàn và vận chuyển tận nơi.'),
+                    title: this.tt('Kiểm định CO/CQ & Giao hàng'),
+                    description: this.tt('Hoàn tất kiểm định chất lượng, đóng gói quy cách công nghiệp và bàn giao tận công trình.'),
                 },
             ]
         },
@@ -604,7 +604,7 @@ export default {
         productJsonLd() {
             const rawPrice = this.product?.price || this.product?.min_price || 250000
             const numericPrice = String(rawPrice).replace(/[^0-9]/g, '') || '250000'
-            const currentUrl = typeof window !== 'undefined' ? window.location.href : 'https://hhmaker.vn/san-pham'
+            const currentUrl = typeof window !== 'undefined' ? window.location.href : 'https://dvktthanhkhang.vn/san-pham'
             const images = Array.isArray(this.productImages)
                 ? this.productImages.map((img) => img.url).filter(Boolean)
                 : []
@@ -613,12 +613,12 @@ export default {
                 '@context': 'https://schema.org',
                 '@type': 'Product',
                 name: this.currentTitle,
-                image: images.length > 0 ? images : ['https://hhmaker.vn/images/pdp/product_main.png'],
+                image: images.length > 0 ? images : ['https://dvktthanhkhang.vn/images/products/thanhkhang/xich-bac-thang-thuong-mai/commercial-type.webp'],
                 description: this.currentDescription,
-                sku: this.product?.sku || `HHM-PRD-${this.product?.id || 1}`,
+                sku: this.product?.sku || `TK-PRD-${this.product?.id || 1}`,
                 brand: {
                     '@type': 'Brand',
-                    name: 'HH Maker',
+                    name: 'Thành Khang Tecsat',
                 },
                 offers: {
                     '@type': 'Offer',
@@ -630,14 +630,14 @@ export default {
                     availability: 'https://schema.org/InStock',
                     seller: {
                         '@type': 'Organization',
-                        name: 'HH Maker',
+                        name: 'Thành Khang Tecsat',
                     },
                 },
             }
         },
         breadcrumbJsonLd() {
-            const homeUrl = this.isEn ? 'https://hhmaker.vn/en' : 'https://hhmaker.vn'
-            const productsUrl = this.isEn ? 'https://hhmaker.vn/en/products' : 'https://hhmaker.vn/san-pham'
+            const homeUrl = this.isEn ? 'https://dvktthanhkhang.vn/en' : 'https://dvktthanhkhang.vn'
+            const productsUrl = this.isEn ? 'https://dvktthanhkhang.vn/en/products' : 'https://dvktthanhkhang.vn/san-pham'
             const currentUrl = typeof window !== 'undefined' ? window.location.href : `${productsUrl}/${this.product?.slug || ''}`
 
             return {

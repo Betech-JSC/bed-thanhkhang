@@ -1,5 +1,5 @@
 <template>
-    <Head title="Hướng dẫn sử dụng CMS - HH Maker 3D" />
+    <Head title="Hướng dẫn sử dụng CMS - Thành Khang Tecsat" />
 
     <div class="px-6 py-8 bg-[#F8FAFC] min-h-screen text-slate-800">
         <!-- Top Navigation / Breadcrumb -->
@@ -19,7 +19,7 @@
 
             <div class="hidden sm:flex items-center gap-2 text-xs font-medium text-slate-500 bg-white px-3.5 py-1.5 rounded-lg border border-slate-200 shadow-sm">
                 <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                <span>HH Maker 3D Admin v2.5 • Chuẩn Vận hành</span>
+                <span>Thành Khang Tecsat Admin v2.5 • Chuẩn B2B</span>
             </div>
         </div>
 
@@ -37,7 +37,7 @@
                     Hướng dẫn sử dụng Hệ thống Admin CMS
                 </h1>
                 <p class="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed">
-                    Cẩm nang tra cứu quy trình vận hành xưởng in 3D HH Maker, hướng dẫn xử lý yêu cầu báo giá &amp; tệp CAD 4 trạng thái, biên tập nội dung song ngữ VI/EN, quản trị hình ảnh theo chuẩn kích thước và quản lý quyền hạn hệ thống.
+                    Cẩm nang tra cứu quy trình quản trị catalog linh kiện thang cuốn, xích công nghiệp, hệ thống xử lý yêu cầu báo giá kỹ thuật (RFQ) &amp; tệp bản vẽ CAD, biên tập nội dung song ngữ VI/EN, quản trị hình ảnh và phân quyền hệ thống Thành Khang Tecsat.
                 </p>
 
                 <!-- 3 Quick Info Badges -->
@@ -127,11 +127,11 @@
                         <span>QUY TRÌNH VẬN HÀNH CỐT LÕI</span>
                     </div>
                     <h2 class="text-lg font-bold text-slate-900 mt-1">
-                        Sơ đồ Xử lý Yêu cầu Báo giá &amp; Tệp CAD In 3D
+                        Sơ đồ Xử lý Yêu cầu Báo giá (RFQ) &amp; Hồ sơ Kỹ thuật
                     </h2>
                 </div>
                 <div class="text-xs text-slate-500 italic">
-                    Áp dụng cho module <span class="font-semibold text-slate-700">Báo giá &amp; Yêu cầu in 3D</span>
+                    Áp dụng cho module <span class="font-semibold text-slate-700">Báo giá &amp; Yêu cầu Kỹ thuật</span>
                 </div>
             </div>
 
@@ -147,9 +147,9 @@
                             <i class="pi pi-inbox text-xs"></i>
                         </span>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-800 mb-1">Tiếp nhận &amp; Tải file CAD</h3>
+                    <h3 class="text-sm font-bold text-slate-800 mb-1">Tiếp nhận Yêu cầu &amp; Bản vẽ</h3>
                     <p class="text-xs text-slate-500 leading-relaxed">
-                        Hệ thống tự động ghi nhận RFQ từ khách hàng kèm tệp CAD (.STL, .STEP, .OBJ, .ZIP). Kiểm tra thông tin liên hệ và số lượng đặt in.
+                        Hệ thống ghi nhận RFQ từ đối tác kèm tài liệu thông số hoặc bản vẽ (.STEP, .DWG, .PDF, .ZIP). Kiểm tra mã linh kiện, số lượng và tiến độ dự án.
                     </p>
                 </div>
 
@@ -163,9 +163,9 @@
                             <i class="pi pi-comments text-xs"></i>
                         </span>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-800 mb-1">Kiểm tra lưới &amp; Báo giá</h3>
+                    <h3 class="text-sm font-bold text-slate-800 mb-1">Đối chiếu Thông số &amp; Báo giá</h3>
                     <p class="text-xs text-slate-500 leading-relaxed">
-                        Kỹ thuật viên mở file CAD trên phần mềm Slicer (Cura, Prusa, Bambu Studio) để kiểm tra lỗi lưới, tính thời gian in, trọng lượng nhựa và gửi báo giá cho khách.
+                        Kỹ sư đối chiếu bản vẽ kỹ thuật, bước xích, tải trọng, công suất quạt hoặc model thang cuốn; kiểm tra tồn kho / thời gian nhập OEM và gửi báo giá B2B.
                     </p>
                 </div>
 
@@ -179,9 +179,9 @@
                             <i class="pi pi-check-circle text-xs"></i>
                         </span>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-800 mb-1">Chốt vật liệu &amp; Chạy máy in</h3>
+                    <h3 class="text-sm font-bold text-slate-800 mb-1">Xác nhận Đơn hàng &amp; Điều phối</h3>
                     <p class="text-xs text-slate-500 leading-relaxed">
-                        Khách hàng xác nhận giá, chọn vật liệu (PLA, ABS, PETG, Resin...), đặt cọc đơn hàng. Xưởng xếp lịch máy in và tiến hành in 3D theo thông số cam kết.
+                        Đối tác xác nhận báo giá / PO và vật liệu (Thép hợp kim 40Cr, Inox 304/316, POM, EPDM...). Kho hoặc đối tác OEM chuẩn bị lô hàng &amp; chứng từ CO/CQ.
                     </p>
                 </div>
 
@@ -195,9 +195,9 @@
                             <i class="pi pi-box text-xs"></i>
                         </span>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-800 mb-1">Hậu xử lý &amp; Bàn giao</h3>
+                    <h3 class="text-sm font-bold text-slate-800 mb-1">Kiểm định QC &amp; Bàn giao</h3>
                     <p class="text-xs text-slate-500 leading-relaxed">
-                        Bóc support, rửa siêu âm / sấy UV (nếu in Resin), chà nhám mịn, kiểm tra kích thước thành phẩm bằng thước kẹp và đóng gói gửi tới khách hàng.
+                        Kiểm tra dung sai kích thước, độ căng xích / thông số kỹ thuật, đóng gói kèm chứng chỉ CO/CQ và bàn giao lắp đặt tại công trình hoặc nhà máy.
                     </p>
                 </div>
             </div>
@@ -337,10 +337,10 @@
                     <span>Tài liệu tham chiếu kỹ thuật</span>
                 </div>
                 <h2 class="text-xl font-bold text-slate-900 tracking-tight">
-                    Quy chuẩn Hình ảnh, Tệp CAD In 3D &amp; Checklist Xuất bản
+                    Quy chuẩn Hình ảnh, Bản vẽ CAD &amp; Checklist Xuất bản
                 </h2>
                 <p class="text-slate-500 text-xs sm:text-sm mt-1">
-                    Bảng thông số kỹ thuật chuẩn giúp quản trị viên tối ưu tốc độ tải trang, đảm bảo chất lượng in 3D và chuẩn SEO toàn diện.
+                    Bảng thông số kỹ thuật chuẩn giúp quản trị viên tối ưu tốc độ tải trang, hiển thị rõ bản vẽ sản phẩm và chuẩn SEO toàn diện.
                 </p>
             </div>
 
@@ -380,12 +380,12 @@
                                 <td class="py-3 px-4 text-slate-500">Hiển thị sắc nét trên điện thoại, tránh chữ nhỏ sát mép</td>
                             </tr>
                             <tr class="hover:bg-slate-50/50">
-                                <td class="py-3 px-4 font-bold text-slate-900">Ảnh Sản phẩm In 3D</td>
+                                <td class="py-3 px-4 font-bold text-slate-900">Ảnh Sản phẩm &amp; Thiết bị</td>
                                 <td class="py-3 px-4 font-mono text-blue-600 font-bold">800 × 800 px</td>
                                 <td class="py-3 px-4">1 : 1 (Vuông)</td>
                                 <td class="py-3 px-4">&lt; 250 KB</td>
                                 <td class="py-3 px-4 font-bold">WebP, PNG</td>
-                                <td class="py-3 px-4 text-slate-500">Nền trắng hoặc studio sạch, chụp rõ chi tiết lớp in</td>
+                                <td class="py-3 px-4 text-slate-500">Nền trắng hoặc ảnh thực tế sạch, chụp rõ mã linh kiện và bản vẽ kỹ thuật</td>
                             </tr>
                             <tr class="hover:bg-slate-50/50">
                                 <td class="py-3 px-4 font-bold text-slate-900">Ảnh Dịch vụ &amp; Quy trình</td>
@@ -393,7 +393,7 @@
                                 <td class="py-3 px-4">3 : 2</td>
                                 <td class="py-3 px-4">&lt; 300 KB</td>
                                 <td class="py-3 px-4 font-bold">WebP, JPG</td>
-                                <td class="py-3 px-4 text-slate-500">Chụp thực tế máy in FDM/SLA vận hành tại xưởng</td>
+                                <td class="py-3 px-4 text-slate-500">Chụp thực tế hệ thống thang cuốn, dây chuyền băng tải, quạt BLDC tại công trình</td>
                             </tr>
                             <tr class="hover:bg-slate-50/50">
                                 <td class="py-3 px-4 font-bold text-slate-900">Ảnh Bài viết &amp; Tin tức</td>
@@ -416,21 +416,21 @@
                 </div>
             </div>
 
-            <!-- Table 2: 3D CAD File Standards -->
+            <!-- Table 2: Technical Drawing Standards -->
             <div>
                 <h3 class="text-sm font-extrabold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2">
                     <span class="w-2 h-4 bg-emerald-600 rounded-full inline-block"></span>
-                    2. Định dạng Tệp CAD In 3D &amp; Thiết kế Hợp Lệ
+                    2. Định dạng Bản vẽ CAD &amp; Hồ sơ Kỹ thuật Hợp Lệ
                 </h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50">
                         <div class="flex items-center justify-between mb-2">
-                            <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-mono font-bold text-xs">.STL</span>
+                            <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-mono font-bold text-xs">.DWG / .DXF</span>
                             <span class="text-[11px] font-bold text-slate-400">Phổ biến nhất</span>
                         </div>
-                        <h4 class="text-xs font-bold text-slate-800 mb-1">Standard Triangle Language</h4>
+                        <h4 class="text-xs font-bold text-slate-800 mb-1">AutoCAD Drawing Exchange</h4>
                         <p class="text-[11px] text-slate-500 leading-relaxed">
-                            Định dạng lưới tam giác 3D tiêu chuẩn hàng đầu cho in FDM và SLA. Mở trực tiếp bằng mọi phần mềm cắt lớp (Slicer).
+                            Định dạng bản vẽ kỹ thuật 2D/3D tiêu chuẩn cho sơ đồ tuyến băng tải, hố thang cuốn và kích thước lắp đặt chi tiết.
                         </p>
                     </div>
 
@@ -505,7 +505,7 @@
                             <span class="w-6 h-6 rounded-md bg-blue-100 text-blue-700 font-extrabold text-xs flex items-center justify-center mb-2">2</span>
                             <h4 class="text-xs font-bold text-slate-800 mb-1">Tối ưu thẻ SEO</h4>
                             <p class="text-[11px] text-slate-500 leading-relaxed">
-                                Điền Meta Title (dưới 65 ký tự) và Meta Description (140-160 ký tự) có chứa từ khóa in 3D chính.
+                                Điền Meta Title (dưới 65 ký tự) và Meta Description (140-160 ký tự) có chứa từ khóa thiết bị / phụ tùng chính.
                             </p>
                         </div>
                         <div class="text-[10px] font-bold text-emerald-600 mt-2 flex items-center gap-1">
@@ -557,7 +557,7 @@
 
         <!-- Support Footer -->
         <div class="text-center text-xs text-slate-400 py-4">
-            HH Maker 3D CMS • Hotline Hỗ trợ Kỹ thuật Nội bộ &amp; Xưởng: <span class="font-semibold text-slate-600">Xem mục Cài đặt chung</span>
+            Thành Khang Tecsat CMS • Hotline Hỗ trợ Kỹ thuật &amp; Báo giá: <span class="font-semibold text-slate-600">0967.732.665 (Xem Cài đặt chung)</span>
         </div>
     </div>
 </template>
@@ -578,7 +578,7 @@ export default {
             tabs: [
                 { id: 'ALL', label: 'Tất cả Module', icon: 'pi pi-th-large' },
                 { id: 'DASHBOARD', label: '1. Bảng điều khiển', icon: 'pi pi-chart-bar' },
-                { id: 'FACTORY', label: '2. Vận hành Xưởng In 3D', icon: 'pi pi-box' },
+                { id: 'FACTORY', label: '2. Danh mục & Báo giá B2B', icon: 'pi pi-box' },
                 { id: 'CONTENT', label: '3. Nội dung & Thương hiệu', icon: 'pi pi-images' },
                 { id: 'SYSTEM', label: '4. Hệ thống & SEO', icon: 'pi pi-cog' },
             ],
@@ -592,11 +592,11 @@ export default {
                     icon: 'pi pi-chart-bar',
                     iconBg: 'bg-blue-50 text-blue-600',
                     title: 'Bảng điều khiển & Thống kê RFQ',
-                    summary: 'Theo dõi tổng quan số lượng báo giá in 3D phát sinh trong ngày, dự báo tháng, tốc độ tăng trưởng MoM và cơ cấu các nhóm dịch vụ.',
+                    summary: 'Theo dõi tổng quan số lượng yêu cầu báo giá phát sinh trong ngày, dự báo tháng, tốc độ tăng trưởng MoM và cơ cấu các nhóm sản phẩm/dịch vụ.',
                     steps: [
                         'Xem 4 thẻ chỉ số KPI ở đầu trang: Báo giá hôm nay, Dự báo báo giá tháng, Tăng trưởng MoM (%) và Tỉ lệ chuyển đổi đơn hàng.',
                         'Lựa chọn năm tại bộ lọc Năm để tra cứu biểu đồ xu hướng số lượng yêu cầu báo giá theo từng tháng.',
-                        'Phân tích cơ cấu 4 nhóm dịch vụ in 3D (Gia công in 3D, Thiết kế 3D & CAD, Làm đồ custom & Quà tặng, Tư vấn kỹ thuật khác) tại biểu đồ tròn.',
+                        'Phân tích cơ cấu các lĩnh vực cốt lõi (Phụ tùng thang cuốn, Xích tải & Băng tải, Quạt công nghiệp BLDC, Tư vấn kỹ thuật) tại biểu đồ tròn.',
                         'Tra cứu nhanh danh sách 8 yêu cầu báo giá mới nhất ở bảng dưới cùng và nhấn "Xem" để mở chi tiết.',
                     ],
                     tips: 'Dữ liệu thẻ "Báo giá hôm nay" tự động tính từ 00:00 mỗi ngày. Nhấn nút "Xem tất cả" tại bảng báo giá gần đây để mở toàn bộ danh sách.',
@@ -609,58 +609,58 @@ export default {
                 {
                     id: 'contacts',
                     category: 'FACTORY',
-                    categoryName: '2. Vận hành Xưởng In 3D',
+                    categoryName: '2. Danh mục & Báo giá B2B',
                     categoryBadge: 'bg-emerald-100 text-emerald-700',
                     icon: 'pi pi-send',
                     iconBg: 'bg-emerald-50 text-emerald-600',
-                    title: 'Báo giá & Yêu cầu In 3D (RFQ)',
-                    summary: 'Quản lý luồng tiếp nhận yêu cầu từ form khách hàng, tải file CAD (.STL, .STEP...), tính toán chi phí và cập nhật trạng thái đơn.',
+                    title: 'Báo giá & Yêu cầu Kỹ thuật (RFQ)',
+                    summary: 'Quản lý luồng tiếp nhận yêu cầu từ form đối tác, tải bản vẽ CAD/catalogue (.STEP, .DWG, .PDF...), đối chiếu thông số và cập nhật trạng thái đơn.',
                     steps: [
                         'Vào danh sách yêu cầu, lọc theo trạng thái "Mới (NEW)" để ưu tiên xử lý các yêu cầu vừa gửi đến.',
-                        'Mở chi tiết yêu cầu để xem thông tin liên hệ, vật liệu mong muốn (PLA, ABS, PETG, Resin...), số lượng và ghi chú của khách.',
-                        'Tải tệp CAD đính kèm (.STL, .STEP, .OBJ, .ZIP) về máy tính để kiểm tra độ dày thành, lưới polygon và ước tính thời gian in.',
-                        'Liên hệ khách hàng qua Điện thoại/Zalo để tư vấn và báo giá chi tiết, sau đó chuyển trạng thái sang "Đã phản hồi (RESPONSE)".',
-                        'Khi khách hàng chốt in và đặt cọc, chuyển sang "Đã xác nhận (CONFIRMED)". Sau khi xưởng in xong và bàn giao chuyển sang "Đã xử lý (PROCESSED)".',
+                        'Mở chi tiết yêu cầu để xem thông tin liên hệ, mã linh kiện / vật liệu mong muốn (40Cr, Inox 304/316, POM, EPDM...), số lượng và ghi chú công trình.',
+                        'Tải tệp kỹ thuật đính kèm (.STEP, .DWG, .PDF, .ZIP) về máy tính để đối chiếu bước xích, tải trọng đứt và thông số lắp đặt.',
+                        'Liên hệ đối tác qua Điện thoại/Zalo để tư vấn kỹ thuật và gửi báo giá chi tiết, sau đó chuyển trạng thái sang "Đã phản hồi (RESPONSE)".',
+                        'Khi đối tác chốt PO và xác nhận đơn hàng, chuyển sang "Đã xác nhận (CONFIRMED)". Sau khi xuất kho, kiểm định CO/CQ và bàn giao chuyển sang "Đã xử lý (PROCESSED)".',
                     ],
                     tips: 'Nếu yêu cầu là quảng cáo hoặc bot tự động, hãy chọn trạng thái "Spam (IS_SPAM)" để không tính vào báo cáo KPI tháng.',
                     permission: 'admin.contacts.index',
                     routeName: 'admin.contacts.index',
-                    keywords: ['báo giá', 'cad', 'stl', 'step', 'obj', 'rfq', 'contact', 'yêu cầu', 'new', 'response', 'confirmed', 'processed', 'close', 'spam'],
+                    keywords: ['báo giá', 'cad', 'dwg', 'step', 'pdf', 'rfq', 'contact', 'yêu cầu', 'new', 'response', 'confirmed', 'processed', 'close', 'spam'],
                 },
 
                 // 2. FACTORY - Products
                 {
                     id: 'products',
                     category: 'FACTORY',
-                    categoryName: '2. Vận hành Xưởng In 3D',
+                    categoryName: '2. Danh mục & Báo giá B2B',
                     categoryBadge: 'bg-emerald-100 text-emerald-700',
                     icon: 'pi pi-box',
                     iconBg: 'bg-emerald-50 text-emerald-600',
-                    title: 'Quản lý Sản phẩm In 3D',
-                    summary: 'Đăng tải và quản lý các sản phẩm mẫu, linh kiện in sẵn, mô hình decor với đầy đủ thông số kỹ thuật và hình ảnh song ngữ.',
+                    title: 'Quản lý Sản phẩm & Linh kiện',
+                    summary: 'Đăng tải và quản lý các dòng xích bậc thang cuốn, xích tải công nghiệp Universal Chains, phụ tùng thang nâng và quạt BLDC với đầy đủ thông số kỹ thuật song ngữ.',
                     steps: [
                         'Nhấn "Thêm mới" hoặc chọn sản phẩm cần cập nhật từ danh sách.',
                         'Điền Tiêu đề và Mô tả sản phẩm ở cả 2 tab Tiếng Việt (VI) và English (EN).',
-                        'Chọn Danh mục sản phẩm tương ứng và nhập Giá bán (hoặc để liên hệ báo giá).',
-                        'Tải lên Ảnh đại diện chính (tỉ lệ 1:1 vuông, kích thước chuẩn 800x800px) và Thư viện ảnh chi tiết các góc chụp thực tế.',
-                        'Điền Thông số kỹ thuật (Vật liệu, Kích thước tối đa, Độ chính xác lớp in, Trọng lượng) và kiểm tra thẻ Meta SEO trước khi bật "Kích hoạt (ACTIVE)".',
+                        'Chọn Danh mục sản phẩm tương ứng và nhập Giá tham khảo (hoặc để liên hệ báo giá B2B).',
+                        'Tải lên Ảnh đại diện chính (tỉ lệ 1:1 vuông, kích thước chuẩn 800x800px) và Thư viện ảnh / bản vẽ thông số kỹ thuật.',
+                        'Điền Thông số kỹ thuật (Vật liệu, Bước xích / Kích thước, Tải trọng đứt, Tiêu chuẩn ISO/DIN) và kiểm tra thẻ Meta SEO trước khi bật "Kích hoạt (ACTIVE)".',
                     ],
                     tips: 'Để sản phẩm hiển thị lên đầu trang chủ hoặc trang danh mục, hãy chỉnh số thứ tự hiển thị (Position) nhỏ hơn (ví dụ: 1, 2, 3).',
                     permission: 'admin.products.index',
                     routeName: 'admin.products.index',
-                    keywords: ['sản phẩm', 'products', 'mô hình', 'linh kiện', 'giá bán', 'active', 'song ngữ', 'tiếng anh'],
+                    keywords: ['sản phẩm', 'products', 'xích tải', 'linh kiện', 'thang cuốn', 'active', 'song ngữ', 'tiếng anh'],
                 },
 
                 // 2. FACTORY - Product Categories
                 {
                     id: 'product-categories',
                     category: 'FACTORY',
-                    categoryName: '2. Vận hành Xưởng In 3D',
+                    categoryName: '2. Danh mục & Báo giá B2B',
                     categoryBadge: 'bg-emerald-100 text-emerald-700',
                     icon: 'pi pi-tags',
                     iconBg: 'bg-emerald-50 text-emerald-600',
                     title: 'Danh mục Sản phẩm',
-                    summary: 'Phân cấp các nhóm sản phẩm in 3D theo ứng dụng (Cơ khí, Kiến trúc, Y tế, Decor, Quà tặng cá nhân hóa).',
+                    summary: 'Phân cấp các nhóm sản phẩm theo ứng dụng công nghiệp (Linh kiện thang cuốn, Thang nâng ô tô, Băng tải hành lý, Dây chuyền đóng gói).',
                     steps: [
                         'Tạo mới danh mục với Tên song ngữ VI/EN và kiểm tra đường dẫn tĩnh (Slug) tự động sinh ra.',
                         'Chọn Danh mục cha nếu là danh mục cấp 2, hoặc để trống nếu là danh mục gốc.',
@@ -670,30 +670,30 @@ export default {
                     tips: 'Không nên xóa danh mục đang có sản phẩm liên kết; hãy chuyển sản phẩm sang danh mục khác trước khi xóa.',
                     permission: 'admin.product-categories.index',
                     routeName: 'admin.product-categories.index',
-                    keywords: ['danh mục', 'categories', 'phân loại sản phẩm', 'slug', 'cơ khí', 'decor'],
+                    keywords: ['danh mục', 'categories', 'phân loại sản phẩm', 'slug', 'thang cuốn', 'xích công nghiệp'],
                 },
 
                 // 2. FACTORY - Services
                 {
                     id: 'services',
                     category: 'FACTORY',
-                    categoryName: '2. Vận hành Xưởng In 3D',
+                    categoryName: '2. Danh mục & Báo giá B2B',
                     categoryBadge: 'bg-emerald-100 text-emerald-700',
                     icon: 'pi pi-cog',
                     iconBg: 'bg-emerald-50 text-emerald-600',
-                    title: 'Dịch vụ In 3D & Thiết kế CAD',
-                    summary: 'Biên tập trang dịch vụ chuyên sâu với các khối JSON động: Hero, Bảng thông số kỹ thuật, Quy trình 5 bước, Ưu điểm, Bảng giá và FAQ.',
+                    title: 'Giải pháp & Dịch vụ Kỹ thuật',
+                    summary: 'Biên tập trang giải pháp chuyên sâu với các khối JSON động: Hero, Bảng thông số kỹ thuật, Quy trình 5 bước, Ưu điểm, Cam kết và FAQ.',
                     steps: [
-                        'Chọn dịch vụ cần chỉnh sửa (ví dụ: In 3D FDM, In 3D SLA Resin, Thiết kế 3D & Reverse Engineering...).',
+                        'Chọn dịch vụ cần chỉnh sửa (ví dụ: Cung ứng Phụ tùng Thang cuốn, Hệ thống Xích tải & Băng tải, Giải pháp Quạt BLDC HVLS...).',
                         'Cập nhật Tiêu đề, Tóm tắt và Nội dung chi tiết song ngữ VI/EN.',
-                        'Cấu hình khối "Bảng thông số kỹ thuật": nhập các thông số độ chính xác (±0.1mm), vật liệu (PLA, ABS, Carbon, Resin...), kích thước bàn in.',
-                        'Kiểm tra khối "Quy trình 5 bước": Tải file -> Báo giá -> Duyệt mẫu -> In 3D -> Giao hàng.',
-                        'Cập nhật khối "Câu hỏi thường gặp (FAQ)" đặc thù của từng công nghệ in và nhấn "Lưu thay đổi".',
+                        'Cấu hình khối "Bảng thông số kỹ thuật": nhập tiêu chuẩn kỹ thuật (EN 115, ISO 9001, DIN/ANSI), vật liệu (40Cr, SUS304/316, EPDM...), tải trọng.',
+                        'Kiểm tra khối "Quy trình 5 bước": Tiếp nhận thông số -> Đối chiếu OEM -> Báo giá & Tiến độ -> Kiểm định CO/CQ -> Giao hàng & Hỗ trợ.',
+                        'Cập nhật khối "Câu hỏi thường gặp (FAQ)" đặc thù của từng mảng giải pháp và nhấn "Lưu thay đổi".',
                     ],
                     tips: 'Khối dữ liệu JSON động của trang dịch vụ quyết định giao diện hiển thị ngoài Frontend; kiểm tra cẩn thận cả 2 tab ngôn ngữ trước khi lưu.',
                     permission: 'admin.services.index',
                     routeName: 'admin.services.index',
-                    keywords: ['dịch vụ', 'services', 'fdm', 'sla', 'sls', 'resin', 'thiết kế cad', 'quy trình', 'thông số', 'faq'],
+                    keywords: ['dịch vụ', 'services', 'thang cuốn', 'băng tải', 'bldc', 'kỹ thuật', 'quy trình', 'thông số', 'faq'],
                 },
 
                 // 3. CONTENT - Sliders & Banners
@@ -709,8 +709,8 @@ export default {
                     steps: [
                         'Chọn vị trí banner cần quản lý: Hero Banner Trang chủ hoặc lọc theo position "HOME_FLIP_ANNOUNCEMENT".',
                         'Với Hero Banner: Tải lên Ảnh Desktop (1920x800px) và Ảnh Mobile (768x600px) để banner hiển thị sắc nét trên điện thoại.',
-                        'Điền Tiêu đề lớn (Headline), Mô tả ngắn và Nhãn nút bấm kèm đường dẫn liên kết (ví dụ: dẫn tới trang /dich-vu-in-3d hoặc nút Báo giá).',
-                        'Với HOME_FLIP_ANNOUNCEMENT: Nhập nội dung thông điệp lật (ví dụ: "Nhận báo giá in 3D nhanh trong 15 phút", "Giao hàng toàn quốc").',
+                        'Điền Tiêu đề lớn (Headline), Mô tả ngắn và Nhãn nút bấm kèm đường dẫn liên kết (ví dụ: dẫn tới trang /san-pham hoặc nút Báo giá).',
+                        'Với HOME_FLIP_ANNOUNCEMENT: Nhập nội dung thông điệp lật (ví dụ: "Tư vấn kỹ thuật & Báo giá nhanh B2B", "Cung ứng phụ tùng OEM toàn quốc").',
                         'Thiết lập Thứ tự hiển thị và chuyển trạng thái sang "Kích hoạt".',
                     ],
                     tips: 'Dung lượng ảnh Hero Desktop nên dưới 350KB định dạng WebP để tối ưu chỉ số Core Web Vitals (LCP) của trang web.',
@@ -727,19 +727,19 @@ export default {
                     categoryBadge: 'bg-purple-100 text-purple-700',
                     icon: 'pi pi-file-edit',
                     iconBg: 'bg-purple-50 text-purple-600',
-                    title: 'Bài viết & Tin tức Công nghệ 3D',
-                    summary: 'Xuất bản các bài viết chia sẻ kiến thức công nghệ in 3D, hướng dẫn chọn vật liệu, case study dự án cơ khí và tin tức xưởng.',
+                    title: 'Bài viết & Tin tức Kỹ thuật',
+                    summary: 'Xuất bản các bài viết chia sẻ kiến thức bảo trì thang cuốn, lựa chọn xích tải công nghiệp, tiết kiệm điện nhà xưởng và tin tức dự án.',
                     steps: [
                         'Nhấn "Thêm bài viết mới" và nhập Tiêu đề hấp dẫn, chuẩn từ khóa SEO.',
                         'Soạn thảo nội dung bằng trình biên tập Rich Text (hỗ trợ chèn tiêu đề H2, H3, bảng so sánh và ảnh minh họa).',
                         'Tải lên Ảnh đại diện bài viết (tỉ lệ 16:9, kích thước chuẩn 1200x675px).',
-                        'Chọn Danh mục bài viết tương ứng và gắn các thẻ Tag liên quan (FDM, SLA, Vật liệu PLA, Thiết kế CAD...).',
+                        'Chọn Danh mục bài viết tương ứng và gắn các thẻ Tag liên quan (Xích thang cuốn, Universal Chains, Quạt BLDC, Bảo trì...).',
                         'Điền Meta Title, Meta Description, kiểm tra đường dẫn Slug không dấu và chuyển sang trạng thái "Xuất bản (PUBLISHED)".',
                     ],
-                    tips: 'Chèn liên kết nội bộ (Internal Link) trỏ về trang Dịch vụ in 3D hoặc form Báo giá trong thân bài viết để tăng tỉ lệ chuyển đổi khách hàng.',
+                    tips: 'Chèn liên kết nội bộ (Internal Link) trỏ về trang Sản phẩm hoặc form Báo giá B2B trong thân bài viết để tăng tỉ lệ chuyển đổi.',
                     permission: 'admin.posts.index',
                     routeName: 'admin.posts.index',
-                    keywords: ['bài viết', 'posts', 'tin tức', 'blog', 'kiến thức in 3d', 'seo', 'slug', 'rich text'],
+                    keywords: ['bài viết', 'posts', 'tin tức', 'blog', 'kiến thức kỹ thuật', 'seo', 'slug', 'rich text'],
                 },
 
                 // 3. CONTENT - Post Categories
@@ -751,7 +751,7 @@ export default {
                     icon: 'pi pi-folder',
                     iconBg: 'bg-purple-50 text-purple-600',
                     title: 'Danh mục Tin tức & Kiến thức',
-                    summary: 'Phân loại các chủ đề bài viết như: Kiến thức In 3D, Vật liệu & Kỹ thuật, Dự án Tiêu biểu, Tin tức HH Maker.',
+                    summary: 'Phân loại các chủ đề bài viết như: Kiến thức Kỹ thuật, Cẩm nang Bảo trì, Dự án Tiêu biểu, Tin tức Thành Khang Tecsat.',
                     steps: [
                         'Thêm danh mục mới với tên Tiếng Việt và Tiếng Anh.',
                         'Cấu hình Slug và Mô tả ngắn cho chuyên mục.',
@@ -815,9 +815,9 @@ export default {
                     icon: 'pi pi-envelope',
                     iconBg: 'bg-slate-100 text-slate-700',
                     title: 'Mẫu Email Thông báo Tự động',
-                    summary: 'Tùy biến nội dung email gửi tự động cho khách khi gửi yêu cầu báo giá, xác nhận đơn hàng hoặc cập nhật tiến độ in.',
+                    summary: 'Tùy biến nội dung email gửi tự động cho khách khi gửi yêu cầu báo giá, xác nhận đơn hàng hoặc cập nhật tiến độ giao nhận.',
                     steps: [
-                        'Chọn mẫu email cần chỉnh sửa (ví dụ: Xác nhận đã nhận yêu cầu báo giá, Thông báo đơn in 3D hoàn tất).',
+                        'Chọn mẫu email cần chỉnh sửa (ví dụ: Xác nhận đã nhận yêu cầu báo giá B2B, Thông báo đơn hàng hoàn tất).',
                         'Cập nhật Tiêu đề thư (Subject) và nội dung thân thư.',
                         'Sử dụng các biến động có sẵn: {customer_name}, {quote_id}, {service_name}, {phone}, {created_at}...',
                         'Lưu mẫu và gửi thử nghiệm một email test để kiểm tra định dạng hiển thị trên Gmail/Outlook.',
@@ -844,7 +844,7 @@ export default {
                         'Sao chép đường dẫn URL của tệp để nhúng vào bài viết hoặc giao diện khi cần.',
                         'Xóa các tệp rác hoặc ảnh trùng lặp để tiết kiệm dung lượng ổ cứng máy chủ.',
                     ],
-                    tips: 'Trước khi tải ảnh lên, hãy đổi tên file tiếng Việt không dấu (ví dụ: mo-hinh-in-3d-sla-nhua-trong.jpg) để chuẩn SEO hình ảnh.',
+                    tips: 'Trước khi tải ảnh lên, hãy đổi tên file tiếng Việt không dấu (ví dụ: xich-tai-thang-cuon-tl133.webp) để chuẩn SEO hình ảnh.',
                     permission: 'admin.files.index',
                     routeName: 'admin.files.index',
                     keywords: ['tệp', 'files', 'media', 'thư viện ảnh', 'upload', 'hình ảnh', 'tài liệu'],
@@ -859,12 +859,12 @@ export default {
                     icon: 'pi pi-phone',
                     iconBg: 'bg-slate-100 text-slate-700',
                     title: 'Cài đặt chung & Hotline / Zalo',
-                    summary: 'Cấu hình số điện thoại Hotline, số Zalo nhận file CAD nhanh, địa chỉ xưởng in, email liên hệ và mã nhúng script.',
+                    summary: 'Cấu hình số điện thoại Hotline, số Zalo tư vấn kỹ thuật, địa chỉ văn phòng/kho, email liên hệ và mã nhúng script.',
                     steps: [
                         'Truy cập trang Cài đặt chung (/admin/settings/form/general).',
-                        'Cập nhật Số điện thoại Hotline chính và Số Zalo kỹ thuật (dùng để khách chat gửi file CAD dung lượng lớn).',
-                        'Cập nhật Địa chỉ xưởng in 3D, Thời gian mở cửa nhận file và Email nhận RFQ.',
-                        'Kiểm tra các liên kết Mạng xã hội: Facebook Fanpage, Kênh TikTok/YouTube mô hình 3D.',
+                        'Cập nhật Số điện thoại Hotline chính và Số Zalo kỹ thuật (dùng để đối tác gửi bản vẽ hoặc mã linh kiện nhanh).',
+                        'Cập nhật Địa chỉ trụ sở & văn phòng giao dịch, Giờ làm việc và Email nhận RFQ.',
+                        'Kiểm tra các liên kết Mạng xã hội: Facebook Fanpage, Kênh TikTok/YouTube kỹ thuật.',
                         'Nhấn "Lưu cấu hình" và tải lại trang chủ để kiểm tra số điện thoại trên nút gọi nhanh / widget Zalo.',
                     ],
                     tips: 'Số điện thoại và Zalo tại đây xuất hiện trên toàn bộ Header, Footer và popup Báo giá nhanh của website.',
@@ -883,10 +883,10 @@ export default {
                     icon: 'pi pi-user-plus',
                     iconBg: 'bg-slate-100 text-slate-700',
                     title: 'Quản trị viên CMS',
-                    summary: 'Quản lý danh sách nhân sự vận hành xưởng, kỹ thuật viên CAD và biên tập viên nội dung có quyền đăng nhập CMS.',
+                    summary: 'Quản lý danh sách nhân sự vận hành, kỹ sư tư vấn kỹ thuật và biên tập viên nội dung có quyền đăng nhập CMS.',
                     steps: [
                         'Nhấn "Thêm quản trị viên mới" và nhập Họ tên, Email công việc và Mật khẩu khởi tạo an toàn.',
-                        'Gán Vai trò phù hợp cho nhân viên (ví dụ: Kỹ thuật viên xưởng, Biên tập viên nội dung hoặc Super Admin).',
+                        'Gán Vai trò phù hợp cho nhân viên (ví dụ: Kỹ sư tư vấn, Biên tập viên nội dung hoặc Super Admin).',
                         'Kích hoạt tài khoản và gửi thông tin đăng nhập bảo mật cho nhân sự.',
                         'Khóa quyền truy cập ngay lập tức khi nhân sự chuyển đổi vị trí hoặc nghỉ việc.',
                     ],
@@ -905,7 +905,7 @@ export default {
                     icon: 'pi pi-key',
                     iconBg: 'bg-slate-100 text-slate-700',
                     title: 'Phân quyền Vai trò (RBAC)',
-                    summary: 'Thiết lập ma trận quyền hạn chi tiết (Xem, Thêm, Sửa, Xóa) cho từng nhóm vị trí công việc trong xưởng in 3D.',
+                    summary: 'Thiết lập ma trận quyền hạn chi tiết (Xem, Thêm, Sửa, Xóa) cho từng nhóm vị trí công việc trong hệ thống quản trị.',
                     steps: [
                         'Xem danh sách các Vai trò hiện có hoặc nhấn "Thêm vai trò mới".',
                         'Tích chọn các nhóm quyền tương ứng với trách nhiệm: Quản lý Báo giá, Quản lý Sản phẩm, Biên tập Bài viết, Quản lý Cài đặt...',

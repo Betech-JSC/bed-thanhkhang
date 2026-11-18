@@ -1,11 +1,8 @@
 <template>
     <div class="flex items-center flex-shrink-0 p-5 border-b border-gray-800">
-        <Link href="/" class="flex items-center w-full p-2 space-x-2">
-            <img
-                src="/assets/images/header/figma-header-logo.svg"
-                alt="HH MAKER"
-                class="max-h-10 w-auto object-contain"
-            />
+        <Link href="/" class="flex items-center w-full p-2 space-x-2.5 text-white">
+            <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-primary/20 border border-primary/40 text-primary font-black text-xs tracking-wider">TK</span>
+            <span class="font-extrabold text-sm tracking-wider uppercase text-white">Thành Khang Tecsat</span>
         </Link>
     </div>
     <nav class="flex-1 px-2 pb-4 space-y-1 navs">

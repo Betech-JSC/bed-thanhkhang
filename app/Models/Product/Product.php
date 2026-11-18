@@ -621,62 +621,41 @@ class Product extends BaseModel
 
     public function syncSpecificationsAndMetadata(): void
     {
-        $defaults = static::getDefaultSpecificationsFor($this);
+        $isCmsSave = strpos(request()->getRequestUri(), '/products/store') !== false;
+
         $rawSpecs = $this->attributes['specifications'] ?? null;
+        if ($isCmsSave && request()->has('specifications')) {
+            $reqSpecs = request()->input('specifications');
+            if (is_array($reqSpecs) || is_string($reqSpecs)) {
+                $rawSpecs = $reqSpecs;
+            }
+        }
         $storedSpecs = is_array($rawSpecs) ? $rawSpecs : (is_string($rawSpecs) ? json_decode($rawSpecs, true) : []);
         if (!is_array($storedSpecs)) {
             $storedSpecs = [];
         }
 
-        // Backfill individual columns from stored specifications or defaults if empty
-        if (empty($this->sample_size)) {
-            $this->sample_size = $storedSpecs[2]['value'] ?? $defaults[2]['value'] ?? null;
-        }
-        if (empty($this->layer_height)) {
-            $this->layer_height = $storedSpecs[3]['value'] ?? $defaults[3]['value'] ?? null;
-        }
-        if (empty($this->nozzle_size)) {
-            $this->nozzle_size = $storedSpecs[4]['value'] ?? $defaults[4]['value'] ?? null;
-        }
-        if (empty($this->infill)) {
-            $this->infill = $storedSpecs[5]['value'] ?? $defaults[5]['value'] ?? null;
-        }
-        if (empty($this->support_material)) {
-            $this->support_material = $storedSpecs[6]['value'] ?? $defaults[6]['value'] ?? null;
+        $normalizedSpecs = [];
+        foreach ($storedSpecs as $row) {
+            if (is_array($row) && isset($row['label']) && trim((string) $row['label']) !== '') {
+                $normalizedSpecs[] = [
+                    'label' => trim((string) $row['label']),
+                    'value' => isset($row['value']) ? trim((string) $row['value']) : '',
+                ];
+            }
         }
 
-        $defaultMeta = static::getDefaultPdpMetadataFor($this);
-        if (empty($this->image_color_label)) {
-            $this->image_color_label = $defaultMeta['image_color_label'];
+        if (empty($normalizedSpecs)) {
+            $normalizedSpecs = static::getDefaultSpecificationsFor($this);
         }
-        if (empty($this->customization_label)) {
-            $this->customization_label = $defaultMeta['customization_label'];
-        }
-
-        $isCmsSave = strpos(request()->getRequestUri(), '/products/store') !== false;
-        $techValue = ($isCmsSave && !empty($this->print_technology))
-            ? $this->print_technology
-            : ($storedSpecs[0]['value'] ?? $this->print_technology ?? $defaults[0]['value']);
-        $matValue = ($isCmsSave && !empty($this->material))
-            ? $this->material
-            : ($storedSpecs[1]['value'] ?? $this->material ?? $defaults[1]['value']);
-
-        $syncedSpecs = [
-            ['label' => 'Công nghệ in', 'value' => $techValue],
-            ['label' => 'Vật liệu', 'value' => $matValue],
-            ['label' => 'Kích thước mẫu', 'value' => $this->sample_size ?: ($defaults[2]['value'] ?? '')],
-            ['label' => 'Chiều cao lớp in', 'value' => $this->layer_height ?: ($defaults[3]['value'] ?? '')],
-            ['label' => 'Đầu phun', 'value' => $this->nozzle_size ?: ($defaults[4]['value'] ?? '')],
-            ['label' => 'Mật độ ruột', 'value' => $this->infill ?: ($defaults[5]['value'] ?? '')],
-            ['label' => 'Vật liệu hỗ trợ', 'value' => $this->support_material ?: ($defaults[6]['value'] ?? '')],
-        ];
 
         if (\Illuminate\Support\Facades\Schema::hasColumn('products', 'specifications')) {
-            $this->attributes['specifications'] = json_encode($syncedSpecs, JSON_UNESCAPED_UNICODE);
+            $this->attributes['specifications'] = json_encode($normalizedSpecs, JSON_UNESCAPED_UNICODE);
         } else {
             unset($this->attributes['specifications']);
         }
 
+        $defaultMeta = static::getDefaultPdpMetadataFor($this);
         $rawMeta = $this->attributes['pdp_metadata'] ?? null;
         $storedMeta = is_array($rawMeta) ? $rawMeta : (is_string($rawMeta) ? json_decode($rawMeta, true) : []);
         if (!is_array($storedMeta)) {
@@ -687,10 +666,13 @@ class Product extends BaseModel
             $storedMeta = array_merge($storedMeta, request()->input('pdp_metadata'));
         }
 
-        $syncedMeta = array_merge($defaultMeta, array_filter($storedMeta, fn($v) => $v !== null && $v !== ''), [
-            'image_color_label' => $this->image_color_label ?: $defaultMeta['image_color_label'],
-            'customization_label' => $this->customization_label ?: $defaultMeta['customization_label'],
-        ]);
+        $syncedMeta = array_merge($defaultMeta, array_filter($storedMeta, fn($v) => $v !== null && $v !== ''));
+        if (!empty($this->image_color_label)) {
+            $syncedMeta['image_color_label'] = $this->image_color_label;
+        }
+        if (!empty($this->customization_label)) {
+            $syncedMeta['customization_label'] = $this->customization_label;
+        }
 
         if (\Illuminate\Support\Facades\Schema::hasColumn('products', 'pdp_metadata')) {
             $this->attributes['pdp_metadata'] = json_encode($syncedMeta, JSON_UNESCAPED_UNICODE);
@@ -712,52 +694,25 @@ class Product extends BaseModel
 
     public function resolveSpecifications(): array
     {
-        $isEn = (app()->getLocale() === 'en' || (function_exists('current_locale') && current_locale() === 'en'));
-        $defaults = static::getDefaultSpecificationsFor($this);
+        $raw = $this->attributes['specifications'] ?? null;
+        $stored = is_array($raw) ? $raw : (is_string($raw) ? json_decode($raw, true) : []);
 
-        if ($isEn) {
-            if (!empty($this->sample_size)) {
-                $defaults[2]['value'] = $this->sample_size;
-            }
-            if (!empty($this->layer_height)) {
-                $defaults[3]['value'] = $this->layer_height;
-            }
-            if (!empty($this->nozzle_size)) {
-                $defaults[4]['value'] = $this->nozzle_size;
-            }
-            return $defaults;
-        }
-
-        $specs = $defaults;
-        if (!empty($this->attributes['specifications'])) {
-            $raw = $this->attributes['specifications'];
-            $stored = is_array($raw) ? $raw : json_decode($raw, true);
-            if (!empty($stored) && is_array($stored)) {
-                foreach ($stored as $idx => $row) {
-                    if (isset($specs[$idx]) && !empty($row['value'])) {
-                        $specs[$idx]['value'] = $row['value'];
-                    }
+        if (is_array($stored) && !empty($stored)) {
+            $normalized = [];
+            foreach ($stored as $row) {
+                if (is_array($row) && isset($row['label']) && trim((string) $row['label']) !== '') {
+                    $normalized[] = [
+                        'label' => trim((string) $row['label']),
+                        'value' => isset($row['value']) ? trim((string) $row['value']) : '',
+                    ];
                 }
             }
+            if (!empty($normalized)) {
+                return $normalized;
+            }
         }
 
-        if (!empty($this->sample_size)) {
-            $specs[2]['value'] = $this->sample_size;
-        }
-        if (!empty($this->layer_height)) {
-            $specs[3]['value'] = $this->layer_height;
-        }
-        if (!empty($this->nozzle_size)) {
-            $specs[4]['value'] = $this->nozzle_size;
-        }
-        if (!empty($this->infill)) {
-            $specs[5]['value'] = $this->infill;
-        }
-        if (!empty($this->support_material)) {
-            $specs[6]['value'] = $this->support_material;
-        }
-
-        return $specs;
+        return static::getDefaultSpecificationsFor($this);
     }
 
     public function resolvePdpMetadata(?array $specifications = null): array
@@ -771,26 +726,25 @@ class Product extends BaseModel
             $storedMeta = [];
         }
 
-        $isEn = (app()->getLocale() === 'en' || (function_exists('current_locale') && current_locale() === 'en'));
-        $merged = $isEn ? $defaults : array_merge($defaults, array_filter($storedMeta, fn($v) => $v !== null && $v !== ''));
+        $merged = array_merge($defaults, array_filter($storedMeta, fn($v) => $v !== null && $v !== ''));
 
-        $colorLabel = (!$isEn && !empty($this->image_color_label))
+        $colorLabel = !empty($this->image_color_label)
             ? $this->image_color_label
             : ($merged['image_color_label'] ?? $defaults['image_color_label']);
 
-        $customLabel = (!$isEn && !empty($this->customization_label))
+        $customLabel = !empty($this->customization_label)
             ? $this->customization_label
             : ($merged['customization_label'] ?? $defaults['customization_label']);
 
         return [
-            'print_technology' => $this->print_technology ?: ($specifications[0]['value'] ?? 'FDM High-Precision'),
-            'material' => $this->material ?: ($specifications[1]['value'] ?? 'Nhựa PLA Matte Cao Cấp'),
-            'lead_time' => $this->lead_time,
-            'sample_size' => $this->sample_size ?: ($specifications[2]['value'] ?? ''),
-            'layer_height' => $this->layer_height ?: ($specifications[3]['value'] ?? ''),
-            'nozzle_size' => $this->nozzle_size ?: ($specifications[4]['value'] ?? ''),
-            'infill' => $this->infill ?: ($specifications[5]['value'] ?? ''),
-            'support_material' => $this->support_material ?: ($specifications[6]['value'] ?? ''),
+            'print_technology' => $this->print_technology ?: ($merged['print_technology'] ?? ''),
+            'material' => $this->material ?: ($merged['material'] ?? ''),
+            'lead_time' => $this->lead_time ?: ($merged['lead_time'] ?? ''),
+            'sample_size' => $this->sample_size ?: ($merged['sample_size'] ?? ''),
+            'layer_height' => $this->layer_height ?: ($merged['layer_height'] ?? ''),
+            'nozzle_size' => $this->nozzle_size ?: ($merged['nozzle_size'] ?? ''),
+            'infill' => $this->infill ?: ($merged['infill'] ?? ''),
+            'support_material' => $this->support_material ?: ($merged['support_material'] ?? ''),
             'color' => $colorLabel,
             'image_color_label' => $colorLabel,
             'customization' => $customLabel,
@@ -810,129 +764,66 @@ class Product extends BaseModel
     public static function getDefaultPdpMetadataFor(self $product): array
     {
         $isEn = (app()->getLocale() === 'en' || (function_exists('current_locale') && current_locale() === 'en'));
-        $slug = $product->slug ?? $product->seo_slug ?? '';
-
-        $colorMapVi = [
-            'mo-hinh-cao-trang-tri' => 'Cam',
-            'iron-man-mark-85-resin-8k' => 'Đỏ - Vàng Metallic',
-            'mo-hinh-iron-man-chibi' => 'Đỏ - Vàng Metallic',
-            'khung-vo-robot-carbon-fiber' => 'Đen Carbon Nhám',
-            'hop-dung-danh-thiep-cyberpunk' => 'Đen Nhám - Vàng Neon',
-            'moc-khoa-turbine-phan-luc' => 'Xám Titan - Xanh',
-            'gia-do-tai-nghe-voronoi' => 'Đen Nhám (Matte Black)',
-            'cum-banh-rang-hanh-tinh' => 'Xám Cơ Khí - Cam',
-            'tuong-cyber-wolf-low-poly' => 'Xám Bạc Ánh Kim',
-            'moc-khoa-dong-co-v8-piston' => 'Xám Kim Loại - Đỏ',
-            'den-ngu-mat-trang-lithophane' => 'Trắng Ngà Ánh Vàng',
-            'khop-noi-cau-bionic-sls' => 'Xám Nylon Kỹ Thuật',
-            'mo-hinh-tau-vu-tru-discovery' => 'Trắng Vũ Trụ - Đen',
-            'khay-to-chuc-day-cap-modular' => 'Đen Nhám - Cam',
-            'moc-khoa-vo-lang-f1-quick-release' => 'Đen Carbon - Đỏ Racing',
-            'den-ban-led-hexagon-to-ong' => 'Đen Nhám - Trắng Khuếch Tán',
-            'vo-case-ban-phim-co-custom' => 'Xám Space Grey',
-            'moc-khoa-trai-tim-co-khi' => 'Đỏ Ruby - Vàng Đồng',
-            'mo-hinh-phi-hanh-gia' => 'Trắng Tuyết - Vàng Gold',
-            'chau-cay-da-giac-mini' => 'Trắng Sữa (Matte White)',
-            'de-do-dien-thoai-mecha' => 'Đen Nhám - Cam',
-            'robot-khop-cu-dong' => 'Cam - Xám Cơ Khí',
-        ];
-
-        $colorMapEn = [
-            'mo-hinh-cao-trang-tri' => 'Orange',
-            'iron-man-mark-85-resin-8k' => 'Metallic Red & Gold',
-            'mo-hinh-iron-man-chibi' => 'Metallic Red & Gold',
-            'khung-vo-robot-carbon-fiber' => 'Matte Carbon Black',
-            'hop-dung-danh-thiep-cyberpunk' => 'Matte Black & Neon Yellow',
-            'moc-khoa-turbine-phan-luc' => 'Titanium Grey & Blue',
-            'gia-do-tai-nghe-voronoi' => 'Matte Black',
-            'cum-banh-rang-hanh-tinh' => 'Mechanical Grey & Orange',
-            'tuong-cyber-wolf-low-poly' => 'Metallic Silver Grey',
-            'moc-khoa-dong-co-v8-piston' => 'Gunmetal Grey & Red',
-            'den-ngu-mat-trang-lithophane' => 'Warm Ivory White',
-            'khop-noi-cau-bionic-sls' => 'Engineering Nylon Grey',
-            'mo-hinh-tau-vu-tru-discovery' => 'Space White & Black',
-            'khay-to-chuc-day-cap-modular' => 'Matte Black & Orange',
-            'moc-khoa-vo-lang-f1-quick-release' => 'Carbon Black & Racing Red',
-            'den-ban-led-hexagon-to-ong' => 'Matte Black & Frosted White',
-            'vo-case-ban-phim-co-custom' => 'Space Grey',
-            'moc-khoa-trai-tim-co-khi' => 'Ruby Red & Brass Gold',
-            'mo-hinh-phi-hanh-gia' => 'Snow White & Gold',
-            'chau-cay-da-giac-mini' => 'Matte White',
-            'de-do-dien-thoai-mecha' => 'Matte Black & Orange',
-            'robot-khop-cu-dong' => 'Orange & Mechanical Grey',
-        ];
-
-        $isIronMan = in_array($slug, ['mo-hinh-iron-man-chibi', 'iron-man-mark-85-resin-8k'], true);
 
         if ($isEn) {
             return [
-                'image_color_label' => $colorMapEn[$slug] ?? 'Orange',
-                'customization_label' => 'Color · Dimensions · Quantity',
-                'story_title' => $isIronMan
-                    ? 'Technological Legend. Sharp Down to Every Detail.'
-                    : 'Compact. Full of Wonders to Explore.',
-                'story_intro' => $product->description ?: 'The low-poly fox sculpture is a modern statement piece for living and working spaces. Crafted with crisp faceted geometry and a warm orange hue, it brings refined energy and creativity to any corner.',
-                'feature1_title' => 'Sharp Low-Poly Contours',
-                'feature1_desc' => 'Faceted edges are smoothly finished to catch light uniquely from every angle, showcasing the dimensional precision of FDM 3D printing.',
-                'feature2_title' => 'Customizable on Request',
-                'feature2_desc' => 'Work with HH Maker to customize colors, adjust scale dimensions, or order in bulk for corporate gifts and event decor.',
+                'image_color_label' => 'Industrial Standard',
+                'customization_label' => 'Part No. · Specs · Quantity',
+                'story_title' => $product->title ?: 'Precision Industrial Component',
+                'story_intro' => $product->description ?: 'Genuine Universal Chains industrial component distributed by Thanh Khang Tecsat with full CO/CQ certification.',
+                'feature1_title' => 'Structure & Metallurgy',
+                'feature1_desc' => 'Manufactured from high-tensile alloy and carbon steel with precision heat treatment for heavy-duty continuous operation.',
+                'feature2_title' => 'Standards & Maintenance',
+                'feature2_desc' => 'Engineered to ISO / JB/T / DIN / ANSI industrial standards. Periodic lubrication and pitch elongation inspection are recommended.',
                 'manufacturing_info' => [
                     [
-                        'title' => 'Tailored Per-Model Fabrication',
-                        'desc' => 'Each piece is 3D printed with slicing parameters optimized for its specific geometry, ensuring structural durability and crisp surface aesthetics.',
+                        'title' => 'Genuine Industrial Supply',
+                        'desc' => 'Supplied with complete Certificate of Origin (CO) and Certificate of Quality (CQ) for B2B projects.',
                     ],
                     [
-                        'title' => 'Hand-Inspected Post-Processing',
-                        'desc' => 'After printing, every model is carefully inspected, support structures are removed, and fine details are cleaned before protective packaging.',
+                        'title' => 'Precision Quality Control',
+                        'desc' => 'Inspected for dimensional pitch accuracy, tensile proof load, and surface hardness prior to dispatch.',
                     ],
                     [
-                        'title' => 'Authentic 3D Printed Surface Texture',
-                        'desc' => 'FDM 3D printed products feature subtle characteristic layer lines—a signature hallmark of additive manufacturing rather than a surface defect.',
+                        'title' => 'Technical Fitment Support',
+                        'desc' => 'Thanh Khang Tecsat engineering team verifies sprocket compatibility and operating clearances.',
                     ],
                 ],
                 'care_instructions' => [
-                    'Avoid placing the product in environments exceeding 55°C (such as car trunks, direct intense window sunlight, or near heat sources) to prevent softening or warping.',
-                    'Clean gently using a soft brush, dry microfiber cloth, or damp cloth wrung dry. Do not use harsh chemical solvents or high-concentration alcohol.',
-                    'Ideal for indoor display on work desks, bookshelves, studio setups, or living spaces.',
-                    'Avoid dropping from height or applying excessive impact force to thin or pointed geometric edges.',
+                    'Inspect chain elongation and roller wear periodically according to equipment operating hours.',
+                    'Use manufacturer-recommended industrial lubricants suited to ambient temperature and dust conditions.',
+                    'Replace drive and driven chain pairs simultaneously on escalators and vertical lifts to maintain synchronization.',
                 ],
             ];
         }
 
-        $defaultFoxIntro = 'Mô hình chú cáo low-poly là điểm nhấn hiện đại cho không gian sống và làm việc. Thiết kế tạo hình từ các mặt cắt đa giác sắc sảo, kết hợp cùng gam màu cam ấm áp mang đến cảm giác tinh tế, sáng tạo và đầy năng lượng';
-
         return [
-            'image_color_label' => $colorMapVi[$slug] ?? 'Cam',
-            'customization_label' => 'Màu sắc · Kích thước · Số lượng',
-            'story_title' => $isIronMan
-                ? 'Huyền thoại công nghệ. Sắc nét đến từng chi tiết.'
-                : 'Nhỏ gọn. Nhiều điều để khám phá.',
-            'story_intro' => ($slug === 'mo-hinh-cao-trang-tri')
-                ? $defaultFoxIntro
-                : ($product->description ?: $defaultFoxIntro),
-            'feature1_title' => 'Tạo hình Low-Poly sắc nét',
-            'feature1_desc' => 'Các góc cạnh đa giác được hoàn thiện mượt mà, phản chiếu ánh sáng độc đáo ở từng góc nhìn, thể hiện rõ thế mạnh độ chính xác của công nghệ in 3D FDM.',
-            'feature2_title' => 'Tùy chỉnh theo yêu cầu',
-            'feature2_desc' => 'Bạn có thể trao đổi với HH Maker để thay đổi màu sắc, điều chỉnh kích thước (tỉ lệ scale) hoặc đặt số lượng lớn làm quà tặng, decor sự kiện.',
+            'image_color_label' => 'Tiêu chuẩn công nghiệp',
+            'customization_label' => 'Mã phụ tùng · Quy cách · Số lượng',
+            'story_title' => $product->title ?: 'Linh kiện cơ khí công nghiệp chính hãng',
+            'story_intro' => $product->description ?: 'Linh kiện cơ khí công nghiệp chính hãng do Thành Khang Tecsat phân phối, đáp ứng tiêu chuẩn vận hành liên tục và đầy đủ hồ sơ CO/CQ.',
+            'feature1_title' => 'Cấu tạo & Vật liệu',
+            'feature1_desc' => 'Chế tạo từ thép hợp kim và thép carbon cường độ cao, nhiệt luyện chính xác giúp chống mài mòn và chịu tải trọng kéo lớn.',
+            'feature2_title' => 'Tiêu chuẩn & Bảo trì',
+            'feature2_desc' => 'Tuân thủ các tiêu chuẩn công nghiệp quốc tế (ISO, JB/T, DIN, ANSI). Khuyến nghị kiểm tra độ giãn bước và bôi trơn định kỳ.',
             'manufacturing_info' => [
                 [
-                    'title' => 'Gia công theo từng mẫu',
-                    'desc' => 'Sản phẩm được in 3D theo thông số kỹ thuật tối ưu cho từng hình khối, đảm bảo độ bền kết cấu và tính thẩm mỹ của bề mặt.',
+                    'title' => 'Phân phối chính hãng B2B',
+                    'desc' => 'Cung cấp đầy đủ chứng chỉ xuất xứ (CO), chứng nhận chất lượng (CQ) và hóa đơn VAT cho dự án.',
                 ],
                 [
-                    'title' => 'Hoàn thiện thủ công',
-                    'desc' => 'Sau khi in, mẫu được kiểm tra, xử lý phần hỗ trợ (support) và làm sạch các chi tiết thừa trước khi đóng gói.',
+                    'title' => 'Kiểm định thông số cơ khí',
+                    'desc' => 'Kiểm tra dung sai bước xích, tải trọng kéo đứt và độ cứng bề mặt trước khi xuất kho bàn giao.',
                 ],
                 [
-                    'title' => 'Đặc trưng bề mặt in 3D',
-                    'desc' => 'Sản phẩm in 3D FDM sẽ có các đường vân lớp in (layer lines) mảnh đặc trưng. Đây là nét riêng của công nghệ chế tác bồi đắp, không phải lỗi sản phẩm.',
+                    'title' => 'Hỗ trợ kỹ thuật lắp đặt',
+                    'desc' => 'Đội ngũ kỹ sư Thành Khang Tecsat hỗ trợ đối chiếu bản vẽ, mã phụ tùng và thông số ăn khớp đĩa xích.',
                 ],
             ],
             'care_instructions' => [
-                'Tránh đặt sản phẩm ở nơi có nhiệt độ cao trên 55°C (như cốp xe hơi, sát cửa sổ nắng gắt trực tiếp hoặc gần nguồn nhiệt) để tránh làm mềm hoặc biến dạng nhựa PLA.',
-                'Vệ sinh nhẹ nhàng bằng chổi lông mềm, khăn khô hoặc khăn ẩm vắt kiệt nước. Không dùng hóa chất tẩy rửa mạnh hoặc cồn nồng độ cao.',
-                'Phù hợp trưng bày trong nhà, bàn làm việc, kệ sách hoặc không gian studio.',
-                'Hạn chế làm rơi từ độ cao hoặc tác động lực mạnh vào các chi tiết mảnh/nhọn của mô hình.',
+                'Kiểm tra độ giãn bước xích và độ mòn con lăn định kỳ theo số giờ vận hành của thiết bị.',
+                'Sử dụng dầu/mỡ bôi trơn công nghiệp phù hợp với tải trọng và điều kiện môi trường làm việc.',
+                'Đối với thang cuốn và thang nâng, nên thay đồng bộ cả hai dải xích trái/phải để đảm bảo độ đồng bộ.',
             ],
         ];
     }
@@ -940,463 +831,30 @@ class Product extends BaseModel
     public static function getDefaultSpecificationsFor(self $product): array
     {
         $isEn = (app()->getLocale() === 'en' || (function_exists('current_locale') && current_locale() === 'en'));
-        $slug = $product->slug ?? $product->seo_slug ?? '';
+        $specs = [];
 
-        $catalogSpecs = [
-            'mo-hinh-cao-trang-tri' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'FDM High-Precision'],
-                    ['label' => 'Vật liệu', 'value' => 'Nhựa PLA Matte Cao Cấp'],
-                    ['label' => 'Kích thước mẫu', 'value' => '120 x 85 x 140 mm'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.16 mm'],
-                    ['label' => 'Đầu phun', 'value' => '0.40 mm Hardened Steel'],
-                    ['label' => 'Mật độ ruột', 'value' => '20% Gyroid'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Không cần (Zero-support)'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'FDM High-Precision'],
-                    ['label' => 'Material', 'value' => 'Premium Matte PLA'],
-                    ['label' => 'Model Dimensions', 'value' => '120 x 85 x 140 mm'],
-                    ['label' => 'Layer Height', 'value' => '0.16 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => '0.40 mm Hardened Steel'],
-                    ['label' => 'Infill Density', 'value' => '20% Gyroid'],
-                    ['label' => 'Support Material', 'value' => 'None (Zero-support)'],
-                ],
-            ],
-            'iron-man-mark-85-resin-8k' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'SLA 8K Photochemical'],
-                    ['label' => 'Vật liệu', 'value' => '8K High-Detail Tough Resin'],
-                    ['label' => 'Kích thước mẫu', 'value' => '180 x 110 x 280 mm'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.025 mm'],
-                    ['label' => 'Đầu phun', 'value' => 'Quang hóa SLA (Laser UV 405nm)'],
-                    ['label' => 'Mật độ ruột', 'value' => 'Đặc 100% (Solid Resin)'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Support dễ tách (Light Touch)'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'SLA 8K Photochemical'],
-                    ['label' => 'Material', 'value' => '8K High-Detail Tough Resin'],
-                    ['label' => 'Model Dimensions', 'value' => '180 x 110 x 280 mm'],
-                    ['label' => 'Layer Height', 'value' => '0.025 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => 'Photochemical SLA (405nm UV Laser)'],
-                    ['label' => 'Infill Density', 'value' => '100% Solid Resin'],
-                    ['label' => 'Support Material', 'value' => 'Light Touch Peel Support'],
-                ],
-            ],
-            'khung-vo-robot-carbon-fiber' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'FDM Industrial Hardened Nozzle'],
-                    ['label' => 'Vật liệu', 'value' => 'PETG Gia Cường 20% Carbon Fiber (PETG-CF)'],
-                    ['label' => 'Kích thước mẫu', 'value' => '220 x 160 x 85 mm'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.20 mm'],
-                    ['label' => 'Đầu phun', 'value' => '0.40 mm Thép Tôi Cứng (Hardened Steel)'],
-                    ['label' => 'Mật độ ruột', 'value' => '40% Honeycomb Chịu Lực'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Tree Support Dễ Tách'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'FDM Industrial Hardened Nozzle'],
-                    ['label' => 'Material', 'value' => 'PETG Reinforced 20% Carbon Fiber (PETG-CF)'],
-                    ['label' => 'Model Dimensions', 'value' => '220 x 160 x 85 mm'],
-                    ['label' => 'Layer Height', 'value' => '0.20 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => '0.40 mm Hardened Steel'],
-                    ['label' => 'Infill Density', 'value' => '40% Structural Honeycomb'],
-                    ['label' => 'Support Material', 'value' => 'Easy-Peel Tree Support'],
-                ],
-            ],
-            'hop-dung-danh-thiep-cyberpunk' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'FDM Precision'],
-                    ['label' => 'Vật liệu', 'value' => 'PLA+ Matte Futuristic Finish'],
-                    ['label' => 'Kích thước mẫu', 'value' => '160 x 95 x 75 mm'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.16 mm'],
-                    ['label' => 'Đầu phun', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Mật độ ruột', 'value' => '15% Grid'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Không cần (Print-in-Place)'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'FDM Precision'],
-                    ['label' => 'Material', 'value' => 'PLA+ Matte Futuristic Finish'],
-                    ['label' => 'Model Dimensions', 'value' => '160 x 95 x 75 mm'],
-                    ['label' => 'Layer Height', 'value' => '0.16 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Infill Density', 'value' => '15% Grid'],
-                    ['label' => 'Support Material', 'value' => 'None (Print-in-Place)'],
-                ],
-            ],
-            'moc-khoa-turbine-phan-luc' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'SLA Precision Micro-Detail'],
-                    ['label' => 'Vật liệu', 'value' => 'Engineering Tough Resin / Titanium Coating'],
-                    ['label' => 'Kích thước mẫu', 'value' => 'Ø30 x 48 mm'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.025 mm'],
-                    ['label' => 'Đầu phun', 'value' => 'Quang hóa SLA (Laser UV)'],
-                    ['label' => 'Mật độ ruột', 'value' => 'Đặc 100%'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Micro-support tách siêu mịn'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'SLA Precision Micro-Detail'],
-                    ['label' => 'Material', 'value' => 'Engineering Tough Resin / Titanium Coating'],
-                    ['label' => 'Model Dimensions', 'value' => 'Ø30 x 48 mm'],
-                    ['label' => 'Layer Height', 'value' => '0.025 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => 'Photochemical SLA (UV Laser)'],
-                    ['label' => 'Infill Density', 'value' => '100% Solid'],
-                    ['label' => 'Support Material', 'value' => 'Ultra-fine Micro-support'],
-                ],
-            ],
-            'gia-do-tai-nghe-voronoi' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'FDM Advanced Parametric'],
-                    ['label' => 'Vật liệu', 'value' => 'PETG Gradient Bionic Structure'],
-                    ['label' => 'Kích thước mẫu', 'value' => '140 x 130 x 250 mm'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.20 mm'],
-                    ['label' => 'Đầu phun', 'value' => '0.40 mm Hardened Steel'],
-                    ['label' => 'Mật độ ruột', 'value' => '25% Gyroid'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Không cần (Cấu trúc Bionic tự chống đỡ)'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'FDM Advanced Parametric'],
-                    ['label' => 'Material', 'value' => 'PETG Gradient Bionic Structure'],
-                    ['label' => 'Model Dimensions', 'value' => '140 x 130 x 250 mm'],
-                    ['label' => 'Layer Height', 'value' => '0.20 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => '0.40 mm Hardened Steel'],
-                    ['label' => 'Infill Density', 'value' => '25% Gyroid'],
-                    ['label' => 'Support Material', 'value' => 'None (Self-supporting Bionic Lattice)'],
-                ],
-            ],
-            'cum-banh-rang-hanh-tinh' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'FDM High-Tolerance Engineering'],
-                    ['label' => 'Vật liệu', 'value' => 'Nylon PA12 Kỹ Thuật Tự Bôi Trơn'],
-                    ['label' => 'Kích thước mẫu', 'value' => '110 x 110 x 45 mm'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.16 mm'],
-                    ['label' => 'Đầu phun', 'value' => '0.40 mm Hardened Steel'],
-                    ['label' => 'Mật độ ruột', 'value' => '35% Rectilinear'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Không cần (Dung sai trục 0.2mm)'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'FDM High-Tolerance Engineering'],
-                    ['label' => 'Material', 'value' => 'Self-lubricating Engineering Nylon PA12'],
-                    ['label' => 'Model Dimensions', 'value' => '110 x 110 x 45 mm'],
-                    ['label' => 'Layer Height', 'value' => '0.16 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => '0.40 mm Hardened Steel'],
-                    ['label' => 'Infill Density', 'value' => '35% Rectilinear'],
-                    ['label' => 'Support Material', 'value' => 'None (0.2mm axle clearance)'],
-                ],
-            ],
-            'tuong-cyber-wolf-low-poly' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'FDM Multi-Axis Contour'],
-                    ['label' => 'Vật liệu', 'value' => 'Silk Metallic PLA / Nano Coating'],
-                    ['label' => 'Kích thước mẫu', 'value' => '210 x 95 x 165 mm'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.16 mm'],
-                    ['label' => 'Đầu phun', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Mật độ ruột', 'value' => '15% Gyroid'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Tree Support tối giản'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'FDM Multi-Axis Contour'],
-                    ['label' => 'Material', 'value' => 'Silk Metallic PLA / Nano Coating'],
-                    ['label' => 'Model Dimensions', 'value' => '210 x 95 x 165 mm'],
-                    ['label' => 'Layer Height', 'value' => '0.16 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Infill Density', 'value' => '15% Gyroid'],
-                    ['label' => 'Support Material', 'value' => 'Minimal Tree Support'],
-                ],
-            ],
-            'moc-khoa-dong-co-v8-piston' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'FDM Print-in-Place Khớp Liền Khối'],
-                    ['label' => 'Vật liệu', 'value' => 'PLA+ Tough Print-in-Place'],
-                    ['label' => 'Kích thước mẫu', 'value' => '55 x 35 x 30 mm'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.12 mm'],
-                    ['label' => 'Đầu phun', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Mật độ ruột', 'value' => '30% Gyroid'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Không cần (Print-in-Place liền khối)'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'FDM Monolithic Print-in-Place'],
-                    ['label' => 'Material', 'value' => 'PLA+ Tough Print-in-Place'],
-                    ['label' => 'Model Dimensions', 'value' => '55 x 35 x 30 mm'],
-                    ['label' => 'Layer Height', 'value' => '0.12 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Infill Density', 'value' => '30% Gyroid'],
-                    ['label' => 'Support Material', 'value' => 'None (Seamless Print-in-Place)'],
-                ],
-            ],
-            'den-ngu-mat-trang-lithophane' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'FDM Lithophane Độ Phân Giải Cao'],
-                    ['label' => 'Vật liệu', 'value' => 'Translucent White Optical PLA'],
-                    ['label' => 'Kích thước mẫu', 'value' => 'Ø150 mm (Cầu)'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.12 mm'],
-                    ['label' => 'Đầu phun', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Mật độ ruột', 'value' => 'Đặc 100% (Vỏ thấu quang Lithophane)'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Support chân đế'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'High-Resolution FDM Lithophane'],
-                    ['label' => 'Material', 'value' => 'Translucent White Optical PLA'],
-                    ['label' => 'Model Dimensions', 'value' => 'Ø150 mm (Sphere)'],
-                    ['label' => 'Layer Height', 'value' => '0.12 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Infill Density', 'value' => '100% Solid (Optical Shell)'],
-                    ['label' => 'Support Material', 'value' => 'Base pedestal support'],
-                ],
-            ],
-            'khop-noi-cau-bionic-sls' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'SLS (Selective Laser Sintering) Công Nghiệp'],
-                    ['label' => 'Vật liệu', 'value' => 'Polyamide 12 (Nylon PA12) Bột Thiêu Kết'],
-                    ['label' => 'Kích thước mẫu', 'value' => '65 x 65 x 75 mm'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.10 mm'],
-                    ['label' => 'Đầu phun', 'value' => 'Chùm tia Laser CO2 (Hệ buồng kín)'],
-                    ['label' => 'Mật độ ruột', 'value' => 'Đặc 100% Đồng nhất'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Zero-support (Bột tự nâng đỡ)'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'Industrial SLS (Selective Laser Sintering)'],
-                    ['label' => 'Material', 'value' => 'Polyamide 12 (Nylon PA12) Sintered Powder'],
-                    ['label' => 'Model Dimensions', 'value' => '65 x 65 x 75 mm'],
-                    ['label' => 'Layer Height', 'value' => '0.10 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => 'CO2 Laser Beam (Enclosed Chamber)'],
-                    ['label' => 'Infill Density', 'value' => '100% Homogeneous Solid'],
-                    ['label' => 'Support Material', 'value' => 'Zero-support (Self-supporting powder)'],
-                ],
-            ],
-            'mo-hinh-tau-vu-tru-discovery' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'Hybrid FDM + SLA Multi-Material'],
-                    ['label' => 'Vật liệu', 'value' => 'PLA Pro Matte & Transparent Optical Resin'],
-                    ['label' => 'Kích thước mẫu', 'value' => '260 x 140 x 95 mm'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.12 mm'],
-                    ['label' => 'Đầu phun', 'value' => '0.40 mm Brass + SLA Optics'],
-                    ['label' => 'Mật độ ruột', 'value' => '20% Gyroid'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Tree Support tách bề mặt mịn'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'Hybrid FDM + SLA Multi-Material'],
-                    ['label' => 'Material', 'value' => 'PLA Pro Matte & Transparent Optical Resin'],
-                    ['label' => 'Model Dimensions', 'value' => '260 x 140 x 95 mm'],
-                    ['label' => 'Layer Height', 'value' => '0.12 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => '0.40 mm Brass + SLA Optics'],
-                    ['label' => 'Infill Density', 'value' => '20% Gyroid'],
-                    ['label' => 'Support Material', 'value' => 'Fine Surface Tree Support'],
-                ],
-            ],
-            'khay-to-chuc-day-cap-modular' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'FDM High-Strength Modular'],
-                    ['label' => 'Vật liệu', 'value' => 'PETG Matte & Neodymium N52 Magnets'],
-                    ['label' => 'Kích thước mẫu', 'value' => '200 x 80 x 35 mm (Module)'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.20 mm'],
-                    ['label' => 'Đầu phun', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Mật độ ruột', 'value' => '20% Grid'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Không cần'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'FDM High-Strength Modular'],
-                    ['label' => 'Material', 'value' => 'PETG Matte & Neodymium N52 Magnets'],
-                    ['label' => 'Model Dimensions', 'value' => '200 x 80 x 35 mm (Module)'],
-                    ['label' => 'Layer Height', 'value' => '0.20 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Infill Density', 'value' => '20% Grid'],
-                    ['label' => 'Support Material', 'value' => 'None'],
-                ],
-            ],
-            'moc-khoa-vo-lang-f1-quick-release' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'SLA Precision 25 Micron'],
-                    ['label' => 'Vật liệu', 'value' => 'Tough Resin 8K & Steel Ball Bearings'],
-                    ['label' => 'Kích thước mẫu', 'value' => '60 x 42 x 25 mm'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.025 mm'],
-                    ['label' => 'Đầu phun', 'value' => 'Quang hóa SLA (Laser UV)'],
-                    ['label' => 'Mật độ ruột', 'value' => 'Đặc 100%'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Support vi điểm bóc tay'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'SLA Precision 25 Micron'],
-                    ['label' => 'Material', 'value' => 'Tough Resin 8K & Steel Ball Bearings'],
-                    ['label' => 'Model Dimensions', 'value' => '60 x 42 x 25 mm'],
-                    ['label' => 'Layer Height', 'value' => '0.025 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => 'Photochemical SLA (UV Laser)'],
-                    ['label' => 'Infill Density', 'value' => '100% Solid'],
-                    ['label' => 'Support Material', 'value' => 'Micro-touch hand-peel support'],
-                ],
-            ],
-            'den-ban-led-hexagon-to-ong' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'FDM High-Precision Optics'],
-                    ['label' => 'Vật liệu', 'value' => 'Heat-Resistant PETG & Optical Diffusion Shell'],
-                    ['label' => 'Kích thước mẫu', 'value' => '130 x 115 x 30 mm (1 Module)'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.16 mm'],
-                    ['label' => 'Đầu phun', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Mật độ ruột', 'value' => '15% Honeycomb'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Không cần'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'FDM High-Precision Optics'],
-                    ['label' => 'Material', 'value' => 'Heat-Resistant PETG & Optical Diffusion Shell'],
-                    ['label' => 'Model Dimensions', 'value' => '130 x 115 x 30 mm (1 Module)'],
-                    ['label' => 'Layer Height', 'value' => '0.16 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Infill Density', 'value' => '15% Honeycomb'],
-                    ['label' => 'Support Material', 'value' => 'None'],
-                ],
-            ],
-            'vo-case-ban-phim-co-custom' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'FDM Multi-Material Carbon Reinforced'],
-                    ['label' => 'Vật liệu', 'value' => 'PETG-CF / Gasket Mount Isolation'],
-                    ['label' => 'Kích thước mẫu', 'value' => '325 x 140 x 38 mm (Layout 75%)'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.20 mm'],
-                    ['label' => 'Đầu phun', 'value' => '0.40 mm Hardened Steel'],
-                    ['label' => 'Mật độ ruột', 'value' => '35% Gyroid'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Support khu vực cổng kết nối'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'FDM Multi-Material Carbon Reinforced'],
-                    ['label' => 'Material', 'value' => 'PETG-CF / Gasket Mount Isolation'],
-                    ['label' => 'Model Dimensions', 'value' => '325 x 140 x 38 mm (Layout 75%)'],
-                    ['label' => 'Layer Height', 'value' => '0.20 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => '0.40 mm Hardened Steel'],
-                    ['label' => 'Infill Density', 'value' => '35% Gyroid'],
-                    ['label' => 'Support Material', 'value' => 'I/O Port Area Support'],
-                ],
-            ],
-            'moc-khoa-trai-tim-co-khi' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'FDM Print-in-Place Siêu Mịn 0.12mm'],
-                    ['label' => 'Vật liệu', 'value' => 'Silk Metallic PLA / Print-in-Place Mechanism'],
-                    ['label' => 'Kích thước mẫu', 'value' => '50 x 45 x 22 mm'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.12 mm'],
-                    ['label' => 'Đầu phun', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Mật độ ruột', 'value' => '25% Gyroid'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Không cần (Print-in-Place)'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'Fine 0.12mm FDM Print-in-Place'],
-                    ['label' => 'Material', 'value' => 'Silk Metallic PLA / Print-in-Place Mechanism'],
-                    ['label' => 'Model Dimensions', 'value' => '50 x 45 x 22 mm'],
-                    ['label' => 'Layer Height', 'value' => '0.12 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Infill Density', 'value' => '25% Gyroid'],
-                    ['label' => 'Support Material', 'value' => 'None (Print-in-Place)'],
-                ],
-            ],
-            'mo-hinh-phi-hanh-gia' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'FDM High-Detail Sculpting'],
-                    ['label' => 'Vật liệu', 'value' => 'PLA Matte Tuyết Trắng & Visor Mạ Vàng'],
-                    ['label' => 'Kích thước mẫu', 'value' => '95 x 80 x 160 mm'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.16 mm'],
-                    ['label' => 'Đầu phun', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Mật độ ruột', 'value' => '20% Gyroid'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Tree Support hữu cơ'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'FDM High-Detail Sculpting'],
-                    ['label' => 'Material', 'value' => 'Pure White Matte PLA & Gold-Plated Visor'],
-                    ['label' => 'Model Dimensions', 'value' => '95 x 80 x 160 mm'],
-                    ['label' => 'Layer Height', 'value' => '0.16 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Infill Density', 'value' => '20% Gyroid'],
-                    ['label' => 'Support Material', 'value' => 'Organic Tree Support'],
-                ],
-            ],
-            'chau-cay-da-giac-mini' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'FDM Watertight In Chống Rò Rỉ'],
-                    ['label' => 'Vật liệu', 'value' => 'PETG Waterproof Chống Thấm 100%'],
-                    ['label' => 'Kích thước mẫu', 'value' => 'Ø90 x 80 mm'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.20 mm'],
-                    ['label' => 'Đầu phun', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Mật độ ruột', 'value' => '20% Grid (Thành vỏ 4 lớp chống thấm)'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Không cần (Góc vát tự chống đỡ)'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'FDM Watertight Leakproof Printing'],
-                    ['label' => 'Material', 'value' => '100% Waterproof PETG'],
-                    ['label' => 'Model Dimensions', 'value' => 'Ø90 x 80 mm'],
-                    ['label' => 'Layer Height', 'value' => '0.20 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Infill Density', 'value' => '20% Grid (4-wall watertight)'],
-                    ['label' => 'Support Material', 'value' => 'None (Self-supporting chamfer angles)'],
-                ],
-            ],
-            'de-do-dien-thoai-mecha' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'FDM Ergonomic Engineering'],
-                    ['label' => 'Vật liệu', 'value' => 'PLA+ Tough Gia Cường Chịu Lực'],
-                    ['label' => 'Kích thước mẫu', 'value' => '85 x 75 x 110 mm'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.20 mm'],
-                    ['label' => 'Đầu phun', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Mật độ ruột', 'value' => '25% Gyroid Chịu Lực'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Không cần (Thiết kế góc nghiêng 60°)'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'FDM Ergonomic Engineering'],
-                    ['label' => 'Material', 'value' => 'Reinforced Heavy-Duty PLA+'],
-                    ['label' => 'Model Dimensions', 'value' => '85 x 75 x 110 mm'],
-                    ['label' => 'Layer Height', 'value' => '0.20 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Infill Density', 'value' => '25% High-Strength Gyroid'],
-                    ['label' => 'Support Material', 'value' => 'None (Ergonomic 60° incline)'],
-                ],
-            ],
-            'robot-khop-cu-dong' => [
-                'vi' => [
-                    ['label' => 'Công nghệ in', 'value' => 'FDM Print-in-Place 14 Khớp Linh Hoạt'],
-                    ['label' => 'Vật liệu', 'value' => 'PETG Tough Kháng Gãy Khớp'],
-                    ['label' => 'Kích thước mẫu', 'value' => '90 x 50 x 175 mm'],
-                    ['label' => 'Chiều cao lớp in', 'value' => '0.16 mm'],
-                    ['label' => 'Đầu phun', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Mật độ ruột', 'value' => '30% Gyroid'],
-                    ['label' => 'Vật liệu hỗ trợ', 'value' => 'Không cần (Khớp cầu in liền khối)'],
-                ],
-                'en' => [
-                    ['label' => 'Print Technology', 'value' => 'FDM Print-in-Place 14 Flexible Joints'],
-                    ['label' => 'Material', 'value' => 'Shatter-Resistant Tough PETG'],
-                    ['label' => 'Model Dimensions', 'value' => '90 x 50 x 175 mm'],
-                    ['label' => 'Layer Height', 'value' => '0.16 mm'],
-                    ['label' => 'Extruder / Nozzle', 'value' => '0.40 mm Brass Nozzle'],
-                    ['label' => 'Infill Density', 'value' => '30% Gyroid'],
-                    ['label' => 'Support Material', 'value' => 'None (Seamless Ball Joints)'],
-                ],
-            ],
-        ];
-
-        if (!empty($slug) && isset($catalogSpecs[$slug])) {
-            $langKey = $isEn ? 'en' : 'vi';
-            return $catalogSpecs[$slug][$langKey] ?? $catalogSpecs[$slug]['vi'];
-        }
-
-        // Dynamic fallback based on product properties
-        $tech = $product->print_technology ?: 'FDM High-Precision';
-        $mat = $product->material ?: 'Nhựa PLA Matte Cao Cấp';
-        $isSla = stripos($tech, 'SLA') !== false || stripos($mat, 'Resin') !== false;
-        $isSls = stripos($tech, 'SLS') !== false || stripos($mat, 'Nylon') !== false;
-
-        if ($isEn) {
-            return [
-                ['label' => 'Print Technology', 'value' => $tech],
-                ['label' => 'Material', 'value' => $mat],
-                ['label' => 'Model Dimensions', 'value' => 'Standard (Customizable on request)'],
-                ['label' => 'Layer Height', 'value' => $isSla ? '0.025 mm' : ($isSls ? '0.10 mm' : '0.16 mm')],
-                ['label' => 'Extruder / Nozzle', 'value' => $isSla ? 'SLA Photochemical UV' : ($isSls ? 'CO2 Laser Beam' : '0.40 mm Hardened Steel')],
-                ['label' => 'Infill Density', 'value' => ($isSla || $isSls) ? '100% Solid' : '20% Gyroid'],
-                ['label' => 'Support Material', 'value' => $isSls ? 'Zero-support (Self-supporting powder)' : ($isSla ? 'Light Touch Peel Support' : 'None / Easy-Peel Support')],
+        if (!empty($product->sku)) {
+            $specs[] = [
+                'label' => $isEn ? 'Part Number / SKU' : 'Mã sản phẩm',
+                'value' => (string) $product->sku,
             ];
         }
 
-        return [
-            ['label' => 'Công nghệ in', 'value' => $tech],
-            ['label' => 'Vật liệu', 'value' => $mat],
-            ['label' => 'Kích thước mẫu', 'value' => 'Tiêu chuẩn (Gia công theo yêu cầu)'],
-            ['label' => 'Chiều cao lớp in', 'value' => $isSla ? '0.025 mm' : ($isSls ? '0.10 mm' : '0.16 mm')],
-            ['label' => 'Đầu phun', 'value' => $isSla ? 'Quang hóa SLA (Laser UV)' : ($isSls ? 'Chùm tia Laser CO2' : '0.40 mm Hardened Steel')],
-            ['label' => 'Mật độ ruột', 'value' => ($isSla || $isSls) ? 'Đặc 100%' : '20% Gyroid'],
-            ['label' => 'Vật liệu hỗ trợ', 'value' => $isSls ? 'Zero-support (Bột tự nâng đỡ)' : ($isSla ? 'Support dễ tách' : 'Không cần / Support dễ tách')],
-        ];
+        if (!empty($product->material)) {
+            $specs[] = [
+                'label' => $isEn ? 'Material' : 'Vật liệu',
+                'value' => (string) $product->material,
+            ];
+        }
+
+        if (!empty($product->lead_time)) {
+            $specs[] = [
+                'label' => $isEn ? 'Supply & Lead Time' : 'Tiến độ cung ứng',
+                'value' => (string) $product->lead_time,
+            ];
+        }
+
+        return $specs;
     }
 
     public function optionsMappingThumbnail($options, $primaryOptionValues)

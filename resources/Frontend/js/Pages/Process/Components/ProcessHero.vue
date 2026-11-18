@@ -94,7 +94,7 @@ const bgImage = computed(() => {
 })
 
 const bgImageAlt = computed(() => {
-    return props.banner?.image?.alt || tt('Quy trình làm việc HH Maker - 5 bước chuẩn hóa')
+    return props.banner?.image?.alt || tt('Quy trình làm việc Thành Khang Tecsat - 5 bước chuẩn hóa')
 })
 
 const categoryText = computed(() => {
@@ -126,8 +126,8 @@ const descriptionText = computed(() => {
         return props.banner.description
     }
     return currentLocale.value === 'en'
-        ? 'From initial concept to final creation, HH Maker works closely with you to clarify needs, align on design and pricing before manufacturing. Every milestone is communicated transparently for easy tracking.'
-        : tt('Từ ý tưởng ban đầu đến thành phẩm hoàn thiện, HH Maker cùng bạn làm rõ nhu cầu, thống nhất thiết kế và chi phí trước khi gia công. Mỗi giai đoạn đều được trao đổi cụ thể để bạn dễ theo dõi và chủ động trong quá trình đặt làm.')
+        ? 'From initial inquiry to final handover, Thành Khang Tecsat works closely with your engineering team to verify specifications, align on OEM standards and lead time. Every milestone is communicated transparently.'
+        : tt('Từ lúc tiếp nhận thông số đến khi bàn giao thiết bị, Thành Khang Tecsat luôn đồng hành cùng đội ngũ kỹ thuật của doanh nghiệp để đối chiếu chuẩn OEM, thống nhất báo giá và tiến độ. Mọi giai đoạn đều minh bạch để chủ đầu tư dễ dàng theo dõi.')
 })
 
 const ctaText = computed(() => props.banner?.primary_cta_text || tt('Khám phá 5 bước'))

@@ -63,11 +63,11 @@ class AgencyController extends Controller
             $locale = current_locale();
             $seo = [
                 'title' => $locale === 'en'
-                    ? 'Contact & Consultation - HH Maker | Turning Creativity Beyond the Screen'
-                    : 'Liên hệ tư vấn - HH Maker | Đưa sáng tạo vượt ra khỏi màn hình',
+                    ? 'Contact & RFQ Quotation - Thanh Khang Tecsat | Industrial Engineering'
+                    : 'Liên Hệ & Báo Giá Kỹ Thuật (RFQ) - Thành Khang Tecsat',
                 'description' => $locale === 'en'
-                    ? 'Get in touch with HH Maker to discuss 3D design concepts, industrial 3D printing services, or bespoke custom fabrication.'
-                    : 'Liên hệ ngay với HH Maker để trao đổi ý tưởng thiết kế 3D, gia công in 3D công nghiệp hoặc chế tác sản phẩm custom theo yêu cầu.',
+                    ? 'Contact Thanh Khang Tecsat hotline 0967.732.665 or info@dvktthanhkhang.vn for escalator spare parts, industrial chains, and energy saving consultations.'
+                    : 'Liên hệ ngay với Công ty TNHH Kỹ thuật Thành Khang Tecsat qua hotline 0967.732.665 hoặc email info@dvktthanhkhang.vn để được tư vấn và nhận báo giá kỹ thuật nhanh chóng.',
             ];
 
             if (request()->wantsJson()) {

@@ -5,17 +5,17 @@
                 <div class="flex space-x-1 body-3">
                     <div class="text-white">{{ tt('Hotline') }}</div>
                     <a
-                        :href="`tel:${tt('842838722846')}`"
+                        :href="`tel:${tt('0967732665')}`"
                         class="text-white lg:hover:text-green-default lg:duration-150"
-                        >{{ tt('+84 283 8722 846') }}</a
+                        >{{ tt('0967 732 665') }}</a
                     >
                 </div>
                 <div class="body-3">
                     <span class="text-white">{{ tt('Email') }}: </span>
                     <a
-                        :href="'mailto:' + ($page.props.global?.general_email || 'info@hhmaker.vn')"
+                        :href="'mailto:' + ($page.props.global?.general_email || 'info@dvktthanhkhang.vn')"
                         class="text-white lg:hover:text-green-default lg:duration-150"
-                        >{{ $page.props.global?.general_email || 'info@hhmaker.vn' }}</a
+                        >{{ $page.props.global?.general_email || 'info@dvktthanhkhang.vn' }}</a
                     >
                 </div>
             </div>

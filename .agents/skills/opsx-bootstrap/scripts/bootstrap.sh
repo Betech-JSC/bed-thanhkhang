@@ -189,7 +189,7 @@ sync_hub_skills_and_commands() {
   mkdir -p "${project_dir}/.agent/skills" "${project_dir}/.agent/workflows" "${project_dir}/.agents/workflows" "${project_dir}/.claude/commands/opsx" "${project_dir}/scratch"
 
   # Đồng bộ các Hub Skills cốt lõi giữa .agents/skills và .agent/skills
-  local hub_skills=("opsx-bootstrap" "opsx-cms-sync" "opsx-pixel-perfect-ui" "opsx-animation" "ui-skill" "opsx-i18n-cms" "opsx-i18n-fe" "opsx-audit-handoff" "vps-cicd-deploy")
+  local hub_skills=("opsx-bootstrap" "opsx-figma-workflow" "opsx-cms-sync" "opsx-pixel-perfect-ui" "opsx-animation" "ui-skill" "opsx-i18n-cms" "opsx-i18n-fe" "opsx-audit-handoff" "fe-mobile-audit" "vps-cicd-deploy")
   for sk in "${hub_skills[@]}"; do
     if [ -d "${project_dir}/.agents/skills/${sk}" ]; then
       mkdir -p "${project_dir}/.agent/skills/${sk}"
@@ -260,7 +260,7 @@ sync_hub_skills_and_commands() {
     cp "${project_dir}/.agents/skills/opsx-audit-handoff/resources/claude-command-audit-handoff.md" "${project_dir}/.claude/commands/opsx/audit-handoff.md"
   fi
 
-  echo "   - Đã đồng bộ Hub Skills & Workflows: /opsx-cms-sync, /opsx-pixel-perfect, /opsx-animation, /ui-skill, /opsx-i18n-cms, /opsx-i18n-fe, /opsx-audit-handoff, /opsx-deploy"
+  echo "   - Đã đồng bộ Hub Skills & Workflows: /opsx-bootstrap, /opsx-figma-workflow, /opsx-cms-sync, /opsx-pixel-perfect, /opsx-animation, /ui-skill, /opsx-i18n-cms, /opsx-i18n-fe, /opsx-audit-handoff, /fe-mobile-audit, /opsx-deploy"
   echo "   - Đã đồng bộ Claude Commands: .claude/commands/opsx/{cms-sync,pixel-perfect,animation,ui-skill,i18n-cms,i18n-fe,audit-handoff}.md"
 }
 

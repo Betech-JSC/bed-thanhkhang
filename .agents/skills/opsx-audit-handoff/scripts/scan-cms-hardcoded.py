@@ -278,6 +278,26 @@ def scan_php_file(file_path: Path, root: Path) -> List[Dict[str, Any]]:
                     }
                 )
 
+        # 6. Fallback String Assignment ('key' => ... ?? 'string') masking missing CMS config
+        m_null_coal = re.search(r"['\"]([a-zA-Z0-9_]+)['\"]\s*=>\s*[^,;]+(?:\?\?|\?:)\s*['\"]([^'\"]{4,})['\"]", line)
+        if m_null_coal:
+            prop_key = m_null_coal.group(1)
+            fallback_val = m_null_coal.group(2)
+            if not re.search(r"^(?:asc|desc|id|created_at|utf-8|vi|en|web|api|get|post)$", fallback_val, re.IGNORECASE):
+                method_name = find_enclosing_php_method(lines, idx)
+                findings.append(
+                    {
+                        "layer": "Backend (PHP)",
+                        "category": f"Fallback String Masking CMS ({prop_key})",
+                        "severity": "P1",
+                        "file": rel_path,
+                        "line": idx,
+                        "symbol": method_name,
+                        "snippet": extract_snippet(lines, idx),
+                        "remediation": f"Sửa tại dòng {idx} thành ?? null hoặc trả về rỗng; yêu cầu cấu hình trong CMS.",
+                    }
+                )
+
     return findings
 
 

@@ -35,11 +35,11 @@ class ProductController extends Controller
 
                 $seoData = [
                     'title' => current_locale() === 'en'
-                        ? '3D Printed Products Catalog - HH Maker | FDM, SLA, SLS Technology'
-                        : 'Danh mục Sản phẩm in 3D - HH Maker | Công nghệ FDM, SLA, SLS',
+                        ? 'Industrial Equipment & Escalator Spare Parts - Thanh Khang Tecsat'
+                        : 'Danh mục Thiết bị & Phụ tùng Thang cuốn B2B - Thành Khang Tecsat',
                     'description' => current_locale() === 'en'
-                        ? 'Explore high-tech 3D printed products by HH Maker. Diverse materials including 8K Resin, PLA+, PETG, Carbon Fiber with micron precision.'
-                        : 'Khám phá bộ sưu tập sản phẩm in 3D công nghệ cao từ HH Maker. Đa dạng vật liệu Resin 8K, PLA+, PETG, Carbon Fiber chính xác từng micron.',
+                        ? 'Explore industrial mechanical components, escalator spare parts, baggage conveyor chains, and BLDC fans by Thanh Khang Tecsat.'
+                        : 'Khám phá danh mục linh kiện cơ khí, phụ tùng thang cuốn, xích băng tải hành lý và quạt trần công nghiệp BLDC từ Thành Khang Tecsat.',
                     'seo_schemas' => [
                         [
                             '@context' => 'https://schema.org',
@@ -129,25 +129,25 @@ class ProductController extends Controller
                     }
                 }
                 if (empty($productImages)) {
-                    $productImages[] = url('/images/pdp/product_main.png');
+                    $productImages[] = url('/images/products/thanhkhang/xich-bac-thang-thuong-mai/commercial-type.webp');
                 }
 
                 $rawPrice = $product->price ?? $details['price'] ?? 0;
                 $numericPrice = preg_replace('/[^0-9]/', '', (string)$rawPrice);
                 if (empty($numericPrice) || (int)$numericPrice <= 0) {
-                    $numericPrice = "250000";
+                    $numericPrice = "0";
                 }
 
                 $productSchema = [
                     '@context' => 'https://schema.org',
                     '@type' => 'Product',
-                    'name' => $product->title ?? $details['title'] ?? 'Sản phẩm HH Maker',
+                    'name' => $product->title ?? $details['title'] ?? 'Sản phẩm Thành Khang Tecsat',
                     'image' => $productImages,
-                    'description' => strip_tags($product->description ?? $details['description'] ?? $seo['seo_meta_description'] ?? 'Sản phẩm in 3D công nghệ cao từ HH Maker.'),
-                    'sku' => $product->sku ?? ('HHM-PRD-' . str_pad($product->id, 3, '0', STR_PAD_LEFT)),
+                    'description' => strip_tags($product->description ?? $details['description'] ?? $seo['seo_meta_description'] ?? 'Linh kiện cơ khí công nghiệp chính hãng từ Thành Khang Tecsat.'),
+                    'sku' => $product->sku ?? ('TK-PRD-' . str_pad($product->id, 3, '0', STR_PAD_LEFT)),
                     'brand' => [
                         '@type' => 'Brand',
-                        'name' => 'HH Maker',
+                        'name' => 'Thành Khang Tecsat',
                     ],
                     'offers' => [
                         '@type' => 'Offer',
@@ -159,7 +159,7 @@ class ProductController extends Controller
                         'availability' => 'https://schema.org/InStock',
                         'seller' => [
                             '@type' => 'Organization',
-                            'name' => 'HH Maker',
+                            'name' => 'Thành Khang Tecsat',
                         ],
                     ],
                 ];

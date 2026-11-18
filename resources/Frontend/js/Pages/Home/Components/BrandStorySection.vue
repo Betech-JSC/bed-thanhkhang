@@ -7,7 +7,7 @@
                     <div class="relative w-full max-w-[520px]">
                         <img
                             :src="founderImage"
-                            :alt="tt('Lâm Hồng Hải - Founder HH Maker')"
+                            :alt="tt('Thành Khang Tecsat - Thiết bị & Giải pháp Kỹ thuật Công nghiệp')"
                             class="w-full h-auto object-contain select-none drop-shadow-2xl"
                             loading="lazy"
                         />
@@ -129,22 +129,22 @@ export default {
         },
         subtitle: {
             type: String,
-            default: tt('CHIA SẺ TỪ NHÀ SÁNG LẬP HH MAKER'),
+            default: tt('VỀ THÀNH KHANG TECSAT'),
         },
         title: {
             type: String,
-            default: tt('HÀNH TRÌNH ĐƯA SÁNG TẠO VƯỢT RA KHỎI MÀN HÌNH'),
+            default: tt('ĐỒNG HÀNH CÙNG VẬN HÀNH CÔNG NGHIỆP BỀN BỈ'),
         },
         story: {
             type: [String, Array],
             default: () => [
-                'Xuất phát từ niềm đam mê với nghệ thuật 3D và công nghệ chế tác hiện đại, tôi thành lập HH Maker với sứ mệnh rút ngắn khoảng cách giữa ý tưởng sơ khai và sản phẩm vật lý.',
-                'Với mỗi dự án, tôi cùng đội ngũ luôn tỉ mỉ trong từng đường nét thiết kế, lựa chọn vật liệu và kiểm soát quy trình in để mang lại những sản phẩm sắc nét, chuẩn xác và mang đậm dấu ấn cá nhân nhất.',
+                'Thành Khang Tecsat là đơn vị chuyên cung cấp giải pháp và thiết bị công nghiệp B2B hàng đầu trong lĩnh vực linh kiện thang cuốn - thang máy, hệ thống băng tải và xích tải công nghiệp Universal Chains.',
+                'Bên cạnh vật tư truyền động chính xác, chúng tôi còn tiên phong triển khai giải pháp tiết kiệm điện với dòng quạt trần công nghiệp BLDC HVLS, cam kết chất lượng chuẩn OEM và dịch vụ kỹ thuật tận tâm.',
             ],
         },
         description: {
             type: [String, Array],
-            default: 'Xuất phát từ niềm đam mê với nghệ thuật 3D và công nghệ chế tác hiện đại, tôi thành lập HH Maker với sứ mệnh rút ngắn khoảng cách giữa ý tưởng sơ khai và sản phẩm vật lý. /n Với mỗi dự án, tôi cùng đội ngũ luôn tỉ mỉ trong từng đường nét thiết kế, lựa chọn vật liệu và kiểm soát quy trình in để mang lại những sản phẩm sắc nét, chuẩn xác và mang đậm dấu ấn cá nhân nhất.',
+            default: 'Thành Khang Tecsat là đơn vị chuyên cung cấp giải pháp và thiết bị công nghiệp B2B hàng đầu trong lĩnh vực linh kiện thang cuốn - thang máy, hệ thống băng tải và xích tải công nghiệp Universal Chains. /n Bên cạnh vật tư truyền động chính xác, chúng tôi còn tiên phong triển khai giải pháp tiết kiệm điện với dòng quạt trần công nghiệp BLDC HVLS, cam kết chất lượng chuẩn OEM và dịch vụ kỹ thuật tận tâm.',
         },
     },
     data() {

@@ -19,7 +19,7 @@
                 <!-- Left Hero Content (Figma Node 2283:6728) -->
                 <div class="relative z-10 flex flex-col gap-4 max-w-[740px] pt-4 sm:pt-6 lg:pt-[197px]">
                     <div class="text-[16px] leading-[22px] font-normal text-[#D1E0FF] uppercase">
-                        {{ tt('KẾT NỐI VỚI HH MAKER') }}
+                        {{ tt('KẾT NỐI VỚI THÀNH KHANG TECSAT') }}
                     </div>
 
                     <h1 class="text-3xl sm:text-4xl lg:text-[38px] lg:leading-[46px] lg:whitespace-nowrap font-bold text-[#FAFAFA] uppercase max-w-[740px]">
@@ -31,13 +31,13 @@
                     </p>
                 </div>
 
-                <!-- Right Hero Logo 3D HH Maker (Figma Node 2308:8196: 469x889 at left 1021px, top -172px) -->
+                <!-- Right Hero Product Graphic -->
                 <div
                     class="w-[200px] sm:w-[240px] max-h-[220px] mx-auto mt-6 lg:mt-0 lg:mx-0 lg:max-h-none lg:absolute lg:w-[469px] lg:h-[889px] lg:-top-[172px] lg:left-[909px] pointer-events-none select-none opacity-20"
                 >
                     <img
-                        src="/images/contact/hh_maker_monogram.png?v=2"
-                        :alt="tt('HH Maker Logo 3D - From Ideas To Reality')"
+                        src="/images/products/thanhkhang/xich-bac-thang-thuong-mai/commercial-type.webp"
+                        :alt="tt('Thành Khang Tecsat - Linh kiện thang cuốn & Xích công nghiệp')"
                         class="w-full h-full object-contain pointer-events-none select-none"
                         loading="eager"
                     />
@@ -112,7 +112,7 @@
                                 {{ displayPhone }}
                             </h3>
                             <p class="text-[16px] leading-[26px] font-normal text-[#B9C0D4]">
-                                {{ tt('Gọi HH Maker để trao đổi trực tiếp về dự án của bạn') }}
+                                {{ tt('Gọi Thành Khang Tecsat để trao đổi trực tiếp về thông số kỹ thuật và dự án của bạn') }}
                             </p>
                         </div>
                     </a>
@@ -169,15 +169,15 @@
                                 {{ tt('CÙNG BẮT ĐẦU MỘT SẢN PHẨM MỚI.') }}
                             </h2>
                             <p class="text-[16px] leading-[26px] font-normal text-[#B9C0D4]">
-                                {{ tt('Điền thông tin để HH Maker hiểu thêm về nhu cầu của bạn và có cơ sở trao đổi phương án phù hợp.') }}
+                                {{ tt('Điền thông tin để Thành Khang Tecsat nắm rõ thông số kỹ thuật và tư vấn phương án cung ứng phù hợp.') }}
                             </p>
                         </div>
 
-                        <!-- Khung Artwork Hình ảnh điêu khắc xanh (Node 2283:6772 & 2283:6773: 380px x 384px) -->
-                        <div class="w-full lg:w-[380px] h-[300px] sm:h-[360px] lg:h-[384px] rounded-[12px] overflow-hidden">
+                        <!-- Industrial product illustration -->
+                        <div class="w-full lg:w-[380px] h-[300px] sm:h-[360px] lg:h-[384px] rounded-[12px] overflow-hidden bg-white/5 border border-[#4A5578]/40">
                             <img
-                                src="/images/contact/dieu_khac_xanh.png"
-                                :alt="tt('HH Maker tác phẩm điêu khắc 3D xanh')"
+                                src="/images/products/thanhkhang/xich-dan-dong-chinh/drive-chain.webp"
+                                :alt="tt('Xích dẫn động chính công nghiệp Thành Khang Tecsat')"
                                 class="w-full h-full object-cover select-none"
                                 loading="lazy"
                             />
@@ -445,7 +445,7 @@
                         {{ tt('Gửi yêu cầu thành công!') }}
                     </h3>
                     <p class="text-[#B9C0D4] text-sm sm:text-base leading-relaxed">
-                        {{ tt('Hệ thống đã nhận được thông tin yêu cầu của bạn. Đội ngũ kỹ thuật HH Maker sẽ liên hệ và tư vấn phương án phù hợp trong thời gian sớm nhất.') }}
+                        {{ tt('Hệ thống đã nhận được thông tin yêu cầu của bạn. Đội ngũ kỹ sư Thành Khang Tecsat sẽ liên hệ và tư vấn phương án phù hợp trong thời gian sớm nhất.') }}
                     </p>
                 </div>
 
@@ -494,8 +494,8 @@ const pageTitle = computed(() => {
     return (
         props.seo?.title ||
         (isEn.value
-            ? 'Contact & Consultation - HH Maker | Turning Creativity Beyond the Screen'
-            : i18n.tt('Liên hệ tư vấn - HH Maker | Đưa sáng tạo vượt ra khỏi màn hình'))
+            ? 'Contact & Technical Consultation - Thành Khang Tecsat | Industrial Equipment & Escalator Parts'
+            : i18n.tt('Liên hệ tư vấn kỹ thuật - Thành Khang Tecsat | Thiết bị công nghiệp & Phụ tùng thang cuốn'))
     )
 })
 
@@ -503,29 +503,33 @@ const pageDescription = computed(() => {
     return (
         props.seo?.description ||
         (isEn.value
-            ? 'Get in touch with HH Maker to discuss 3D design concepts, industrial 3D printing services, or bespoke custom fabrication.'
-            : i18n.tt('Liên hệ ngay với HH Maker để trao đổi ý tưởng thiết kế 3D, gia công in 3D công nghiệp hoặc chế tác sản phẩm custom theo yêu cầu.'))
+            ? 'Get in touch with Thành Khang Tecsat for escalator spare parts, Universal Chains industrial conveyors, and BLDC HVLS ceiling fans.'
+            : i18n.tt('Liên hệ ngay với Thành Khang Tecsat để tư vấn linh kiện thang cuốn, thang nâng ô tô, xích công nghiệp Universal Chains và quạt trần BLDC HVLS.'))
     )
 })
 
 const displayZaloUrl = computed(() => {
     const raw = page.props.value?.global?.general_zalo
-    if (!raw) return 'https://zalo.me/0906636425'
+    if (!raw) return 'https://zalo.me/0967732665'
     if (raw.startsWith('http://') || raw.startsWith('https://')) return raw
     const digits = raw.replace(/\D/g, '')
-    return digits ? `https://zalo.me/${digits}` : 'https://zalo.me/0906636425'
+    return digits ? `https://zalo.me/${digits}` : 'https://zalo.me/0967732665'
 })
 
 const displayPhone = computed(() => {
-    return page.props.value?.global?.general_phone || '0906636425'
+    return page.props.value?.global?.general_phone || '0967 732 665'
 })
 
 const displayEmail = computed(() => {
-    return page.props.value?.global?.general_email || 'info@hhmaker.vn'
+    return page.props.value?.global?.general_email || 'info@dvktthanhkhang.vn'
 })
 
 // Dịch vụ lựa chọn
-const availableServices = [key.tt('Thiết kế 3D'), key.tt('Gia công 3D'), key.tt('Làm đồ custom')]
+const availableServices = [
+    key.tt('Linh kiện Thang cuốn - Thang máy'),
+    key.tt('Xích tải & Hệ thống Băng tải'),
+    key.tt('Quạt công nghiệp BLDC HVLS'),
+]
 
 // FAQ Accordion State & Data
 const activeFaq = ref(null)
@@ -548,7 +552,7 @@ const form = useForm({
     name: '',
     phone: '',
     email: '',
-    service: key.tt('Thiết kế 3D'),
+    service: key.tt('Linh kiện Thang cuốn - Thang máy'),
     content: '',
 })
 
@@ -584,8 +588,8 @@ const validate = () => {
         isValid = false
     } else if (!phoneRegex.test(phoneTrimmed) && phoneTrimmed.length < 10) {
         clientErrors.phone = isEn.value
-            ? 'Invalid phone number (e.g. 0906636425).'
-            : i18n.tt('Số điện thoại không hợp lệ (ví dụ: 0906636425).')
+            ? 'Invalid phone number (e.g. 0967732665).'
+            : i18n.tt('Số điện thoại không hợp lệ (ví dụ: 0967732665).')
         isValid = false
     }
 
@@ -646,7 +650,7 @@ const submitContact = () => {
         onSuccess: () => {
             showSuccessModal.value = true
             form.reset()
-            form.service = key.tt('Thiết kế 3D')
+            form.service = key.tt('Linh kiện Thang cuốn - Thang máy')
         },
         onError: (errs) => {
             console.error('Lỗi khi gửi yêu cầu liên hệ:', errs)

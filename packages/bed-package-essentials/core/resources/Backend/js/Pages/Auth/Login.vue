@@ -1,5 +1,5 @@
 <template>
-    <Head title="Đăng nhập Hệ thống - HH Maker" />
+    <Head title="Đăng nhập Hệ thống - Thành Khang Tecsat" />
 
     <div class="w-full">
         <!-- Main Dark Tech Login Card -->
@@ -9,13 +9,12 @@
 
             <!-- Card Header -->
             <div class="text-center mb-6">
-                <!-- Logo HH Maker 3D with Subtle Glow -->
+                <!-- Brand Wordmark Thành Khang Tecsat -->
                 <div class="flex items-center justify-center mb-4">
-                    <img
-                        src="/assets/images/header/figma-header-logo.svg"
-                        alt="HH Maker"
-                        class="h-10 w-auto object-contain filter drop-shadow-[0_0_15px_rgba(41,112,255,0.45)]"
-                    />
+                    <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl bg-[#181D33]/90 border border-[#2B334E] shadow-[0_0_15px_rgba(41,112,255,0.25)]">
+                        <span class="w-2.5 h-2.5 rounded-sm bg-[#2970FF]"></span>
+                        <span class="text-base font-extrabold tracking-wider text-white uppercase">THÀNH KHANG TECSAT</span>
+                    </div>
                 </div>
 
                 <!-- Status Badge with Pulsing LED -->
@@ -24,7 +23,7 @@
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2970FF] opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2 w-2 bg-[#2970FF]"></span>
                     </span>
-                    <span>HH MAKER WORKSHOP OS • v2.0</span>
+                    <span>THANH KHANG TECSAT CMS • v2.0</span>
                 </div>
 
                 <!-- Title & Subtitle -->
@@ -32,7 +31,7 @@
                     ĐĂNG NHẬP HỆ THỐNG
                 </h1>
                 <p class="text-xs text-[#8B9FC7] mt-1">
-                    Hệ thống Quản trị &amp; Điều hành Xưởng in 3D
+                    Hệ thống Quản trị Thiết bị Công nghiệp &amp; Phụ tùng Thang cuốn
                 </p>
             </div>
 
@@ -65,7 +64,7 @@
                             type="email"
                             required
                             autocomplete="username"
-                            placeholder="admin@hhmaker.vn"
+                            placeholder="info@dvktthanhkhang.vn"
                             class="w-full pl-10 pr-4 py-2.5 bg-[#0F121F] border border-[#2B334E] rounded-xl text-sm text-gray-100 placeholder-[#64748B] focus:outline-none focus:border-[#2970FF] focus:ring-1 focus:ring-[#2970FF] transition-all"
                             :class="{ '!border-rose-500 !ring-rose-500/30': form.errors.email }"
                         />
@@ -154,7 +153,7 @@
             <!-- Card Footer / Security Notice -->
             <div class="mt-6 pt-5 border-t border-[#2B334E]/60 text-center">
                 <p class="text-[11px] font-mono tracking-tight text-[#64748B]">
-                    Authorized Personnel Only • Additive Manufacturing &amp; Rapid Prototyping System
+                    Authorized Personnel Only • Industrial Equipment &amp; Escalator Parts Management
                 </p>
             </div>
         </div>

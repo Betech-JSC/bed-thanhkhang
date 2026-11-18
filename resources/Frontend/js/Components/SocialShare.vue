@@ -18,7 +18,7 @@ export default {
             if (typeof window !== 'undefined') {
                 return window.location.href
             }
-            return `https://hhmaker.vn/tin-tuc/${this.slug}`
+            return `https://dvktthanhkhang.vn/tin-tuc/${this.slug}`
         },
         facebookShareUrl() {
             return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(this.pageUrl)}`

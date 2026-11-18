@@ -22,9 +22,12 @@ Không lao vào code một file `Home.vue` / `page.tsx` nguyên khối dài hàn
      - `SectionHeader` (eyebrow / title / subtitle / action link)
      - `ProductCard` / `CategoryCard`
      - `PostCard` / `NewsCard`
-     - `ContactBanner` / `PartnerCarousel`
+     - `ContactBanner` / `PartnerCarousel` (bắt buộc khai báo tỷ lệ `aspect-[W/H]` chuẩn Figma)
    - Tải toàn bộ SVG icons và hình ảnh nền chuẩn từ Figma bằng `download_figma_images`.
-4. **Kiểm chứng & Ghi nhận AST**:
+4. **Quy Chuẩn Banner Aspect-Ratio & Spacing**:
+   - Trích xuất kích thước Banner từ Figma: gán `aspect-[W_mb/H_mb] md:aspect-[W_dt/H_dt]` kèm ảnh `w-full h-full object-cover`.
+   - Spacing mobile: container `px-4 md:px-8`, section `py-8 md:py-16`, card gap `gap-3 md:gap-6`.
+5. **Kiểm chứng & Ghi nhận AST**:
    - Chạy build 0 lỗi -> chạy `graphify . --code-only` để toàn bộ Tokens, Layout Shell và Shared Components xuất hiện trên `graphify-out/graph.json`.
 
 ---
@@ -33,9 +36,14 @@ Không lao vào code một file `Home.vue` / `page.tsx` nguyên khối dài hàn
 
 1. Mở change `feat-page-home`.
 2. Đi sâu `get_figma_data` vào từng `nodeId` section của Trang Home (`HeroBanner`, `AboutIntro`, `ProductShowcase`, `WhyChooseUs`, `LatestNews`, `QuickContact`...).
-3. Lắp ráp trang Home từ các Shared Components và các Home-specific Sections gọn nhẹ, kết nối đúng dữ liệu thật từ Controller/Props.
-4. Chạy build thật 0 lỗi + chạy `graphify . --code-only`.
-5. Giao `QA Verifier` mở **Playwright MCP** chụp ảnh đối chiếu từng section của Trang Home ở cả Desktop (`1440x900`) và Mobile (`375x812`) so với Figma. Khi đạt độ chính xác cao và 0 lỗi console/overflow, chạy `openspec archive` cho `setup-core-from-home` và `feat-page-home`.
+3. **CMS-First Data Binding (Tuyệt đối cấm gán cứng mock array)**:
+   - Khảo sát các Model CMS (`Product`, `Post`, `Config`, `Slider`...) và Controller tương ứng `HomeController.php`.
+   - Viết query thật trong `HomeController.php` và truyền dữ liệu qua Inertia props.
+   - Viết Seeder nạp đúng tên, giá, ảnh từ Figma vào Database để có dữ liệu sống hiển thị.
+   - Các component Home và Shared Component khai báo `defineProps<{ ... }>()` và render trực tiếp `props`.
+4. Lắp ráp trang Home từ các Shared Components và các Home-specific Sections gọn nhẹ, kết nối đúng dữ liệu thật từ Controller/Props.
+5. Chạy build thật 0 lỗi + chạy `graphify . --code-only`.
+6. Giao `QA Verifier` mở **Playwright MCP** chụp ảnh đối chiếu từng section của Trang Home ở cả Desktop (`1440x900`) và Mobile (`375x812`) so với Figma. Kiểm tra tỷ lệ khung banner không méo ảnh, không tràn ngang, 0 lỗi console. Khi đạt độ chính xác cao, chạy `openspec archive` cho `setup-core-from-home` và `feat-page-home`.
 
 ---
 

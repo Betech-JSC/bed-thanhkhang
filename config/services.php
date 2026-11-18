@@ -41,10 +41,4 @@ return [
         'course_sheet_id' => env('GOOGLE_COURSE_SHEET_ID'),
     ],
 
-    'synology' => [
-        'host' => env('SYNOLOGY_HOST', 'https://funkystyle.synology.me:5101'),
-        'username' => env('SYNOLOGY_USERNAME'),
-        'password' => env('SYNOLOGY_PASSWORD'),
-    ],
-
 ];

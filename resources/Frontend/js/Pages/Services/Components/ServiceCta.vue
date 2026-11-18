@@ -67,7 +67,7 @@ const title = computed(() => ctaData.value?.title || i18n.tt('Tạo nên phiên 
 const description = computed(() => {
     return (
         ctaData.value?.description ||
-        i18n.tt('Gửi hình ảnh tham khảo hoặc chia sẻ ý tưởng để HH Maker cùng bạn định hình sản phẩm mong muốn. Chúng tôi sẽ tư vấn giải pháp phù hợp với phong cách, nhu cầu và ngân sách của bạn.')
+        i18n.tt('Gửi thông số kỹ thuật, mã linh kiện hoặc bản vẽ công trình để đội ngũ kỹ sư Thành Khang Tecsat tư vấn phương án phụ tùng OEM, xích tải công nghiệp hoặc giải pháp tiết kiệm điện tối ưu.')
     )
 })
 const ctaText = computed(() => ctaData.value?.primary_cta_text || i18n.tt('Nhận tư vấn ngay'))

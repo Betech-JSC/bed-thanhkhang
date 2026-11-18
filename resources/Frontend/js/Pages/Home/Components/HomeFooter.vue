@@ -13,51 +13,48 @@
                 <!-- Column 1: Brand Info (5 cols) -->
                 <div class="lg:col-span-5 space-y-4">
                     <Link href="/" class="inline-flex items-center gap-3">
-                        <img
-                            src="/assets/images/header/logo.png"
-                            alt="HH Maker Logo"
-                            class="h-10 w-auto object-contain"
-                        />
+                        <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#2970FF] to-[#00359E] text-white font-black text-sm tracking-wider">TK</span>
+                        <span class="font-extrabold text-base tracking-wider uppercase text-white">THÀNH KHANG TECSAT</span>
                     </Link>
                     <p class="text-sm text-secondary/90 leading-relaxed max-w-sm">
-                        {{ tt('Hiện thực hóa mọi ý tưởng với công nghệ in 3D hiện đại. Rút ngắn khoảng cách giữa thiết kế số và sản phẩm vật lý chuẩn xác.') }}
+                        {{ tt('Giải pháp thiết bị công nghiệp B2B: linh kiện thang cuốn, thang nâng ô tô, xích tải Universal Chains, hệ thống băng tải và quạt BLDC HVLS.') }}
                     </p>
                     <div class="space-y-1.5 text-xs text-secondary/80 pt-2">
-                        <p><strong class="text-white">{{ tt('Xưởng sản xuất:') }}</strong> {{ tt('Hà Nội & TP. Hồ Chí Minh') }}</p>
-                        <p><strong class="text-white">Hotline:</strong> 0968 000 000</p>
-                        <p><strong class="text-white">Email:</strong> contact@hhmaker.vn</p>
+                        <p><strong class="text-white">{{ tt('Trụ sở chính:') }}</strong> {{ tt('Tầng 25, Tòa nhà TNR, 54A Nguyễn Chí Thanh, Đống Đa, Hà Nội') }}</p>
+                        <p><strong class="text-white">Hotline:</strong> 0967 732 665</p>
+                        <p><strong class="text-white">Email:</strong> info@dvktthanhkhang.vn</p>
                     </div>
                 </div>
 
                 <!-- Column 2: Dịch vụ (2 cols) -->
                 <div class="lg:col-span-2 space-y-3">
                     <h4 class="text-sm font-bold text-white uppercase tracking-wider font-sans">
-                        {{ tt('Dịch vụ') }}
+                        {{ tt('Giải pháp') }}
                     </h4>
                     <ul class="space-y-2 text-sm">
                         <li>
                             <Link href="/dich-vu" class="hover:text-primary transition-colors">
-                                {{ tt('Gia công in 3D') }}
+                                {{ tt('Phụ tùng Thang cuốn') }}
                             </Link>
                         </li>
                         <li>
                             <Link href="/dich-vu" class="hover:text-primary transition-colors">
-                                {{ tt('Thiết kế mô hình CAD') }}
+                                {{ tt('Xích tải Universal Chains') }}
                             </Link>
                         </li>
                         <li>
                             <Link href="/dich-vu" class="hover:text-primary transition-colors">
-                                {{ tt('Quét 3D Scanning') }}
+                                {{ tt('Hệ thống Băng tải') }}
                             </Link>
                         </li>
                         <li>
                             <Link href="/dich-vu" class="hover:text-primary transition-colors">
-                                Reverse Engineering
+                                {{ tt('Quạt trần BLDC HVLS') }}
                             </Link>
                         </li>
                         <li>
                             <Link href="/dich-vu" class="hover:text-primary transition-colors">
-                                {{ tt('Sơn & Xử lý bề mặt') }}
+                                {{ tt('Tư vấn Kỹ thuật OEM') }}
                             </Link>
                         </li>
                     </ul>
@@ -71,27 +68,27 @@
                     <ul class="space-y-2 text-sm">
                         <li>
                             <Link href="/san-pham" class="hover:text-primary transition-colors">
-                                {{ tt('Móc khoá custom') }}
+                                {{ tt('Xích bậc thang cuốn') }}
                             </Link>
                         </li>
                         <li>
                             <Link href="/san-pham" class="hover:text-primary transition-colors">
-                                {{ tt('Decor văn phòng') }}
+                                {{ tt('Xích thang nâng ô tô') }}
                             </Link>
                         </li>
                         <li>
                             <Link href="/san-pham" class="hover:text-primary transition-colors">
-                                {{ tt('Nguyên mẫu cơ khí') }}
+                                {{ tt('Xích băng tải hành lý') }}
                             </Link>
                         </li>
                         <li>
                             <Link href="/san-pham" class="hover:text-primary transition-colors">
-                                {{ tt('Quà tặng doanh nghiệp') }}
+                                {{ tt('Xích chốt rỗng') }}
                             </Link>
                         </li>
                         <li>
                             <Link href="/san-pham" class="hover:text-primary transition-colors">
-                                {{ tt('Đồ chơi chuyển động') }}
+                                {{ tt('Linh kiện dây chuyền') }}
                             </Link>
                         </li>
                     </ul>
@@ -105,22 +102,22 @@
                     <ul class="space-y-2 text-sm">
                         <li>
                             <a href="#process-section" class="hover:text-primary transition-colors">
-                                {{ tt('Quy trình đặt hàng & in 3D') }}
+                                {{ tt('Quy trình cung ứng B2B') }}
                             </a>
                         </li>
                         <li>
                             <a href="#contact-section" class="hover:text-primary transition-colors">
-                                {{ tt('Hướng dẫn gửi file 3D (STL/STEP)') }}
+                                {{ tt('Gửi bản vẽ & yêu cầu báo giá') }}
                             </a>
                         </li>
                         <li>
                             <Link href="/chinh-sach" class="hover:text-primary transition-colors">
-                                {{ tt('Chính sách bảo hành & Đổi trả') }}
+                                {{ tt('Chính sách bảo hành') }}
                             </Link>
                         </li>
                         <li>
                             <Link href="/chinh-sach" class="hover:text-primary transition-colors">
-                                {{ tt('Chính sách bảo mật dữ liệu file') }}
+                                {{ tt('Chính sách bảo mật hồ sơ') }}
                             </Link>
                         </li>
                     </ul>
@@ -131,7 +128,7 @@
             <div
                 class="pt-8 border-t border-dark-border/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted"
             >
-                <p>© {{ currentYear }} HH Maker. All rights reserved.</p>
+                <p>© {{ currentYear }} Thành Khang Tecsat. All rights reserved.</p>
                 <div class="flex items-center gap-6">
                     <Link href="/chinh-sach" class="hover:text-white transition-colors">
                         {{ tt('Điều khoản dịch vụ') }}

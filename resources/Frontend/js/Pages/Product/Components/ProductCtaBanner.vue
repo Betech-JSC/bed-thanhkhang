@@ -58,7 +58,7 @@ export default {
         description() {
             return this.ctaData?.description
                 ? this.tt(this.ctaData.description)
-                : this.tt('Gửi hình ảnh tham khảo hoặc chia sẻ ý tưởng để HH Maker cùng bạn định hình sản phẩm mong muốn. Chúng tôi sẽ tư vấn giải pháp phù hợp với phong cách, nhu cầu và ngân sách của bạn.')
+                : this.tt('Gửi mã linh kiện, thông số bước xích hoặc yêu cầu dự án để kỹ sư Thành Khang Tecsat tư vấn giải pháp cung ứng phù hợp chuẩn OEM và tiến độ công trình.')
         },
         ctaText() {
             return this.ctaData?.primary_cta_text ? this.tt(this.ctaData.primary_cta_text) : this.tt('Nhận tư vấn ngay')

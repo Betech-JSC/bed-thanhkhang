@@ -13,7 +13,7 @@
                             type: 'text',
                             name: 'title',
                             label: 'Tên sản phẩm',
-                            placeholder: 'VD: Mô hình Cáo Low-Poly Trang Trí',
+                            placeholder: 'VD: Xích thang cuốn bước lớn TL133',
                         }"
                     />
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -23,7 +23,7 @@
                                 type: 'text',
                                 name: 'sku',
                                 label: 'Mã SKU / Mã sản phẩm',
-                                placeholder: 'VD: HHM-LP-FOX-01',
+                                placeholder: 'VD: TK-TC-TL133',
                             }"
                         />
                         <Field
@@ -44,11 +44,11 @@
                 </div>
             </div>
 
-            <!-- 2. Thông số kỹ thuật xưởng in 3D & Bảng thông số in tham khảo (7 dòng) -->
+            <!-- 2. Thông số kỹ thuật & Đặc tính cơ khí (B2B Specifications) -->
             <div class="card">
                 <div class="card-header font-bold text-slate-800 flex items-center justify-between">
-                    <span>Thông số kỹ thuật in 3D &amp; Bảng thông số tham khảo</span>
-                    <span class="text-xs text-blue-600 font-semibold">Chuẩn xưởng chế tác HH Maker (7 thông số)</span>
+                    <span>Thông số kỹ thuật &amp; Đặc tính cơ khí</span>
+                    <span class="text-xs text-blue-600 font-semibold">Tiêu chuẩn kỹ thuật Thành Khang Tecsat</span>
                 </div>
                 <div class="card-body space-y-4">
                     <!-- Dòng 1, 2 & Lead time -->
@@ -58,7 +58,7 @@
                             :field="{
                                 type: 'select_single',
                                 name: 'print_technology',
-                                label: '1. Công nghệ in',
+                                label: '1. Tiêu chuẩn / Công nghệ chế tạo',
                                 options: printTechnologyOptions,
                             }"
                         />
@@ -67,7 +67,7 @@
                             :field="{
                                 type: 'select_single',
                                 name: 'material',
-                                label: '2. Vật liệu in',
+                                label: '2. Vật liệu / Cấu tạo cơ khí',
                                 options: materialOptions,
                             }"
                         />
@@ -76,21 +76,21 @@
                             :field="{
                                 type: 'text',
                                 name: 'lead_time',
-                                label: 'Thời gian hoàn thiện (Lead time)',
-                                placeholder: 'VD: Hoàn thiện trong 24-48h',
+                                label: 'Thời gian cấp hàng (Lead time)',
+                                placeholder: 'VD: Sẵn kho / Đặt hàng 3-7 ngày làm việc',
                             }"
                         />
                     </div>
 
-                    <!-- Dòng 3, 4, 5 của bảng Thông số in tham khảo -->
+                    <!-- Dòng 3, 4, 5 của bảng Thông số kỹ thuật -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <Field
                             v-model="form.sample_size"
                             :field="{
                                 type: 'text',
                                 name: 'sample_size',
-                                label: '3. Kích thước mẫu',
-                                placeholder: 'VD: 120 x 85 x 140 mm',
+                                label: '3. Kích thước / Bước xích / Đường kính',
+                                placeholder: 'VD: Bước xích p=100mm, Bản rộng B=400mm',
                             }"
                         />
                         <Field
@@ -98,8 +98,8 @@
                             :field="{
                                 type: 'text',
                                 name: 'layer_height',
-                                label: '4. Chiều cao lớp in',
-                                placeholder: 'VD: 0.16 mm',
+                                label: '4. Tải trọng làm việc / Giới hạn đứt',
+                                placeholder: 'VD: Tải trọng phá hủy tối thiểu 120 kN',
                             }"
                         />
                         <Field
@@ -107,21 +107,21 @@
                             :field="{
                                 type: 'text',
                                 name: 'nozzle_size',
-                                label: '5. Đầu phun',
-                                placeholder: 'VD: 0.40 mm Hardened Steel',
+                                label: '5. Xử lý bề mặt / Bôi trơn',
+                                placeholder: 'VD: Mạ kẽm / Thấm Nitơ / Tra mỡ chịu nhiệt',
                             }"
                         />
                     </div>
 
-                    <!-- Dòng 6, 7 & Màu trong ảnh / Tuỳ chỉnh -->
+                    <!-- Dòng 6, 7 & Tiêu chuẩn -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <Field
                             v-model="form.infill"
                             :field="{
                                 type: 'text',
                                 name: 'infill',
-                                label: '6. Mật độ ruột (Infill)',
-                                placeholder: 'VD: 20% Gyroid',
+                                label: '6. Tiêu chuẩn áp dụng / Độ cứng',
+                                placeholder: 'VD: ISO 606 / DIN 8187 / JIS B1801',
                             }"
                         />
                         <Field
@@ -129,8 +129,8 @@
                             :field="{
                                 type: 'text',
                                 name: 'support_material',
-                                label: '7. Vật liệu hỗ trợ (Support)',
-                                placeholder: 'VD: Không cần (Zero-support)',
+                                label: '7. Chứng chỉ / Kiểm định',
+                                placeholder: 'VD: CO/CQ, Test report nhà máy',
                             }"
                         />
                     </div>
@@ -180,7 +180,7 @@
                                 type: 'text',
                                 name: 'story_title',
                                 label: 'Tiêu đề câu chuyện sản phẩm (Tab Tổng quan)',
-                                placeholder: 'VD: Nhỏ gọn. Nhiều điều để khám phá.',
+                                placeholder: 'VD: Độ bền chuẩn công nghiệp cho hệ thống vận hành liên tục.',
                             }"
                         />
                         <Field
@@ -190,7 +190,7 @@
                                 name: 'story_intro',
                                 label: 'Đoạn mở đầu câu chuyện (Tab Tổng quan)',
                                 rows: 2,
-                                placeholder: 'Mô tả câu chuyện thiết kế và cảm hứng của mẫu in...',
+                                placeholder: 'Mô tả đặc tính cơ khí, quy trình nhiệt luyện và ứng dụng công nghiệp của sản phẩm...',
                             }"
                         />
                     </div>
@@ -202,7 +202,7 @@
                                 type: 'text',
                                 name: 'feature1_title',
                                 label: 'Tiêu đề điểm nổi bật 1',
-                                placeholder: 'VD: Tạo hình Low-Poly sắc nét',
+                                placeholder: 'VD: Chịu tải cao & chống mài mòn vượt trội',
                             }"
                         />
                         <Field
@@ -312,39 +312,24 @@
 </template>
 <script>
 const DEFAULT_TECH_OPTIONS = [
-    { id: 'FDM High-Precision', label: 'FDM High-Precision (In sợi độ chính xác cao)' },
-    { id: 'FDM Print-in-Place', label: 'FDM Print-in-Place (In khớp nối liền khối)' },
-    { id: 'FDM Multi-Color (AMS)', label: 'FDM Multi-Color (AMS Đa sắc)' },
-    { id: 'SLA Resin 8K', label: 'SLA / MSLA (Quang hóa Resin 8K)' },
-    { id: 'SLS Nylon', label: 'SLS Nylon (Thiêu kết bột laser)' },
-    { id: 'FDM', label: 'FDM (Sợi đùn bồi đắp)' },
-    { id: 'SLA', label: 'SLA (Quang hóa Resin)' },
-    { id: 'SLS', label: 'SLS (Thiêu kết bột)' },
-    { id: 'Custom', label: 'Gia công theo yêu cầu' },
+    { id: 'Gia công CNC chính xác', label: 'Gia công CNC chính xác & Tiện phay' },
+    { id: 'Đúc & Nhiệt luyện cao tần', label: 'Đúc & Nhiệt luyện cao tần chịu mỏi' },
+    { id: 'Lắp ráp tiêu chuẩn OEM/ODM', label: 'Lắp ráp tiêu chuẩn OEM/ODM công nghiệp' },
+    { id: 'Dập nguội & Chốt rỗng chuẩn ISO', label: 'Dập nguội & Chốt rỗng chuẩn ISO/DIN' },
+    { id: 'Động cơ BLDC không chổi than', label: 'Công nghệ động cơ BLDC tiết kiệm điện' },
+    { id: 'Custom', label: 'Gia công & Chế tạo theo yêu cầu bản vẽ' },
 ]
 
 const DEFAULT_MATERIAL_OPTIONS = [
-    { id: 'Nhựa PLA Matte Cao Cấp', label: 'Nhựa PLA Matte Cao Cấp' },
-    { id: 'PLA+', label: 'PLA+ / Tough PLA' },
-    { id: 'PLA+ Tough', label: 'PLA+ Tough Chịu Lực' },
-    { id: 'PLA+ / PETG', label: 'PLA+ / PETG' },
-    { id: 'PLA+ Silk / Matte', label: 'PLA+ Silk / Matte' },
-    { id: 'PLA Silk Dual-Color', label: 'PLA Silk Dual-Color (Đổi màu 2 ánh)' },
-    { id: 'PLA Matte', label: 'PLA Matte Nhám Mịn' },
-    { id: 'PLA Matte / Silk', label: 'PLA Matte / Silk' },
-    { id: 'PLA Silk / Matte', label: 'PLA Silk / Matte' },
-    { id: 'PLA Matte / TPU', label: 'PLA Matte / TPU' },
-    { id: 'PLA+ Tough / Wood PLA', label: 'PLA+ Tough / Wood PLA' },
-    { id: 'PLA+ Multi-Color / Resin', label: 'PLA+ Multi-Color / Resin' },
-    { id: 'PETG', label: 'PETG Kháng Chịu Lực' },
-    { id: 'PETG Tough', label: 'PETG Tough Kháng Gãy' },
-    { id: 'PETG Waterproof', label: 'PETG Waterproof Chống Thấm' },
-    { id: 'PETG / Carbon Fiber', label: 'PETG / Carbon Fiber' },
-    { id: 'Resin 8K', label: 'Resin 8K Chi Tiết Cao' },
-    { id: 'Resin 8K Matte Grey', label: 'Resin 8K Matte Grey' },
-    { id: 'Carbon Fiber', label: 'Carbon Fiber Cường Lực' },
-    { id: 'ABS', label: 'ABS Kỹ Thuật' },
-    { id: 'TPU', label: 'TPU Nhựa Dẻo Đàn Hồi' },
+    { id: 'Thép hợp kim 40Cr/SCM435', label: 'Thép hợp kim 40Cr / SCM435 (Tôi cao tần)' },
+    { id: 'Inox 304 chống rỉ', label: 'Inox 304 / SUS304 (Chống ăn mòn hóa chất)' },
+    { id: 'Inox 316', label: 'Inox 316 / SUS316 (Môi trường thực phẩm & biển)' },
+    { id: 'Polyurethane (PU) chịu tải', label: 'Polyurethane (PU) chịu tải cao & giảm chấn' },
+    { id: 'Nhựa POM kỹ thuật', label: 'Nhựa kỹ thuật POM / Polyacetal (Hệ số ma sát thấp)' },
+    { id: 'Nhựa PA66 / Nylon', label: 'Nhựa PA66 / Nylon chịu mài mòn' },
+    { id: 'Cao su EPDM / NBR', label: 'Cao su kỹ thuật EPDM / NBR (Chịu nhiệt & dầu)' },
+    { id: 'Hợp kim nhôm hàng không', label: 'Hợp kim nhôm hàng không nhẹ & bền' },
+    { id: 'Thép Carbon C45', label: 'Thép Carbon C45 cường độ cao' },
 ]
 
 export default {
@@ -390,27 +375,27 @@ export default {
                 categories: item.categories ?? [],
                 price: item.price ?? null,
                 compare_at_price: item.compare_at_price ?? null,
-                print_technology: item.print_technology ?? specs[0]?.value ?? 'FDM High-Precision',
-                material: item.material ?? specs[1]?.value ?? 'Nhựa PLA Matte Cao Cấp',
-                lead_time: item.lead_time ?? 'Hoàn thiện trong 24-48h',
-                sample_size: item.sample_size ?? specs[2]?.value ?? '120 x 85 x 140 mm',
-                layer_height: item.layer_height ?? specs[3]?.value ?? '0.16 mm',
-                nozzle_size: item.nozzle_size ?? specs[4]?.value ?? '0.40 mm Hardened Steel',
-                infill: item.infill ?? specs[5]?.value ?? '20% Gyroid',
-                support_material: item.support_material ?? specs[6]?.value ?? 'Không cần (Zero-support)',
-                image_color_label: item.image_color_label ?? meta.image_color_label ?? 'Cam',
-                customization_label: item.customization_label ?? meta.customization_label ?? 'Màu sắc · Kích thước · Số lượng',
+                print_technology: item.print_technology ?? specs[0]?.value ?? 'Gia công CNC chính xác',
+                material: item.material ?? specs[1]?.value ?? 'Thép hợp kim 40Cr/SCM435',
+                lead_time: item.lead_time ?? 'Sẵn kho / Giao hàng trong 3-7 ngày',
+                sample_size: item.sample_size ?? specs[2]?.value ?? 'Tiêu chuẩn catalog hoặc bản vẽ',
+                layer_height: item.layer_height ?? specs[3]?.value ?? 'Theo tiêu chuẩn tải trọng công nghiệp',
+                nozzle_size: item.nozzle_size ?? specs[4]?.value ?? 'Mạ kẽm / Thấm Nitơ / Tra mỡ chịu nhiệt',
+                infill: item.infill ?? specs[5]?.value ?? 'ISO 606 / DIN 8187 / JIS B1801',
+                support_material: item.support_material ?? specs[6]?.value ?? 'Đầy đủ CO/CQ, Test report nhà máy',
+                image_color_label: item.image_color_label ?? meta.image_color_label ?? 'Tiêu chuẩn nhà máy',
+                customization_label: item.customization_label ?? meta.customization_label ?? 'Kích thước · Tải trọng · Bản vẽ OEM',
                 pdp_metadata: {
-                    story_title: meta.story_title ?? 'Nhỏ gọn. Nhiều điều để khám phá.',
+                    story_title: meta.story_title ?? 'Giải pháp cơ khí & phụ tùng công nghiệp bền bỉ.',
                     story_intro: meta.story_intro ?? item.description ?? '',
-                    feature1_title: meta.feature1_title ?? 'Tạo hình Low-Poly sắc nét',
+                    feature1_title: meta.feature1_title ?? 'Độ bền cơ tính vượt trội',
                     feature1_desc:
                         meta.feature1_desc ??
-                        'Các góc cạnh đa giác được hoàn thiện mượt mà, phản chiếu ánh sáng độc đáo ở từng góc nhìn, thể hiện rõ thế mạnh độ chính xác của công nghệ in 3D FDM.',
-                    feature2_title: meta.feature2_title ?? 'Tùy chỉnh theo yêu cầu',
+                        'Sản phẩm được gia công cơ khí chính xác, nhiệt luyện cao tần đạt độ cứng tiêu chuẩn, đảm bảo chống mài mòn và chịu tải trọng làm việc khắc nghiệt.',
+                    feature2_title: meta.feature2_title ?? 'Tư vấn kỹ thuật & Gia công theo bản vẽ',
                     feature2_desc:
                         meta.feature2_desc ??
-                        'Bạn có thể trao đổi với HH Maker để thay đổi màu sắc, điều chỉnh kích thước (tỉ lệ scale) hoặc đặt số lượng lớn làm quà tặng, decor sự kiện.',
+                        'Đội ngũ kỹ sư Thành Khang Tecsat sẵn sàng khảo sát thực địa tại nhà máy, tư vấn giải pháp tương thích 100% với dây chuyền hiện hữu.',
                 },
                 images: item.images ?? [],
                 status: item.status ?? 'ACTIVE',

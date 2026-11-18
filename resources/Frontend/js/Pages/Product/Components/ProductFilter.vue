@@ -218,9 +218,9 @@ export default {
     computed: {
         purposes() {
             return [
-                this.tt('Trang trí không gian'),
-                this.tt('Đồ dùng hằng ngày'),
-                this.tt('Quà tặng cá nhân'),
+                this.tt('Thang cuốn thương mại & công cộng'),
+                this.tt('Bãi đỗ xe & Thang nâng ô tô'),
+                this.tt('Băng tải & Dây chuyền công nghiệp'),
             ]
         },
         defaultCategoryTree() {
@@ -233,35 +233,39 @@ export default {
                     subcategories: [],
                 },
                 {
-                    id: 'moc-khoa',
-                    name: this.tt('Móc khoá'),
-                    slug: 'moc-khoa-phu-kien',
+                    id: 'linh-kien-thang-cuon',
+                    name: this.tt('Linh kiện thang cuốn'),
+                    slug: 'linh-kien-thang-cuon',
                     hasChevron: true,
                     subcategories: [
-                        { id: 'moc-khoa-co-khi', slug: 'moc-khoa-co-khi', name: this.tt('Móc khoá cơ khí') },
-                        { id: 'moc-khoa-the-thao', slug: 'moc-khoa-the-thao', name: this.tt('Móc khoá thể thao & phụ kiện') },
+                        { id: 'xich-bac-thang-cuon', slug: 'xich-bac-thang-cuon', name: this.tt('Xích bậc thang cuốn') },
+                        { id: 'xich-bang-tai-hanh-khach', slug: 'xich-bang-tai-hanh-khach', name: this.tt('Xích băng tải hành khách') },
+                        { id: 'xich-dan-dong-chinh-thang-cuon', slug: 'xich-dan-dong-chinh-thang-cuon', name: this.tt('Xích dẫn động chính') },
                     ],
                 },
                 {
-                    id: 'van-phong-pham',
-                    name: this.tt('Văn phòng phẩm'),
-                    slug: 'trang-tri-do-dung',
+                    id: 'linh-kien-thang-nang-o-to',
+                    name: this.tt('Linh kiện thang nâng ô tô'),
+                    slug: 'linh-kien-thang-nang-o-to',
                     hasChevron: true,
                     subcategories: [
-                        { id: 'ly', slug: 'ly', name: this.tt('Ly') },
-                        { id: 'lo-cam-hoa-de-ban', slug: 'lo-cam-hoa-de-ban', name: this.tt('Lọ cắm hoa để bàn') },
-                        { id: 'den', slug: 'den', name: this.tt('Đèn') },
+                        { id: 'xich-bai-do-xe-tieu-chuan-lt', slug: 'xich-bai-do-xe-tieu-chuan-lt', name: this.tt('Xích bãi đỗ xe tiêu chuẩn LT') },
+                        { id: 'xich-bai-do-xe-tuan-hoan-dung', slug: 'xich-bai-do-xe-tuan-hoan-dung', name: this.tt('Xích tuần hoàn đứng') },
                     ],
                 },
                 {
-                    id: 'gia-cong-theo-yeu-cau',
-                    name: this.tt('Gia công theo yêu cầu'),
-                    slug: 'gia-cong-theo-yeu-cau',
-                    hasChevron: true,
-                    subcategories: [
-                        { id: 'mo-hinh-resin', slug: 'mo-hinh-resin', name: this.tt('Mô hình Resin & Khớp cử động') },
-                        { id: 'linh-kien-carbon', slug: 'linh-kien-carbon', name: this.tt('Linh kiện cơ khí & Carbon Fiber') },
-                    ],
+                    id: 'he-thong-bang-tai-hanh-ly',
+                    name: this.tt('Hệ thống băng tải hành lý'),
+                    slug: 'he-thong-bang-tai-hanh-ly',
+                    hasChevron: false,
+                    subcategories: [],
+                },
+                {
+                    id: 'linh-kien-day-chuyen-dong-goi',
+                    name: this.tt('Linh kiện dây chuyền đóng gói'),
+                    slug: 'linh-kien-day-chuyen-dong-goi',
+                    hasChevron: false,
+                    subcategories: [],
                 },
             ]
         },
@@ -304,12 +308,14 @@ export default {
                 const rawTitle = String(root.title || root.name || '').trim()
 
                 let fallback = null
-                if (slug.includes('moc-khoa') || slug.includes('keychain') || rawTitle.toLowerCase().includes('móc khoá') || rawTitle.toLowerCase().includes('móc khóa')) {
+                if (slug.includes('thang-cuon') || slug.includes('escalator') || rawTitle.toLowerCase().includes('thang cuốn')) {
                     fallback = this.defaultCategoryTree[1]
-                } else if (slug.includes('trang-tri-do-dung') || slug.includes('van-phong-pham') || slug.includes('stationery') || rawTitle.toLowerCase().includes('đồ dùng') || rawTitle.toLowerCase().includes('văn phòng')) {
+                } else if (slug.includes('thang-nang') || slug.includes('parking') || rawTitle.toLowerCase().includes('thang nâng')) {
                     fallback = this.defaultCategoryTree[2]
-                } else if (slug.includes('gia-cong') || slug.includes('custom') || rawTitle.toLowerCase().includes('gia công')) {
+                } else if (slug.includes('bang-tai') || slug.includes('baggage') || rawTitle.toLowerCase().includes('băng tải')) {
                     fallback = this.defaultCategoryTree[3]
+                } else if (slug.includes('dong-goi') || slug.includes('packaging') || rawTitle.toLowerCase().includes('đóng gói')) {
+                    fallback = this.defaultCategoryTree[4]
                 }
 
                 const rawChildren =

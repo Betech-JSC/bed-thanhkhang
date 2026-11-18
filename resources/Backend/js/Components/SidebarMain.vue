@@ -27,12 +27,12 @@
         <span>Hướng dẫn sử dụng</span>
     </Link>
 
-    <!-- 2. VẬN HÀNH XƯỞNG IN 3D -->
+    <!-- 2. QUẢN LÝ SẢN PHẨM & BÁO GIÁ -->
     <div class="sidebar-section-header">
-        <span>🟢 VẬN HÀNH XƯỞNG IN 3D</span>
+        <span>QUẢN LÝ SẢN PHẨM & BÁO GIÁ</span>
     </div>
 
-    <!-- Báo giá & Yêu cầu in 3D -->
+    <!-- Yêu cầu báo giá kỹ thuật (RFQ) -->
     <Link
         v-if="can('admin.contacts.index')"
         :href="route('admin.contacts.index')"
@@ -40,7 +40,7 @@
         class="item"
     >
         <material-symbols:connect-without-contact />
-        <span>Báo giá &amp; Yêu cầu in 3D</span>
+        <span>Yêu cầu báo giá kỹ thuật (RFQ)</span>
         <span class="badge badge-primary" v-if="newContact">{{ newContact }}</span>
     </Link>
 
@@ -66,7 +66,7 @@
         <span>Danh mục Sản phẩm</span>
     </Link>
 
-    <!-- Dịch vụ In 3D & Thiết kế -->
+    <!-- Dịch vụ & Giải pháp Kỹ thuật -->
     <Link
         v-if="can('admin.services.index')"
         :href="route('admin.services.index')"
@@ -74,7 +74,7 @@
         class="item"
     >
         <bx:category />
-        <span>Dịch vụ In &amp; Thiết kế</span>
+        <span>Dịch vụ &amp; Giải pháp Kỹ thuật</span>
     </Link>
 
     <!-- 3. NỘI DUNG & THƯƠNG HIỆU -->

@@ -81,11 +81,11 @@ class PolicyController extends Controller
         $title = $content['title'] ?? ($locale === 'en' ? 'Policies & Terms' : 'Chính sách & Điều khoản');
         $seo = [
             'title' => $locale === 'en'
-                ? $title . ' - HH Maker | 3D Printing Workshop'
-                : $title . ' - HH Maker | Xưởng in 3D',
+                ? $title . ' - Thanh Khang Tecsat | B2B Industrial Policies'
+                : $title . ' - Thành Khang Tecsat | Chính sách B2B',
             'description' => $locale === 'en'
-                ? 'Official service policies, warranty terms, and privacy commitments for 3D printing and custom modeling at HH Maker.'
-                : 'Thông tin chính sách dịch vụ, cam kết bảo mật và quy định bảo hành in 3D chuyên nghiệp tại HH Maker.',
+                ? 'Official B2B service policies, sales terms, warranty, and technical commitments of Thanh Khang Tecsat.'
+                : 'Thông tin chính sách bán hàng, bảo hành kỹ thuật, vận chuyển và cam kết chất lượng B2B của Thành Khang Tecsat.',
         ];
 
         $data = [
@@ -103,7 +103,7 @@ class PolicyController extends Controller
     }
 
     /**
-     * Get Figma standard fallback policies (Bảo mật, Điều khoản dịch vụ, Bảo hành & đổi trả).
+     * Get B2B standard fallback policies for Thanh Khang Tecsat.
      */
     protected function getFallbackPolicies(?string $locale = null): Collection
     {
@@ -113,42 +113,42 @@ class PolicyController extends Controller
         return collect([
             [
                 'id' => 1,
-                'title' => $isEn ? 'Terms of Service' : 'Điều khoản dịch vụ',
-                'slug' => $isEn ? 'terms-of-service' : 'dieu-khoan-dich-vu',
-                'slug_vi' => 'dieu-khoan-dich-vu',
-                'slug_en' => 'terms-of-service',
+                'title' => $isEn ? 'B2B Sales & Quotation Policy' : 'Chính sách bán hàng & Báo giá B2B',
+                'slug' => $isEn ? 'sales-policy' : 'chinh-sach-ban-hang',
+                'slug_vi' => 'chinh-sach-ban-hang',
+                'slug_en' => 'sales-policy',
                 'content' => $isEn
-                    ? '<h3>1. Scope of 3D Printing Services</h3><p>HH Maker provides professional 3D printing services, CAD design, digital sculpting, and bespoke custom fabrication. All manufacturing activities strictly adhere to agreed specifications, engineering drawings, or 3D digital models provided by clients or mutually finalized during consultation.</p><h3>2. Quotations and Ordering Process</h3><p>Project quotations are valid for 15 business days from issuance. Production commences upon official client confirmation and completion of required initial deposit terms. Technical revisions requested after slicing or fabrication commencement may incur additional scheduling or material costs.</p><h3>3. Intellectual Property and Confidentiality</h3><p>HH Maker honors and protects customer intellectual property. Client 3D models (STL, OBJ, STEP, 3MF) and proprietary design files will never be shared, commercialized, or reproduced for third parties without explicit prior written authorization.</p><h3>4. Lead Times and Delivery</h3><p>Turnaround times are calculated based on model volume, printing technology (FDM, SLA, SLS), and post-processing complexity. Single prototype parts typically complete within 24 to 48 hours. Express nationwide logistics partners facilitate swift and insured delivery.</p>'
-                    : '<h3>1. Phạm vi dịch vụ in và chế tác 3D</h3><p>HH Maker cung cấp dịch vụ in 3D chuyên nghiệp, thiết kế CAD, dựng hình kỹ thuật số và làm đồ custom theo yêu cầu. Tất cả quy trình gia công đều tuân thủ chặt chẽ các thông số kỹ thuật, bản vẽ hoặc file 3D do khách hàng cung cấp hoặc đã thống nhất trong quá trình tư vấn.</p><h3>2. Quy trình báo giá và đặt hàng</h3><p>Bảng báo giá dự án có hiệu lực trong vòng 15 ngày làm việc kể từ thời điểm gửi. Đơn hàng được chính thức đưa vào sản xuất sau khi hai bên thống nhất phương án kỹ thuật và hoàn tất thủ tục đặt cọc theo thỏa thuận.</p><h3>3. Bản quyền tác giả & Quyền sở hữu trí tuệ</h3><p>HH Maker cam kết tôn trọng tuyệt đối quyền sở hữu trí tuệ của khách hàng đối với các mô hình 3D (STL, OBJ, STEP, 3MF). Chúng tôi không sao chép, phát tán hay thương mại hóa bất kỳ thiết kế nào khi chưa có sự đồng ý bằng văn bản của khách hàng.</p><h3>4. Tiến độ hoàn thiện và bàn giao</h3><p>Thời gian gia công được tính toán dựa trên khối lượng mô hình, công nghệ in (FDM, SLA, SLS) và yêu cầu xử lý bề mặt. Các mẫu thử đơn chiếc thường hoàn thiện trong vòng 24 - 48 giờ làm việc.</p>',
+                    ? '<h3>1. Scope of Supply & Target Customers</h3><p>Thanh Khang Tecsat specializes in supplying genuine escalator components, baggage handling systems, industrial conveyor chains, and energy-saving BLDC fans nationwide.</p><h3>2. Technical RFQ Quotation Procedure</h3><p>Submit RFQ inquiries via Hotline/Zalo (+84 967 732 665) or Email (info@dvktthanhkhang.vn). Quotes are provided within 2 to 4 business hours.</p><h3>3. Quotation Validity & Commercial Terms</h3><p>Formal quotations remain valid for 30 business days with tiered project volume discounts and complete VAT invoices, CO, and CQ certificates.</p>'
+                    : '<h3>1. Phạm vi cung ứng & Đối tượng phục vụ</h3><p>Thành Khang Tecsat chuyên cung ứng vật tư, linh kiện cơ khí chính xác cho thang cuốn, thang nâng ô tô tự động, hệ thống băng tải hành lý sân bay, dây chuyền đóng gói công nghiệp và quạt trần công nghiệp BLDC trên toàn quốc.</p><h3>2. Quy trình báo giá kỹ thuật (RFQ)</h3><p>Mọi yêu cầu báo giá được tiếp nhận qua Hotline/Zalo 0967732665 hoặc Email info@dvktthanhkhang.vn với thời gian phản hồi chi tiết trong vòng 2 – 4 giờ làm việc.</p><h3>3. Hiệu lực báo giá & Chứng từ xuất xưởng</h3><p>Báo giá có hiệu lực trong 30 ngày. 100% đơn hàng B2B có đầy đủ hóa đơn VAT, chứng chỉ xuất xưởng, chứng nhận CO và CQ chính hãng.</p>',
                 'formatted_updated_at' => null,
                 'icon' => null,
-                'url' => $isEn ? '/en/policies/terms-of-service' : '/chinh-sach/dieu-khoan-dich-vu',
+                'url' => $isEn ? '/en/policies/sales-policy' : '/chinh-sach/chinh-sach-ban-hang',
             ],
             [
                 'id' => 2,
-                'title' => $isEn ? 'Privacy Policy' : 'Chính sách bảo mật',
+                'title' => $isEn ? 'Corporate Privacy Policy' : 'Chính sách bảo mật thông tin doanh nghiệp',
                 'slug' => $isEn ? 'privacy-policy' : 'chinh-sach-bao-mat',
                 'slug_vi' => 'chinh-sach-bao-mat',
                 'slug_en' => 'privacy-policy',
                 'content' => $isEn
-                    ? '<h3>1. Collection of Information</h3><p>We collect essential contact information (name, telephone number, email address, delivery location) and technical project briefs solely to fulfill consultation, quoting, manufacturing, and order delivery.</p><h3>2. Security of 3D Files and CAD Data</h3><p>All 3D CAD assets and confidential project documents uploaded to HH Maker are encrypted and accessible strictly by authorized engineering personnel. Files are automatically archived or permanently deleted 30 days after successful delivery unless a continuous retention agreement is requested.</p><h3>3. Data Disclosure</h3><p>We do not sell, rent, or trade customer information to any third parties. Data is shared exclusively with certified logistics partners for courier purposes.</p><h3>4. Inquiries and Contact</h3><p>For any privacy inquiries or requests to remove design data, please contact our data compliance officer at info@hhmaker.vn or hotline 0906636425.</p>'
-                    : '<h3>1. Thu thập và sử dụng thông tin</h3><p>Chúng tôi chỉ thu thập các thông tin liên lạc cần thiết (họ tên, số điện thoại, email, địa chỉ giao hàng) và tệp mô hình 3D nhằm phục vụ việc tư vấn báo giá, gia công sản xuất và giao vận đơn hàng.</p><h3>2. Bảo mật tệp thiết kế 3D</h3><p>Tất cả tệp CAD và tài liệu kỹ thuật gửi tới HH Maker được lưu trữ bảo mật trên hệ thống máy chủ nội bộ. Dữ liệu sẽ tự động xóa sau 30 ngày kể từ khi đơn hàng giao thành công, trừ trường hợp khách hàng có yêu cầu lưu trữ để tái đặt hàng.</p><h3>3. Cam kết không chia sẻ dữ liệu</h3><p>HH Maker không bán, trao đổi hoặc chia sẻ thông tin cá nhân hay bản vẽ của bạn cho bất kỳ bên thứ ba nào, ngoại trừ đơn vị vận chuyển đối tác phục vụ giao nhận tận nơi.</p><h3>4. Liên hệ giải đáp</h3><p>Mọi thắc mắc về chính sách bảo mật hoặc yêu cầu xóa dữ liệu thiết kế, xin vui lòng gửi email về info@hhmaker.vn hoặc hotline 0906636425.</p>',
+                    ? '<h3>1. Business Data Collection</h3><p>We collect essential corporate information (company name, tax code, technical CAD drawings) strictly to prepare engineering quotes and execute delivery contracts.</p><h3>2. Confidentiality & Non-Disclosure</h3><p>All drawings and project specifications are treated as confidential trade secrets. We never disclose or commercialize customer design assets to third parties.</p><h3>3. Contact & Compliance</h3><p>For inquiries regarding privacy, please contact our compliance desk at info@dvktthanhkhang.vn or hotline +84 967 732 665.</p>'
+                    : '<h3>1. Thu thập dữ liệu doanh nghiệp</h3><p>Chúng tôi chỉ thu thập các thông tin liên lạc và bản vẽ kỹ thuật phục vụ việc tư vấn báo giá, giao nhận vật tư và ký kết hợp đồng kinh tế.</p><h3>2. Bảo mật bản vẽ kỹ thuật</h3><p>Mọi bản vẽ cơ khí và tài liệu dự án được bảo mật tuyệt đối trên máy chủ nội bộ. Thành Khang Tecsat cam kết không tiết lộ hay chuyển giao dữ liệu cho bên thứ ba.</p><h3>3. Liên hệ giải đáp</h3><p>Mọi thắc mắc về chính sách bảo mật, xin vui lòng gửi email về info@dvktthanhkhang.vn hoặc hotline 0967732665.</p>',
                 'formatted_updated_at' => null,
                 'icon' => null,
                 'url' => $isEn ? '/en/policies/privacy-policy' : '/chinh-sach/chinh-sach-bao-mat',
             ],
             [
                 'id' => 3,
-                'title' => $isEn ? 'Warranty & Return Policy' : 'Chính sách bảo hành & đổi trả',
-                'slug' => $isEn ? 'warranty-return-policy' : 'chinh-sach-bao-hanh-doi-tra',
-                'slug_vi' => 'chinh-sach-bao-hanh-doi-tra',
-                'slug_en' => 'warranty-return-policy',
+                'title' => $isEn ? 'Warranty & Technical Services Policy' : 'Chính sách bảo hành & Dịch vụ kỹ thuật',
+                'slug' => $isEn ? 'warranty-policy' : 'chinh-sach-bao-hanh',
+                'slug_vi' => 'chinh-sach-bao-hanh',
+                'slug_en' => 'warranty-policy',
                 'content' => $isEn
-                    ? '<h3>1. Technical Tolerance Standards</h3><p>HH Maker maintains stringent industrial standards: standard FDM tolerance is +/- 0.2mm (or 0.5%), and high-precision SLA/Resin tolerance is +/- 0.05mm. Dimensional tolerances conform strictly to agreed design slicer parameters.</p><h3>2. 100% Free Reprint Guarantee</h3><p>HH Maker provides full, free-of-charge reprints under the following conditions:</p><ul><li>Physical cracking or breakage sustained during courier transit with valid packaging unboxing evidence.</li><li>Critical printing defects such as severe layer shifts, delamination, or incomplete curing.</li><li>Deviations exceeding agreed dimensional tolerances rendering components functionally unusable.</li></ul><h3>3. Claim Submission Period</h3><p>Please inspect received items and notify our technical support team within 48 hours of parcel arrival via Zalo OA or email info@hhmaker.vn with unboxing photos/videos for immediate expedited processing.</p>'
-                    : '<h3>1. Tiêu chuẩn dung sai kỹ thuật</h3><p>Sản phẩm in 3D tại HH Maker tuân thủ dung sai cơ khí chuẩn: công nghệ FDM đạt +/- 0.2mm (hoặc 0.5%), công nghệ Resin/SLA đạt +/- 0.05mm theo thông số file slicer đã được duyệt.</p><h3>2. Cam kết in lại miễn phí 100%</h3><p>HH Maker thực hiện in lại hoàn toàn miễn phí cho khách hàng trong các trường hợp:</p><ul><li>Sản phẩm bị nứt vỡ, hư hỏng trong quá trình vận chuyển (có video/ảnh chụp mở hộp xác nhận).</li><li>Lỗi gia công từ xưởng in như tách lớp nghiêm trọng, lệch layer hoặc biến dạng nhiệt vượt chuẩn.</li><li>Kích thước sai lệch vượt mức dung sai kỹ thuật đã cam kết khiến chi tiết không thể lắp ghép.</li></ul><h3>3. Thời hạn tiếp nhận yêu cầu</h3><p>Khách hàng vui lòng kiểm tra sản phẩm và gửi phản hồi cho HH Maker trong vòng 48 giờ kể từ khi nhận kiện hàng để được hỗ trợ xử lý đổi trả hoặc in bù nhanh chóng nhất.</p>',
+                    ? '<h3>1. Standard Warranty Coverage</h3><p>All precision escalator spare parts, conveyor chains, and BLDC fans carry official 12 to 24-month warranties against manufacturing and material defects.</p><h3>2. 100% Free 1:1 Replacement Guarantee</h3><p>Immediate 1:1 replacement is provided for dimension mismatch, transit damage, or material flaws detected upon handover.</p><h3>3. Technical Advisory Support</h3><p>Our engineering team provides 24/7 technical advisory on alignment, chain elongation tracking, and preventive maintenance.</p>'
+                    : '<h3>1. Thời hạn bảo hành tiêu chuẩn</h3><p>Toàn bộ linh kiện cơ khí, xích tải thang cuốn và quạt trần công nghiệp BLDC do Thành Khang Tecsat cung ứng được bảo hành chính hãng từ 12 đến 24 tháng.</p><h3>2. Cam kết đổi mới 1:1 miễn phí</h3><p>Đổi mới 100% không phát sinh chi phí nếu sản phẩm sai quy cách, lỗi gia công hoặc nứt vỡ trong quá trình vận chuyển.</p><h3>3. Hỗ trợ kỹ thuật 24/7</h3><p>Kỹ sư Thành Khang Tecsat đồng hành trọn đời sản phẩm, tư vấn đo độ dão mòn xích và phương án bảo trì phòng ngừa sự cố.</p>',
                 'formatted_updated_at' => null,
                 'icon' => null,
-                'url' => $isEn ? '/en/policies/warranty-return-policy' : '/chinh-sach/chinh-sach-bao-hanh-doi-tra',
+                'url' => $isEn ? '/en/policies/warranty-policy' : '/chinh-sach/chinh-sach-bao-hanh',
             ],
         ]);
     }

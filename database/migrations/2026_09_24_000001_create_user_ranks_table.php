@@ -26,7 +26,7 @@ return new class extends Migration
         });
 
         // Tự động nạp sẵn 8 mốc danh hiệu mẫu và avatar icon khi triển khai lên môi trường mới
-        if (class_exists(\App\Models\UserRank::class)) {
+        if (class_exists(\App\Models\UserRank::class) && class_exists(\Database\Seeders\UserRankSeeder::class)) {
             \Artisan::call('db:seed', [
                 '--class' => 'Database\\Seeders\\UserRankSeeder',
                 '--force' => true,

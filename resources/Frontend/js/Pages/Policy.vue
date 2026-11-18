@@ -15,10 +15,10 @@
                     {{ tt('CHÍNH SÁCH & ĐIỀU KHOẢN') }}
                 </span>
                 <h1 class="text-2xl sm:text-3xl lg:text-[38px] font-bold text-[#FAFAFA] tracking-tight leading-tight lg:leading-[46px]">
-                    {{ tt('Chính sách & Cam kết xưởng in 3D HH Maker') }}
+                    {{ tt('Chính sách & Cam kết Thành Khang Tecsat') }}
                 </h1>
                 <p class="text-[#B9C0D4] text-sm sm:text-base leading-relaxed max-w-3xl">
-                    {{ tt('Thông tin chi tiết về điều khoản dịch vụ, bảo vệ quyền sở hữu trí tuệ bản vẽ CAD và chính sách bảo hành in 3D.') }}
+                    {{ tt('Thông tin chi tiết về điều khoản bán hàng, bảo mật thông số bản vẽ kỹ thuật và chính sách bảo hành thiết bị công nghiệp.') }}
                 </p>
             </div>
 
@@ -155,14 +155,14 @@ export default {
             if (this.seo?.title) return this.seo.title
             const itemTitle = this.content ? this.tt(this.content.title) : this.tt('Chính sách & Điều khoản')
             return this.currentLocale === 'en'
-                ? `${itemTitle} - HH Maker | 3D Printing Workshop`
-                : `${itemTitle} - ${this.tt('HH Maker | Xưởng in 3D')}`
+                ? `${itemTitle} - Thành Khang Tecsat | Industrial Equipment & Escalator Parts`
+                : `${itemTitle} - ${this.tt('Thành Khang Tecsat | Thiết bị công nghiệp')}`
         },
         pageDescription() {
             if (this.seo?.description) return this.seo.description
             return this.currentLocale === 'en'
-                ? 'Official service policies, warranty terms, and privacy commitments for 3D printing and custom modeling at HH Maker.'
-                : this.tt('Thông tin chính sách dịch vụ, cam kết bảo mật và quy định bảo hành in 3D chuyên nghiệp tại HH Maker.')
+                ? 'Official sales policies, warranty terms, and technical data confidentiality commitments at Thành Khang Tecsat.'
+                : this.tt('Thông tin chính sách bán hàng, cam kết bảo mật hồ sơ kỹ thuật và quy định bảo hành thiết bị tại Thành Khang Tecsat.')
         },
     },
     methods: {

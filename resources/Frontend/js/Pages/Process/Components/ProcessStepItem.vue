@@ -37,10 +37,10 @@
                         </p>
                     </div>
 
-                    <!-- Column 2: HH MAKER THỰC HIỆN (Figma 420px wide, gap: 8px) -->
+                    <!-- Column 2: THÀNH KHANG TECSAT THỰC HIỆN -->
                     <div class="flex flex-col gap-2">
                         <h3 class="font-semibold text-[13px] leading-[16px] text-[#84ADFF] uppercase">
-                            {{ tt('HH MAKER THỰC HIỆN') }}
+                            {{ tt('THÀNH KHANG TECSAT THỰC HIỆN') }}
                         </h3>
                         <p class="text-sm sm:text-base text-[#B9C0D4] leading-relaxed lg:leading-[26px]">
                             {{ tt(step.makerAction) }}

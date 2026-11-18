@@ -49,25 +49,25 @@
         <!-- 5. Brand Story Section (Figma Node 2261:5696) -->
         <BrandStorySection
             :founderImage="founderBanner?.image?.url || '/assets/images/homepage/founder-composite.png'"
-            :subtitle="founderBanner?.subtitle ? tt(founderBanner.subtitle) : tt('CHIA SẺ TỪ NHÀ SÁNG LẬP HH MAKER')"
-            :title="founderBanner?.title ? tt(founderBanner.title) : tt('HÀNH TRÌNH ĐƯA SÁNG TẠO VƯỢT RA KHỎI MÀN HÌNH')"
-            :description="founderBanner?.description ? tt(founderBanner.description) : tt('Xuất phát từ niềm đam mê với nghệ thuật 3D và công nghệ chế tác hiện đại, tôi thành lập HH Maker với sứ mệnh rút ngắn khoảng cách giữa ý tưởng sơ khai và sản phẩm vật lý. /n Với mỗi dự án, tôi cùng đội ngũ luôn tỉ mỉ trong từng đường nét thiết kế, lựa chọn vật liệu và kiểm soát quy trình in để mang lại những sản phẩm sắc nét, chuẩn xác và mang đậm dấu ấn cá nhân nhất.')"
+            :subtitle="founderBanner?.subtitle ? tt(founderBanner.subtitle) : tt('VỀ THÀNH KHANG TECSAT')"
+            :title="founderBanner?.title ? tt(founderBanner.title) : tt('ĐỒNG HÀNH CÙNG VẬN HÀNH CÔNG NGHIỆP BỀN BỈ')"
+            :description="founderBanner?.description ? tt(founderBanner.description) : tt('Thành Khang Tecsat là đơn vị chuyên cung cấp giải pháp và thiết bị công nghiệp B2B hàng đầu trong lĩnh vực linh kiện thang cuốn - thang máy, hệ thống băng tải và xích tải công nghiệp Universal Chains. /n Bên cạnh vật tư truyền động chính xác, chúng tôi còn tiên phong triển khai giải pháp tiết kiệm điện với dòng quạt trần công nghiệp BLDC HVLS, cam kết chất lượng chuẩn OEM và dịch vụ kỹ thuật tận tâm.')"
         />
 
         <!-- 6. 5-Step Process Section (Figma Node 2261:5723) -->
         <ProcessSection
             :processImage="'/assets/images/homepage/process-banner-figma.png'"
             :stepCount="'05'"
-            :title="tt('BƯỚC TRONG QUY TRÌNH LÀM VIỆC CHUYÊN NGHIỆP & MINH BẠCH TẠI HH MAKER')"
-            :description="tt('Khách hàng gửi file 3D hoặc chia sẻ ý tưởng, đội ngũ kỹ thuật của HH Maker sẽ tiến hành phân tích độ khả thi, tư vấn công nghệ in tối ưu, cũng như lựa chọn loại vật liệu phù hợp nhất để đảm bảo sản phẩm đạt độ bền, tính thẩm mỹ và công năng sử dụng đúng như kỳ vọng của bạn.')"
+            :title="tt('BƯỚC TRONG QUY TRÌNH CUNG ỨNG CHUYÊN NGHIỆP & MINH BẠCH TẠI THÀNH KHANG TECSAT')"
+            :description="tt('Đối tác gửi mã linh kiện, thông số bước xích hoặc bản vẽ kỹ thuật, đội ngũ kỹ sư Thành Khang Tecsat sẽ đối chiếu chuẩn OEM, tư vấn vật liệu và giải pháp vận hành tối ưu cùng chứng chỉ CO/CQ đầy đủ.')"
             :steps="processSteps"
             :customSteps="processSteps"
         />
 
         <!-- 7. Fast Consultation Form Section (Figma Node 2261:5755) -->
         <ContactSection
-            :title="tt('KẾT NỐI VỚI HH MAKER')"
-            :description="tt('Bạn cần tư vấn về in 3D? Hãy chia sẻ nhu cầu & ý tưởng của bạn với HH MAKER qua các kênh bên dưới')"
+            :title="tt('KẾT NỐI VỚI THÀNH KHANG TECSAT')"
+            :description="tt('Bạn cần tư vấn phụ tùng thang cuốn, xích công nghiệp hay quạt BLDC? Hãy gửi thông tin yêu cầu cho chúng tôi qua các kênh bên dưới')"
         />
     </div>
 </template>
@@ -136,16 +136,16 @@ export default {
         return {
             heroBanner: '/assets/images/homepage/hero-banner.png',
             heroSubtitle: this.tt('VỀ CHÚNG TÔI'),
-            heroTitle: this.tt('HIỆN THỰC HÓA MỌI Ý TƯỞNG VỚI CÔNG NGHỆ IN 3D'),
-            heroDescription: this.tt('Không giới hạn không gian sáng tạo, HH Maker thổi hồn vào từng sản phẩm thông qua công nghệ in và gia công 3D hiện đại'),
+            heroTitle: this.tt('GIẢI PHÁP THIẾT BỊ CÔNG NGHIỆP & PHỤ TÙNG THANG CUỐN CHUẨN OEM'),
+            heroDescription: this.tt('Thành Khang Tecsat cung cấp linh kiện thang cuốn, xích công nghiệp Universal Chains, hệ thống băng tải và quạt trần công nghiệp BLDC HVLS với đầy đủ chứng từ CO/CQ'),
         };
     },
     computed: {
         pageTitle() {
-            return this.tt('HH Maker - Hiện Thực Hóa Mọi Ý Tưởng Với Công Nghệ In 3D');
+            return this.tt('Thành Khang Tecsat - Thiết bị công nghiệp & Phụ tùng thang cuốn');
         },
         pageDescription() {
-            return this.tt('Không giới hạn không gian sáng tạo, HH Maker thổi hồn vào từng sản phẩm thông qua công nghệ in và gia công 3D hiện đại.');
+            return this.tt('Cung cấp linh kiện thang cuốn, thang nâng ô tô, xích công nghiệp Universal Chains, hệ thống băng tải và quạt trần công nghiệp BLDC HVLS.');
         },
         activeSlider() {
             if (Array.isArray(this.sliders) && this.sliders.length > 0) {
@@ -169,7 +169,7 @@ export default {
             return this.heroBanner;
         },
         dynamicHeroTitle() {
-            if (this.activeSlider?.title && !this.activeSlider.title.includes('HH Maker - Dịch vụ')) {
+            if (this.activeSlider?.title && !this.activeSlider.title.includes('HH Maker')) {
                 return this.tt(this.activeSlider.title);
             }
             return this.tt(this.heroTitle);

@@ -73,8 +73,8 @@ const pageTitle = computed(() => {
     return (
         props.seo?.title ||
         (currentLocale.value === 'en'
-            ? 'Professional 3D Printing & Manufacturing Process - HH Maker'
-            : i18n.tt('Quy Trình Gia Công & Chế Tác 3D Chuyên Nghiệp - HH Maker'))
+            ? 'Professional Supply & Technical Process - Thành Khang Tecsat'
+            : i18n.tt('Quy Trình Cung Ứng & Hỗ Trợ Kỹ Thuật Chuyên Nghiệp - Thành Khang Tecsat'))
     )
 })
 
@@ -82,8 +82,8 @@ const pageDescription = computed(() => {
     return (
         props.seo?.description ||
         (currentLocale.value === 'en'
-            ? 'Explore HH Maker\'s 5-step professional 3D printing and design process: From contact, detailed quotation, precise fabrication, careful packaging to safe delivery.'
-            : i18n.tt('Khám phá quy trình 5 bước in 3D và thiết kế chuyên nghiệp tại HH Maker: Từ liên hệ, báo giá chi tiết, gia công chuẩn xác, đóng gói cẩn thận đến giao hàng an toàn.'))
+            ? 'Explore Thành Khang Tecsat\'s 5-step industrial supply process: From receiving technical specs, OEM matching, transparent quotation, CO/CQ quality inspection to on-site delivery.'
+            : i18n.tt('Khám phá quy trình 5 bước cung ứng thiết bị & phụ tùng công nghiệp tại Thành Khang Tecsat: Từ tiếp nhận thông số, đối chiếu mã OEM, báo giá, kiểm định CO/CQ đến giao hàng tận nơi.'))
     )
 })
 

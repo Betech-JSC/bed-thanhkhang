@@ -4,14 +4,16 @@
         @mouseleave="menuSelected = null"
     >
         <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-20 h-[64px] lg:h-[111px] lg:py-8 flex items-center justify-between">
-            <!-- Brand Logo HH Maker (Node 2352:10264) -->
+            <!-- Brand Logo Thành Khang Tecsat -->
             <div class="flex items-center shrink-0">
-                <Link :href="route('home')" class="inline-flex items-center">
-                    <img
-                        src="/assets/images/header/figma-header-logo.svg"
-                        alt="HH Maker Logo"
-                        class="h-8 lg:h-[47px] w-auto lg:w-[139px] object-contain"
-                    />
+                <Link :href="route('home')" class="inline-flex items-center gap-2.5 group">
+                    <span class="inline-flex h-9 w-9 lg:h-10 lg:w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#2970FF] to-[#00359E] text-white font-black text-sm lg:text-base tracking-wider shadow-sm">
+                        TK
+                    </span>
+                    <span class="flex flex-col leading-none">
+                        <span class="text-white font-extrabold text-sm lg:text-base tracking-wider uppercase group-hover:text-[#84ADFF] transition-colors">THÀNH KHANG</span>
+                        <span class="text-[#84ADFF] font-semibold text-[10px] lg:text-[11px] tracking-[0.22em] uppercase mt-0.5">TECSAT</span>
+                    </span>
                 </Link>
             </div>
 
@@ -273,12 +275,9 @@
                     <div class="space-y-6">
                         <!-- Drawer Top Header: Logo + Close X Button -->
                         <div class="flex items-center justify-between pb-4 border-b border-dark-border">
-                            <Link href="/" @click="closeDrawer" class="inline-block">
-                                <img
-                                    src="/assets/images/header/logo.png"
-                                    alt="HH Maker Logo"
-                                    class="h-8 w-auto object-contain"
-                                />
+                            <Link href="/" @click="closeDrawer" class="inline-flex items-center gap-2">
+                                <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#2970FF] to-[#00359E] text-white font-black text-xs tracking-wider">TK</span>
+                                <span class="text-white font-extrabold text-sm tracking-wider uppercase">THÀNH KHANG TECSAT</span>
                             </Link>
                             <button
                                 type="button"
@@ -502,14 +501,14 @@
                             <div class="text-xs text-muted space-y-1.5">
                                 <p>
                                     <strong class="text-secondary">Hotline:</strong>
-                                    <a :href="'tel:' + ($page.props.global?.general_phone || '0968 000 000').replace(/\s+/g, '')" class="ml-1 text-secondary hover:text-primary">
-                                        {{ $page.props.global?.general_phone || '0968 000 000' }}
+                                    <a :href="'tel:' + ($page.props.global?.general_phone || '0967732665').replace(/\s+/g, '')" class="ml-1 text-secondary hover:text-primary">
+                                        {{ $page.props.global?.general_phone || '0967 732 665' }}
                                     </a>
                                 </p>
                                 <p>
                                     <strong class="text-secondary">Email:</strong>
-                                    <a :href="'mailto:' + ($page.props.global?.general_email || 'contact@hhmaker.vn')" class="ml-1 text-secondary hover:text-primary">
-                                        {{ $page.props.global?.general_email || 'contact@hhmaker.vn' }}
+                                    <a :href="'mailto:' + ($page.props.global?.general_email || 'info@dvktthanhkhang.vn')" class="ml-1 text-secondary hover:text-primary">
+                                        {{ $page.props.global?.general_email || 'info@dvktthanhkhang.vn' }}
                                     </a>
                                 </p>
                             </div>
@@ -564,38 +563,35 @@ export default {
             if (!rawCategories || rawCategories.length === 0) {
                 return [
                     {
-                        id: 'trang-tri-khong-gian',
-                        title: this.tt('Trang trí không gian'),
-                        slug: 'trang-tri-khong-gian',
+                        id: 'linh-kien-thang-cuon',
+                        title: this.tt('Linh kiện thang cuốn'),
+                        slug: 'linh-kien-thang-cuon',
+                        children: [
+                            { id: 'xich-bac-thang-cuon', title: this.tt('Xích bậc thang cuốn'), slug: 'xich-bac-thang-cuon' },
+                            { id: 'xich-bang-tai-hanh-khach', title: this.tt('Xích băng tải hành khách'), slug: 'xich-bang-tai-hanh-khach' },
+                            { id: 'xich-dan-dong-chinh-thang-cuon', title: this.tt('Xích dẫn động chính'), slug: 'xich-dan-dong-chinh-thang-cuon' },
+                        ],
+                    },
+                    {
+                        id: 'linh-kien-thang-nang-o-to',
+                        title: this.tt('Linh kiện thang nâng ô tô'),
+                        slug: 'linh-kien-thang-nang-o-to',
+                        children: [
+                            { id: 'xich-bai-do-xe-tieu-chuan-lt', title: this.tt('Xích bãi đỗ xe LT'), slug: 'xich-bai-do-xe-tieu-chuan-lt' },
+                            { id: 'xich-bai-do-xe-tuan-hoan-dung', title: this.tt('Xích tuần hoàn đứng'), slug: 'xich-bai-do-xe-tuan-hoan-dung' },
+                        ],
+                    },
+                    {
+                        id: 'he-thong-bang-tai-hanh-ly',
+                        title: this.tt('Hệ thống băng tải hành lý'),
+                        slug: 'he-thong-bang-tai-hanh-ly',
                         children: [],
                     },
                     {
-                        id: 'moc-khoa-phu-kien',
-                        title: this.tt('Móc khoá & Phụ kiện'),
-                        slug: 'moc-khoa-phu-kien',
-                        children: [
-                            { id: 'moc-khoa-co-khi', title: this.tt('Móc khoá cơ khí'), slug: 'moc-khoa-co-khi' },
-                            { id: 'moc-khoa-the-thao', title: this.tt('Móc khoá thể thao & phụ kiện'), slug: 'moc-khoa-the-thao' },
-                        ],
-                    },
-                    {
-                        id: 'trang-tri-do-dung',
-                        title: this.tt('Trang trí & Đồ dùng'),
-                        slug: 'trang-tri-do-dung',
-                        children: [
-                            { id: 'ly', title: this.tt('Ly'), slug: 'ly' },
-                            { id: 'lo-cam-hoa-de-ban', title: this.tt('Lọ cắm hoa để bàn'), slug: 'lo-cam-hoa-de-ban' },
-                            { id: 'den', title: this.tt('Đèn'), slug: 'den' },
-                        ],
-                    },
-                    {
-                        id: 'gia-cong-theo-yeu-cau',
-                        title: this.tt('Gia công theo yêu cầu'),
-                        slug: 'gia-cong-theo-yeu-cau',
-                        children: [
-                            { id: 'mo-hinh-resin', title: this.tt('Mô hình Resin & Khớp cử động'), slug: 'mo-hinh-resin' },
-                            { id: 'linh-kien-carbon', title: this.tt('Linh kiện cơ khí & Carbon Fiber'), slug: 'linh-kien-carbon' },
-                        ],
+                        id: 'linh-kien-day-chuyen-dong-goi',
+                        title: this.tt('Linh kiện dây chuyền đóng gói'),
+                        slug: 'linh-kien-day-chuyen-dong-goi',
+                        children: [],
                     },
                 ]
             }

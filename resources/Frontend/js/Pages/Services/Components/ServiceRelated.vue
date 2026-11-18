@@ -93,7 +93,7 @@ const displayCards = computed(() => {
                 description: item.description,
                 image:
                     item.image?.url ||
-                    (typeof item.image === 'string' ? item.image : '/assets/images/services/service-gia-cong-3d.png'),
+                    (typeof item.image === 'string' ? item.image : '/images/products/thanhkhang/xich-bac-thang-thuong-mai/commercial-type.webp'),
                 href: item.slug ? getServiceHref(item.slug) : (isEn.value ? '/en/services' : '/dich-vu'),
             }))
             .slice(0, 2)

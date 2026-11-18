@@ -68,8 +68,11 @@ Phase 1-2: Infra & OPSX Bootstrap
 ### Phase 6: Chuỗi OpenSpec Changes `feat-screen-<name>`
 - **Mục tiêu**: Triển khai từng màn hình nghiệp vụ (`feat-screen-home`, `feat-screen-products`, `feat-screen-product-detail`, `feat-screen-about`, `feat-screen-news`, `feat-screen-contact`...).
 - **Quy trình chuẩn cho mỗi màn hình**:
-  1. **Khảo sát**: Đọc `graphify-out/graph.json` + đọc Controller/Route backend liên quan để nắm chính xác cấu trúc `props` dữ liệu thực tế (Zero-Assumption — nếu thiếu API/props phải hỏi người dùng hoặc mở task `Backend Worker` bổ sung, cấm bịa mock cấu trúc sai lệch).
-  2. **Tách Section Figma**: Gọi `get_figma_data` ở `depth: 2` trên frame màn hình để lấy danh sách `nodeId` các section con.
+  1. **Khảo sát CMS & Props**: Đọc `graphify-out/graph.json` + đọc Controller/Route backend liên quan để nắm chính xác cấu trúc `props` dữ liệu thực tế. Áp dụng chuẩn **CMS-First Binding**: Controller query Eloquent thật, viết Seeder nạp dữ liệu Figma vào DB, Component Vue nhận qua `defineProps` và render thẳng, **tuyệt đối cấm mảng mock tĩnh** trong `<script>`.
+  2. **Tách Section Figma & Khóa Banner Aspect-Ratio**:
+     - Gọi `get_figma_data` ở `depth: 2` trên frame màn hình để lấy danh sách `nodeId` các section con.
+     - Với các Banner/Hero: đo kích thước Desktop & Mobile trên Figma, bắt buộc gán `aspect-[W_mb/H_mb] md:aspect-[W_dt/H_dt]` kèm ảnh `w-full h-full object-cover`.
+     - Áp dụng Spacing chuẩn mobile: section `py-8 md:py-16`, container gutter `px-4 md:px-8`, gap `gap-3 md:gap-6`.
   3. **OpenSpec**: Tạo `/opsx-propose` cho `feat-screen-<name>` liệt kê rõ từng section, danh sách component tái sử dụng từ `graph.json` và danh sách component mới cần tạo.
   4. **Code & Build (`Frontend Worker`)**: Gọi `get_figma_data` từng `nodeId` section, tải ảnh minh họa qua `download_figma_images`, lắp ráp giao diện sạch sẽ (tuân thủ `anti-ui-slop`), chạy lệnh build 0 lỗi.
   5. **Cập nhật AST**: Chạy `graphify . --code-only`.

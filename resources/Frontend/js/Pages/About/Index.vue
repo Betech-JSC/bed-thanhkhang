@@ -62,82 +62,78 @@
                     <!-- Left Column: Chuyên mục & Tiêu đề (Figma 2283:7110) -->
                     <div class="lg:w-[360px] shrink-0 flex flex-col gap-4">
                         <p class="text-[#84ADFF] font-normal text-[16px] leading-[19px] font-sans">
-                            {{ tt('Vì sao HH Maker ra đời?') }}
+                            {{ tt('Về Thành Khang Tecsat') }}
                         </p>
                         <h2 class="text-2xl sm:text-3xl lg:text-[38px] lg:leading-[46px] font-bold text-[#FAFAFA] uppercase font-sans tracking-normal">
-                            {{ tt('TỪ ĐAM MÊ ĐẾN MỘT SỨ MỆNH') }}
+                            {{ tt('CHUYÊN MÔN KỸ THUẬT - UY TÍN ĐỒNG HÀNH') }}
                         </h2>
                     </div>
 
-                    <!-- Right Column: Câu chuyện sứ mệnh (Figma 2283:7113) -->
+                    <!-- Right Column: Câu chuyện sứ mệnh -->
                     <div class="lg:w-[672px] flex flex-col gap-6 text-[#B9C0D4] font-normal text-[16px] leading-[26px] font-sans">
                         <p>
-                            {{ tt('HH Maker được thành lập từ niềm đam mê với nghệ thuật 3D và công nghệ chế tác hiện đại của Lâm Hồng Hải. Điểm khởi đầu là một mong muốn giản dị: rút ngắn khoảng cách giữa ý tưởng và sản phẩm vật lý.') }}
+                            {{ tt('Công ty TNHH Dịch vụ Kỹ thuật Thành Khang Tecsat hoạt động chuyên sâu trong lĩnh vực cung ứng thiết bị công nghiệp B2B, phụ tùng thang cuốn - thang máy và hệ thống xích tải truyền động chuẩn OEM.') }}
                         </p>
                         <p>
-                            {{ tt('Một bản phác thảo, một hình ảnh hay một nhu cầu rất riêng đều có thể mở ra một cuộc trao đổi. Tại HH Maker, thiết kế và chế tác không tách rời nhau: hình dáng cần đẹp, đồng thời phải phù hợp để tạo thành sản phẩm thực tế.') }}
+                            {{ tt('Với nền tảng kỹ thuật vững chắc và mạng lưới nhà sản xuất uy tín như Universal Chains, chúng tôi luôn kiểm soát chặt chẽ từng thông số tải trọng, vật liệu và chứng từ CO/CQ để đảm bảo vận hành ổn định cho mọi công trình.') }}
                         </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 3. NHÀ SÁNG LẬP (FIGMA 2283:7116) -->
+        <!-- 3. TẦM NHÌN & SỨ MỆNH -->
         <section v-scroll-reveal class="py-10 lg:py-[40px] bg-dark-bg">
             <div class="app-container">
                 <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 lg:gap-[72px]">
-                    <!-- Left: Khung chân dung Founder Lâm Hồng Hải vát góc công nghệ (Figma 2283:7602) -->
                     <div class="w-full max-w-[561px] lg:w-[561px] lg:h-[666px] mx-auto lg:mx-0 shrink-0 select-none">
                         <img
                             src="/assets/images/about/founder-composite.png"
-                            :alt="tt('Lâm Hồng Hải - Founder HH Maker')"
+                            :alt="tt('Thành Khang Tecsat - Giải pháp Thiết bị Công nghiệp')"
                             class="w-full h-full object-contain"
                             loading="lazy"
                         />
                     </div>
 
-                    <!-- Right: Chia sẻ từ Nhà sáng lập (Figma 2283:7122) -->
                     <div class="w-full lg:w-[519px] flex flex-col gap-8 lg:gap-[40px]">
                         <div class="flex flex-col gap-4">
                             <p class="text-[#84ADFF] font-normal text-[16px] leading-[26px] font-sans">
-                                {{ tt('Chia sẻ từ Nhà sáng lập HH Maker') }}
+                                {{ tt('Cam kết từ Thành Khang Tecsat') }}
                             </p>
                             <h2 class="text-2xl sm:text-3xl lg:text-[32px] lg:leading-[38px] font-bold text-[#FAFAFA] font-sans tracking-normal">
-                                {{ tt('Mỗi ý tưởng đều xứng đáng có một hình hài') }}
+                                {{ tt('Chuẩn xác kỹ thuật trong từng linh kiện vận hành') }}
                             </h2>
                         </div>
 
                         <div class="flex flex-col gap-6 text-[#B9C0D4] font-normal text-[16px] leading-[26px] font-sans">
                             <p>
-                                {{ tt('Xuất phát từ niềm đam mê với nghệ thuật 3D và công nghệ chế tác hiện đại, tôi thành lập HH Maker với sứ mệnh rút ngắn khoảng cách giữa ý tưởng sơ khai và sản phẩm vật lý.') }}
+                                {{ tt('Thành Khang Tecsat tập trung vào ba mảng giải pháp cốt lõi: Linh kiện & Phụ tùng Thang cuốn - Thang máy, Hệ thống Băng tải & Xích tải Công nghiệp, cùng Giải pháp Tiết kiệm Điện với Quạt trần Công nghiệp BLDC HVLS.') }}
                             </p>
                             <p>
-                                {{ tt('Với mỗi dự án, tôi cùng đội ngũ luôn tỉ mỉ trong từng đường nét thiết kế, lựa chọn vật liệu và kiểm soát quy trình in để mang lại những sản phẩm sắc nét, chuẩn xác và mang đậm dấu ấn cá nhân nhất.') }}
+                                {{ tt('Mỗi đơn hàng đều được đội ngũ kỹ sư đối chiếu kỹ thuật chuẩn xác theo mã phụ tùng OEM, tiêu chuẩn EN 115, ISO và DIN trước khi xuất kho.') }}
                             </p>
                             <p>
-                                {{ tt('Tôi mong HH Maker sẽ là nơi bạn có thể thoải mái chia sẻ cả những ý tưởng chưa trọn vẹn. Qua từng cuộc trao đổi và mỗi lần thử nghiệm, chúng tôi cùng bạn khám phá những cách thể hiện phù hợp, để mỗi sản phẩm khi hoàn thành đều có ý nghĩa riêng. Với tôi, niềm vui lớn nhất là nhìn thấy sự hào hứng của bạn khi lần đầu cầm trên tay điều mình từng hình dung.') }}
+                                {{ tt('Chúng tôi mong muốn trở thành đối tác tin cậy lâu dài của các chủ đầu tư tòa nhà, nhà máy sản xuất và đơn vị bảo trì thang máy trên toàn quốc.') }}
                             </p>
                         </div>
 
-                        <!-- Chữ ký triết lý (Figma 2283:7128) -->
                         <p class="text-[#FAFAFA] font-semibold text-[16px] leading-[26px] font-sans">
-                            {{ tt('Trân trọng từng ý tưởng - Tận tâm với từng thành phẩm.') }}
+                            {{ tt('Chất lượng chuẩn OEM - Tiến độ đúng cam kết.') }}
                         </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 4. TRIẾT LÝ CHẾ TÁC (FIGMA 2283:7129) -->
+        <!-- 4. TRIẾT LÝ CUNG ỨNG -->
         <section v-scroll-reveal class="py-14 lg:py-[80px] bg-dark-bg">
             <div class="app-container flex flex-col gap-8 lg:gap-[40px]">
-                <!-- Section Header (Figma 2283:7647) -->
                 <div class="flex flex-col gap-3">
                     <p class="text-[#84ADFF] font-normal text-[16px] leading-[19px] font-sans">
-                        {{ tt('Cách HH Maker thực hiện trong từng dự án') }}
+                        {{ tt('Cách Thành Khang Tecsat thực hiện trong từng dự án') }}
                     </p>
                     <h2 class="text-2xl sm:text-3xl lg:text-[38px] lg:leading-[53px] font-bold text-[#FAFAFA] uppercase font-sans tracking-normal">
-                        {{ tt('CÔNG NGHỆ TẠO HÌNH - SỰ TỈ MỈ TẠO DẤU ẤN') }}
+                        {{ tt('CHUẨN KỸ THUẬT - ĐỒNG HÀNH BỀN VỮNG') }}
                     </h2>
                 </div>
 
@@ -192,10 +188,10 @@
                         </div>
                         <div class="flex flex-col gap-4">
                             <h3 class="text-[24px] leading-[28px] font-bold text-[#FAFAFA] font-sans">
-                                {{ tt('Giữ trọn dấu ấn riêng') }}
+                                {{ tt('Chuẩn xác và bền bỉ') }}
                             </h3>
                             <p class="text-[#B9C0D4] font-normal text-[16px] leading-[26px] font-sans">
-                                {{ tt('Phong cách của bạn được thể hiện qua màu sắc, đường nét và những chi tiết cá nhân hóa. HH Maker kết nối những yếu tố ấy để truyền tải đúng tinh thần bạn muốn gửi gắm.') }}
+                                {{ tt('Mỗi hệ thống vận hành đòi hỏi thông số riêng về tải trọng, bước xích và vật liệu. Thành Khang Tecsat tư vấn đúng cấu hình để đảm bảo hiệu suất và an toàn lâu dài.') }}
                             </p>
                         </div>
                     </div>
@@ -263,32 +259,32 @@ export default {
         pageTitle() {
             return (
                 this.seo?.title ||
-                this.tt('Giới thiệu - HH Maker | Đưa sáng tạo vượt ra khỏi màn hình')
+                this.tt('Giới thiệu - Thành Khang Tecsat | Thiết bị Công nghiệp & Phụ tùng Thang cuốn')
             )
         },
         pageDescription() {
             return (
                 this.seo?.description ||
-                this.tt('HH Maker kết nối nghệ thuật 3D với công nghệ chế tác hiện đại, để một ý tưởng sơ khai có thể trở thành sản phẩm vật lý bạn cầm trên tay.')
+                this.tt('Thành Khang Tecsat cung cấp linh kiện thang cuốn - thang máy, hệ thống băng tải, xích tải Universal Chains và quạt trần công nghiệp BLDC HVLS chuẩn OEM.')
             )
         },
         bannerSubtitle() {
-            return this.heroBanner?.subtitle || this.tt('Giới thiệu về HH Maker')
+            return this.heroBanner?.subtitle || this.tt('Giới thiệu về Thành Khang Tecsat')
         },
         bannerTitle() {
-            return this.heroBanner?.title || this.tt('ĐƯA SÁNG TẠO VƯỢT RA KHỎI MÀN HÌNH')
+            return this.heroBanner?.title || this.tt('GIẢI PHÁP THIẾT BỊ CÔNG NGHIỆP BỀN BỈ & CHUẨN OEM')
         },
         bannerDescription() {
             return (
                 this.heroBanner?.description ||
-                this.tt('Chúng tôi kết nối nghệ thuật 3D với công nghệ chế tác hiện đại, để một ý tưởng sơ khai có thể trở thành sản phẩm bạn cầm trên tay.')
+                this.tt('Chúng tôi kết nối kỹ thuật truyền động chính xác và nguồn linh kiện chính hãng, đảm bảo an toàn và hiệu suất tối ưu cho công trình của bạn.')
             )
         },
         bannerImage() {
             return this.heroBanner?.image?.url || '/assets/images/about/hero-about.png'
         },
         bannerImageAlt() {
-            return this.heroBanner?.image?.alt || this.tt('Xưởng chế tác 3D HH Maker')
+            return this.heroBanner?.image?.alt || this.tt('Thành Khang Tecsat - Thiết bị & Giải pháp Kỹ thuật Công nghiệp')
         },
         globalCta() {
             return (
@@ -298,12 +294,12 @@ export default {
             )
         },
         ctaTitle() {
-            return this.globalCta?.title || this.tt('Ý tưởng của bạn, bước tiếp theo của chúng ta.')
+            return this.globalCta?.title || this.tt('Yêu cầu kỹ thuật của bạn, giải pháp của chúng tôi.')
         },
         ctaDescription() {
             return (
                 this.globalCta?.description ||
-                this.tt('Chia sẻ mong muốn của bạn. HH Maker sẽ cùng bạn tìm hướng thiết kế và gia công phù hợp.')
+                this.tt('Chia sẻ thông số linh kiện hoặc nhu cầu công trình. Thành Khang Tecsat sẽ tư vấn phương án kỹ thuật và báo giá phù hợp.')
             )
         },
         ctaButtonText() {

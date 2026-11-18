@@ -1,6 +1,6 @@
-# 7 Quy Tắc Vàng Đạt 100% Pixel-Perfect UI Từ Figma MCP (LUXI Production Standard)
+# 8 Quy Tắc Vàng Đạt 100% Pixel-Perfect UI Từ Figma MCP (LUXI Production Standard)
 
-Tài liệu này đúc kết **7 quy chuẩn kỹ thuật và các bẫy CSS thực chiến** từ dự án LUXI giúp giao diện thực tế trên trình duyệt khớp 100% với bản vẽ Figma từ kích thước khung (`px`), tỷ lệ ảnh (`1:1`), vị trí trên màn hình đầu tiên (`1-Screen Viewport`), hướng mũi tên vector SVG cho đến độ nét Retina.
+Tài liệu này đúc kết **8 quy chuẩn kỹ thuật và các bẫy CSS thực chiến** từ dự án LUXI giúp giao diện thực tế trên trình duyệt khớp 100% với bản vẽ Figma từ kích thước khung (`px`), tỷ lệ ảnh (`1:1`), tỷ lệ banner (`aspect-ratio`), vị trí trên màn hình đầu tiên (`1-Screen Viewport`), hướng mũi tên vector SVG cho đến độ nét Retina.
 
 ---
 
@@ -119,3 +119,27 @@ Mọi màn hình sau khi hoàn thiện đều phải kiểm chứng bằng Playw
 }
 ```
 Floats/Bboxes phải đạt: `horizontalOverflowPx === 0`, `overflowX.body === 'clip'`, và `galleryBox.width === 688`.
+
+---
+
+## Quy Tắc 8: Khóa Tỷ Lệ Banner Aspect-Ratio & Spacing Parity Chuẩn Figma (Desktop & Mobile)
+
+### Bẫy thường gặp:
+1. **Banner méo ảnh hoặc giật sập màn hình (CLS)**:
+   - Gán cứng `h-[500px]` hoặc `h-auto` cho Banner mà không gán tỷ lệ khung `aspect-ratio`.
+   - Trên Desktop hiển thị ổn nhưng trên Mobile (375px) khung ảnh bị kéo dài dọc hoặc bị crop mất chủ thể.
+   - Khi mạng tải ảnh chậm, khung banner chưa có chiều cao cố định khiến toàn bộ nội dung phía dưới bị nhảy giật mạnh (CLS > 0.25).
+2. **Spacing lệch chuẩn giữa Mobile và Desktop**:
+   - Dùng `py-20` (80px) cứng từ Desktop khiến màn hình Mobile toàn khoảng trắng thừa, cuộn mỏi tay.
+   - Container padding `px-0` (chữ dính sát mép kính điện thoại) hoặc `px-12` (bóp nghẹt nội dung mobile dưới 300px).
+   - Card gap `gap-8` trên mobile làm các khối rời rạc.
+
+### Giải pháp chuẩn bắt buộc:
+1. **Khóa tỷ lệ Banner Aspect-Ratio**:
+   - Trích xuất $W_{dt} \times H_{dt}$ từ Frame Desktop $\rightarrow$ `md:aspect-[W_dt/H_dt]` (ví dụ `md:aspect-[1440/500]`).
+   - Trích xuất $W_{mb} \times H_{mb}$ từ Frame Mobile $\rightarrow$ `aspect-[W_mb/H_mb]` (ví dụ `aspect-[375/250]`).
+   - Ảnh bên trong: `<img class="w-full h-full object-cover object-center" />`.
+2. **Spacing Parity**:
+   - Section vertical padding: `py-8 md:py-16` hoặc `py-10 lg:py-20`.
+   - Container gutter: `px-4 md:px-8` (cấm `px-0` hoặc `px-12` trên mobile).
+   - Card/Grid gap: `gap-3 md:gap-6` hoặc `gap-4 lg:gap-8`.

@@ -704,6 +704,21 @@ def audit_unconnected_ui_to_cms(
                     "action": f"Remove lệnh gọi `->{callee}()` tại `{frel}:{idx}`, xử lý trực tiếp kết quả truy vấn từ Database.",
                 })
 
+            # 1C. Kiểm tra Controller có toán tử fallback string 'key' => ... ?? 'chuỗi cố định' không (Zero-Fallback Policy)
+            m_null_coal = re.search(r"['\"]([a-zA-Z0-9_]+)['\"]\s*=>\s*[^,;]+(?:\?\?|\?:)\s*['\"]([^'\"]{4,})['\"]", line)
+            if m_null_coal:
+                prop_key = m_null_coal.group(1)
+                fallback_val = m_null_coal.group(2)
+                if not re.search(r"^(?:asc|desc|id|created_at|utf-8|vi|en|web|api|get|post)$", fallback_val, re.IGNORECASE):
+                    findings.append({
+                        "severity": "HIGH (Fallback String che giấu CMS trống)",
+                        "location": f"{frel}:{idx}",
+                        "ui_element": f"Toán tử fallback `{prop_key} => ... ?? '{fallback_val}'`",
+                        "issue": f"Controller `{fc.name}` truyền fallback string '{fallback_val}' cho key `{prop_key}` khi CMS chưa có dữ liệu, che giấu cấu hình CMS thật.",
+                        "cms_mapping": resolve_cms_system_dynamically(frel, prop_key, cms_systems, ast_graph),
+                        "action": f"Sửa tại `{frel}:{idx}` thành `?? null` hoặc trả về rỗng, yêu cầu cấu hình trong CMS.",
+                    })
+
     # 2. Kiểm tra routes/frontend.php và routes/web.php xem có Route::inertia(...) hoặc closure trả về Inertia::render tĩnh cho các trang Active không
     for rf_name in ("routes/frontend.php", "routes/web.php"):
         rf = root / rf_name
@@ -929,6 +944,18 @@ def audit_unconnected_ui_to_cms(
                     "issue": f"Component `{vf.name}` đang ghép mảng mock vào mảng thật để ép đủ số lượng card.",
                     "cms_mapping": resolve_cms_system_dynamically(frel, "spread mock", cms_systems, ast_graph),
                     "action": f"Xóa ghép mảng giả tại `{frel}:{lineno}`; chỉ giữ mảng dữ liệu thật từ props.",
+                })
+
+            # 3A-4. Quét toán tử Fallback Prop gán mock vào UI (Zero-Fallback Policy)
+            m_prop_fb = re.search(r"props\.[a-zA-Z0-9_]+\s*(?:\|\||\?\?)\s*(\[|\{)", stripped)
+            if m_prop_fb:
+                findings.append({
+                    "severity": "HIGH (Fallback Prop gán mock vào UI)",
+                    "location": f"{frel}:{lineno}",
+                    "ui_element": f"Toán tử fallback prop `{stripped}`",
+                    "issue": f"Component `{vf.name}` fallback về mảng/object mock khi props rỗng thay vì hiển thị EmptyState.",
+                    "cms_mapping": resolve_cms_system_dynamically(frel, "prop fallback", cms_systems, ast_graph),
+                    "action": f"Xóa fallback tại `{frel}:{lineno}`; hiển thị component EmptyState khi props rỗng.",
                 })
 
         # 3B. Quét thông tin liên hệ / thương hiệu hardcode trong <template>
