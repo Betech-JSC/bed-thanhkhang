@@ -190,11 +190,28 @@ createInertiaApp({
                         return isCurrentRoute && isCurrentParams
                     },
                     staticUrl(url) {
-                        if (url && !url.includes('http') && url.includes('assets')) {
-                            return window.location.origin + url;
+                        if (!url) return ''
+
+                        const urlStr = url.toString().trim()
+                        if (!urlStr) return ''
+
+                        if (urlStr.startsWith('http://') || urlStr.startsWith('https://')) {
+                            return urlStr
                         }
 
-                        return url && url.toString().includes('http') ? url : this.route('files.show') + '/' + url
+                        if (
+                            urlStr.startsWith('/images/') ||
+                            urlStr.startsWith('images/') ||
+                            urlStr.startsWith('/assets/') ||
+                            urlStr.startsWith('assets/') ||
+                            urlStr.startsWith('/storage/') ||
+                            urlStr.startsWith('storage/')
+                        ) {
+                            return window.location.origin + (urlStr.startsWith('/') ? urlStr : '/' + urlStr)
+                        }
+
+                        const cleanPath = urlStr.startsWith('/') ? urlStr.substring(1) : urlStr
+                        return this.route('files.show') + '/' + cleanPath
                     },
                     isImage(url) {
                         if (!url || !(url.toString().includes('.'))) return false;

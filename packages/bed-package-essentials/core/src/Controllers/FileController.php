@@ -26,6 +26,17 @@ class FileController extends Controller
 
     public function show(Request $request, $path = '/')
     {
+        $cleanPath = ltrim($path, '/');
+        if (
+            str_starts_with($cleanPath, 'images/') ||
+            str_starts_with($cleanPath, 'assets/')
+        ) {
+            $fullPath = public_path($cleanPath);
+            if (file_exists($fullPath)) {
+                return response()->file($fullPath);
+            }
+        }
+
         $file = new File($path);
         return $file->findOrFail($request->all());
     }

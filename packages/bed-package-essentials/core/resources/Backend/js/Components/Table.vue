@@ -116,7 +116,7 @@
                     <slot :name="'cell-' + column.field" :data="data" :column="column">
                         <Image
                             v-if="isImageCell(data, column)"
-                            :src="staticUrl(data[column.field]?.path)"
+                            :src="staticUrl(getImagePath(data, column))"
                             imageClass="h-[80px] w-[80px] object-contain"
                             preview
                         />
@@ -450,8 +450,19 @@ export default {
 
             return value
         },
+        getImagePath(data, column) {
+            const val = data?.[column?.field]
+            if (!val) return ''
+            if (typeof val === 'string') return val
+            if (val.path) return val.path
+            if (Array.isArray(val) && val[0]) {
+                return val[0].path || (typeof val[0] === 'string' ? val[0] : '')
+            }
+            return ''
+        },
         isImageCell(data, column) {
-            return this.isImage(data[column.field]?.path)
+            const path = this.getImagePath(data, column)
+            return this.isImage(path)
         },
         capitalize(string) {
             return string?.charAt(0).toUpperCase() + string.slice(1)
