@@ -77,10 +77,16 @@ class Config extends Model
                 'test_mode' => 'required',
             ],
             'general' => [
+                'general_logo' => 'nullable',
+                'logo' => 'nullable',
                 'general_business_name' => 'nullable',
                 'general_business_name_en' => 'nullable',
                 'general_site_name' => 'nullable',
                 'general_site_name_en' => 'nullable',
+                'general_description' => 'nullable|string',
+                'general_description_en' => 'nullable|string',
+                'description' => 'nullable|string',
+                'description_en' => 'nullable|string',
                 'general_email' => 'nullable',
                 'general_address' => 'nullable',
                 'general_address_en' => 'nullable',
@@ -89,6 +95,8 @@ class Config extends Model
                 'general_working_hours' => 'nullable',
                 'general_working_hours_en' => 'nullable',
                 'general_facebook' => 'nullable',
+                'general_linkedin' => 'nullable|string|max:500',
+                'linkedin' => 'nullable|string|max:500',
                 'general_tiktok' => 'nullable',
                 'map_iframe' => 'nullable',
                 'general_map_iframe' => 'nullable',
@@ -101,12 +109,35 @@ class Config extends Model
                 'email' => 'nullable',
                 'address' => 'nullable',
                 'address_en' => 'nullable',
-                'showroom_address' => 'nullable',
+                'showroom_address' => 'nullable|string|max:500',
+                'showroom_address_en' => 'nullable|string|max:500',
                 'working_hours' => 'nullable',
                 'working_hours_en' => 'nullable',
                 'zalo' => 'nullable',
                 'facebook' => 'nullable',
                 'tiktok' => 'nullable',
+                'home_about_eyebrow' => 'nullable|string|max:255',
+                'home_about_eyebrow_en' => 'nullable|string|max:255',
+                'home_about_lead_highlight' => 'nullable|string|max:500',
+                'home_about_lead_highlight_en' => 'nullable|string|max:500',
+                'home_about_lead_rest' => 'nullable|string|max:1000',
+                'home_about_lead_rest_en' => 'nullable|string|max:1000',
+                'home_about_paragraph_1' => 'nullable|string',
+                'home_about_paragraph_1_en' => 'nullable|string',
+                'home_about_paragraph_2' => 'nullable|string',
+                'home_about_paragraph_2_en' => 'nullable|string',
+                'home_about_commitment_quote' => 'nullable|string|max:500',
+                'home_about_commitment_quote_en' => 'nullable|string|max:500',
+                'home_about_commitment_sub' => 'nullable|string|max:500',
+                'home_about_commitment_sub_en' => 'nullable|string|max:500',
+                'home_about_cta_text' => 'nullable|string|max:255',
+                'home_about_cta_text_en' => 'nullable|string|max:255',
+                'home_about_cta_link' => 'nullable|string|max:500',
+                'home_about_cta_link_en' => 'nullable|string|max:500',
+                'home_contact_title' => 'nullable|string|max:500',
+                'home_contact_title_en' => 'nullable|string|max:500',
+                'home_contact_description' => 'nullable|string',
+                'home_contact_description_en' => 'nullable|string',
             ],
         ][$id] ?? [];
     }
@@ -289,119 +320,214 @@ class Config extends Model
         return $trimmed;
     }
 
+    public static function resolveMediaSettingUrl($raw): string
+    {
+        if (empty($raw)) {
+            return '';
+        }
+
+        if (is_string($raw)) {
+            $trimmed = trim($raw);
+            if ($trimmed === '') {
+                return '';
+            }
+            if (str_starts_with($trimmed, '{') || str_starts_with($trimmed, '[')) {
+                $decoded = json_decode($trimmed, true);
+                if (is_array($decoded)) {
+                    $raw = $decoded;
+                } else {
+                    return '';
+                }
+            } else {
+                return $trimmed;
+            }
+        }
+
+        if (is_object($raw)) {
+            $raw = (array) $raw;
+        }
+
+        if (is_array($raw)) {
+            if (!empty($raw['url']) && is_string($raw['url'])) {
+                return trim($raw['url']);
+            }
+            if (!empty($raw['static_url']) && is_string($raw['static_url'])) {
+                return trim($raw['static_url']);
+            }
+            if (!empty($raw['path']) && is_string($raw['path'])) {
+                $path = trim($raw['path']);
+                if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://') || str_starts_with($path, '/')) {
+                    return $path;
+                }
+                return function_exists('static_url') ? (string) static_url($path) : '/' . ltrim($path, '/');
+            }
+        }
+
+        return '';
+    }
+
     public static function normalizeGeneralSettings(array $raw = [], ?string $locale = null): array
     {
         $locale = $locale ?: (function_exists('current_locale') ? current_locale() : app()->getLocale());
         $isEn = $locale === 'en';
 
-        $pickNonEmpty = static function (array $candidates, string $fallback = ''): string {
+        $pickNonEmpty = static function (array $candidates): string {
             foreach ($candidates as $candidate) {
                 if (is_string($candidate) && trim($candidate) !== '') {
                     return trim($candidate);
                 }
             }
-            return $fallback;
+            return '';
         };
+
+        $logo = self::resolveMediaSettingUrl($raw['general_logo'] ?? $raw['logo'] ?? null);
 
         $viBusinessName = $pickNonEmpty([
             $raw['general_business_name_vi'] ?? null,
             $raw['general_business_name'] ?? null,
             $raw['company_name'] ?? null,
-        ], 'Thành Khang Tecsat');
+        ]);
         $enBusinessName = $pickNonEmpty([
             $raw['general_business_name_en'] ?? null,
             $raw['company_name_en'] ?? null,
-        ], 'Thanh Khang Tecsat');
+        ]);
         $businessName = ($isEn && $enBusinessName !== '') ? $enBusinessName : $viBusinessName;
 
         $viSiteName = $pickNonEmpty([
             $raw['general_site_name_vi'] ?? null,
             $raw['general_site_name'] ?? null,
             $raw['site_name'] ?? null,
-        ], 'Thành Khang Tecsat - Thiết bị công nghiệp & Phụ tùng thang cuốn');
+        ]);
         $enSiteName = $pickNonEmpty([
             $raw['general_site_name_en'] ?? null,
             $raw['site_name_en'] ?? null,
-        ], '');
+        ]);
         $siteName = ($isEn && $enSiteName !== '') ? $enSiteName : $viSiteName;
 
-        $phone = $raw['general_phone']
-            ?? $raw['phone']
-            ?? $raw['hotline']
-            ?? '0967732665';
+        $viDescription = $pickNonEmpty([
+            $raw['general_description_vi'] ?? null,
+            $raw['general_description'] ?? null,
+            $raw['description'] ?? null,
+        ]);
+        $enDescription = $pickNonEmpty([
+            $raw['general_description_en'] ?? null,
+            $raw['description_en'] ?? null,
+        ]);
+        $description = ($isEn && $enDescription !== '') ? $enDescription : $viDescription;
 
-        $email = $raw['general_email']
-            ?? $raw['email']
-            ?? 'info@dvktthanhkhang.vn';
+        $phone = $pickNonEmpty([
+            $raw['general_phone'] ?? null,
+            $raw['phone'] ?? null,
+            $raw['hotline'] ?? null,
+        ]);
 
-        $zalo = $raw['general_zalo']
-            ?? $raw['zalo']
-            ?? $raw['social_zalo']
-            ?? 'https://zalo.me/0967732665';
+        $hotline = $pickNonEmpty([
+            $raw['hotline'] ?? null,
+            $phone,
+        ]);
+
+        $email = $pickNonEmpty([
+            $raw['general_email'] ?? null,
+            $raw['email'] ?? null,
+        ]);
+
+        $zalo = $pickNonEmpty([
+            $raw['general_zalo'] ?? null,
+            $raw['zalo'] ?? null,
+            $raw['social_zalo'] ?? null,
+        ]);
 
         $viAddress = $pickNonEmpty([
             $raw['general_address_vi'] ?? null,
             $raw['general_address'] ?? null,
             $raw['address'] ?? null,
             $raw['showroom_address'] ?? null,
-        ], 'Tầng 25, Tòa nhà TNR, 54A Nguyễn Chí Thanh, Phường Láng Thượng, Quận Đống Đa, Hà Nội');
+        ]);
         $enAddress = $pickNonEmpty([
             $raw['general_address_en'] ?? null,
             $raw['address_en'] ?? null,
             $raw['showroom_address_en'] ?? null,
-        ], '');
-        $address = ($isEn && $enAddress !== '') ? $enAddress : ($viAddress ?: '25th Floor, TNR Tower, 54A Nguyen Chi Thanh, Lang Thuong Ward, Dong Da District, Hanoi');
+        ]);
+        $address = ($isEn && $enAddress !== '') ? $enAddress : $viAddress;
+
+        $viShowroomAddress = $pickNonEmpty([
+            $raw['showroom_address'] ?? null,
+            $raw['office_address'] ?? null,
+            $viAddress,
+        ]);
+        $enShowroomAddress = $pickNonEmpty([
+            $raw['showroom_address_en'] ?? null,
+            $raw['office_address_en'] ?? null,
+            $enAddress,
+        ]);
+        $showroomAddress = ($isEn && $enShowroomAddress !== '') ? $enShowroomAddress : $viShowroomAddress;
 
         $viWorkingHours = $pickNonEmpty([
             $raw['general_working_hours_vi'] ?? null,
             $raw['general_working_hours'] ?? null,
             $raw['working_hours'] ?? null,
-        ], 'Thứ 2 - Thứ 7: 08:00 - 17:30');
+        ]);
         $enWorkingHours = $pickNonEmpty([
             $raw['general_working_hours_en'] ?? null,
             $raw['working_hours_en'] ?? null,
-        ], '');
-        $workingHours = ($isEn && $enWorkingHours !== '') ? $enWorkingHours : ($viWorkingHours ?: 'Mon - Sat: 08:00 - 17:30');
+        ]);
+        $workingHours = ($isEn && $enWorkingHours !== '') ? $enWorkingHours : $viWorkingHours;
 
-        $facebook = $raw['facebook']
-            ?? $raw['social_facebook']
-            ?? $raw['general_facebook']
-            ?? 'https://www.facebook.com/thanhkhangtecsat';
+        $facebook = $pickNonEmpty([
+            $raw['general_facebook'] ?? null,
+            $raw['facebook'] ?? null,
+            $raw['social_facebook'] ?? null,
+        ]);
 
-        $messenger = $raw['messenger']
-            ?? $raw['social_messenger']
-            ?? $raw['general_messenger']
-            ?? 'https://m.me/2108952142469502';
+        $linkedin = $pickNonEmpty([
+            $raw['general_linkedin'] ?? null,
+            $raw['linkedin'] ?? null,
+            $raw['social_linkedin'] ?? null,
+        ]);
 
-        $tiktok = $raw['tiktok']
-            ?? $raw['social_tiktok']
-            ?? $raw['general_tiktok']
-            ?? '';
+        $messenger = $pickNonEmpty([
+            $raw['general_messenger'] ?? null,
+            $raw['messenger'] ?? null,
+            $raw['social_messenger'] ?? null,
+        ]);
 
-        $youtube = $raw['youtube']
-            ?? $raw['social_youtube']
-            ?? $raw['general_youtube']
-            ?? '';
+        $tiktok = $pickNonEmpty([
+            $raw['general_tiktok'] ?? null,
+            $raw['tiktok'] ?? null,
+            $raw['social_tiktok'] ?? null,
+        ]);
 
-        $instagram = $raw['instagram']
-            ?? $raw['social_instagram']
-            ?? $raw['general_instagram']
-            ?? '';
+        $youtube = $pickNonEmpty([
+            $raw['general_youtube'] ?? null,
+            $raw['youtube'] ?? null,
+            $raw['social_youtube'] ?? null,
+        ]);
+
+        $instagram = $pickNonEmpty([
+            $raw['general_instagram'] ?? null,
+            $raw['instagram'] ?? null,
+            $raw['social_instagram'] ?? null,
+        ]);
 
         $mapIframe = self::extractIframeSrc($raw['map_iframe'] ?? $raw['general_map_iframe'] ?? '');
 
         return array_merge($raw, [
+            'general_logo' => $logo,
+            'logo' => $logo,
             'general_business_name_vi' => $viBusinessName,
             'general_site_name_vi' => $viSiteName,
+            'general_description_vi' => $viDescription,
             'general_address_vi' => $viAddress,
             'general_working_hours_vi' => $viWorkingHours,
             'general_business_name' => $businessName,
             'company_name' => $businessName,
             'general_site_name' => $siteName,
             'site_name' => $siteName,
+            'general_description' => $description,
+            'description' => $description,
             'general_phone' => $phone,
             'phone' => $phone,
-            'hotline' => $raw['hotline'] ?? $phone,
+            'hotline' => $hotline,
             'general_email' => $email,
             'email' => $email,
             'general_zalo' => $zalo,
@@ -409,12 +535,15 @@ class Config extends Model
             'social_zalo' => $zalo,
             'general_address' => $address,
             'address' => $address,
-            'showroom_address' => ($isEn && $enAddress !== '') ? $enAddress : ($raw['showroom_address'] ?? $address),
+            'showroom_address' => $showroomAddress,
             'general_working_hours' => $workingHours,
             'working_hours' => $workingHours,
             'general_facebook' => $facebook,
             'facebook' => $facebook,
             'social_facebook' => $facebook,
+            'general_linkedin' => $linkedin,
+            'linkedin' => $linkedin,
+            'social_linkedin' => $linkedin,
             'messenger' => $messenger,
             'social_messenger' => $messenger,
             'general_tiktok' => $tiktok,
@@ -452,6 +581,85 @@ class Config extends Model
         return self::getGeneralSettings();
     }
 
+    public static function getHomeAboutSettings(?string $locale = null): array
+    {
+        $locale = $locale ?: (function_exists('current_locale') ? current_locale() : app()->getLocale());
+        $isEn = $locale === 'en';
+
+        $raw = [];
+        try {
+            $settings = settings()->group('general')->all();
+            if ($settings instanceof \Illuminate\Support\Collection) {
+                $raw = $settings->toArray();
+            } elseif (is_array($settings)) {
+                $raw = $settings;
+            }
+        } catch (\Throwable $e) {
+            report($e);
+        }
+
+        $resolve = static function (string $key) use ($raw, $isEn): string {
+            $viVal = trim((string) ($raw[$key] ?? ''));
+            $enVal = trim((string) ($raw[$key . '_en'] ?? ''));
+
+            if ($isEn) {
+                return $enVal !== '' ? $enVal : $viVal;
+            }
+
+            return $viVal;
+        };
+
+        $paragraphs = array_values(array_filter([
+            $resolve('home_about_paragraph_1'),
+            $resolve('home_about_paragraph_2'),
+        ], static fn(string $p): bool => $p !== ''));
+
+        return [
+            'eyebrow' => $resolve('home_about_eyebrow'),
+            'lead_highlight' => $resolve('home_about_lead_highlight'),
+            'lead_rest' => $resolve('home_about_lead_rest'),
+            'paragraphs' => $paragraphs,
+            'commitment_quote' => $resolve('home_about_commitment_quote'),
+            'commitment_sub' => $resolve('home_about_commitment_sub'),
+            'cta_text' => $resolve('home_about_cta_text'),
+            'cta_link' => $resolve('home_about_cta_link'),
+        ];
+    }
+
+    public static function getHomeContactSettings(?string $locale = null): array
+    {
+        $locale = $locale ?: (function_exists('current_locale') ? current_locale() : app()->getLocale());
+        $isEn = $locale === 'en';
+
+        $raw = [];
+        try {
+            $settings = settings()->group('general')->all();
+            if ($settings instanceof \Illuminate\Support\Collection) {
+                $raw = $settings->toArray();
+            } elseif (is_array($settings)) {
+                $raw = $settings;
+            }
+        } catch (\Throwable $e) {
+            report($e);
+        }
+
+        $resolve = static function (string $key) use ($raw, $isEn): string {
+            $viVal = trim((string) ($raw[$key] ?? ''));
+            $enVal = trim((string) ($raw[$key . '_en'] ?? ''));
+
+            if ($isEn) {
+                return $enVal !== '' ? $enVal : $viVal;
+            }
+
+            return $viVal;
+        };
+
+        return [
+            'title' => $resolve('home_contact_title'),
+            'description' => $resolve('home_contact_description'),
+        ];
+    }
+
     public static function getProcessSteps($rawSettingsOrLocale = null, ?string $locale = null): array
     {
         if (is_string($rawSettingsOrLocale)) {
@@ -466,147 +674,12 @@ class Config extends Model
         $locale = $locale ?: (function_exists('current_locale') ? current_locale() : app()->getLocale());
         $isEn = $locale === 'en';
 
-        $defaultStepsVi = [
-            [
-                'number' => '01',
-                'title' => 'Tiếp nhận yêu cầu',
-                'subtitle' => 'Tiếp nhận thông số & mã phụ tùng',
-                'description' => 'Khách hàng gửi mã phụ tùng, bản vẽ kỹ thuật hoặc thông số chi tiết cần thay thế. Kỹ sư Thành Khang Tecsat tiếp nhận và phân tích yêu cầu kỹ thuật.',
-                'client_prep' => 'Cung cấp mã phụ tùng, thông số kỹ thuật (bước xích, tải trọng, kích thước) hoặc hình ảnh linh kiện thực tế.',
-                'clientPrep' => 'Cung cấp mã phụ tùng, thông số kỹ thuật (bước xích, tải trọng, kích thước) hoặc hình ảnh linh kiện thực tế.',
-                'maker_action' => 'Kỹ sư kỹ thuật Thành Khang đối chiếu bản vẽ tiêu chuẩn công nghiệp, kiểm tra khả năng lắp ghép và tư vấn giải pháp tối ưu.',
-                'makerAction' => 'Kỹ sư kỹ thuật Thành Khang đối chiếu bản vẽ tiêu chuẩn công nghiệp, kiểm tra khả năng lắp ghép và tư vấn giải pháp tối ưu.',
-                'deliverables' => 'Bản xác nhận thông số kỹ thuật & giải pháp phụ tùng phù hợp',
-                'quality_standard' => 'Phản hồi trong 2-4 giờ làm việc, chính xác 100% theo tiêu chuẩn lắp ráp',
-                'isLast' => false,
-            ],
-            [
-                'number' => '02',
-                'title' => 'Báo giá kỹ thuật',
-                'subtitle' => 'Báo giá minh bạch & tiến độ cung ứng',
-                'description' => 'Thống nhất chủng loại vật liệu, tiêu chuẩn cơ khí và phương án giao nhận trước khi triển khai đơn hàng.',
-                'client_prep' => 'Xác nhận số lượng đặt hàng, địa điểm công trình/nhà máy nhận hàng và yêu cầu hồ sơ CO/CQ nếu có.',
-                'clientPrep' => 'Xác nhận số lượng đặt hàng, địa điểm công trình/nhà máy nhận hàng và yêu cầu hồ sơ CO/CQ nếu có.',
-                'maker_action' => 'Lập bảng báo giá chi tiết, dự toán chi phí tối ưu theo số lượng B2B và cam kết tiến độ giao hàng chuẩn xác.',
-                'makerAction' => 'Lập bảng báo giá chi tiết, dự toán chi phí tối ưu theo số lượng B2B và cam kết tiến độ giao hàng chuẩn xác.',
-                'deliverables' => 'Bảng báo giá RFQ chính thức & tiến độ cung ứng dự kiến',
-                'quality_standard' => 'Giá gốc nhà máy cạnh tranh nhất, minh bạch chi phí vận chuyển & thuế VAT',
-                'isLast' => false,
-            ],
-            [
-                'number' => '03',
-                'title' => 'Ký kết hợp đồng',
-                'subtitle' => 'Xác nhận đơn hàng & bảo lãnh cung ứng',
-                'description' => 'Hoàn thiện thủ tục hợp đồng kinh tế, cam kết pháp lý về tiêu chuẩn chất lượng sản phẩm và bảo hành.',
-                'client_prep' => 'Cung cấp thông tin pháp nhân công ty, ký kết hợp đồng mua bán và thực hiện tạm ứng theo thỏa thuận.',
-                'clientPrep' => 'Cung cấp thông tin pháp nhân công ty, ký kết hợp đồng mua bán và thực hiện tạm ứng theo thỏa thuận.',
-                'maker_action' => 'Phát hành hợp đồng mua bán B2B, lên lệnh xuất kho hoặc điều phối sản xuất theo đúng thông số đã chốt.',
-                'makerAction' => 'Phát hành hợp đồng mua bán B2B, lên lệnh xuất kho hoặc điều phối sản xuất theo đúng thông số đã chốt.',
-                'deliverables' => 'Hợp đồng kinh tế B2B & kế hoạch giao hàng chi tiết',
-                'quality_standard' => 'Hợp đồng pháp lý rõ ràng, bảo vệ tối đa quyền lợi khách hàng doanh nghiệp',
-                'isLast' => false,
-            ],
-            [
-                'number' => '04',
-                'title' => 'Kiểm định & Đóng gói',
-                'subtitle' => 'Kiểm định QC nghiêm ngặt & đóng kiện công nghiệp',
-                'description' => 'Toàn bộ linh kiện được kiểm tra kích thước, tải trọng thử nghiệm, tra dầu bảo quản và đóng thùng kiện gỗ an toàn.',
-                'client_prep' => 'Sắp xếp nhân sự hoặc kỹ thuật viên tiếp nhận hàng hóa tại công trình/nhà xưởng.',
-                'clientPrep' => 'Sắp xếp nhân sự hoặc kỹ thuật viên tiếp nhận hàng hóa tại công trình/nhà xưởng.',
-                'maker_action' => 'Kiểm tra chất lượng (QC) từng chi tiết, đóng gói chống sốc chống ẩm và hoàn thiện bộ chứng chỉ chất lượng CO/CQ.',
-                'makerAction' => 'Kiểm tra chất lượng (QC) từng chi tiết, đóng gói chống sốc chống ẩm và hoàn thiện bộ chứng chỉ chất lượng CO/CQ.',
-                'deliverables' => 'Kiện hàng nguyên đai nguyên kiện & bộ hồ sơ CO/CQ xuất xưởng',
-                'quality_standard' => 'Đạt 100% tiêu chuẩn xuất xưởng, bảo vệ hoàn hảo trong vận chuyển',
-                'isLast' => false,
-            ],
-            [
-                'number' => '05',
-                'title' => 'Bàn giao & Bảo hành',
-                'subtitle' => 'Giao nhận tại chân công trình & hỗ trợ kỹ thuật',
-                'description' => 'Bàn giao vật tư tại hiện trường, hướng dẫn lắp đặt căn chỉnh và kích hoạt chính sách bảo hành kỹ thuật chính hãng.',
-                'client_prep' => 'Kiểm tra niêm phong, đối chiếu danh mục hàng hóa theo phiếu xuất kho và ký biên bản giao nhận.',
-                'clientPrep' => 'Kiểm tra niêm phong, đối chiếu danh mục hàng hóa theo phiếu xuất kho và ký biên bản giao nhận.',
-                'maker_action' => 'Giao hàng đúng hẹn, hướng dẫn kỹ thuật bảo trì định kỳ và sẵn sàng hỗ trợ kỹ thuật 24/7 khi vận hành.',
-                'makerAction' => 'Giao hàng đúng hẹn, hướng dẫn kỹ thuật bảo trì định kỳ và sẵn sàng hỗ trợ kỹ thuật 24/7 khi vận hành.',
-                'deliverables' => 'Biên bản nghiệm thu bàn giao & phiếu bảo hành chính hãng',
-                'quality_standard' => 'Bảo hành 12 - 24 tháng chính hãng, hỗ trợ kỹ thuật trọn vòng đời sản phẩm',
-                'isLast' => true,
-            ],
-        ];
-
-        $defaultStepsEn = [
-            [
-                'number' => '01',
-                'title' => 'Technical Intake',
-                'subtitle' => 'Part Number & Specs Survey',
-                'description' => 'Clients provide part numbers, technical drawings, or physical dimensions. Our engineers review and verify technical specifications.',
-                'client_prep' => 'Provide part numbers, dimensional drawings, pitch/tensile specs, or photos of existing components.',
-                'clientPrep' => 'Provide part numbers, dimensional drawings, pitch/tensile specs, or photos of existing components.',
-                'maker_action' => 'Thanh Khang engineers cross-check industrial standards, verify dimensional fitment, and advise optimal part specifications.',
-                'makerAction' => 'Thanh Khang engineers cross-check industrial standards, verify dimensional fitment, and advise optimal part specifications.',
-                'deliverables' => 'Technical verification datasheet & optimal part selection',
-                'quality_standard' => 'Response within 2-4 hours, 100% dimensional accuracy',
-                'isLast' => false,
-            ],
-            [
-                'number' => '02',
-                'title' => 'Technical RFQ Quotation',
-                'subtitle' => 'Transparent Pricing & Lead Time',
-                'description' => 'Align on metallurgy, industrial standards, and logistics options prior to commercial confirmation.',
-                'client_prep' => 'Confirm required quantities, delivery site, and compliance documentation requirements (CO/CQ).',
-                'clientPrep' => 'Confirm required quantities, delivery site, and compliance documentation requirements (CO/CQ).',
-                'maker_action' => 'Prepare detailed commercial quotation, tiered volume pricing, and committed delivery schedules.',
-                'makerAction' => 'Prepare detailed commercial quotation, tiered volume pricing, and committed delivery schedules.',
-                'deliverables' => 'Official B2B quotation & committed fulfillment schedule',
-                'quality_standard' => 'Competitive factory pricing, transparent freight & VAT terms',
-                'isLast' => false,
-            ],
-            [
-                'number' => '03',
-                'title' => 'Contract & Order Confirmation',
-                'subtitle' => 'Formal Agreement & Procurement',
-                'description' => 'Finalize commercial sales contract with strict legal warranties on quality and delivery milestones.',
-                'client_prep' => 'Provide legal corporate profile, execute purchase contract, and process initial deposit.',
-                'clientPrep' => 'Provide legal corporate profile, execute purchase contract, and process initial deposit.',
-                'maker_action' => 'Issue sales agreement, place warehouse dispatch orders or initiate specialized manufacturing.',
-                'makerAction' => 'Issue sales agreement, place warehouse dispatch orders or initiate specialized manufacturing.',
-                'deliverables' => 'Executed purchase contract & dispatch milestone schedule',
-                'quality_standard' => 'Transparent legal terms safeguarding customer interests',
-                'isLast' => false,
-            ],
-            [
-                'number' => '04',
-                'title' => 'QC & Industrial Packaging',
-                'subtitle' => 'Rigorous Inspection & Industrial Crating',
-                'description' => 'All components undergo dimensional verification, proof-load testing, anti-rust oiling, and heavy-duty wooden crating.',
-                'client_prep' => 'Arrange receiving personnel or engineering staff at the job site or warehouse.',
-                'clientPrep' => 'Arrange receiving personnel or engineering staff at the job site or warehouse.',
-                'maker_action' => 'Perform QC checks, pack with moisture and shock protection, and prepare CO/CQ certificates.',
-                'makerAction' => 'Perform QC checks, pack with moisture and shock protection, and prepare CO/CQ certificates.',
-                'deliverables' => 'Factory-sealed crates & complete certification dossier',
-                'quality_standard' => '100% factory inspection pass rate, zero transit damage',
-                'isLast' => false,
-            ],
-            [
-                'number' => '05',
-                'title' => 'Handover & Warranty Support',
-                'subtitle' => 'Site Delivery & Technical Support',
-                'description' => 'Site delivery, alignment and installation guidance, and activation of genuine technical warranty.',
-                'client_prep' => 'Inspect seals, verify packing list against delivery docket, and sign handover acceptance report.',
-                'clientPrep' => 'Inspect seals, verify packing list against delivery docket, and sign handover acceptance report.',
-                'maker_action' => 'Deliver on schedule, provide preventive maintenance instructions, and deliver 24/7 engineering support.',
-                'makerAction' => 'Deliver on schedule, provide preventive maintenance instructions, and deliver 24/7 engineering support.',
-                'deliverables' => 'Acceptance handover protocol & official warranty certificate',
-                'quality_standard' => '12 to 24-month warranty, lifetime technical advisory',
-                'isLast' => true,
-            ],
-        ];
-
-        $defaultSteps = $isEn ? $defaultStepsEn : $defaultStepsVi;
-
         try {
             $general = $rawSettings;
             if ($general === null) {
+                if (!\Illuminate\Support\Facades\Schema::hasTable('settings')) {
+                    return [];
+                }
                 $settings = settings()->group('general')->all();
                 if ($settings instanceof \Illuminate\Support\Collection) {
                     $general = $settings->toArray();
@@ -634,13 +707,11 @@ class Config extends Model
 
             if (is_array($baseSteps) && count($baseSteps) > 0) {
                 $total = count($baseSteps);
-                return array_values(array_map(function ($item, $index) use ($total, $defaultSteps, $defaultStepsVi, $rawStepsVi, $rawStepsEn, $isEn) {
+                return array_values(array_map(function ($item, $index) use ($total, $rawStepsVi, $rawStepsEn, $isEn) {
                     $itemVi = is_array($rawStepsVi[$index] ?? null) ? $rawStepsVi[$index] : (is_array($item) ? $item : []);
                     $itemEn = is_array($rawStepsEn[$index] ?? null) ? $rawStepsEn[$index] : [];
-                    $fallback = $defaultSteps[$index] ?? ($defaultStepsVi[$index] ?? []);
-                    $fallbackVi = $defaultStepsVi[$index] ?? [];
 
-                    $resolveField = static function (string $key, ?string $snakeKey = null) use ($itemVi, $itemEn, $fallback, $fallbackVi, $isEn): string {
+                    $resolveField = static function (string $key, ?string $snakeKey = null) use ($itemVi, $itemEn, $isEn): string {
                         $viVal = trim((string) ($itemVi[$key] ?? ($snakeKey ? ($itemVi[$snakeKey] ?? '') : '')));
                         $enVal = trim((string) (
                             $itemEn[$key]
@@ -650,22 +721,13 @@ class Config extends Model
                         ));
 
                         if ($isEn) {
-                            if ($enVal !== '') {
-                                return $enVal;
-                            }
-                            if ($viVal !== '') {
-                                return $viVal;
-                            }
-                            return (string) ($fallback[$key] ?? ($fallbackVi[$key] ?? ($fallback[$snakeKey] ?? '')));
+                            return $enVal !== '' ? $enVal : $viVal;
                         }
 
-                        if ($viVal !== '') {
-                            return $viVal;
-                        }
-                        return (string) ($fallbackVi[$key] ?? ($fallback[$key] ?? ($fallbackVi[$snakeKey] ?? '')));
+                        return $viVal;
                     };
 
-                    $number = $itemVi['number'] ?? $itemEn['number'] ?? ($fallback['number'] ?? str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT));
+                    $number = $itemVi['number'] ?? $itemEn['number'] ?? str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT);
                     $clientPrep = $resolveField('clientPrep', 'client_prep');
                     $makerAction = $resolveField('makerAction', 'maker_action');
 
@@ -688,6 +750,6 @@ class Config extends Model
             report($e);
         }
 
-        return $defaultSteps;
+        return [];
     }
 }

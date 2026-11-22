@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Config;
+use App\Models\Keyword;
 use App\Models\Post\Post;
 use Inertia\Middleware;
 use Illuminate\Http\Request;
@@ -31,7 +32,7 @@ class HandleInertiaFrontendRequests extends Middleware
 
     public function share(Request $request)
     {
-        $relativeUrl = str_replace(env('APP_URL'), '',  url()->current());
+        $relativeUrl = $request->path() !== '/' ? '/' . ltrim($request->path(), '/') : '/';
         try {
             $metaPage = \Illuminate\Support\Facades\Schema::hasTable('meta_pages')
                 ? MetaPage::where('url', $relativeUrl ?: '/')->first()
@@ -49,6 +50,7 @@ class HandleInertiaFrontendRequests extends Middleware
             'policies' => [],
             'faqs' => [],
             'product_categories' => [],
+            'popular_keywords' => [],
             'globalCtaBanner' => null,
             'banner' => [
                 'banner_home' => null,
@@ -104,6 +106,32 @@ class HandleInertiaFrontendRequests extends Middleware
                         ->get()
                         ->map(fn($item) => $item->transform());
 
+                    $popularKeywords = [];
+                    try {
+                        if (\Illuminate\Support\Facades\Schema::hasTable('settings')) {
+                            $popularKeywords = Config::getKeywords()
+                                ->filter(fn($kw) => is_string($kw) && trim($kw) !== '')
+                                ->map(fn($kw) => trim($kw))
+                                ->unique()
+                                ->values()
+                                ->all();
+                        }
+                        if (empty($popularKeywords) && \Illuminate\Support\Facades\Schema::hasTable('keywords')) {
+                            $popularKeywords = Keyword::query()
+                                ->orderByDesc('search_count')
+                                ->orderByDesc('updated_at')
+                                ->limit(8)
+                                ->pluck('keyword')
+                                ->filter(fn($kw) => is_string($kw) && trim($kw) !== '')
+                                ->map(fn($kw) => trim($kw))
+                                ->unique()
+                                ->values()
+                                ->all();
+                        }
+                    } catch (\Throwable $e) {
+                        $popularKeywords = [];
+                    }
+
                     $banner_home = Slider::getByPosition('HOME_SLIDER');
                     $globalCtaBanner = Slider::getByPosition('BANNER_GLOBAL_CTA');
 
@@ -115,6 +143,7 @@ class HandleInertiaFrontendRequests extends Middleware
                         'policies' => $policies,
                         'faqs' => $faqs,
                         'product_categories' => $productCategories,
+                        'popular_keywords' => $popularKeywords,
                         'globalCtaBanner' => $globalCtaBanner,
                         'banner' => [
                             'banner_home' => $banner_home,
@@ -171,6 +200,7 @@ class HandleInertiaFrontendRequests extends Middleware
             'global' => $global,
             'globalCtaBanner' => $layoutData['globalCtaBanner'] ?? null,
             'product_categories' => $layoutData['product_categories'] ?? [],
+            'popular_keywords' => $layoutData['popular_keywords'] ?? [],
             'locale' => [
                 'current' => current_locale(),
                 'default' => config('app.locale'),

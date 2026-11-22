@@ -6,6 +6,14 @@
                 <div class="card">
                     <div class="card-body">
                         <Field
+                            v-model="form.general_logo"
+                            :field="{
+                                type: 'file_upload',
+                                label: 'Logo thương hiệu',
+                                name: 'general_logo',
+                            }"
+                        />
+                        <Field
                             v-model="form.general_business_name"
                             :field="{
                                 name: 'general_business_name',
@@ -16,7 +24,7 @@
                             :field="{
                                 label: 'Tên doanh nghiệp (EN)',
                                 name: 'general_business_name_en',
-                                placeholder: 'VD: Thanh Khang Tecsat (Để trống tự động lấy Tiếng Việt)',
+                                placeholder: 'Để trống tự động lấy Tiếng Việt',
                             }"
                         />
                         <Field
@@ -30,7 +38,26 @@
                             :field="{
                                 label: 'Tên website (EN)',
                                 name: 'general_site_name_en',
-                                placeholder: 'VD: Thanh Khang Tecsat - Industrial Equipment & Escalator Spare Parts',
+                                placeholder: 'Để trống tự động lấy Tiếng Việt',
+                            }"
+                        />
+                        <Field
+                            v-model="form.general_description"
+                            :field="{
+                                type: 'textarea',
+                                label: 'Mô tả ngắn doanh nghiệp (Footer & SEO)',
+                                name: 'general_description',
+                                rows: 3,
+                            }"
+                        />
+                        <Field
+                            v-model="form.general_description_en"
+                            :field="{
+                                type: 'textarea',
+                                label: 'Mô tả ngắn doanh nghiệp (EN)',
+                                name: 'general_description_en',
+                                rows: 3,
+                                placeholder: 'Để trống tự động lấy Tiếng Việt',
                             }"
                         />
                         <Field
@@ -52,7 +79,22 @@
                             :field="{
                                 label: 'Địa chỉ (EN)',
                                 name: 'general_address_en',
-                                placeholder: 'VD: 25th Floor, TNR Tower, 54A Nguyen Chi Thanh, Dong Da District, Hanoi',
+                                placeholder: 'Để trống tự động lấy Tiếng Việt',
+                            }"
+                        />
+                        <Field
+                            v-model="form.showroom_address"
+                            :field="{
+                                label: 'Địa chỉ Showroom / Văn phòng giao dịch',
+                                name: 'showroom_address',
+                            }"
+                        />
+                        <Field
+                            v-model="form.showroom_address_en"
+                            :field="{
+                                label: 'Địa chỉ Showroom / Văn phòng giao dịch (EN)',
+                                name: 'showroom_address_en',
+                                placeholder: 'Để trống tự động lấy Tiếng Việt',
                             }"
                         />
                         <Field
@@ -91,7 +133,15 @@
                             :field="{
                                 label: 'Link Fanpage Facebook',
                                 name: 'general_facebook',
-                                placeholder: 'https://www.facebook.com/thanhkhangtecsat',
+                                placeholder: 'https://www.facebook.com/...',
+                            }"
+                        />
+                        <Field
+                            v-model="form.general_linkedin"
+                            :field="{
+                                label: 'Link LinkedIn',
+                                name: 'general_linkedin',
+                                placeholder: 'https://www.linkedin.com/company/...',
                             }"
                         />
                         <Field
@@ -99,7 +149,17 @@
                             :field="{
                                 label: 'Link Kênh TikTok',
                                 name: 'general_tiktok',
-                                placeholder: 'https://tiktok.com/@thanhkhangtecsat',
+                                placeholder: 'https://tiktok.com/@...',
+                            }"
+                        />
+                        <Field
+                            v-model="form.map_iframe"
+                            :field="{
+                                type: 'textarea',
+                                label: 'Google Maps Embed URL / Iframe',
+                                name: 'map_iframe',
+                                rows: 3,
+                                placeholder: 'Dán URL embed hoặc nguyên thẻ <iframe src=...> Google Maps',
                             }"
                         />
                         <Field
@@ -143,6 +203,228 @@
                         />
                     </div>
                 </div>
+
+                <!-- Trang chủ — Phần Giới thiệu (Home About Section) -->
+                <div class="card">
+                    <div class="card-header font-bold text-slate-800">
+                        Trang chủ — Phần Giới thiệu (Về chúng tôi)
+                    </div>
+                    <div class="card-body">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.home_about_eyebrow"
+                                :field="{
+                                    label: 'Nhãn trên tiêu đề (VI)',
+                                    name: 'home_about_eyebrow',
+                                }"
+                            />
+                            <Field
+                                v-model="form.home_about_eyebrow_en"
+                                :field="{
+                                    label: 'Nhãn trên tiêu đề (EN)',
+                                    name: 'home_about_eyebrow_en',
+                                    placeholder: 'Để trống tự động lấy Tiếng Việt',
+                                }"
+                            />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.home_about_lead_highlight"
+                                :field="{
+                                    label: 'Tiêu đề nổi bật (VI)',
+                                    name: 'home_about_lead_highlight',
+                                }"
+                            />
+                            <Field
+                                v-model="form.home_about_lead_highlight_en"
+                                :field="{
+                                    label: 'Tiêu đề nổi bật (EN)',
+                                    name: 'home_about_lead_highlight_en',
+                                    placeholder: 'Để trống tự động lấy Tiếng Việt',
+                                }"
+                            />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.home_about_lead_rest"
+                                :field="{
+                                    type: 'textarea',
+                                    rows: 2,
+                                    label: 'Phần tiếp theo tiêu đề (VI)',
+                                    name: 'home_about_lead_rest',
+                                }"
+                            />
+                            <Field
+                                v-model="form.home_about_lead_rest_en"
+                                :field="{
+                                    type: 'textarea',
+                                    rows: 2,
+                                    label: 'Phần tiếp theo tiêu đề (EN)',
+                                    name: 'home_about_lead_rest_en',
+                                    placeholder: 'Để trống tự động lấy Tiếng Việt',
+                                }"
+                            />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.home_about_paragraph_1"
+                                :field="{
+                                    type: 'textarea',
+                                    rows: 4,
+                                    label: 'Đoạn mô tả 1 (VI)',
+                                    name: 'home_about_paragraph_1',
+                                }"
+                            />
+                            <Field
+                                v-model="form.home_about_paragraph_1_en"
+                                :field="{
+                                    type: 'textarea',
+                                    rows: 4,
+                                    label: 'Đoạn mô tả 1 (EN)',
+                                    name: 'home_about_paragraph_1_en',
+                                    placeholder: 'Để trống tự động lấy Tiếng Việt',
+                                }"
+                            />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.home_about_paragraph_2"
+                                :field="{
+                                    type: 'textarea',
+                                    rows: 4,
+                                    label: 'Đoạn mô tả 2 (VI)',
+                                    name: 'home_about_paragraph_2',
+                                }"
+                            />
+                            <Field
+                                v-model="form.home_about_paragraph_2_en"
+                                :field="{
+                                    type: 'textarea',
+                                    rows: 4,
+                                    label: 'Đoạn mô tả 2 (EN)',
+                                    name: 'home_about_paragraph_2_en',
+                                    placeholder: 'Để trống tự động lấy Tiếng Việt',
+                                }"
+                            />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.home_about_commitment_quote"
+                                :field="{
+                                    label: 'Câu trích dẫn cam kết (VI)',
+                                    name: 'home_about_commitment_quote',
+                                }"
+                            />
+                            <Field
+                                v-model="form.home_about_commitment_quote_en"
+                                :field="{
+                                    label: 'Câu trích dẫn cam kết (EN)',
+                                    name: 'home_about_commitment_quote_en',
+                                    placeholder: 'Để trống tự động lấy Tiếng Việt',
+                                }"
+                            />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.home_about_commitment_sub"
+                                :field="{
+                                    label: 'Mô tả phụ cam kết (VI)',
+                                    name: 'home_about_commitment_sub',
+                                }"
+                            />
+                            <Field
+                                v-model="form.home_about_commitment_sub_en"
+                                :field="{
+                                    label: 'Mô tả phụ cam kết (EN)',
+                                    name: 'home_about_commitment_sub_en',
+                                    placeholder: 'Để trống tự động lấy Tiếng Việt',
+                                }"
+                            />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.home_about_cta_text"
+                                :field="{
+                                    label: 'Nút CTA — Tiêu đề (VI)',
+                                    name: 'home_about_cta_text',
+                                }"
+                            />
+                            <Field
+                                v-model="form.home_about_cta_text_en"
+                                :field="{
+                                    label: 'Nút CTA — Tiêu đề (EN)',
+                                    name: 'home_about_cta_text_en',
+                                    placeholder: 'Để trống tự động lấy Tiếng Việt',
+                                }"
+                            />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.home_about_cta_link"
+                                :field="{
+                                    label: 'Nút CTA — Đường dẫn (VI)',
+                                    name: 'home_about_cta_link',
+                                    placeholder: 'VD: /gioi-thieu',
+                                }"
+                            />
+                            <Field
+                                v-model="form.home_about_cta_link_en"
+                                :field="{
+                                    label: 'Nút CTA — Đường dẫn (EN)',
+                                    name: 'home_about_cta_link_en',
+                                    placeholder: 'VD: /en/about',
+                                }"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trang chủ — Phần Liên hệ / Báo giá (Home Contact Section) -->
+                <div class="card">
+                    <div class="card-header font-bold text-slate-800">
+                        Trang chủ — Phần Liên hệ &amp; Yêu cầu báo giá
+                    </div>
+                    <div class="card-body">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.home_contact_title"
+                                :field="{
+                                    label: 'Tiêu đề khối Liên hệ (VI)',
+                                    name: 'home_contact_title',
+                                }"
+                            />
+                            <Field
+                                v-model="form.home_contact_title_en"
+                                :field="{
+                                    label: 'Tiêu đề khối Liên hệ (EN)',
+                                    name: 'home_contact_title_en',
+                                    placeholder: 'Để trống tự động lấy Tiếng Việt',
+                                }"
+                            />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.home_contact_description"
+                                :field="{
+                                    type: 'textarea',
+                                    rows: 3,
+                                    label: 'Mô tả khối Liên hệ (VI)',
+                                    name: 'home_contact_description',
+                                }"
+                            />
+                            <Field
+                                v-model="form.home_contact_description_en"
+                                :field="{
+                                    type: 'textarea',
+                                    rows: 3,
+                                    label: 'Mô tả khối Liên hệ (EN)',
+                                    name: 'home_contact_description_en',
+                                    placeholder: 'Để trống tự động lấy Tiếng Việt',
+                                }"
+                            />
+                        </div>
+                    </div>
+                </div>
                 <SeoFields
                     :modelValue="form"
                     @update:modelValue="form = $event"
@@ -157,6 +439,24 @@
 </template>
 <script>
 import WrapSetting from '@Core/Components/WrapSetting.vue'
+
+function parseJsonMedia(val) {
+    if (!val) return null
+    if (typeof val === 'object') return val
+    if (typeof val === 'string') {
+        const trimmed = val.trim()
+        if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+            try {
+                return JSON.parse(trimmed)
+            } catch (e) {
+                return val
+            }
+        }
+        return trimmed || null
+    }
+    return val
+}
+
 export default {
     components: { WrapSetting },
     props: ['item', 'schema'],
@@ -165,8 +465,20 @@ export default {
             formData: {
                 id: 'general',
                 ...this.item,
+                general_logo: parseJsonMedia(this.item?.general_logo),
+                map_iframe: this.item?.map_iframe || this.item?.general_map_iframe || '',
             },
         }
+    },
+    watch: {
+        item(newVal) {
+            this.formData = {
+                id: 'general',
+                ...newVal,
+                general_logo: parseJsonMedia(newVal?.general_logo),
+                map_iframe: newVal?.map_iframe || newVal?.general_map_iframe || '',
+            }
+        },
     },
 }
 </script>

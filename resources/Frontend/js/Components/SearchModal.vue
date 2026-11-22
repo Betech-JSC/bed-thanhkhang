@@ -70,8 +70,8 @@
 
                     <!-- 2. Trạng thái Chưa gõ từ khóa: Gợi ý từ khóa & Sản phẩm nổi bật -->
                     <div v-else-if="!keyword.trim()" class="space-y-5">
-                        <!-- Gợi ý từ khóa phổ biến -->
-                        <div>
+                        <!-- Gợi ý từ khóa phổ biến (100% CMS-driven via $page.props.popular_keywords) -->
+                        <div v-if="popularTags.length > 0">
                             <div class="flex items-center gap-2 mb-2.5">
                                 <svg class="w-4 h-4 text-[#84ADFF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -88,7 +88,7 @@
                                     @click="selectTag(tag.keyword)"
                                     class="px-3 py-1.5 rounded-lg text-xs font-medium text-[#B9C0D4] bg-[#16192B] border border-[#23273F] hover:border-[#2970FF] hover:text-[#FAFAFA] hover:bg-[#1E233D] transition-all duration-200 cursor-pointer"
                                 >
-                                    {{ tt(tag.label) }}
+                                    {{ tag.label }}
                                 </button>
                             </div>
                         </div>
@@ -105,10 +105,11 @@
                             </div>
 
                             <div class="space-y-2">
-                                <div
+                                <Link
                                     v-for="product in results"
                                     :key="product.id"
-                                    @click="goToProduct(product)"
+                                    :href="getProductUrl(product)"
+                                    @click="close"
                                     class="group flex items-center justify-between p-3 rounded-xl bg-[#16192B]/80 hover:bg-[#1C2038] border border-[#23273F] hover:border-[#2970FF] transition-all duration-200 cursor-pointer shadow-sm hover:shadow-[0_0_15px_rgba(41,112,255,0.15)]"
                                 >
                                     <div class="flex items-center gap-3.5 min-w-0">
@@ -152,7 +153,7 @@
                                             </svg>
                                         </div>
                                     </div>
-                                </div>
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -169,10 +170,11 @@
                         </div>
 
                         <div class="space-y-2">
-                            <div
+                            <Link
                                 v-for="product in results"
                                 :key="product.id"
-                                @click="goToProduct(product)"
+                                :href="getProductUrl(product)"
+                                @click="close"
                                 class="group flex items-center justify-between p-3 rounded-xl bg-[#16192B]/80 hover:bg-[#1C2038] border border-[#23273F] hover:border-[#2970FF] transition-all duration-200 cursor-pointer shadow-sm hover:shadow-[0_0_15px_rgba(41,112,255,0.15)]"
                             >
                                 <div class="flex items-center gap-3.5 min-w-0">
@@ -216,7 +218,7 @@
                                         </svg>
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                         </div>
                     </div>
 
@@ -233,6 +235,16 @@
                         <p class="text-xs sm:text-sm text-[#B9C0D4] max-w-sm mx-auto">
                             {{ tt('Không tìm thấy sản phẩm nào khớp với từ khóa') }} "<span class="text-[#84ADFF]">{{ keyword }}</span>". {{ tt('Vui lòng thử từ khóa khác hoặc duyệt bộ sưu tập.') }}
                         </p>
+                        <div class="pt-2">
+                            <Link
+                                :href="productsIndexUrl"
+                                @click="close"
+                                class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold text-white bg-[#005EA4] hover:bg-[#004D86] transition-colors"
+                            >
+                                <span>{{ tt('Xem tất cả sản phẩm') }}</span>
+                                <span aria-hidden="true">&rarr;</span>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -242,9 +254,13 @@
 
 <script>
 import axios from 'axios'
+import { Link } from '@inertiajs/inertia-vue3'
 
 export default {
     name: 'SearchModal',
+    components: {
+        Link,
+    },
     props: {
         isOpen: {
             type: Boolean,
@@ -265,17 +281,34 @@ export default {
         currentLocale() {
             return this.$page?.props?.locale?.current || 'vi'
         },
+        productsIndexUrl() {
+            const fallback = this.currentLocale === 'en' ? '/en/products' : '/san-pham'
+            if (typeof this.route === 'function') {
+                try {
+                    const url = this.route('products.index')
+                    if (url && url !== '#') return url
+                } catch (e) {
+                    // Fall through to localized fallback
+                }
+            }
+            return fallback
+        },
         popularTags() {
-            return [
-                { label: this.tt('Xích bậc thang cuốn'), keyword: this.currentLocale === 'en' ? 'Escalator' : 'Thang cuốn' },
-                { label: 'Universal Chains', keyword: 'Universal' },
-                { label: this.tt('Xích thang nâng ô tô'), keyword: this.currentLocale === 'en' ? 'Car Elevator' : 'Thang nâng' },
-                { label: this.tt('Xích băng tải hành lý'), keyword: this.currentLocale === 'en' ? 'Baggage' : 'Hành lý' },
-                { label: this.tt('Xích chốt rỗng'), keyword: this.currentLocale === 'en' ? 'Hollow Pin' : 'Chốt rỗng' },
-                { label: this.tt('Quạt công nghiệp BLDC'), keyword: 'BLDC' },
-                { label: this.tt('Thép hợp kim 40Cr'), keyword: '40Cr' },
-                { label: 'Inox 304 / 316', keyword: '304' },
-            ]
+            const raw = this.$page?.props?.popular_keywords || []
+            if (!Array.isArray(raw)) return []
+            return raw
+                .map((item) => {
+                    if (typeof item === 'string') {
+                        const kw = item.trim()
+                        return kw ? { label: kw, keyword: kw } : null
+                    }
+                    if (item && typeof item === 'object') {
+                        const kw = String(item.keyword || item.title || item.label || '').trim()
+                        return kw ? { label: String(item.label || item.title || kw).trim(), keyword: kw } : null
+                    }
+                    return null
+                })
+                .filter(Boolean)
         },
     },
     watch: {
@@ -372,11 +405,19 @@ export default {
             return new Intl.NumberFormat('vi-VN').format(val) + ' ' + this.tt('đ')
         },
         getProductUrl(product) {
-            if (!product) return '/san-pham'
+            const prefix = this.productsIndexUrl
+            if (!product) return prefix
             const isEn = (this.currentLocale || this.$page?.props?.locale?.current || '').toLowerCase() === 'en'
-            const prefix = isEn ? '/en/products' : '/san-pham'
 
             if (product.slug) {
+                if (typeof this.route === 'function') {
+                    try {
+                        const url = this.route('products.show', { slug: product.slug })
+                        if (url && url !== '#') return url
+                    } catch (e) {
+                        // Fall through to prefix + slug
+                    }
+                }
                 return `${prefix}/${product.slug}`
             }
             if (typeof product.url === 'string' && product.url) {

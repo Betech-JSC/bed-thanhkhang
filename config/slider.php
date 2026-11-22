@@ -32,5 +32,35 @@ return [
             'value' => 'BANNER_HOME_FOUNDER',
             'banner' => true,
         ],
+        'HOME_ABOUT_GALLERY' => [
+            'title' => 'Ảnh Giới thiệu trang chủ (3 ảnh Về chúng tôi)',
+            'value' => 'HOME_ABOUT_GALLERY',
+            'banner' => false,
+        ],
+        'BANNER_HOME_CATEGORIES_CTA' => [
+            'title' => 'Thẻ CTA Khám phá toàn bộ sản phẩm (Trang chủ)',
+            'value' => 'BANNER_HOME_CATEGORIES_CTA',
+            'banner' => true,
+        ],
+        'BANNER_HOME_TRUST' => [
+            'title' => 'Banner nền Vì sao chọn Thành Khang (Trang chủ)',
+            'value' => 'BANNER_HOME_TRUST',
+            'banner' => true,
+        ],
+        'HOME_TRUST_PILLARS' => [
+            'title' => '5 Trụ cột Vì sao chọn Thành Khang (Trang chủ)',
+            'value' => 'HOME_TRUST_PILLARS',
+            'banner' => false,
+        ],
+        'BANNER_HOME_PROCESS' => [
+            'title' => 'Banner nền Quy trình (Trang chủ)',
+            'value' => 'BANNER_HOME_PROCESS',
+            'banner' => true,
+        ],
+        'HOME_PROCESS_STEPS' => [
+            'title' => '4 Bước Quy trình làm việc (Trang chủ)',
+            'value' => 'HOME_PROCESS_STEPS',
+            'banner' => false,
+        ],
     ]
 ];

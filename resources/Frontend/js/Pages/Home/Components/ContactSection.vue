@@ -1,252 +1,572 @@
 <template>
-    <section v-scroll-reveal id="contact-section" class="py-14 sm:py-20 lg:py-24 bg-[#111322] relative">
-        <div class="app-container">
-            <!-- Modern Card matching Figma Node 2261:5750 / 2261:5751 (1152x492px) -->
-            <div class="relative text-white max-w-[1152px] lg:h-[492px] p-6 sm:p-8 lg:p-10 mx-auto">
-                <!-- Desktop & Tablet SVG Background with Smooth Chamfered Bottom-Left Corner -->
-                <div class="hidden sm:block absolute inset-0 w-full h-full pointer-events-none -z-0">
-                    <svg viewBox="0 0 2304 984" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="w-full h-full drop-shadow-2xl">
-                        <defs>
-                            <linearGradient id="contactCardGrad" x1="1152" y1="0" x2="1152" y2="984" gradientUnits="userSpaceOnUse">
-                                <stop offset="0.1975" stop-color="#111322"/>
-                                <stop offset="0.938" stop-color="#2970FF"/>
-                            </linearGradient>
-                        </defs>
-                        <path
-                            d="M2257.61 0C2283.23 0.000263884 2304 20.7682 2304 46.3867V937.613C2304 963.232 2283.23 984 2257.61 984H217.42C202.284 984 187.747 978.081 176.916 967.508L17.4799 811.867C6.30234 800.955 0 785.995 0 770.375V46.3867C0.000212344 20.7681 20.7681 0.000208235 46.3867 0H2257.61Z"
-                            fill="url(#contactCardGrad)"
-                        />
-                    </svg>
-                </div>
+    <section
+        id="contact-section"
+        class="relative w-full bg-[#00284B] overflow-hidden py-10 md:py-16 lg:pt-[125px] lg:pb-[124px]"
+    >
+        <!-- Decorative Chain Accent 1: Bottom-Left (native RGBA transparency, behind content, Figma 595:15499) -->
+        <div
+            class="hidden md:block pointer-events-none select-none absolute -left-[120px] -bottom-[155px] w-[560px] -rotate-[6deg] z-0 opacity-95"
+            aria-hidden="true"
+        >
+            <img
+                src="/assets/images/homepage/contact-chain-deco.png"
+                alt=""
+                class="w-full h-auto block"
+                loading="lazy"
+                decoding="async"
+            />
+        </div>
 
-                <!-- Mobile Fallback with Clean Rounded Corners -->
-                <div
-                    class="block sm:hidden absolute inset-0 rounded-[24px] pointer-events-none -z-0 shadow-2xl"
-                    style="background: linear-gradient(180deg, #111322 20%, #2970FF 94%);"
-                ></div>
+        <!-- Decorative Chain Accent 2: Top-Right (sweeping diagonally behind frosted card, Figma 595:15502) -->
+        <div
+            class="hidden lg:block pointer-events-none select-none absolute -right-[120px] -top-[55px] w-[760px] rotate-[24deg] z-0 opacity-95"
+            aria-hidden="true"
+        >
+            <img
+                src="/assets/images/homepage/contact-chain-deco.png"
+                alt=""
+                class="w-full h-auto block"
+                loading="lazy"
+                decoding="async"
+            />
+        </div>
 
+        <!-- Decorative Chain Accent 3: Bottom-Right (sweeping diagonally behind bottom-right of frosted card, Figma 595:15532) -->
+        <div
+            class="hidden lg:block pointer-events-none select-none absolute -right-[130px] -bottom-[85px] w-[620px] -rotate-[18deg] z-0 opacity-95"
+            aria-hidden="true"
+        >
+            <img
+                src="/assets/images/homepage/contact-chain-deco.png"
+                alt=""
+                class="w-full h-auto block"
+                loading="lazy"
+                decoding="async"
+            />
+        </div>
 
-
-                <div class="flex flex-col lg:flex-row lg:justify-between items-start gap-8 lg:gap-[80px] relative z-10">
-                    <!-- Left Column: Headline, Description & 3 Social Buttons (Figma Node 2261:5755) -->
-                    <div class="w-full lg:w-[433px] flex-shrink-0">
-                        <div class="space-y-3 sm:space-y-4">
-                            <h2
-                                class="text-2xl sm:text-3xl lg:text-[38px] font-bold text-[#F5F8FF] uppercase tracking-tight font-sans leading-tight lg:leading-[46px]"
-                            >
-                                {{ tt(title) }}
-                            </h2>
-                            <p class="text-sm sm:text-base text-[#D1E0FF] leading-relaxed font-normal max-w-[430px]">
-                                {{ tt(description) }}
-                            </p>
-                        </div>
-
-                        <!-- 3 Social Icon Buttons (Facebook, Instagram, TikTok) (Figma Node 2261:5759) -->
-                        <div class="flex items-center gap-3 mt-6">
-                            <a
-                                v-for="soc in socialLinks"
-                                :key="soc.id"
-                                :href="soc.url"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="w-10 h-10 rounded-[8px] bg-[#111322] hover:bg-[#1A1F36] flex items-center justify-center text-white hover:scale-105 transition-colors duration-200 shadow-md"
-                                :aria-label="soc.label"
-                            >
-                                <!-- Facebook -->
-                                <svg v-if="soc.id === 'facebook'" class="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                                </svg>
-                                <!-- Instagram -->
-                                <svg v-else-if="soc.id === 'instagram'" class="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0-3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                                </svg>
-                                <!-- TikTok -->
-                                <svg v-else-if="soc.id === 'tiktok'" class="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-1.01-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
-                                </svg>
-                            </a>
-                        </div>
+        <!-- Main Content Grid -->
+        <div class="app-container relative z-10">
+            <div class="flex flex-col lg:flex-row lg:items-stretch justify-between gap-8 lg:gap-[64px]">
+                <!-- Left Column: Title, Subtitle & Live CMS Contact Details -->
+                <div class="w-full lg:w-[462px] lg:min-h-[508px] shrink-0 flex flex-col justify-between gap-8">
+                    <div v-if="heading || description">
+                        <h2
+                            v-if="heading"
+                            class="font-bold text-[24px] sm:text-[26px] lg:text-[28px] leading-[1.6] lg:min-h-[100px] text-[#FAFAFA] uppercase break-words"
+                        >
+                            {{ heading }}
+                        </h2>
+                        <p
+                            v-if="description"
+                            class="font-medium text-[15px] sm:text-[16px] leading-[1.6] text-[#9AA4B2] mt-3 lg:mt-0 break-words"
+                        >
+                            {{ description }}
+                        </p>
                     </div>
 
-                    <!-- Right Column: Form (Figma Node 2261:5767) -->
-                    <div class="w-full lg:w-[559px] flex-shrink-0">
-                        <form @submit.prevent="submitForm">
-                            <div class="flex flex-col gap-5">
-                            <!-- Dòng 1: Họ và tên* (full width) (Figma Node 2261:5769) -->
+                    <!-- Live CMS Contact Info (Bound to $page.props.global / configs) -->
+                    <div class="flex flex-col gap-[12px]">
+                        <a
+                            v-if="displayHotline"
+                            :href="'tel:' + cleanHotline"
+                            class="flex items-center gap-2 text-[14px] font-medium leading-[1.6] text-[#EEF2F6] hover:text-[#C9E0FF] transition-colors focus:outline-none focus-visible:underline"
+                        >
+                            <img
+                                src="/assets/svg/icons/contact-phone.svg"
+                                alt=""
+                                aria-hidden="true"
+                                width="24"
+                                height="24"
+                                class="w-6 h-6 shrink-0"
+                            />
+                            <span class="break-words">Hotline: {{ displayHotline }}</span>
+                        </a>
+
+                        <a
+                            v-if="displayEmail"
+                            :href="'mailto:' + displayEmail"
+                            class="flex items-center gap-2 text-[14px] font-medium leading-[1.6] text-[#EEF2F6] hover:text-[#C9E0FF] transition-colors focus:outline-none focus-visible:underline"
+                        >
+                            <img
+                                src="/assets/svg/icons/contact-mail.svg"
+                                alt=""
+                                aria-hidden="true"
+                                width="24"
+                                height="24"
+                                class="w-6 h-6 shrink-0"
+                            />
+                            <span class="break-all sm:break-words">Email: {{ displayEmail }}</span>
+                        </a>
+
+                        <div
+                            v-if="displayAddress"
+                            class="flex items-start gap-2 text-[14px] font-medium leading-[1.6] text-[#EEF2F6]"
+                        >
+                            <img
+                                src="/assets/svg/icons/contact-pin.svg"
+                                alt=""
+                                aria-hidden="true"
+                                width="24"
+                                height="24"
+                                class="w-6 h-6 shrink-0"
+                            />
+                            <span class="break-words">
+                                {{ isEn ? 'Headquarters' : 'Trụ sở' }}: {{ displayAddress }}
+                            </span>
+                        </div>
+
+                        <div
+                            v-if="displayShowroomAddress"
+                            class="flex items-start gap-2 text-[14px] font-medium leading-[1.6] text-[#EEF2F6]"
+                        >
+                            <img
+                                src="/assets/svg/icons/contact-pin.svg"
+                                alt=""
+                                aria-hidden="true"
+                                width="24"
+                                height="24"
+                                class="w-6 h-6 shrink-0"
+                            />
+                            <span class="break-words">
+                                {{ isEn ? 'Office & Showroom' : 'VPGD & Showroom' }}: {{ displayShowroomAddress }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Frosted Quote Form Card -->
+                <div
+                    class="w-full flex-1 min-w-0 backdrop-blur-[3px] bg-[rgba(201,224,255,0.8)] rounded-[8px] p-6 sm:p-8 lg:p-[40px] flex flex-col justify-between"
+                >
+                    <form
+                        @submit.prevent="submitForm"
+                        novalidate
+                        class="flex flex-col justify-between h-full gap-6"
+                    >
+                        <div class="flex flex-col gap-[16px]">
+                            <!-- Field 1: Full Name (required) -->
                             <div>
-                                <label class="block text-[16px] leading-[22px] font-normal text-[#FAFAFA] mb-1">
-                                    {{ tt('Họ và tên') }}*
+                                <label
+                                    for="home-contact-name"
+                                    class="block text-[14px] font-medium leading-[1.6] text-[#424242] mb-[4px]"
+                                >
+                                    {{ isEn ? 'Full Name*' : 'Họ và tên*' }}
                                 </label>
                                 <input
+                                    id="home-contact-name"
                                     v-model="form.name"
                                     type="text"
-                                    :placeholder="tt('Họ và tên')"
+                                    name="name"
+                                    autocomplete="name"
                                     required
-                                    class="w-full h-12 px-4 rounded-[8px] bg-white/20 border border-[#5D6B98] text-white placeholder-[#B9C0D4] focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white text-sm sm:text-base transition-colors duration-200"
+                                    :placeholder="isEn ? 'John Doe' : 'Nguyễn Văn A'"
+                                    :aria-invalid="Boolean(fieldErrors.name)"
+                                    :aria-describedby="fieldErrors.name ? 'home-contact-name-error' : undefined"
+                                    class="w-full bg-white border rounded-[8px] px-[12px] py-[8px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] text-[16px] font-normal leading-[1.6] text-[#1A1A1A] placeholder:text-[#808080] focus:outline-none focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-colors"
+                                    :class="fieldErrors.name ? 'border-[#D92D20]' : 'border-[#D6D6D6]'"
+                                    @input="clearFieldError('name')"
                                 />
+                                <p
+                                    v-if="fieldErrors.name"
+                                    id="home-contact-name-error"
+                                    role="alert"
+                                    class="text-[13px] font-medium text-[#B42318] mt-1"
+                                >
+                                    {{ fieldErrors.name }}
+                                </p>
                             </div>
 
-                            <!-- Dòng 2: Grid 2 cột: Email* (50%) | Số điện thoại* (50%) (Figma Node 2261:5781) -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Field 2 & 3: Email + Phone (2-column row) -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-[12px]">
                                 <div>
-                                    <label class="block text-[16px] leading-[22px] font-normal text-[#FAFAFA] mb-1">
+                                    <label
+                                        for="home-contact-email"
+                                        class="block text-[14px] font-medium leading-[1.6] text-[#424242] mb-[4px]"
+                                    >
                                         Email*
                                     </label>
                                     <input
+                                        id="home-contact-email"
                                         v-model="form.email"
                                         type="email"
-                                        placeholder="Email"
+                                        name="email"
+                                        autocomplete="email"
                                         required
-                                        class="w-full h-12 px-4 rounded-[8px] bg-white/20 border border-[#5D6B98] text-white placeholder-[#B9C0D4] focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white text-sm sm:text-base transition-colors duration-200"
+                                        :placeholder="isEn ? 'example@company.com' : 'example@congty.com'"
+                                        :aria-invalid="Boolean(fieldErrors.email)"
+                                        :aria-describedby="fieldErrors.email ? 'home-contact-email-error' : undefined"
+                                        class="w-full bg-white border rounded-[8px] px-[12px] py-[8px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] text-[16px] font-normal leading-[1.6] text-[#1A1A1A] placeholder:text-[#808080] focus:outline-none focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-colors"
+                                        :class="fieldErrors.email ? 'border-[#D92D20]' : 'border-[#D6D6D6]'"
+                                        @input="clearFieldError('email')"
                                     />
+                                    <p
+                                        v-if="fieldErrors.email"
+                                        id="home-contact-email-error"
+                                        role="alert"
+                                        class="text-[13px] font-medium text-[#B42318] mt-1"
+                                    >
+                                        {{ fieldErrors.email }}
+                                    </p>
                                 </div>
+
                                 <div>
-                                    <label class="block text-[16px] leading-[22px] font-normal text-[#FAFAFA] mb-1">
-                                        {{ tt('Số điện thoại') }}*
+                                    <label
+                                        for="home-contact-phone"
+                                        class="block text-[14px] font-medium leading-[1.6] text-[#424242] mb-[4px]"
+                                    >
+                                        {{ isEn ? 'Phone Number*' : 'Số điện thoại*' }}
                                     </label>
                                     <input
+                                        id="home-contact-phone"
                                         v-model="form.phone"
                                         type="tel"
-                                        :placeholder="tt('Số điện thoại')"
+                                        name="phone"
+                                        autocomplete="tel"
                                         required
-                                        class="w-full h-12 px-4 rounded-[8px] bg-white/20 border border-[#5D6B98] text-white placeholder-[#B9C0D4] focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white text-sm sm:text-base transition-colors duration-200"
+                                        :placeholder="isEn ? '(+84) 901 234 567' : '0901 234 567'"
+                                        :aria-invalid="Boolean(fieldErrors.phone)"
+                                        :aria-describedby="fieldErrors.phone ? 'home-contact-phone-error' : undefined"
+                                        class="w-full bg-white border rounded-[8px] px-[12px] py-[8px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] text-[16px] font-normal leading-[1.6] text-[#1A1A1A] placeholder:text-[#808080] focus:outline-none focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-colors"
+                                        :class="fieldErrors.phone ? 'border-[#D92D20]' : 'border-[#D6D6D6]'"
+                                        @input="clearFieldError('phone')"
                                     />
+                                    <p
+                                        v-if="fieldErrors.phone"
+                                        id="home-contact-phone-error"
+                                        role="alert"
+                                        class="text-[13px] font-medium text-[#B42318] mt-1"
+                                    >
+                                        {{ fieldErrors.phone }}
+                                    </p>
                                 </div>
                             </div>
 
-                            <!-- Dòng 3: Nhập lời nhắn* (textarea) (Figma Node 2261:5806) -->
+                            <!-- Field 4: Message / Note (optional) -->
                             <div>
-                                <label class="block text-[16px] leading-[22px] font-normal text-[#FAFAFA] mb-1">
-                                    {{ tt('Nhập lời nhắn') }}*
+                                <label
+                                    for="home-contact-note"
+                                    class="block text-[14px] font-medium leading-[1.6] text-[#424242] mb-[4px]"
+                                >
+                                    {{ isEn ? 'Message' : 'Lời nhắn' }}
                                 </label>
                                 <textarea
+                                    id="home-contact-note"
                                     v-model="form.note"
-                                    rows="3"
-                                    :placeholder="tt('Chia sẻ mã linh kiện, thông số kỹ thuật hoặc yêu cầu dự án với Thành Khang Tecsat')"
-                                    required
-                                    class="w-full h-24 px-4 py-3 rounded-[8px] bg-white/20 border border-[#5D6B98] text-white placeholder-[#B9C0D4] focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white text-sm sm:text-base transition-colors duration-200 resize-none"
-                                ></textarea>
+                                    name="note"
+                                    rows="5"
+                                    :placeholder="
+                                        isEn
+                                            ? 'Enter your quotation details (product, quantity, required delivery time...)'
+                                            : 'Nhập nội dung bạn cần báo giá (sản phẩm, số lượng, thời gian cần hàng...)'
+                                    "
+                                    :aria-invalid="Boolean(fieldErrors.note)"
+                                    :aria-describedby="fieldErrors.note ? 'home-contact-note-error' : undefined"
+                                    class="w-full min-h-[146px] resize-y bg-white border rounded-[8px] px-[12px] py-[8px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] text-[16px] font-normal leading-[1.6] text-[#1A1A1A] placeholder:text-[#808080] focus:outline-none focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-colors"
+                                    :class="fieldErrors.note ? 'border-[#D92D20]' : 'border-[#D6D6D6]'"
+                                    @input="clearFieldError('note')"
+                                />
+                                <p
+                                    v-if="fieldErrors.note"
+                                    id="home-contact-note-error"
+                                    role="alert"
+                                    class="text-[13px] font-medium text-[#B42318] mt-1"
+                                >
+                                    {{ fieldErrors.note }}
+                                </p>
                             </div>
+                        </div>
 
-                            </div>
+                        <!-- Feedback Banners -->
+                        <div
+                            v-if="submitSuccess"
+                            role="status"
+                            aria-live="polite"
+                            class="rounded-[6px] bg-[#ECFDF3] border border-[#ABEFC6] px-4 py-3 text-[14px] font-medium text-[#067647]"
+                        >
+                            {{
+                                isEn
+                                    ? 'Thank you! Your consultation request has been received. Our engineering team will contact you shortly.'
+                                    : 'Cảm ơn bạn! Yêu cầu tư vấn và báo giá đã được ghi nhận. Đội ngũ kỹ sư Thành Khang sẽ liên hệ với bạn sớm nhất.'
+                            }}
+                        </div>
 
-                            <!-- Submit Success Notice -->
-                            <div
-                                v-if="submitSuccess"
-                                class="mt-4 p-3 rounded-lg bg-white/20 border border-white/30 text-white text-sm flex items-center gap-2"
-                            >
-                                <svg class="w-5 h-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/>
-                                </svg>
-                                <span>{{ tt('Gửi yêu cầu thành công! Đội ngũ kỹ thuật Thành Khang Tecsat sẽ liên hệ hỗ trợ bạn.') }}</span>
-                            </div>
+                        <div
+                            v-if="submitError"
+                            role="alert"
+                            aria-live="assertive"
+                            class="rounded-[6px] bg-[#FEF3F2] border border-[#FECDCA] px-4 py-3 text-[14px] font-medium text-[#B42318]"
+                        >
+                            {{ submitError }}
+                        </div>
 
-                            <!-- Dòng 4: Nút "Gửi yêu cầu" (nền đen #111322, bo góc 8px) (Figma Node 2261:5816) -->
-                            <button
-                                type="submit"
-                                :disabled="isSubmitting"
-                                class="w-full h-14 rounded-[8px] bg-[#111322] hover:bg-[#1A1F36] text-[#FAFAFA] font-semibold text-base flex items-center justify-center transition-colors duration-200 active:scale-[0.98] shadow-md cursor-pointer disabled:opacity-50 mt-10"
-                                :class="{ '!mt-4': submitSuccess }"
-                            >
-                                <span v-if="!isSubmitting">{{ tt('Gửi yêu cầu') }}</span>
-                                <span v-else class="inline-flex items-center gap-2">
-                                    <svg class="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24" fill="none">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-                                    </svg>
-                                    {{ tt('Đang gửi...') }}
-                                </span>
-                            </button>
-                        </form>
-                    </div>
+                        <!-- Left-Aligned Primary Submit Button (Figma 595:15531) -->
+                        <button
+                            type="submit"
+                            :disabled="isSubmitting"
+                            class="self-start bg-[#005EA4] hover:bg-[#004c86] active:bg-[#003d6d] text-[#FAFAFA] font-medium text-[16px] leading-[1.6] px-[24px] py-[10px] rounded-[4px] inline-flex items-center justify-center gap-2 transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer min-h-[46px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
+                        >
+                            <span>
+                                {{
+                                    isSubmitting
+                                        ? isEn
+                                            ? 'Sending...'
+                                            : 'Đang gửi...'
+                                        : isEn
+                                            ? 'Get Consultation Now'
+                                            : 'Nhận tư vấn ngay'
+                                }}
+                            </span>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
     </section>
 </template>
 
-<script>
-const tt = (s) => s;
+<script setup>
+import { computed, getCurrentInstance, reactive, ref } from 'vue'
+import { usePage } from '@inertiajs/inertia-vue3'
 
-export default {
-    name: 'ContactSection',
-    props: {
-        title: {
-            type: String,
-            default: tt('KẾT NỐI VỚI THÀNH KHANG TECSAT'),
-        },
-        description: {
-            type: String,
-            default: tt('Bạn cần tư vấn phụ tùng thang cuốn, xích công nghiệp hay quạt BLDC? Hãy gửi thông tin yêu cầu cho chúng tôi qua các kênh bên dưới'),
-        },
+const props = defineProps({
+    contactSection: {
+        type: Object,
+        default: () => null,
     },
-    data() {
-        return {
-            form: {
-                name: '',
-                email: '',
-                phone: '',
-                note: '',
-            },
-            isSubmitting: false,
-            submitSuccess: false,
-        };
-    },
-    computed: {
-        socialLinks() {
-            return [
-                {
-                    id: 'facebook',
-                    label: 'Facebook Thành Khang Tecsat',
-                    url: this.$page.props.global?.general_facebook || 'https://www.facebook.com/thanhkhangtecsat',
-                },
-                {
-                    id: 'instagram',
-                    label: 'Instagram',
-                    url: this.$page.props.global?.general_instagram || 'https://instagram.com',
-                },
-                {
-                    id: 'tiktok',
-                    label: 'TikTok Thành Khang Tecsat',
-                    url: this.$page.props.global?.general_tiktok || 'https://tiktok.com',
-                },
-            ];
-        },
-    },
-    methods: {
-        async submitForm() {
-            this.isSubmitting = true;
-            this.submitSuccess = false;
+})
 
-            try {
-                const targetUrl = typeof route === 'function' ? route('contact.store') : '/contacts';
-                const payload = {
-                    type: 'CONTACT_FORM',
-                    name: this.form.name,
-                    email: this.form.email,
-                    phone: this.form.phone,
-                    data: {
-                        [this.tt('Họ và tên')]: this.form.name,
-                        [this.tt('Số điện thoại')]: this.form.phone,
-                        'Email': this.form.email,
-                        [this.tt('Nội dung cần hỗ trợ')]: this.form.note,
-                        [this.tt('Dịch vụ quan tâm')]: this.tt('Tư vấn Thiết bị Công nghiệp'),
-                    },
-                };
-                if (window.axios) {
-                    await window.axios.post(targetUrl, payload).catch(() => {});
-                }
-            } catch (e) {
-                // Keep resilient
-            } finally {
-                this.isSubmitting = false;
-                this.submitSuccess = true;
-                this.form = { name: '', email: '', phone: '', note: '' };
-                setTimeout(() => {
-                    this.submitSuccess = false;
-                }, 8000);
+const page = usePage()
+const instance = getCurrentInstance()
+
+const currentLocale = computed(() => {
+    const loc = page.props.value?.locale
+    if (typeof loc === 'string') return loc
+    return loc?.current || 'vi'
+})
+
+const isEn = computed(() => currentLocale.value === 'en')
+
+const siteConfig = computed(() => ({
+    ...(page.props.value?.global || {}),
+    ...(page.props.value?.configs || {}),
+}))
+
+const heading = computed(() => (props.contactSection?.title || '').trim())
+
+const description = computed(() => (props.contactSection?.description || '').trim())
+
+const displayHotline = computed(
+    () => siteConfig.value.hotline || siteConfig.value.general_phone || siteConfig.value.phone || ''
+)
+
+const cleanHotline = computed(() => String(displayHotline.value || '').replace(/[^\d+]/g, ''))
+
+const displayEmail = computed(() => siteConfig.value.general_email || siteConfig.value.email || '')
+
+const displayAddress = computed(() => siteConfig.value.general_address || siteConfig.value.address || '')
+
+const displayShowroomAddress = computed(() => {
+    const showroom = siteConfig.value.showroom_address || ''
+    if (!showroom || showroom === displayAddress.value) return ''
+    return showroom
+})
+
+const form = reactive({
+    name: '',
+    email: '',
+    phone: '',
+    note: '',
+})
+
+const fieldErrors = reactive({
+    name: '',
+    email: '',
+    phone: '',
+    note: '',
+})
+
+const isSubmitting = ref(false)
+const submitSuccess = ref(false)
+const submitError = ref('')
+
+function clearFieldError(field) {
+    if (fieldErrors[field]) {
+        fieldErrors[field] = ''
+    }
+    if (submitError.value) {
+        submitError.value = ''
+    }
+}
+
+function resetErrors() {
+    fieldErrors.name = ''
+    fieldErrors.email = ''
+    fieldErrors.phone = ''
+    fieldErrors.note = ''
+    submitError.value = ''
+}
+
+function validateClient() {
+    resetErrors()
+    let valid = true
+
+    const trimmedName = form.name.trim()
+    const trimmedEmail = form.email.trim()
+    const trimmedPhone = form.phone.trim()
+
+    if (!trimmedName) {
+        fieldErrors.name = isEn.value ? 'Please enter your full name.' : 'Vui lòng nhập họ và tên.'
+        valid = false
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!trimmedEmail) {
+        fieldErrors.email = isEn.value ? 'Please enter your email address.' : 'Vui lòng nhập địa chỉ email.'
+        valid = false
+    } else if (!emailRegex.test(trimmedEmail)) {
+        fieldErrors.email = isEn.value ? 'Please enter a valid email address.' : 'Địa chỉ email không hợp lệ.'
+        valid = false
+    }
+
+    const phoneDigits = trimmedPhone.replace(/[\s\-()+.]/g, '')
+    if (!trimmedPhone) {
+        fieldErrors.phone = isEn.value ? 'Please enter your phone number.' : 'Vui lòng nhập số điện thoại.'
+        valid = false
+    } else if (!/^\d{8,15}$/.test(phoneDigits)) {
+        fieldErrors.phone = isEn.value
+            ? 'Phone number must contain 8 to 15 digits.'
+            : 'Số điện thoại phải gồm từ 8 đến 15 chữ số.'
+        valid = false
+    }
+
+    return valid
+}
+
+function applyServerErrors(errors) {
+    if (!errors || typeof errors !== 'object') return
+    const firstMsg = (val) => (Array.isArray(val) ? val[0] : typeof val === 'string' ? val : '')
+    const nameErr = firstMsg(errors.name || errors['data.name'])
+    const emailErr = firstMsg(errors.email || errors['data.email'])
+    const phoneErr = firstMsg(errors.phone || errors['data.phone'])
+    const noteErr = firstMsg(errors.note || errors.content || errors['data.note'])
+
+    if (nameErr) fieldErrors.name = nameErr
+    if (emailErr) fieldErrors.email = emailErr
+    if (phoneErr) fieldErrors.phone = phoneErr
+    if (noteErr) fieldErrors.note = noteErr
+}
+
+function getEndpoint() {
+    const proxy = instance?.proxy
+    if (proxy && typeof proxy.route === 'function') {
+        try {
+            const url = proxy.route('contact.store')
+            if (url && url !== '#') return url
+        } catch (e) {
+            // Fall through to localized fallback
+        }
+    }
+    return isEn.value ? '/en/contacts' : '/contacts'
+}
+
+async function submitForm() {
+    if (isSubmitting.value) return
+    submitSuccess.value = false
+
+    if (!validateClient()) return
+
+    isSubmitting.value = true
+    submitError.value = ''
+
+    const payload = {
+        type: 'CONTACT_FORM',
+        name: form.name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim(),
+        note: form.note.trim(),
+        data: {
+            name: form.name.trim(),
+            email: form.email.trim(),
+            phone: form.phone.trim(),
+            note: form.note.trim(),
+            form_source: 'home_contact_section',
+            lead_type: 'quote',
+        },
+    }
+
+    const endpoint = getEndpoint()
+    const headers = {
+        Accept: 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+    }
+
+    try {
+        let responseData = null
+
+        if (typeof window !== 'undefined' && window.axios) {
+            const response = await window.axios.post(endpoint, payload, { headers })
+            responseData = response?.data
+        } else {
+            const csrfToken =
+                typeof document !== 'undefined'
+                    ? document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    : ''
+            const res = await fetch(endpoint, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    ...headers,
+                    'Content-Type': 'application/json',
+                    ...(csrfToken ? { 'X-CSRF-TOKEN': csrfToken } : {}),
+                },
+                body: JSON.stringify(payload),
+            })
+            const data = await res.json().catch(() => null)
+            if (!res.ok) {
+                const err = new Error(data?.message || 'Request failed')
+                err.response = { status: res.status, data }
+                throw err
             }
-        },
-    },
-};
+            responseData = data
+        }
+
+        if (responseData && responseData.success === true) {
+            submitSuccess.value = true
+            form.name = ''
+            form.email = ''
+            form.phone = ''
+            form.note = ''
+            resetErrors()
+        } else {
+            if (responseData?.errors) {
+                applyServerErrors(responseData.errors)
+            }
+            submitError.value =
+                responseData?.message ||
+                (isEn.value
+                    ? 'Unable to submit your request right now. Please try again.'
+                    : 'Không thể gửi yêu cầu lúc này. Vui lòng thử lại.')
+        }
+    } catch (error) {
+        const status = error?.response?.status
+        const errData = error?.response?.data
+        if (status === 422 && errData?.errors) {
+            applyServerErrors(errData.errors)
+            submitError.value =
+                errData.message ||
+                (isEn.value
+                    ? 'Please check the highlighted fields and try again.'
+                    : 'Vui lòng kiểm tra lại các thông tin bên trên.')
+        } else {
+            submitError.value =
+                errData?.message ||
+                (isEn.value
+                    ? 'A network or server error occurred. Please try again or call our hotline directly.'
+                    : 'Có lỗi kết nối hoặc máy chủ. Vui lòng thử lại hoặc gọi trực tiếp hotline.')
+        }
+    } finally {
+        isSubmitting.value = false
+    }
+}
 </script>

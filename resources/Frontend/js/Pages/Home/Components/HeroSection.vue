@@ -1,164 +1,340 @@
 <template>
-    <section class="relative pt-0 pb-0 overflow-hidden">
-        <div class="w-full max-w-[1279px] mx-auto px-4 sm:px-6 lg:px-0">
-            <!-- Hero Card Wrapper (Figma Node 2701:1177: 1279px x 616px, no border) -->
+    <section
+        class="w-full relative overflow-hidden bg-[#00284B]"
+        aria-roledescription="carousel"
+        :aria-label="tt('Banner trang chủ')"
+        @mouseenter="pauseAutoplay"
+        @mouseleave="resumeAutoplay"
+        @focusin="pauseAutoplay"
+        @focusout="resumeAutoplay"
+        @keydown.left.prevent="prevSlide"
+        @keydown.right.prevent="nextSlide"
+    >
+        <!-- Aspect-Ratio Locked Hero Viewport (Mobile 375/480, Desktop 1440/582) -->
+        <div class="relative w-full aspect-[375/480] md:aspect-[1440/582] overflow-hidden">
+            <!-- Empty state wrapper (zero fake copy) -->
+            <div v-if="normalizedSlides.length === 0" class="w-full h-full bg-[#00284B]" />
+
+            <!-- Horizontal Slide Track (translate-x, zero opacity blank flash) -->
             <div
-                class="relative rounded-[16px] overflow-hidden min-h-[520px] lg:h-[616px] flex items-center bg-[#111322] px-6 py-12 sm:px-10 lg:px-[80px] lg:py-0"
+                v-else
+                class="flex h-full w-full transition-transform duration-500 ease-out will-change-transform"
+                :style="{ transform: `translateX(-${activeIndex * 100}%)` }"
             >
-                <!-- Background Image (Figma Node 2701:1180) -->
-                <div class="absolute inset-0 z-0 overflow-hidden rounded-[16px]">
-                    <picture>
-                        <source :srcset="currentBannerWebp" type="image/webp" />
+                <div
+                    v-for="(slide, index) in normalizedSlides"
+                    :key="slide.id || index"
+                    class="relative w-full h-full shrink-0 basis-full"
+                    role="group"
+                    aria-roledescription="slide"
+                    :aria-label="`${index + 1} / ${normalizedSlides.length}`"
+                    :aria-hidden="index !== activeIndex ? 'true' : undefined"
+                >
+                    <!-- Slide Background Image (CMS-only, clean surface if empty/errored) -->
+                    <picture
+                        v-if="getDesktopImage(slide, index)"
+                        class="absolute inset-0 block w-full h-full"
+                    >
+                        <source
+                            v-if="getMobileImage(slide, index)"
+                            media="(max-width: 767px)"
+                            :srcset="getMobileImage(slide, index)"
+                        />
                         <img
-                            :src="currentBannerImage"
-                            alt="Thành Khang Tecsat - Thiết bị công nghiệp & Phụ tùng thang cuốn"
-                            class="w-full h-full object-cover object-right md:object-center select-none"
-                            width="1279"
-                            height="616"
-                            loading="eager"
+                            :src="getDesktopImage(slide, index)"
+                            :alt="slide.image?.alt || slide.title || ''"
+                            class="w-full h-full object-cover object-center select-none"
+                            width="1440"
+                            height="582"
+                            :loading="index === 0 ? 'eager' : 'lazy'"
                             decoding="async"
-                            fetchpriority="high"
-                            @error="handleImageError"
+                            :fetchpriority="index === 0 ? 'high' : undefined"
+                            @error="handleImageError(index)"
                         />
                     </picture>
-                    <!-- Subtle mobile gradient only on small screens; on desktop the 3D artwork is clear -->
+
+                    <!-- Left Dark Scrim Overlay (Figma 595:15538: 744px / 51.67% left gradient on desktop) -->
                     <div
-                        class="absolute inset-0 bg-gradient-to-r from-[#080C14]/90 via-[#080C14]/60 to-transparent md:hidden"
-                    ></div>
-                </div>
-
-                <!-- Hero Content (Figma Node 2701:1181: width 565px, left 80px, top 165px, gap 48px) -->
-                <div class="relative z-10 w-full max-w-[580px] flex flex-col gap-8 lg:gap-[48px] items-start">
-                    <!-- Text header (Figma Node 2701:1183: width 565px, gap 16px) -->
-                    <div class="w-full max-w-[580px] flex flex-col gap-4 items-start">
-                        <!-- Subtitle (Figma Node 2701:1184: width 481px, 16px, leading 22px, #D1E0FF) -->
-                        <div class="w-full max-w-[481px] text-sm sm:text-[16px] font-normal text-[#D1E0FF] leading-[22px] uppercase font-sans">
-                            {{ tt(subtitle) }}
-                        </div>
-
-                        <!-- Main Title (Figma Node 2701:1185: width 565px, 38px, font-bold 700, leading 46px, #FAFAFA) -->
-                        <h1
-                            class="w-full max-w-[580px] text-2xl sm:text-3xl lg:text-[38px] font-bold text-[#FAFAFA] uppercase tracking-normal lg:tracking-[-0.015em] leading-[1.2] lg:leading-[46px] font-sans"
-                        >
-                            {{ tt(title) }}
-                        </h1>
-
-                        <!-- Description (Figma Node 2701:1186: width 481px, 16px, leading 26px, #D1E0FF) -->
-                        <p class="w-full max-w-[481px] text-sm sm:text-[16px] text-[#D1E0FF] leading-[26px] font-normal font-sans">
-                            {{ tt(description) }}
-                        </p>
-                    </div>
-
-                    <!-- Dual CTA Buttons (Figma Node 2701:1188: gap 10px, height 40px) -->
-                    <div class="flex flex-wrap items-center gap-[10px]">
-                        <a
-                            :href="primaryCtaLink || '#featured-carousel'"
-                            class="inline-flex items-center justify-center h-[40px] px-[20px] py-[8px] text-sm sm:text-[16px] leading-[24px] font-medium rounded-[8px] bg-[#F5F8FF] text-[#111322] hover:bg-white transition-colors duration-200 active:scale-[0.98]"
-                        >
-                            {{ tt(primaryCtaText) }}
-                        </a>
-
-                        <a
-                            :href="secondaryCtaLink || '#contact-section'"
-                            class="inline-flex items-center justify-center h-[40px] px-[20px] py-[8px] rounded-[8px] border border-[#F5F8FF] text-[#F5F8FF] hover:bg-white/10 hover:border-white text-sm sm:text-[16px] leading-[24px] font-medium transition-colors duration-200 active:scale-[0.98]"
-                        >
-                            {{ tt(secondaryCtaText) }}
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Rotating Circular Badge (Figma Node 2701:1201: 114px x 114px, right 33px, bottom 35px) -->
-                <div
-                    class="absolute bottom-6 right-6 lg:bottom-[35px] lg:right-[33px] hidden sm:flex items-center justify-center z-10"
-                >
-                    <CircularBadge
-                        tag="a"
-                        :href="primaryCtaLink || '#featured-carousel'"
-                        :aria-label="tt('Khám phá ngay')"
+                        class="absolute inset-y-0 left-0 w-full md:w-[51.67%] md:min-w-[744px] bg-[#01101E]/[0.45] md:bg-transparent md:bg-[linear-gradient(to_right,rgba(1,16,30,0.6)_0%,rgba(1,16,30,0)_100%)] pointer-events-none"
+                        aria-hidden="true"
                     />
+
+                    <!-- Slide Content Container (1280px inner content width via .app-container-wide, px-4 / md:px-8) -->
+                    <div
+                        class="relative z-10 h-full app-container-wide flex items-end justify-between pb-6 md:pb-10 pt-8 md:pt-12 lg:pt-16"
+                    >
+                        <div class="w-full max-w-[542px] flex flex-col items-start">
+                            <!-- Eyebrow -->
+                            <p
+                                v-if="slide.subtitle"
+                                class="w-full bg-[linear-gradient(to_right,#009FFF_0%,#C9E0FF_40%)] bg-clip-text text-transparent font-normal text-lg md:text-[24px] lg:text-[28px] leading-[1.5] md:leading-[1.6]"
+                            >
+                                {{ slide.subtitle }}
+                            </p>
+
+                            <!-- Main Heading (single <h1> on first slide for valid SEO) -->
+                            <component
+                                :is="index === 0 ? 'h1' : 'p'"
+                                v-if="slide.title"
+                                class="font-bold text-[28px] sm:text-[32px] md:text-[38px] lg:text-[48px] leading-[1.25] md:leading-[1.4] text-white uppercase tracking-normal"
+                            >
+                                {{ slide.title }}
+                            </component>
+
+                            <!-- Description -->
+                            <p
+                                v-if="slide.description"
+                                class="mt-2 font-medium text-sm md:text-[16px] lg:text-[18px] leading-[1.6] text-[#C9E0FF] line-clamp-4 md:line-clamp-none"
+                            >
+                                {{ slide.description }}
+                            </p>
+
+                            <!-- 2 CTA Buttons (strictly guarded: never render dead href="#") -->
+                            <div
+                                v-if="(slide.primary_cta_text && slide.primary_cta_link) || (slide.secondary_cta_text && slide.secondary_cta_link)"
+                                class="mt-5 md:mt-8 xl:mt-12 flex flex-wrap gap-3 md:gap-4 items-center"
+                            >
+                                <Link
+                                    v-if="slide.primary_cta_text && slide.primary_cta_link && isInertiaLink(slide.primary_cta_link)"
+                                    :href="slide.primary_cta_link"
+                                    :tabindex="index === activeIndex ? undefined : -1"
+                                    class="bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-sm md:text-[16px] lg:text-[18px] leading-[1.6] px-5 md:px-6 py-2.5 rounded-[4px] transition-colors inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
+                                >
+                                    {{ slide.primary_cta_text }}
+                                </Link>
+                                <a
+                                    v-else-if="slide.primary_cta_text && slide.primary_cta_link"
+                                    :href="slide.primary_cta_link"
+                                    :tabindex="index === activeIndex ? undefined : -1"
+                                    class="bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-sm md:text-[16px] lg:text-[18px] leading-[1.6] px-5 md:px-6 py-2.5 rounded-[4px] transition-colors inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
+                                >
+                                    {{ slide.primary_cta_text }}
+                                </a>
+
+                                <Link
+                                    v-if="slide.secondary_cta_text && slide.secondary_cta_link && isInertiaLink(slide.secondary_cta_link)"
+                                    :href="slide.secondary_cta_link"
+                                    :tabindex="index === activeIndex ? undefined : -1"
+                                    class="bg-[#C9E0FF] hover:bg-[#81BDFF] text-[#003967] font-medium text-sm md:text-[16px] lg:text-[18px] leading-[1.6] px-5 md:px-6 py-2.5 rounded-[4px] transition-colors inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
+                                >
+                                    {{ slide.secondary_cta_text }}
+                                </Link>
+                                <a
+                                    v-else-if="slide.secondary_cta_text && slide.secondary_cta_link"
+                                    :href="slide.secondary_cta_link"
+                                    :tabindex="index === activeIndex ? undefined : -1"
+                                    class="bg-[#C9E0FF] hover:bg-[#81BDFF] text-[#003967] font-medium text-sm md:text-[16px] lg:text-[18px] leading-[1.6] px-5 md:px-6 py-2.5 rounded-[4px] transition-colors inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
+                                >
+                                    {{ slide.secondary_cta_text }}
+                                </a>
+                            </div>
+
+                            <!-- Reserve vertical space for fixed bottom slider controls (80px gap + 10px dots on xl desktop; clears 40px arrows on mobile) -->
+                            <div
+                                v-if="normalizedSlides.length > 1"
+                                class="mt-6 md:mt-10 lg:mt-14 xl:mt-20 h-10 md:h-[10px]"
+                                aria-hidden="true"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slider Bottom Controls Overlay: Pagination Squares (Left) + Prev/Next Arrows (Right) -->
+            <div
+                v-if="normalizedSlides.length > 1"
+                class="absolute inset-x-0 bottom-0 z-20 pointer-events-none"
+            >
+                <div class="app-container-wide pb-6 md:pb-10 flex items-end justify-between gap-4">
+                    <!-- Pagination Squares -->
+                    <div
+                        class="flex items-center gap-4 md:gap-6 pointer-events-auto"
+                        role="tablist"
+                        :aria-label="tt('Chọn slide')"
+                    >
+                        <button
+                            v-for="(slide, idx) in normalizedSlides"
+                            :key="slide.id || idx"
+                            type="button"
+                            role="tab"
+                            :aria-selected="idx === activeIndex"
+                            :aria-label="`${tt('Slide')} ${idx + 1}`"
+                            class="w-[10px] h-[10px] rounded-[2px] transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
+                            :class="
+                                idx === activeIndex
+                                    ? 'bg-[#FAFAFA]'
+                                    : 'border border-[#FAFAFA] bg-transparent hover:bg-white/40'
+                            "
+                            @click="goToSlide(idx)"
+                        />
+                    </div>
+
+                    <!-- Right Prev / Next Arrow Controls -->
+                    <div class="flex items-center gap-3 pointer-events-auto">
+                        <button
+                            type="button"
+                            class="w-10 h-10 rounded-[4px] bg-[#394C6B]/80 hover:bg-[#394C6B] flex items-center justify-center transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                            :aria-label="tt('Slide trước')"
+                            @click="prevSlide"
+                        >
+                            <img
+                                src="/assets/svg/icons/hero-chevron-left.svg"
+                                alt=""
+                                aria-hidden="true"
+                                width="20"
+                                height="20"
+                                class="w-5 h-5"
+                            />
+                        </button>
+                        <button
+                            type="button"
+                            class="w-10 h-10 rounded-[4px] bg-[#394C6B]/80 hover:bg-[#394C6B] flex items-center justify-center transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                            :aria-label="tt('Slide tiếp theo')"
+                            @click="nextSlide"
+                        >
+                            <img
+                                src="/assets/svg/icons/hero-chevron-left.svg"
+                                alt=""
+                                aria-hidden="true"
+                                width="20"
+                                height="20"
+                                class="w-5 h-5 rotate-180"
+                            />
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 </template>
 
-<script>
-import CircularBadge from '@/Components/CircularBadge.vue';
+<script setup>
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { Link } from '@inertiajs/inertia-vue3'
 
-const tt = (s) => s;
+const AUTOPLAY_INTERVAL_MS = 6000
 
-export default {
-    name: 'HeroSection',
-    components: {
-        CircularBadge,
+const props = defineProps({
+    sliders: {
+        type: Array,
+        default: () => [],
     },
-    props: {
-        bannerImage: {
-            type: String,
-            default: '/assets/images/homepage/hero-banner.png',
-        },
-        subtitle: {
-            type: String,
-            default: tt('Về chúng tôi'),
-        },
-        title: {
-            type: String,
-            default: tt('GIẢI PHÁP THIẾT BỊ CÔNG NGHIỆP & PHỤ TÙNG THANG CUỐN CHUẨN OEM'),
-        },
-        description: {
-            type: String,
-            default: tt('Thành Khang Tecsat cung cấp linh kiện thang cuốn, xích công nghiệp Universal Chains, hệ thống băng tải và quạt trần công nghiệp BLDC HVLS với đầy đủ chứng từ CO/CQ'),
-        },
-        primaryCtaText: {
-            type: String,
-            default: tt('Khám phá ngay'),
-        },
-        primaryCtaLink: {
-            type: String,
-            default: '#featured-carousel',
-        },
-        secondaryCtaText: {
-            type: String,
-            default: tt('Nhận tư vấn thiết kế'),
-        },
-        secondaryCtaLink: {
-            type: String,
-            default: '#contact-section',
-        },
-    },
-    data() {
-        return {
-            fallbackBanner: '/assets/images/homepage/hero-banner.png',
-            hasError: false,
-        };
-    },
-    computed: {
-        currentBannerImage() {
-            if (this.hasError || !this.bannerImage) {
-                return this.fallbackBanner;
-            }
-            if (typeof this.bannerImage === 'string' && this.bannerImage.includes('/static/assets/')) {
-                return this.bannerImage.replace(/^https?:\/\/[^\/]+/, '').replace('/static/', '/');
-            }
-            return this.bannerImage;
-        },
-        currentBannerWebp() {
-            const img = this.currentBannerImage;
-            if (typeof img === 'string' && img.endsWith('.png')) {
-                return img.replace(/\.png$/, '.webp');
-            }
-            return '/assets/images/homepage/hero-banner.webp';
-        },
-    },
-    watch: {
-        bannerImage() {
-            this.hasError = false;
-        },
-    },
-    methods: {
-        handleImageError() {
-            this.hasError = true;
-        },
-    },
+})
+
+const activeIndex = ref(0)
+const failedImages = reactive({})
+let autoplayTimer = null
+let isPaused = false
+
+const normalizedSlides = computed(() => {
+    if (!Array.isArray(props.sliders)) return []
+    return props.sliders.filter((item) => item && typeof item === 'object')
+})
+
+watch(
+    () => normalizedSlides.value.length,
+    (len) => {
+        if (len === 0) {
+            activeIndex.value = 0
+        } else if (activeIndex.value >= len) {
+            activeIndex.value = 0
+        }
+    }
+)
+
+function normalizeImageUrl(url) {
+    if (!url || typeof url !== 'string') return ''
+    const trimmed = url.trim()
+    if (!trimmed) return ''
+    if (trimmed.includes('/static/assets/')) {
+        return trimmed.replace(/^https?:\/\/[^/]+/, '').replace('/static/', '/')
+    }
+    return trimmed
 }
+
+function getDesktopImage(slide, index) {
+    if (failedImages[index]) return ''
+    return normalizeImageUrl(slide?.image?.url || (typeof slide?.image === 'string' ? slide.image : ''))
+}
+
+function getMobileImage(slide, index) {
+    if (failedImages[index]) return ''
+    const mobileUrl = normalizeImageUrl(
+        slide?.image_mobile?.url || (typeof slide?.image_mobile === 'string' ? slide.image_mobile : '')
+    )
+    if (mobileUrl) return mobileUrl
+    return getDesktopImage(slide, index)
+}
+
+function handleImageError(index) {
+    failedImages[index] = true
+}
+
+function isInertiaLink(href) {
+    if (!href || typeof href !== 'string') return false
+    return href.startsWith('/') && !href.startsWith('//')
+}
+
+function goToSlide(index) {
+    const total = normalizedSlides.value.length
+    if (total <= 1) return
+    activeIndex.value = ((index % total) + total) % total
+    restartAutoplay()
+}
+
+function nextSlide() {
+    goToSlide(activeIndex.value + 1)
+}
+
+function prevSlide() {
+    goToSlide(activeIndex.value - 1)
+}
+
+function prefersReducedMotion() {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return true
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+function stopAutoplay() {
+    if (autoplayTimer) {
+        clearInterval(autoplayTimer)
+        autoplayTimer = null
+    }
+}
+
+function startAutoplay() {
+    stopAutoplay()
+    if (typeof window === 'undefined') return
+    if (isPaused || normalizedSlides.value.length <= 1 || prefersReducedMotion()) return
+    autoplayTimer = setInterval(() => {
+        const total = normalizedSlides.value.length
+        if (total > 1) {
+            activeIndex.value = (activeIndex.value + 1) % total
+        }
+    }, AUTOPLAY_INTERVAL_MS)
+}
+
+function restartAutoplay() {
+    if (!isPaused) {
+        startAutoplay()
+    }
+}
+
+function pauseAutoplay() {
+    isPaused = true
+    stopAutoplay()
+}
+
+function resumeAutoplay() {
+    isPaused = false
+    startAutoplay()
+}
+
+onMounted(() => {
+    startAutoplay()
+})
+
+onBeforeUnmount(() => {
+    stopAutoplay()
+})
 </script>

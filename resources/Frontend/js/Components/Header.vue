@@ -1,533 +1,527 @@
 <template>
-    <header
-        class="fixed top-0 inset-x-0 z-[1000] bg-[#111322] antialiased transition-colors duration-200"
-        @mouseleave="menuSelected = null"
-    >
-        <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-20 h-[64px] lg:h-[111px] lg:py-8 flex items-center justify-between">
-            <!-- Brand Logo Thành Khang Tecsat -->
-            <div class="flex items-center shrink-0">
-                <Link :href="route('home')" class="inline-flex items-center gap-2.5 group">
-                    <span class="inline-flex h-9 w-9 lg:h-10 lg:w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#2970FF] to-[#00359E] text-white font-black text-sm lg:text-base tracking-wider shadow-sm">
-                        TK
-                    </span>
-                    <span class="flex flex-col leading-none">
-                        <span class="text-white font-extrabold text-sm lg:text-base tracking-wider uppercase group-hover:text-[#84ADFF] transition-colors">THÀNH KHANG</span>
-                        <span class="text-[#84ADFF] font-semibold text-[10px] lg:text-[11px] tracking-[0.22em] uppercase mt-0.5">TECSAT</span>
-                    </span>
-                </Link>
+    <!-- Desktop Top Info Bar (Figma 595:15540 — 46px, #00284B) -->
+    <div v-if="companyName || contactEmail || contactPhone" class="hidden lg:block w-full h-[46px] bg-dark text-ink-light antialiased">
+        <div class="app-container h-full flex items-center justify-between gap-6">
+            <p v-if="companyName" class="text-[14px] font-normal leading-[1.4] text-ink-light truncate">
+                {{ companyName }}
+            </p>
+            <div class="flex items-center gap-6 shrink-0 text-[14px] font-normal leading-[1.4] text-ink-light">
+                <a
+                    v-if="contactEmail"
+                    :href="'mailto:' + contactEmail"
+                    class="inline-flex items-center gap-2 text-ink-light hover:text-secondary transition-colors focus:outline-none focus-visible:underline"
+                >
+                    <img
+                        src="/assets/svg/icons/header-mail.svg"
+                        alt=""
+                        aria-hidden="true"
+                        width="18"
+                        height="18"
+                        class="w-[18px] h-[18px] shrink-0"
+                    />
+                    <span>{{ tt('Email') }}: {{ contactEmail }}</span>
+                </a>
+                <a
+                    v-if="contactPhone"
+                    :href="'tel:' + cleanPhone"
+                    class="inline-flex items-center gap-2 text-ink-light hover:text-secondary transition-colors focus:outline-none focus-visible:underline"
+                >
+                    <img
+                        src="/assets/svg/icons/header-phone.svg"
+                        alt=""
+                        aria-hidden="true"
+                        width="18"
+                        height="18"
+                        class="w-[18px] h-[18px] shrink-0"
+                    />
+                    <span>{{ tt('Hotline') }}: {{ contactPhone }}</span>
+                </a>
             </div>
+        </div>
+    </div>
 
-            <!-- Desktop Navigation Menu 5 Tabs & Right Actions Grouped (Node 2352:10717) -->
-            <div class="hidden lg:flex items-center gap-8 xl:gap-[64px]">
-                <!-- Desktop Navigation Menu 5 Tabs (Frame 261 / Node 2352:10269) -->
-                <nav class="flex items-center gap-5 xl:gap-6 h-[47px]">
-                    <template v-for="(menu, index) in menus" :key="index">
-                        <div
-                            v-if="menu && menu.title"
-                            class="relative h-[47px] flex items-center"
-                            @mouseenter="setMenuSelected(menu)"
-                            @mouseover="setMenuSelected(menu)"
-                            @mouseleave="setMenuSelected(null)"
-                        >
+    <!-- Main Sticky Header Bar (Figma 595:15540 — 72px Desktop / 64px Mobile, #FAFAFA) -->
+    <header
+        ref="headerRoot"
+        class="sticky top-0 z-[1000] w-full bg-surface border-b antialiased transition-all duration-200"
+        :class="isScrolled ? 'border-gray-200 shadow-xs bg-surface/95 backdrop-blur-md' : 'border-gray-200/60'"
+        @mouseleave="closeDesktopDropdown"
+    >
+        <div class="app-container h-[64px] lg:h-[72px] flex items-center justify-between gap-4 lg:gap-6">
+            <!-- Brand Logo (Desktop 120x40, CMS general_logo with local fallback) -->
+            <Link
+                :href="safeRoute('home', undefined, '/')"
+                class="inline-flex items-center shrink-0 min-w-0 max-w-[140px] rounded-cta focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                :aria-label="companyName || tt('Trang chủ')"
+            >
+                <img
+                    v-if="resolvedLogoUrl"
+                    :src="resolvedLogoUrl"
+                    :alt="companyName || 'Thanh Khang Tecsat'"
+                    width="120"
+                    height="40"
+                    class="h-[34px] sm:h-[38px] lg:h-[40px] w-auto max-w-[140px] object-contain"
+                    @error="onLogoError"
+                />
+                <span
+                    v-else-if="companyName"
+                    class="font-bold text-[15px] lg:text-[17px] tracking-tight text-dark uppercase truncate max-w-[140px]"
+                >
+                    {{ companyName }}
+                </span>
+            </Link>
+
+            <!-- Desktop Navigation (5 items per Figma 595:15540) -->
+            <nav
+                class="hidden lg:flex items-center gap-5 xl:gap-8"
+                :aria-label="tt('Điều hướng chính')"
+            >
+                <template v-for="(menu, index) in menus" :key="index">
+                    <div
+                        class="relative flex items-center"
+                        @mouseenter="menu.hasDropdown ? openDesktopDropdown(menu.type) : closeDesktopDropdown()"
+                    >
+                        <div class="inline-flex items-center gap-1">
                             <Link
-                                :href="menu.slug || '#'"
-                                class="h-[47px] text-base font-semibold leading-6 transition-colors duration-200 flex items-center gap-1.5 border-b-2"
-                                :class="isMenuActive(menu)
-                                    ? 'text-[#2970FF] border-[#2970FF]'
-                                    : 'text-[#FAFAFA] border-transparent hover:text-[#2970FF]'"
-                                @click="menuSelected = null"
+                                :href="menu.href"
+                                class="py-2 text-[14px] font-bold uppercase leading-[1.4] tracking-normal whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-cta"
+                                :class="
+                                    isMenuActive(menu)
+                                        ? 'text-primary'
+                                        : 'text-dark hover:text-primary'
+                                "
+                                @click="closeDesktopDropdown"
                             >
-                                <span>{{ menu.title }}</span>
-                                <!-- Chevron-down 20px for tab Sản phẩm (Node 2352:10273) -->
-                                <svg
-                                    v-if="menu.type === 'products' || (menu.subMenu && menu.subMenu.length > 0)"
-                                    class="w-5 h-5 transition-transform duration-200 shrink-0"
-                                    :class="(menuSelected === menu || (menuSelected && menuSelected.type === menu.type)) ? 'rotate-180' : ''"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M5 7.5L10 12.5L15 7.5"
-                                        stroke="currentColor"
-                                        stroke-width="1.67"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    />
-                                </svg>
+                                {{ menu.title }}
                             </Link>
+                            <button
+                                v-if="menu.hasDropdown"
+                                type="button"
+                                class="inline-flex items-center justify-center w-6 h-6 rounded-cta hover:bg-surface-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors cursor-pointer shrink-0"
+                                :aria-label="tt('Mở danh mục sản phẩm')"
+                                :aria-expanded="activeDropdown === menu.type"
+                                aria-haspopup="true"
+                                @click.stop="toggleDesktopDropdown(menu.type)"
+                            >
+                                <img
+                                    src="/assets/svg/icons/header-chevron-down.svg"
+                                    alt=""
+                                    aria-hidden="true"
+                                    width="24"
+                                    height="24"
+                                    class="w-6 h-6 transition-transform duration-200"
+                                    :class="activeDropdown === menu.type ? 'rotate-180' : ''"
+                                />
+                            </button>
+                        </div>
 
-                            <!-- Submenu Dropdown Desktop with Hover Bridge (Dark Tech) -->
-                            <transition name="dropdown-fade">
-                                <div
-                                    v-show="(menuSelected === menu || (menuSelected && menuSelected.type === menu.type)) && menu.subMenu && menu.subMenu.length > 0"
-                                    class="absolute top-full left-0 pt-2 z-[1010]"
-                                >
-                                    <div class="min-w-[240px] w-[280px] bg-[#1A1F36]/95 backdrop-blur-md border border-[#30374F] rounded-xl shadow-[0_16px_40px_rgba(0,0,0,0.6)] p-2 flex flex-col gap-1">
-                                        <!-- Category Items with Level 2 Flyout Menu (Bay Ngang Bên Phải) -->
-                                        <div
-                                            v-for="(sub, subIdx) in menu.subMenu.filter(s => !s.isAll)"
-                                            :key="subIdx"
-                                            class="relative group/sub"
+                        <!-- Products Dropdown Menu (Light High-Trust Surface, CMS product_categories) -->
+                        <transition name="dropdown-fade">
+                            <div
+                                v-if="menu.hasDropdown"
+                                v-show="activeDropdown === menu.type"
+                                class="absolute top-full left-0 pt-2 z-[1010]"
+                            >
+                                <div class="min-w-[260px] w-[280px] bg-white border border-gray-200 rounded-lg shadow-lg p-2 flex flex-col gap-0.5">
+                                    <div
+                                        v-for="cat in productCategories"
+                                        :key="cat.id || cat.slug"
+                                        class="relative group/sub"
+                                    >
+                                        <Link
+                                            :href="cat.url"
+                                            class="px-3 py-2.5 rounded-[6px] text-[14px] font-medium text-dark hover:text-primary hover:bg-surface-100 flex items-center justify-between gap-2 transition-colors"
+                                            @click="closeDesktopDropdown"
                                         >
-                                            <Link
-                                                :href="sub.url || sub.slug"
-                                                class="px-3 py-2.5 rounded-lg text-sm font-medium text-[#B9C0D4] hover:text-[#FAFAFA] hover:bg-[#222842] flex items-center justify-between transition-colors group/item"
-                                                @click="menuSelected = null"
-                                            >
-                                                <span class="truncate">{{ sub.title }}</span>
-                                                <!-- Chevron-right for items with subcategories -->
-                                                <svg
-                                                    v-if="sub.children && sub.children.length > 0"
-                                                    class="w-4 h-4 text-[#84ADFF] transition-transform duration-200 group-hover/sub:translate-x-0.5 shrink-0 ml-2"
-                                                    viewBox="0 0 16 16"
-                                                    fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                    <path
-                                                        d="M6 3.5L10.5 8L6 12.5"
-                                                        stroke="currentColor"
-                                                        stroke-width="1.5"
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                    />
-                                                </svg>
-                                            </Link>
+                                            <span class="truncate">{{ cat.title }}</span>
+                                            <img
+                                                v-if="cat.children && cat.children.length > 0"
+                                                src="/assets/svg/icons/header-chevron-down.svg"
+                                                alt=""
+                                                aria-hidden="true"
+                                                width="16"
+                                                height="16"
+                                                class="w-4 h-4 -rotate-90 shrink-0 opacity-70"
+                                            />
+                                        </Link>
 
-                                            <!-- Level 2 Flyout Menu (Bay Ngang Bên Phải) with Hover Bridge -->
-                                            <div
-                                                v-if="sub.children && sub.children.length > 0"
-                                                class="absolute left-full -top-1.5 pt-1.5 pb-1.5 pl-[11px] hidden group-hover/sub:block z-[1020]"
-                                            >
-                                                <div class="min-w-[240px] w-[260px] bg-[#1A1F36]/95 backdrop-blur-md border border-[#30374F] rounded-xl shadow-[0_16px_40px_rgba(0,0,0,0.6)] p-2 flex flex-col gap-1">
-                                                    <Link
-                                                        v-for="(child, childIdx) in sub.children"
-                                                        :key="childIdx"
-                                                        :href="child.url || child.slug"
-                                                        class="px-3 py-2.5 rounded-lg text-sm font-medium text-[#B9C0D4] hover:text-[#FAFAFA] hover:bg-[#222842] flex items-center justify-between transition-colors group/child"
-                                                        @click="menuSelected = null"
-                                                    >
-                                                        <span class="truncate">{{ child.title }}</span>
-                                                        <svg
-                                                            class="w-4 h-4 text-[#84ADFF] opacity-0 group-hover/child:opacity-100 transition-opacity shrink-0 ml-2"
-                                                            viewBox="0 0 16 16"
-                                                            fill="currentColor"
-                                                        >
-                                                            <path
-                                                                fill-rule="evenodd"
-                                                                d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06z"
-                                                                clip-rule="evenodd"
-                                                            />
-                                                        </svg>
-                                                    </Link>
-                                                </div>
+                                        <!-- Level 2 Flyout Subcategories -->
+                                        <div
+                                            v-if="cat.children && cat.children.length > 0"
+                                            class="absolute left-full -top-1 pl-2 hidden group-hover/sub:block z-[1020]"
+                                        >
+                                            <div class="min-w-[240px] w-[260px] bg-white border border-gray-200 rounded-lg shadow-lg p-2 flex flex-col gap-0.5">
+                                                <Link
+                                                    v-for="child in cat.children"
+                                                    :key="child.id || child.slug"
+                                                    :href="child.url"
+                                                    class="px-3 py-2 rounded-[6px] text-[14px] font-normal text-ink-body hover:text-primary hover:bg-surface-100 truncate transition-colors"
+                                                    @click="closeDesktopDropdown"
+                                                >
+                                                    {{ child.title }}
+                                                </Link>
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <!-- Divider & View All Link -->
-                                        <div class="pt-1 mt-1 border-t border-[#30374F]">
-                                            <Link
-                                                :href="route('products.index')"
-                                                class="px-3 py-2 rounded-lg text-xs font-semibold text-[#84ADFF] hover:text-[#FAFAFA] hover:bg-[#222842] flex items-center justify-between transition-colors"
-                                                @click="menuSelected = null"
-                                            >
-                                                <span>{{ tt('Xem tất cả sản phẩm') }}</span>
-                                                <svg
-                                                    class="w-4 h-4 shrink-0"
-                                                    viewBox="0 0 16 16"
-                                                    fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                    <path
-                                                        d="M3.33334 8H12.6667M8 3.33334L12.6667 8L8 12.6667"
-                                                        stroke="currentColor"
-                                                        stroke-width="1.5"
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                    />
-                                                </svg>
-                                            </Link>
-                                        </div>
+                                    <div
+                                        :class="productCategories.length > 0 ? 'pt-1.5 mt-1 border-t border-gray-200' : ''"
+                                    >
+                                        <Link
+                                            :href="safeRoute('products.index', undefined, '/san-pham')"
+                                            class="px-3 py-2 rounded-[6px] text-[13px] font-semibold text-primary hover:bg-surface-100 flex items-center justify-between transition-colors"
+                                            @click="closeDesktopDropdown"
+                                        >
+                                            <span>{{ tt('Xem tất cả sản phẩm') }}</span>
+                                            <span aria-hidden="true">&rarr;</span>
+                                        </Link>
                                     </div>
                                 </div>
-                            </transition>
-                        </div>
-                    </template>
-                </nav>
-
-                <!-- Right Actions Desktop (Node 2380:1132 / Frame 1000005802): Search, Lang Switcher, CTA -->
-                <div class="flex items-center gap-8 xl:gap-10 shrink-0">
-                    <!-- 1. Icon Tìm kiếm (Node 2352:10286) -->
-                    <button
-                        type="button"
-                        @click="isSearchOpen = true"
-                        class="w-6 h-6 flex items-center justify-center hover:opacity-80 transition-opacity shrink-0 cursor-pointer"
-                        :title="tt('Tìm kiếm (Ctrl+K)')"
-                        :aria-label="tt('Tìm kiếm')"
-                    >
-                        <img
-                            src="/assets/images/header/figma-search-icon.svg"
-                            :alt="tt('Tìm kiếm')"
-                            class="w-6 h-6 object-contain"
-                        />
-                    </button>
-
-                    <!-- 2. Language Switcher (Node 2380:1477) -->
-                    <div class="w-[96px] h-[34px] border border-[#5D6B98] rounded-[8px] flex items-center justify-between p-1 shrink-0 select-none">
-                        <template v-if="currentLocale === 'vi'">
-                            <button
-                                type="button"
-                                @click="switchLocale('vi')"
-                                class="bg-[#FAFAFA] text-[#111322] w-[36px] h-[24px] rounded-[4px] text-xs font-semibold flex items-center justify-center shadow-xs cursor-default"
-                                :title="tt('Tiếng Việt')"
-                            >
-                                VIE
-                            </button>
-                            <button
-                                type="button"
-                                @click="switchLocale('en')"
-                                class="text-white text-sm font-semibold pr-2 flex items-center justify-center hover:text-[#FAFAFA]/80 transition-colors"
-                                title="English"
-                            >
-                                ENG
-                            </button>
-                        </template>
-                        <template v-else>
-                            <button
-                                type="button"
-                                @click="switchLocale('vi')"
-                                class="text-white text-sm font-semibold pl-2 flex items-center justify-center hover:text-[#FAFAFA]/80 transition-colors"
-                                :title="tt('Tiếng Việt')"
-                            >
-                                VIE
-                            </button>
-                            <button
-                                type="button"
-                                @click="switchLocale('en')"
-                                class="bg-[#FAFAFA] text-[#111322] w-[42px] h-[24px] rounded-[4px] text-xs font-semibold flex items-center justify-center shadow-xs cursor-default"
-                                title="English"
-                            >
-                                ENG
-                            </button>
-                        </template>
+                            </div>
+                        </transition>
                     </div>
+                </template>
+            </nav>
 
-                    <!-- 3. Nút CTA Liên hệ ngay (Node 2352:10291) -->
-                    <Link
-                        :href="route('contact')"
-                        class="w-[137px] h-[40px] rounded-[8px] flex items-center justify-center text-base font-medium text-[#F5F8FF] shadow-xs hover:opacity-90 transition-opacity shrink-0"
-                        style="background: linear-gradient(90deg, #2970FF 0%, #00359E 89%);"
-                    >
-                        {{ tt('Liên hệ ngay') }}
-                    </Link>
-                </div>
-            </div>
-
-            <!-- Mobile Controls (< 1024px) -->
-            <div class="flex items-center gap-3 lg:hidden shrink-0">
+            <!-- Desktop Right Actions: Search + 2 CTAs (Figma 595:15540) -->
+            <div class="hidden lg:flex items-center gap-4 xl:gap-8 shrink-0">
                 <button
                     type="button"
                     @click="isSearchOpen = true"
-                    class="w-6 h-6 flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
-                    :title="tt('Tìm kiếm')"
+                    class="w-9 h-9 inline-flex items-center justify-center rounded-cta hover:bg-surface-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors cursor-pointer shrink-0"
+                    :title="tt('Tìm kiếm (Ctrl+K)')"
                     :aria-label="tt('Tìm kiếm')"
                 >
                     <img
-                        src="/assets/images/header/figma-search-icon.svg"
-                        :alt="tt('Tìm kiếm')"
+                        src="/assets/svg/icons/header-search.svg"
+                        alt=""
+                        aria-hidden="true"
+                        width="20"
+                        height="20"
                         class="w-5 h-5 object-contain"
                     />
                 </button>
 
+                <div class="flex items-center gap-3 shrink-0">
+                    <Link
+                        :href="safeRoute('contact', undefined, '/lien-he')"
+                        class="inline-flex items-center justify-center whitespace-nowrap rounded-cta bg-primary hover:bg-primary-hover active:bg-primary-active text-surface text-[14px] font-medium leading-[1.4] px-4 xl:px-5 py-2 shadow-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                    >
+                        {{ tt('Nhận báo giá') }}
+                    </Link>
+                    <a
+                        v-if="contactPhone"
+                        :href="'tel:' + cleanPhone"
+                        class="inline-flex items-center justify-center whitespace-nowrap rounded-cta bg-secondary hover:bg-secondary-hover text-primary-active text-[14px] font-medium leading-[1.4] px-4 xl:px-5 py-2 shadow-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                    >
+                        {{ tt('Gọi hotline') }}
+                    </a>
+                </div>
+            </div>
+
+            <!-- Mobile Controls (< lg, 375px optimized with >= 44px touch targets) -->
+            <div class="flex items-center gap-1 lg:hidden shrink-0">
                 <button
                     type="button"
-                    @click="openDrawer"
-                    class="p-2 rounded-xl text-secondary hover:text-white hover:bg-dark-surface transition-colors focus:outline-none"
-                    :aria-label="tt('Mở danh mục điều hướng')"
+                    @click="isSearchOpen = true"
+                    class="w-11 h-11 inline-flex items-center justify-center rounded-cta hover:bg-surface-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors cursor-pointer"
+                    :title="tt('Tìm kiếm')"
+                    :aria-label="tt('Tìm kiếm')"
                 >
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <img
+                        src="/assets/svg/icons/header-search.svg"
+                        alt=""
+                        aria-hidden="true"
+                        width="20"
+                        height="20"
+                        class="w-5 h-5 object-contain"
+                    />
+                </button>
+
+                <a
+                    v-if="contactPhone"
+                    :href="'tel:' + cleanPhone"
+                    class="w-11 h-11 inline-flex items-center justify-center rounded-cta bg-secondary hover:bg-secondary-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors"
+                    :title="tt('Gọi hotline') + ': ' + contactPhone"
+                    :aria-label="tt('Gọi hotline') + ' ' + contactPhone"
+                >
+                    <img
+                        src="/assets/svg/icons/footer-phone.svg"
+                        alt=""
+                        aria-hidden="true"
+                        width="20"
+                        height="20"
+                        class="w-5 h-5 object-contain"
+                    />
+                </a>
+
+                <button
+                    type="button"
+                    data-testid="mobile-menu-toggle"
+                    @click="openDrawer"
+                    class="w-11 h-11 inline-flex items-center justify-center rounded-cta text-dark hover:bg-surface-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors cursor-pointer"
+                    :aria-label="tt('Mở danh mục điều hướng')"
+                    :aria-expanded="isDrawerOpen"
+                    aria-controls="mobile-drawer"
+                >
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
             </div>
         </div>
+    </header>
 
-        <!-- Mobile Slide-over Drawer with Teleport to body -->
-        <Teleport to="body">
-            <!-- Backdrop Overlay -->
-            <Transition name="drawer-fade">
-                <div
-                    v-if="isDrawerOpen"
-                    class="fixed inset-0 z-[1040] bg-black/70 backdrop-blur-sm"
-                    @click="closeDrawer"
-                />
-            </Transition>
+    <!-- Mobile Slide-in Drawer -->
+    <Teleport to="body">
+        <Transition name="drawer-fade">
+            <div
+                v-if="isDrawerOpen"
+                class="fixed inset-0 z-[1040] bg-dark/50 backdrop-blur-[2px]"
+                aria-hidden="true"
+                @click="closeDrawer"
+            />
+        </Transition>
 
-            <!-- Slide-over Drawer Panel -->
-            <Transition name="drawer-slide">
-                <aside
-                    v-if="isDrawerOpen"
-                    class="fixed top-0 right-0 bottom-0 z-[1050] w-[85%] max-w-[360px] bg-dark-bg border-l border-dark-border p-6 flex flex-col justify-between overflow-y-auto shadow-2xl"
-                    role="dialog"
-                    aria-modal="true"
-                    :aria-label="tt('Menu di động')"
-                >
-                    <div class="space-y-6">
-                        <!-- Drawer Top Header: Logo + Close X Button -->
-                        <div class="flex items-center justify-between pb-4 border-b border-dark-border">
-                            <Link href="/" @click="closeDrawer" class="inline-flex items-center gap-2">
-                                <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#2970FF] to-[#00359E] text-white font-black text-xs tracking-wider">TK</span>
-                                <span class="text-white font-extrabold text-sm tracking-wider uppercase">THÀNH KHANG TECSAT</span>
-                            </Link>
-                            <button
-                                type="button"
-                                @click="closeDrawer"
-                                class="p-2 rounded-xl text-secondary hover:text-white hover:bg-dark-surface transition-colors"
-                                :aria-label="tt('Đóng menu')"
+        <Transition name="drawer-slide">
+            <aside
+                v-if="isDrawerOpen"
+                id="mobile-drawer"
+                data-testid="mobile-drawer"
+                class="fixed top-0 right-0 bottom-0 z-[1050] w-[85vw] max-w-[340px] bg-white border-l border-gray-200 flex flex-col justify-between overflow-y-auto shadow-2xl"
+                role="dialog"
+                aria-modal="true"
+                :aria-label="tt('Menu di động')"
+            >
+                <div class="p-5 space-y-5">
+                    <!-- Drawer Header: Logo + Close Button -->
+                    <div class="flex items-center justify-between pb-4 border-b border-gray-200">
+                        <Link
+                            :href="safeRoute('home', undefined, '/')"
+                            @click="closeDrawer"
+                            class="inline-flex items-center shrink-0 min-w-0 max-w-[200px]"
+                        >
+                            <img
+                                v-if="resolvedLogoUrl"
+                                :src="resolvedLogoUrl"
+                                :alt="companyName || 'Thanh Khang Tecsat'"
+                                width="108"
+                                height="36"
+                                class="h-9 w-auto max-w-[140px] object-contain"
+                                @error="onLogoError"
+                            />
+                            <span
+                                v-else-if="companyName"
+                                class="font-bold text-[14px] tracking-tight text-dark uppercase truncate"
                             >
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
+                                {{ companyName }}
+                            </span>
+                        </Link>
+                        <button
+                            type="button"
+                            data-testid="mobile-menu-close"
+                            @click="closeDrawer"
+                            class="w-11 h-11 inline-flex items-center justify-center rounded-cta text-dark hover:bg-surface-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors cursor-pointer"
+                            :aria-label="tt('Đóng menu')"
+                        >
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
 
-                        <!-- Drawer Navigation Links (touch target >= 44px) -->
-                        <nav class="space-y-1">
-                            <template v-for="(menu, index) in menus" :key="index">
-                                <!-- Tab Sản phẩm with Accordion -->
-                                <div v-if="menu.type === 'products'" class="space-y-1">
+                    <!-- Drawer Navigation Links (Touch target >= 44px) -->
+                    <nav class="space-y-1" :aria-label="tt('Điều hướng di động')">
+                        <template v-for="(menu, index) in menus" :key="index">
+                            <div v-if="menu.hasDropdown" class="space-y-1">
+                                <div
+                                    class="flex items-center justify-between min-h-[44px] rounded-[6px] transition-colors"
+                                    :class="
+                                        isMenuActive(menu)
+                                            ? 'bg-secondary/40 text-primary'
+                                            : 'text-dark hover:bg-surface-100'
+                                    "
+                                >
+                                    <Link
+                                        :href="menu.href"
+                                        @click="closeDrawer"
+                                        class="flex-1 px-3 py-2.5 text-[14px] font-bold uppercase leading-[1.4]"
+                                    >
+                                        {{ menu.title }}
+                                    </Link>
                                     <button
                                         type="button"
                                         @click="isProductAccordionOpen = !isProductAccordionOpen"
-                                        class="w-full min-h-[44px] px-3.5 py-3 rounded-xl flex items-center justify-between text-base font-medium transition-colors text-left cursor-pointer"
-                                        :class="isMenuActive(menu) ? 'bg-primary/10 text-primary font-semibold' : 'text-secondary hover:text-white hover:bg-dark-surface'"
+                                        class="w-11 h-11 inline-flex items-center justify-center rounded-[6px] hover:bg-surface-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer shrink-0"
+                                        :aria-label="tt('Mở rộng danh mục sản phẩm')"
                                         :aria-expanded="isProductAccordionOpen"
                                     >
-                                        <span>{{ menu.title }}</span>
-                                        <svg
-                                            class="w-5 h-5 transition-transform duration-200 shrink-0 text-[#B9C0D4]"
-                                            :class="isProductAccordionOpen ? 'rotate-180 text-primary' : ''"
-                                            viewBox="0 0 20 20"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M5 7.5L10 12.5L15 7.5"
-                                                stroke="currentColor"
-                                                stroke-width="1.67"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                            />
-                                        </svg>
+                                        <img
+                                            src="/assets/svg/icons/header-chevron-down.svg"
+                                            alt=""
+                                            aria-hidden="true"
+                                            width="20"
+                                            height="20"
+                                            class="w-5 h-5 transition-transform duration-200"
+                                            :class="isProductAccordionOpen ? 'rotate-180' : ''"
+                                        />
                                     </button>
-
-                                    <!-- Accordion Submenu Items (Cấp 1 & Cấp 2) -->
-                                    <transition name="accordion">
-                                        <div
-                                            v-show="isProductAccordionOpen"
-                                            class="pl-4 pr-1 py-1 space-y-1 border-l border-[#30374F] ml-3"
-                                        >
-                                            <div
-                                                v-for="(sub, subIdx) in menu.subMenu.filter(s => !s.isAll)"
-                                                :key="subIdx"
-                                                class="space-y-1"
-                                            >
-                                                <!-- Mục cha có con: Hỗ trợ toggle Accordion cấp 2 -->
-                                                <div
-                                                    v-if="sub.children && sub.children.length > 0"
-                                                    class="flex items-center justify-between min-h-[44px] px-3 py-2 rounded-lg text-sm transition-colors"
-                                                    :class="isMobileCategoryExpanded(sub.id) ? 'bg-[#222842]/60 text-white' : 'text-[#B9C0D4] hover:text-white hover:bg-dark-surface'"
-                                                >
-                                                    <Link
-                                                        :href="sub.url || sub.slug"
-                                                        @click="closeDrawer"
-                                                        class="flex-1 truncate py-1 text-sm font-medium"
-                                                    >
-                                                        {{ sub.title }}
-                                                    </Link>
-                                                    <button
-                                                        type="button"
-                                                        @click.stop="toggleMobileCategory(sub.id)"
-                                                        class="p-2 -mr-1 rounded-md text-[#84ADFF] hover:bg-[#222842] transition-colors cursor-pointer"
-                                                        :aria-label="tt('Mở rộng danh mục con')"
-                                                        :aria-expanded="isMobileCategoryExpanded(sub.id)"
-                                                    >
-                                                        <svg
-                                                            class="w-4 h-4 transition-transform duration-200"
-                                                            :class="isMobileCategoryExpanded(sub.id) ? 'rotate-180 text-primary' : ''"
-                                                            viewBox="0 0 20 20"
-                                                            fill="none"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                        >
-                                                            <path
-                                                                d="M5 7.5L10 12.5L15 7.5"
-                                                                stroke="currentColor"
-                                                                stroke-width="1.67"
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </div>
-
-                                                <!-- Mục cha không có con -->
-                                                <Link
-                                                    v-else
-                                                    :href="sub.url || sub.slug"
-                                                    @click="closeDrawer"
-                                                    class="min-h-[44px] px-3 py-2.5 rounded-lg flex items-center justify-between text-sm font-medium text-[#B9C0D4] hover:text-white hover:bg-dark-surface transition-colors"
-                                                >
-                                                    <span class="truncate">{{ sub.title }}</span>
-                                                </Link>
-
-                                                <!-- Danh mục con cấp 2 (Thụt lề pl-6) -->
-                                                <transition name="accordion">
-                                                    <div
-                                                        v-if="sub.children && sub.children.length > 0"
-                                                        v-show="isMobileCategoryExpanded(sub.id)"
-                                                        class="pl-6 pr-1 py-1 space-y-1 border-l border-[#30374F]/60 ml-4"
-                                                    >
-                                                        <Link
-                                                            v-for="(child, childIdx) in sub.children"
-                                                            :key="childIdx"
-                                                            :href="child.url || child.slug"
-                                                            @click="closeDrawer"
-                                                            class="min-h-[40px] px-3 py-2 rounded-lg flex items-center justify-between text-xs font-normal text-[#8E97B2] hover:text-[#FAFAFA] hover:bg-dark-surface transition-colors"
-                                                        >
-                                                            <span class="truncate">{{ child.title }}</span>
-                                                        </Link>
-                                                    </div>
-                                                </transition>
-                                            </div>
-
-                                            <!-- Divider & View All Products -->
-                                            <div class="pt-1 mt-1 border-t border-[#30374F]">
-                                                <Link
-                                                    :href="route('products.index')"
-                                                    @click="closeDrawer"
-                                                    class="min-h-[44px] px-3 py-2.5 rounded-lg flex items-center justify-between text-xs font-semibold text-[#84ADFF] hover:text-white hover:bg-dark-surface transition-colors"
-                                                >
-                                                    <span>{{ tt('Xem tất cả sản phẩm') }}</span>
-                                                    <svg
-                                                        class="w-4 h-4 shrink-0"
-                                                        viewBox="0 0 16 16"
-                                                        fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                    >
-                                                        <path
-                                                            d="M3.33334 8H12.6667M8 3.33334L12.6667 8L8 12.6667"
-                                                            stroke="currentColor"
-                                                            stroke-width="1.5"
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                        />
-                                                    </svg>
-                                                </Link>
-                                            </div>
-                                        </div>
-                                    </transition>
                                 </div>
 
-                                <!-- Other Tabs -->
-                                <Link
-                                    v-else
-                                    :href="menu.slug || '#'"
-                                    @click="closeDrawer"
-                                    class="min-h-[44px] px-3.5 py-3 rounded-xl flex items-center justify-between text-base font-medium transition-colors"
-                                    :class="isMenuActive(menu) ? 'bg-primary/10 text-primary font-semibold' : 'text-secondary hover:text-white hover:bg-dark-surface'"
-                                >
-                                    <span>{{ menu.title }}</span>
-                                    <span v-if="isMenuActive(menu)" class="w-2 h-2 rounded-full bg-primary"></span>
-                                </Link>
-                            </template>
-                        </nav>
-                    </div>
+                                <transition name="accordion">
+                                    <div
+                                        v-show="isProductAccordionOpen"
+                                        class="pl-3 ml-3 border-l border-gray-200 space-y-1 py-1"
+                                    >
+                                        <div
+                                            v-for="cat in productCategories"
+                                            :key="cat.id || cat.slug"
+                                            class="space-y-1"
+                                        >
+                                            <div class="flex items-center justify-between min-h-[44px] rounded-[6px] hover:bg-surface-100">
+                                                <Link
+                                                    :href="cat.url"
+                                                    @click="closeDrawer"
+                                                    class="flex-1 px-3 py-2 text-[14px] font-medium text-ink-body hover:text-primary truncate"
+                                                >
+                                                    {{ cat.title }}
+                                                </Link>
+                                                <button
+                                                    v-if="cat.children && cat.children.length > 0"
+                                                    type="button"
+                                                    @click.stop="toggleMobileCategory(cat.id || cat.slug)"
+                                                    class="w-10 h-10 inline-flex items-center justify-center rounded-[6px] hover:bg-surface-100 shrink-0 cursor-pointer"
+                                                    :aria-label="tt('Mở rộng danh mục con')"
+                                                    :aria-expanded="isMobileCategoryExpanded(cat.id || cat.slug)"
+                                                >
+                                                    <img
+                                                        src="/assets/svg/icons/header-chevron-down.svg"
+                                                        alt=""
+                                                        aria-hidden="true"
+                                                        width="16"
+                                                        height="16"
+                                                        class="w-4 h-4 transition-transform duration-200"
+                                                        :class="isMobileCategoryExpanded(cat.id || cat.slug) ? 'rotate-180' : ''"
+                                                    />
+                                                </button>
+                                            </div>
 
-                    <!-- Drawer Bottom Section: Language Capsule & Contact info -->
-                    <div class="pt-6 border-t border-dark-border space-y-5">
-                        <!-- Capsule Language Switcher in Mobile Drawer (Node 2380:1477) -->
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs text-muted font-medium">{{ tt('Ngôn ngữ') }}:</span>
-                            <div class="w-[96px] h-[34px] border border-[#5D6B98] rounded-[8px] flex items-center justify-between p-1 shrink-0 select-none bg-dark-surface">
-                                <template v-if="currentLocale === 'vi'">
-                                    <button
-                                        type="button"
-                                        @click="switchLocale('vi')"
-                                        class="bg-[#FAFAFA] text-[#111322] w-[36px] h-[24px] rounded-[4px] text-xs font-semibold flex items-center justify-center shadow-xs cursor-default"
-                                        :title="tt('Tiếng Việt')"
-                                    >
-                                        VIE
-                                    </button>
-                                    <button
-                                        type="button"
-                                        @click="switchLocale('en')"
-                                        class="text-white text-sm font-semibold pr-2 flex items-center justify-center hover:text-[#FAFAFA]/80 transition-colors"
-                                        title="English"
-                                    >
-                                        ENG
-                                    </button>
-                                </template>
-                                <template v-else>
-                                    <button
-                                        type="button"
-                                        @click="switchLocale('vi')"
-                                        class="text-white text-sm font-semibold pl-2 flex items-center justify-center hover:text-[#FAFAFA]/80 transition-colors"
-                                        :title="tt('Tiếng Việt')"
-                                    >
-                                        VIE
-                                    </button>
-                                    <button
-                                        type="button"
-                                        @click="switchLocale('en')"
-                                        class="bg-[#FAFAFA] text-[#111322] w-[42px] h-[24px] rounded-[4px] text-xs font-semibold flex items-center justify-center shadow-xs cursor-default"
-                                        title="English"
-                                    >
-                                        ENG
-                                    </button>
-                                </template>
+                                            <transition name="accordion">
+                                                <div
+                                                    v-if="cat.children && cat.children.length > 0"
+                                                    v-show="isMobileCategoryExpanded(cat.id || cat.slug)"
+                                                    class="pl-3 ml-3 border-l border-gray-200 space-y-0.5 py-0.5"
+                                                >
+                                                    <Link
+                                                        v-for="child in cat.children"
+                                                        :key="child.id || child.slug"
+                                                        :href="child.url"
+                                                        @click="closeDrawer"
+                                                        class="min-h-[40px] px-3 py-2 rounded-[6px] flex items-center text-[13px] text-ink-subtle hover:text-primary hover:bg-surface-100 truncate"
+                                                    >
+                                                        {{ child.title }}
+                                                    </Link>
+                                                </div>
+                                            </transition>
+                                        </div>
+
+                                        <Link
+                                            :href="safeRoute('products.index', undefined, '/san-pham')"
+                                            @click="closeDrawer"
+                                            class="min-h-[44px] px-3 py-2 rounded-[6px] flex items-center justify-between text-[13px] font-semibold text-primary hover:bg-surface-100"
+                                        >
+                                            <span>{{ tt('Xem tất cả sản phẩm') }}</span>
+                                            <span aria-hidden="true">&rarr;</span>
+                                        </Link>
+                                    </div>
+                                </transition>
                             </div>
-                        </div>
 
-                        <!-- Quick Contact info -->
-                        <div class="space-y-3 pt-1">
                             <Link
-                                :href="route('contact')"
+                                v-else
+                                :href="menu.href"
                                 @click="closeDrawer"
-                                class="w-full min-h-[44px] flex items-center justify-center rounded-[8px] text-white font-medium text-sm transition-all shadow-xs"
-                                style="background: linear-gradient(90deg, #2970FF 0%, #00359E 89%);"
+                                class="min-h-[44px] px-3 py-2.5 rounded-[6px] flex items-center text-[14px] font-bold uppercase leading-[1.4] transition-colors"
+                                :class="
+                                    isMenuActive(menu)
+                                        ? 'bg-secondary/40 text-primary'
+                                        : 'text-dark hover:text-primary hover:bg-surface-100'
+                                "
                             >
-                                {{ tt('Liên hệ ngay') }}
+                                {{ menu.title }}
                             </Link>
-                            <div class="text-xs text-muted space-y-1.5">
-                                <p>
-                                    <strong class="text-secondary">Hotline:</strong>
-                                    <a :href="'tel:' + ($page.props.global?.general_phone || '0967732665').replace(/\s+/g, '')" class="ml-1 text-secondary hover:text-primary">
-                                        {{ $page.props.global?.general_phone || '0967 732 665' }}
-                                    </a>
-                                </p>
-                                <p>
-                                    <strong class="text-secondary">Email:</strong>
-                                    <a :href="'mailto:' + ($page.props.global?.general_email || 'info@dvktthanhkhang.vn')" class="ml-1 text-secondary hover:text-primary">
-                                        {{ $page.props.global?.general_email || 'info@dvktthanhkhang.vn' }}
-                                    </a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </aside>
-            </Transition>
-        </Teleport>
+                        </template>
+                    </nav>
+                </div>
 
-        <!-- Dark Tech Search Modal Teleport to body -->
-        <Teleport to="body">
-            <SearchModal :is-open="isSearchOpen" @close="isSearchOpen = false" />
-        </Teleport>
-    </header>
+                <!-- Drawer Bottom: CTAs + Contact Info from CMS -->
+                <div class="p-5 pt-4 border-t border-gray-200 bg-surface-50 space-y-4">
+                    <div class="flex flex-col gap-2.5">
+                        <Link
+                            :href="safeRoute('contact', undefined, '/lien-he')"
+                            @click="closeDrawer"
+                            class="w-full min-h-[44px] inline-flex items-center justify-center rounded-cta bg-primary hover:bg-primary-hover active:bg-primary-active text-surface text-[14px] font-medium shadow-xs transition-colors"
+                        >
+                            {{ tt('Nhận báo giá') }}
+                        </Link>
+                        <a
+                            v-if="contactPhone"
+                            :href="'tel:' + cleanPhone"
+                            @click="closeDrawer"
+                            class="w-full min-h-[44px] inline-flex items-center justify-center rounded-cta bg-secondary hover:bg-secondary-hover text-primary-active text-[14px] font-medium shadow-xs transition-colors"
+                        >
+                            {{ tt('Gọi hotline') }}
+                        </a>
+                    </div>
+
+                    <div class="space-y-2 pt-1 text-[13px] text-ink-body">
+                        <a
+                            v-if="contactPhone"
+                            :href="'tel:' + cleanPhone"
+                            class="flex items-center gap-2.5 text-ink-body hover:text-primary transition-colors"
+                        >
+                            <img
+                                src="/assets/svg/icons/footer-phone.svg"
+                                alt=""
+                                aria-hidden="true"
+                                width="18"
+                                height="18"
+                                class="w-[18px] h-[18px] shrink-0"
+                            />
+                            <span>{{ contactPhone }}</span>
+                        </a>
+                        <a
+                            v-if="contactEmail"
+                            :href="'mailto:' + contactEmail"
+                            class="flex items-center gap-2.5 text-ink-body hover:text-primary transition-colors break-all"
+                        >
+                            <img
+                                src="/assets/svg/icons/footer-mail.svg"
+                                alt=""
+                                aria-hidden="true"
+                                width="18"
+                                height="18"
+                                class="w-[18px] h-[18px] shrink-0"
+                            />
+                            <span>{{ contactEmail }}</span>
+                        </a>
+                    </div>
+                </div>
+            </aside>
+        </Transition>
+    </Teleport>
+
+    <!-- Search Modal -->
+    <Teleport to="body">
+        <SearchModal :is-open="isSearchOpen" @close="isSearchOpen = false" />
+    </Teleport>
 </template>
 
 <script>
 import { Link } from '@inertiajs/inertia-vue3'
 import SearchModal from '@/Components/SearchModal.vue'
+
+const DEFAULT_LOGO_URL = '/assets/images/logo/logo-thanhkhang.png'
 
 export default {
     name: 'Header',
@@ -547,78 +541,106 @@ export default {
     },
     data() {
         return {
-            menuSelected: null,
+            activeDropdown: null,
+            isScrolled: false,
             isDrawerOpen: false,
             isSearchOpen: false,
             isProductAccordionOpen: false,
             expandedMobileCategoryIds: [],
+            logoFallbackStage: 0,
         }
     },
     computed: {
         currentLocale() {
-            return this.$page.props.locale?.current || 'vi'
+            return this.$inertia?.page?.props?.locale?.current || this.$page?.props?.locale?.current || 'vi'
+        },
+        siteConfig() {
+            return {
+                ...(this.$page?.props?.global || {}),
+                ...(this.$page?.props?.configs || {}),
+            }
+        },
+        companyName() {
+            return (
+                this.siteConfig.general_business_name ||
+                this.siteConfig.company_name ||
+                this.siteConfig.general_site_name ||
+                ''
+            )
+        },
+        contactEmail() {
+            return this.siteConfig.general_email || this.siteConfig.email || ''
+        },
+        contactPhone() {
+            return this.siteConfig.hotline || this.siteConfig.general_phone || this.siteConfig.phone || ''
+        },
+        cleanPhone() {
+            return String(this.contactPhone || '').replace(/[^\d+]/g, '')
+        },
+        cmsLogoUrl() {
+            const raw = this.siteConfig.general_logo || this.siteConfig.logo || ''
+            return typeof raw === 'string' ? raw.trim() : ''
+        },
+        resolvedLogoUrl() {
+            if (this.logoFallbackStage >= 2) return ''
+            if (this.logoFallbackStage === 0 && this.cmsLogoUrl) {
+                return this.cmsLogoUrl
+            }
+            return DEFAULT_LOGO_URL
         },
         productCategories() {
-            const rawCategories = this.$page?.props?.product_categories || this.$page?.props?.data?.product_categories
-            if (!rawCategories || rawCategories.length === 0) {
-                return [
-                    {
-                        id: 'linh-kien-thang-cuon',
-                        title: this.tt('Linh kiện thang cuốn'),
-                        slug: 'linh-kien-thang-cuon',
-                        children: [
-                            { id: 'xich-bac-thang-cuon', title: this.tt('Xích bậc thang cuốn'), slug: 'xich-bac-thang-cuon' },
-                            { id: 'xich-bang-tai-hanh-khach', title: this.tt('Xích băng tải hành khách'), slug: 'xich-bang-tai-hanh-khach' },
-                            { id: 'xich-dan-dong-chinh-thang-cuon', title: this.tt('Xích dẫn động chính'), slug: 'xich-dan-dong-chinh-thang-cuon' },
-                        ],
-                    },
-                    {
-                        id: 'linh-kien-thang-nang-o-to',
-                        title: this.tt('Linh kiện thang nâng ô tô'),
-                        slug: 'linh-kien-thang-nang-o-to',
-                        children: [
-                            { id: 'xich-bai-do-xe-tieu-chuan-lt', title: this.tt('Xích bãi đỗ xe LT'), slug: 'xich-bai-do-xe-tieu-chuan-lt' },
-                            { id: 'xich-bai-do-xe-tuan-hoan-dung', title: this.tt('Xích tuần hoàn đứng'), slug: 'xich-bai-do-xe-tuan-hoan-dung' },
-                        ],
-                    },
-                    {
-                        id: 'he-thong-bang-tai-hanh-ly',
-                        title: this.tt('Hệ thống băng tải hành lý'),
-                        slug: 'he-thong-bang-tai-hanh-ly',
-                        children: [],
-                    },
-                    {
-                        id: 'linh-kien-day-chuyen-dong-goi',
-                        title: this.tt('Linh kiện dây chuyền đóng gói'),
-                        slug: 'linh-kien-day-chuyen-dong-goi',
-                        children: [],
-                    },
-                ]
+            const rawCategories =
+                this.$page?.props?.product_categories || this.$page?.props?.data?.product_categories || []
+
+            if (!Array.isArray(rawCategories) || rawCategories.length === 0) {
+                return []
             }
 
-            // Phòng vệ: Kiểm tra xem có phần tử mang parent_id > 0 ở cấp gốc không
-            const hasFlatChildren = rawCategories.some(c => c && Number(c.parent_id) > 0)
+            const baseProductsUrl = this.safeRoute(
+                'products.index',
+                undefined,
+                this.currentLocale === 'en' ? '/en/products' : '/san-pham'
+            )
+            const normalizeCategoryUrl = (cat, parentSlug = '') => {
+                if (parentSlug && cat.slug) {
+                    return `${baseProductsUrl}?category=${encodeURIComponent(parentSlug)}&subcategory=${encodeURIComponent(cat.slug)}`
+                }
+                return cat.url || (cat.slug ? `${baseProductsUrl}?category=${encodeURIComponent(cat.slug)}` : baseProductsUrl)
+            }
+
+            const hasFlatChildren = rawCategories.some((c) => c && Number(c.parent_id) > 0)
 
             if (!hasFlatChildren) {
-                return rawCategories.map(cat => ({
-                    ...cat,
-                    children: (cat.children || cat.subcategories || cat.nodes || []).map(child => ({
-                        ...child,
-                        url: child.url || (this.route('products.index') + '?category=' + child.slug),
-                    })),
-                }))
+                return rawCategories
+                    .filter((cat) => cat && (cat.title || cat.name))
+                    .map((cat) => ({
+                        id: cat.id,
+                        title: cat.title || cat.name,
+                        slug: cat.slug,
+                        url: normalizeCategoryUrl(cat),
+                        children: (cat.children || cat.subcategories || cat.nodes || [])
+                            .filter((child) => child && (child.title || child.name))
+                            .map((child) => ({
+                                id: child.id,
+                                title: child.title || child.name,
+                                slug: child.slug,
+                                url: normalizeCategoryUrl(child, cat.slug),
+                            })),
+                    }))
             }
 
-            // Gộp theo cây danh mục phòng vệ (Defensive tree grouping)
             const parentMap = new Map()
             const childItems = []
 
-            rawCategories.forEach(item => {
-                if (!item) return
+            rawCategories.forEach((item) => {
+                if (!item || !(item.title || item.name)) return
                 const parentId = Number(item.parent_id || 0)
                 if (parentId === 0) {
                     parentMap.set(item.id, {
-                        ...item,
+                        id: item.id,
+                        title: item.title || item.name,
+                        slug: item.slug,
+                        url: normalizeCategoryUrl(item),
                         children: [...(item.children || item.subcategories || item.nodes || [])],
                     })
                 } else {
@@ -626,231 +648,153 @@ export default {
                 }
             })
 
-            childItems.forEach(child => {
+            childItems.forEach((child) => {
                 const parentId = Number(child.parent_id)
                 if (parentMap.has(parentId)) {
                     const parent = parentMap.get(parentId)
-                    if (!parent.children.some(c => c.id === child.id)) {
+                    if (!parent.children.some((c) => c.id === child.id)) {
                         parent.children.push(child)
                     }
                 }
             })
 
-            return Array.from(parentMap.values()).map(cat => ({
+            return Array.from(parentMap.values()).map((cat) => ({
                 ...cat,
-                children: (cat.children || []).map(child => ({
-                    ...child,
-                    url: child.url || (this.route('products.index') + '?category=' + child.slug),
-                })),
+                children: (cat.children || [])
+                    .filter((child) => child && (child.title || child.name))
+                    .map((child) => ({
+                        id: child.id,
+                        title: child.title || child.name,
+                        slug: child.slug,
+                        url: normalizeCategoryUrl(child, cat.slug),
+                    })),
             }))
         },
         menus() {
-            const categories = this.productCategories
-            const productSubMenu = [
-                {
-                    title: this.tt('Xem tất cả sản phẩm'),
-                    slug: this.route('products.index'),
-                    url: this.route('products.index'),
-                    isAll: true,
-                    children: [],
-                },
-                ...categories.map(cat => {
-                    const children = (cat.children || []).map(child => ({
-                        id: child.id,
-                        title: child.title || child.name,
-                        slug: child.url || (this.route('products.index') + '?category=' + child.slug),
-                        url: child.url || (this.route('products.index') + '?category=' + child.slug),
-                        categorySlug: child.slug,
-                        isAll: false,
-                    }))
-
-                    return {
-                        id: cat.id,
-                        title: cat.title || cat.name,
-                        slug: cat.url || (this.route('products.index') + '?category=' + cat.slug),
-                        url: cat.url || (this.route('products.index') + '?category=' + cat.slug),
-                        categorySlug: cat.slug,
-                        isAll: false,
-                        children: children,
-                    }
-                }),
-            ]
+            const isEn = this.currentLocale === 'en'
+            const processHref = this.safeRoute('process.index', undefined, isEn ? '/en/process' : '/quy-trinh')
 
             return [
                 {
-                    title: this.tt('Trang chủ'),
-                    slug: this.route('home'),
-                    type: 'home',
-                    subMenu: [],
+                    title: this.tt('VỀ CHÚNG TÔI'),
+                    href: this.safeRoute('histories.index', undefined, isEn ? '/en/about-us' : '/gioi-thieu'),
+                    type: 'about',
+                    hasDropdown: false,
                 },
                 {
-                    title: this.tt('Sản phẩm'),
-                    slug: this.route('products.index'),
+                    title: this.tt('SẢN PHẨM'),
+                    href: this.safeRoute('products.index', undefined, isEn ? '/en/products' : '/san-pham'),
                     type: 'products',
-                    subMenu: productSubMenu,
+                    hasDropdown: true,
                 },
                 {
-                    title: this.tt('Dịch vụ'),
-                    slug: this.route('services.index'),
-                    type: 'services',
-                    subMenu: [],
+                    title: String(this.tt('Quy trình') || (isEn ? 'PROCESS' : 'QUY TRÌNH')).toUpperCase(),
+                    href: processHref,
+                    type: 'process',
+                    hasDropdown: false,
                 },
                 {
-                    title: this.tt('Giới thiệu'),
-                    slug: this.route('histories.index'),
-                    type: 'histories',
-                    subMenu: [],
+                    title: this.tt('TIN TỨC'),
+                    href: this.safeRoute('posts', undefined, isEn ? '/en/posts' : '/tin-tuc'),
+                    type: 'posts',
+                    hasDropdown: false,
                 },
                 {
-                    title: this.tt('Quy trình'),
-                    slug: this.route('process.index'),
-                    type: 'quy-trinh',
-                    subMenu: [],
+                    title: this.tt('LIÊN HỆ'),
+                    href: this.safeRoute('contact', undefined, isEn ? '/en/contact' : '/lien-he'),
+                    type: 'contact',
+                    hasDropdown: false,
                 },
             ]
         },
     },
+    watch: {
+        cmsLogoUrl() {
+            this.logoFallbackStage = 0
+        },
+        '$page.url': function () {
+            this.closeDrawer()
+            this.closeDesktopDropdown()
+        },
+    },
     methods: {
+        safeRoute(name, params, fallback = '/') {
+            if (typeof this.route === 'function' && typeof this.routes === 'function') {
+                const allRoutes = this.routes() || {}
+                const localizedName =
+                    typeof this.routeLocaleName === 'function' ? this.routeLocaleName(name) : name
+                if (allRoutes[localizedName] || allRoutes[name]) {
+                    try {
+                        const url = this.route(name, params)
+                        if (url && url !== '#') return url
+                    } catch (e) {
+                        // Fall through to fallback
+                    }
+                }
+            }
+            return fallback
+        },
+        onLogoError() {
+            if (this.logoFallbackStage === 0 && this.cmsLogoUrl && this.cmsLogoUrl !== DEFAULT_LOGO_URL) {
+                this.logoFallbackStage = 1
+            } else {
+                this.logoFallbackStage = 2
+            }
+        },
         isMenuActive(menu) {
-            if (!menu || !menu.slug) return false
+            if (!menu || !menu.href) return false
 
             const path = typeof window !== 'undefined' ? window.location.pathname : this.$page?.url || ''
-            const cleanPath = path.split('?')[0].split('#')[0]
-            const normalizedPath = cleanPath.replace(/\/+$/, '') || '/'
+            const cleanPath = path.split('?')[0].split('#')[0].replace(/\/+$/, '') || '/'
+            const component = (this.$page?.component || '').toLowerCase()
 
-            const rawInertia = (this.$page?.url || '').split('?')[0].split('#')[0]
-            const inertiaUrl = rawInertia.replace(/\/+$/, '') || '/'
-
-            const component = this.$page?.component || ''
-
-            // Kiểm tra trạng thái Trang chủ chính xác 100%
-            const isHome =
-                normalizedPath === '/' ||
-                normalizedPath === '/vi' ||
-                normalizedPath === '/en' ||
-                inertiaUrl === '/' ||
-                inertiaUrl === '/vi' ||
-                inertiaUrl === '/en' ||
-                component === 'Home' ||
-                component === 'Home/Index'
-
-            // Nếu đang ở Trang chủ: CHỈ duy nhất tab 'home' được active
-            if (isHome) {
-                return menu.type === 'home'
+            if (menu.type === 'about') {
+                return (
+                    component.includes('about') ||
+                    component.includes('histor') ||
+                    cleanPath.startsWith('/gioi-thieu') ||
+                    cleanPath.startsWith('/en/about')
+                )
             }
-
-            // Nếu không ở Trang chủ: tab 'home' không bao giờ active
-            if (menu.type === 'home') {
-                return false
-            }
-
-            // Xử lý các tab chuyên biệt khi không ở trang chủ
             if (menu.type === 'products') {
                 return (
-                    component.toLowerCase().includes('product') ||
-                    normalizedPath === '/san-pham' ||
-                    normalizedPath.startsWith('/san-pham/') ||
-                    normalizedPath === '/products' ||
-                    normalizedPath.startsWith('/products/') ||
-                    normalizedPath === '/en/products' ||
-                    normalizedPath.startsWith('/en/products/') ||
-                    inertiaUrl === '/san-pham' ||
-                    inertiaUrl.startsWith('/san-pham/') ||
-                    inertiaUrl === '/products' ||
-                    inertiaUrl.startsWith('/products/') ||
-                    inertiaUrl === '/en/products' ||
-                    inertiaUrl.startsWith('/en/products/')
+                    component.includes('product') ||
+                    cleanPath.startsWith('/san-pham') ||
+                    cleanPath.startsWith('/en/products')
                 )
             }
-
-            if (menu.type === 'services') {
+            if (menu.type === 'process') {
                 return (
-                    component.toLowerCase().includes('service') ||
-                    normalizedPath === '/dich-vu' ||
-                    normalizedPath.startsWith('/dich-vu/') ||
-                    normalizedPath === '/services' ||
-                    normalizedPath.startsWith('/services/') ||
-                    normalizedPath === '/en/services' ||
-                    normalizedPath.startsWith('/en/services/') ||
-                    inertiaUrl === '/dich-vu' ||
-                    inertiaUrl.startsWith('/dich-vu/') ||
-                    inertiaUrl === '/services' ||
-                    inertiaUrl.startsWith('/services/') ||
-                    inertiaUrl === '/en/services' ||
-                    inertiaUrl.startsWith('/en/services/')
+                    component.includes('process') ||
+                    cleanPath.startsWith('/quy-trinh') ||
+                    cleanPath.startsWith('/en/process')
                 )
             }
-
-            if (menu.type === 'histories') {
+            if (menu.type === 'posts') {
                 return (
-                    component.toLowerCase().includes('histor') ||
-                    component.toLowerCase().includes('about') ||
-                    normalizedPath === '/gioi-thieu' ||
-                    normalizedPath.startsWith('/gioi-thieu/') ||
-                    normalizedPath === '/ve-chung-toi' ||
-                    normalizedPath.startsWith('/ve-chung-toi/') ||
-                    normalizedPath === '/cot-moc-phat-trien' ||
-                    normalizedPath.startsWith('/cot-moc-phat-trien/') ||
-                    normalizedPath === '/about-us' ||
-                    normalizedPath.startsWith('/about') ||
-                    normalizedPath === '/en/about-us' ||
-                    normalizedPath.startsWith('/en/about') ||
-                    inertiaUrl === '/gioi-thieu' ||
-                    inertiaUrl.startsWith('/gioi-thieu/') ||
-                    inertiaUrl === '/ve-chung-toi' ||
-                    inertiaUrl.startsWith('/ve-chung-toi/') ||
-                    inertiaUrl === '/cot-moc-phat-trien' ||
-                    inertiaUrl.startsWith('/cot-moc-phat-trien/') ||
-                    inertiaUrl === '/about-us' ||
-                    inertiaUrl.startsWith('/about') ||
-                    inertiaUrl === '/en/about-us' ||
-                    inertiaUrl.startsWith('/en/about')
+                    component.includes('post') ||
+                    cleanPath.startsWith('/tin-tuc') ||
+                    cleanPath.startsWith('/en/posts')
                 )
             }
-
-            if (menu.type === 'quy-trinh') {
+            if (menu.type === 'contact') {
                 return (
-                    component.toLowerCase().includes('process') ||
-                    normalizedPath === '/quy-trinh' ||
-                    normalizedPath.startsWith('/quy-trinh/') ||
-                    normalizedPath === '/process' ||
-                    normalizedPath.startsWith('/process/') ||
-                    normalizedPath === '/en/process' ||
-                    normalizedPath.startsWith('/en/process/') ||
-                    inertiaUrl === '/quy-trinh' ||
-                    inertiaUrl.startsWith('/quy-trinh/') ||
-                    inertiaUrl === '/process' ||
-                    inertiaUrl.startsWith('/process/') ||
-                    inertiaUrl === '/en/process' ||
-                    inertiaUrl.startsWith('/en/process/')
+                    component.includes('contact') ||
+                    cleanPath.startsWith('/lien-he') ||
+                    cleanPath.startsWith('/en/contact')
                 )
             }
 
-            // Fallback so khớp đường dẫn tuyệt đối/tương đối (bỏ qua trang chủ "/")
-            let menuPath = menu.slug
-            try {
-                if (menuPath.startsWith('http://') || menuPath.startsWith('https://')) {
-                    menuPath = new URL(menuPath).pathname
-                }
-            } catch (e) {
-                // fallback to original slug
-            }
-            const cleanMenuPath = menuPath.split('?')[0].split('#')[0]
-            const normalizedMenuPath = cleanMenuPath.replace(/\/+$/, '') || '/'
-
-            if (normalizedMenuPath === '/' || normalizedMenuPath === '') {
-                return false
-            }
-
-            return (
-                normalizedPath === normalizedMenuPath ||
-                normalizedPath.startsWith(normalizedMenuPath + '/') ||
-                inertiaUrl === normalizedMenuPath ||
-                inertiaUrl.startsWith(normalizedMenuPath + '/')
-            )
+            return false
         },
-        setMenuSelected(item) {
-            this.menuSelected = item
+        openDesktopDropdown(type) {
+            this.activeDropdown = type
+        },
+        toggleDesktopDropdown(type) {
+            this.activeDropdown = this.activeDropdown === type ? null : type
+        },
+        closeDesktopDropdown() {
+            this.activeDropdown = null
         },
         openDrawer() {
             this.isDrawerOpen = true
@@ -876,140 +820,43 @@ export default {
         isMobileCategoryExpanded(id) {
             return this.expandedMobileCategoryIds.includes(id)
         },
-        switchLocale(lang) {
-            if (this.currentLocale === lang) return
-
-            this.closeDrawer()
-
-            // 1. Try resolving using current route name and Ziggy
-            const currentRouteName = this.$page?.props?.route?.name || ''
-            if (currentRouteName) {
-                const baseRouteName = currentRouteName.replace(/^(vi|en)\./, '')
-                const targetRouteName = `${lang}.${baseRouteName}`
-                if (this.routes && this.routes()[targetRouteName]) {
-                    const routeParams = this.$page?.props?.route?.params || {}
-                    const routeQuery = this.$page?.props?.route?.query || {}
-                    const allParams = { ...routeParams, ...routeQuery }
-                    try {
-                        const targetUrl = this.route(targetRouteName, allParams)
-                        if (targetUrl && targetUrl !== '#') {
-                            if (this.$inertia) {
-                                this.$inertia.visit(targetUrl)
-                            } else if (typeof window !== 'undefined') {
-                                window.location.href = targetUrl
-                            }
-                            return
-                        }
-                    } catch (e) {
-                        // fallback to path replacement
-                    }
-                }
-            }
-
-            // 2. Intelligent path translation mapping
-            let currentUrl = typeof window !== 'undefined'
-                ? window.location.pathname + window.location.search
-                : (this.$page?.url || '/')
-            const [rawPath, rawQuery] = currentUrl.split('?')
-            const cleanPath = (rawPath || '/').split('#')[0]
-            const queryString = rawQuery ? `?${rawQuery}` : ''
-
-            const viToEnPrefixes = [
-                { from: '/san-pham', to: '/products' },
-                { from: '/dich-vu', to: '/services' },
-                { from: '/gioi-thieu', to: '/about-us' },
-                { from: '/ve-chung-toi', to: '/about-us' },
-                { from: '/cot-moc-phat-trien', to: '/about-us' },
-                { from: '/quy-trinh', to: '/process' },
-                { from: '/lien-he', to: '/contact' },
-                { from: '/tim-kiem', to: '/search' },
-                { from: '/tin-tuc', to: '/posts' },
-                { from: '/chinh-sach', to: '/policies' },
-            ]
-
-            const enToViPrefixes = [
-                { from: '/products', to: '/san-pham' },
-                { from: '/services', to: '/dich-vu' },
-                { from: '/about-us', to: '/gioi-thieu' },
-                { from: '/about', to: '/gioi-thieu' },
-                { from: '/histories', to: '/gioi-thieu' },
-                { from: '/process', to: '/quy-trinh' },
-                { from: '/contact', to: '/lien-he' },
-                { from: '/search', to: '/tim-kiem' },
-                { from: '/posts', to: '/tin-tuc' },
-                { from: '/policies', to: '/chinh-sach' },
-            ]
-
-            let newPath = '/'
-            if (lang === 'en') {
-                if (cleanPath === '/' || cleanPath === '/vi') {
-                    newPath = '/en'
-                } else {
-                    const stripped = cleanPath.replace(/^\/vi/, '') || '/'
-                    let translated = stripped
-                    for (const p of viToEnPrefixes) {
-                        if (stripped === p.from) {
-                            translated = p.to
-                            break
-                        } else if (stripped.startsWith(p.from + '/')) {
-                            translated = p.to + stripped.slice(p.from.length)
-                            break
-                        }
-                    }
-                    newPath = '/en' + (translated.startsWith('/') ? translated : '/' + translated)
-                }
-            } else {
-                // Switching to 'vi'
-                const stripped = cleanPath.replace(/^\/en/, '') || '/'
-                let translated = stripped
-                for (const p of enToViPrefixes) {
-                    if (stripped === p.from) {
-                        translated = p.to
-                        break
-                    } else if (stripped.startsWith(p.from + '/')) {
-                        translated = p.to + stripped.slice(p.from.length)
-                        break
-                    }
-                }
-                newPath = translated.startsWith('/') ? translated : '/' + translated
-            }
-
-            if (queryString) {
-                newPath += queryString
-            }
-
-            if (this.$inertia) {
-                this.$inertia.visit(newPath)
-            } else if (typeof window !== 'undefined') {
-                window.location.href = newPath
+        handleScroll() {
+            if (typeof window === 'undefined') return
+            this.isScrolled = window.scrollY > 46
+        },
+        handleClickOutside(e) {
+            if (!this.activeDropdown) return
+            const root = this.$refs.headerRoot
+            if (root && !root.contains(e.target)) {
+                this.closeDesktopDropdown()
             }
         },
-
         handleKeydown(e) {
-            // Phím tắt Ctrl+K hoặc Cmd+K mở modal tìm kiếm
             if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
                 e.preventDefault()
                 this.isSearchOpen = !this.isSearchOpen
                 return
             }
             if (e.key === 'Escape') {
-                if (this.isSearchOpen) {
-                    this.isSearchOpen = false
-                }
-                if (this.isDrawerOpen) {
-                    this.closeDrawer()
-                }
+                if (this.isSearchOpen) this.isSearchOpen = false
+                if (this.isDrawerOpen) this.closeDrawer()
+                if (this.activeDropdown) this.closeDesktopDropdown()
             }
         },
     },
     mounted() {
         if (typeof window !== 'undefined') {
+            this.handleScroll()
+            window.addEventListener('scroll', this.handleScroll, { passive: true })
             window.addEventListener('keydown', this.handleKeydown)
+            document.addEventListener('click', this.handleClickOutside)
         }
     },
     beforeUnmount() {
         if (typeof window !== 'undefined') {
+            window.removeEventListener('scroll', this.handleScroll)
             window.removeEventListener('keydown', this.handleKeydown)
+            document.removeEventListener('click', this.handleClickOutside)
             document.body.classList.remove('overflow-hidden')
         }
     },
@@ -1020,54 +867,50 @@ export default {
 body {
     --header-height-sm: 64px;
     --header-height-md: 64px;
-    --header-height-lg: 111px;
-    --header-height-xl: 111px;
+    --header-height-lg: 72px;
+    --header-height-xl: 72px;
+    --header-total-lg: 118px;
 }
 </style>
 
 <style lang="scss" scoped>
-/* Drawer Fade Backdrop */
 .drawer-fade-enter-active,
 .drawer-fade-leave-active {
-    transition: opacity 0.3s ease;
+    transition: opacity 0.25s ease;
 }
 .drawer-fade-enter-from,
 .drawer-fade-leave-to {
     opacity: 0;
 }
 
-/* Drawer Slide Panel */
 .drawer-slide-enter-active,
 .drawer-slide-leave-active {
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .drawer-slide-enter-from,
 .drawer-slide-leave-to {
     transform: translateX(100%);
 }
 
-/* Dropdown Fade with Hover Bridge */
 .dropdown-fade-enter-active,
 .dropdown-fade-leave-active {
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: opacity 0.18s ease, transform 0.18s ease;
 }
 .dropdown-fade-enter-from,
 .dropdown-fade-leave-to {
     opacity: 0;
-    transform: translateY(-6px);
+    transform: translateY(-4px);
 }
 
-/* Accordion Transition for Mobile Drawer */
 .accordion-enter-active,
 .accordion-leave-active {
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    max-height: 500px;
+    transition: opacity 0.2s ease, max-height 0.25s ease;
+    max-height: 480px;
     overflow: hidden;
 }
 .accordion-enter-from,
 .accordion-leave-to {
     opacity: 0;
     max-height: 0;
-    transform: translateY(-6px);
 }
 </style>

@@ -757,8 +757,28 @@ class Post extends BaseModel
 
     public function getImageDetail($image)
     {
+        if (is_string($image)) {
+            $image = ['path' => $image];
+        }
+
+        $path = isset($image['path']) ? trim((string) $image['path']) : '';
+        if ($path === '') {
+            return [
+                'url' => null,
+                'alt' => $image['alt'] ?? $this->title,
+            ];
+        }
+
+        if (str_starts_with($path, '/assets/') || str_starts_with($path, '/images/')) {
+            $url = $path;
+        } elseif (str_starts_with($path, 'assets/') || str_starts_with($path, 'images/')) {
+            $url = '/' . $path;
+        } else {
+            $url = static_url($path);
+        }
+
         return [
-            'url' => isset($image['path']) ? static_url($image['path']) : null,
+            'url' => $url,
             'alt' => $image['alt'] ?? $this->title,
         ];
     }

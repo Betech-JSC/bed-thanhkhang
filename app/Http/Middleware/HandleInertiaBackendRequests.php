@@ -44,8 +44,16 @@ class HandleInertiaBackendRequests extends Middleware
             ];
         };
 
-        $newContact = Contact::where('status', Contact::STATUS_NEW)->get();
-        $todayContact = Contact::whereDate('created_at', Carbon::today())->get();
+        $newContact = collect();
+        $todayContact = collect();
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('contacts')) {
+                $newContact = Contact::where('status', Contact::STATUS_NEW)->get();
+                $todayContact = Contact::whereDate('created_at', Carbon::today())->get();
+            }
+        } catch (\Throwable $e) {
+            report($e);
+        }
 
         $data = [
             'flash' => function () use ($request) {

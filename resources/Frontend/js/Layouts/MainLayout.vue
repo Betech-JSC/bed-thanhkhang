@@ -1,66 +1,93 @@
 <template>
-    <div class="min-h-screen flex flex-col bg-dark-bg text-secondary font-sans selection:bg-primary selection:text-white">
+    <div class="min-h-screen flex flex-col bg-surface text-ink-body font-sans selection:bg-primary selection:text-white">
         <Header />
-        <main class="flex-grow pt-[var(--header-height-md)] lg:pt-[var(--header-height-lg)] xl:pt-[var(--header-height-xl)]">
+        <main class="flex-grow">
             <slot />
         </main>
         <Footer />
-        <NotificationPopup />
     </div>
 </template>
 
 <script>
 import Header from '@/Components/Header.vue'
 import Footer from '@/Components/Footer.vue'
-import NotificationPopup from '@/Components/NotificationPopup.vue'
 
 export default {
     name: 'MainLayout',
     components: {
         Header,
         Footer,
-        NotificationPopup,
     },
     watch: {
         '$page.url': function () {
             if (typeof document === 'undefined') return
 
-            const seo = this.$page.props?.seo
-            const global = this.$page.props?.global
-
-            const seo_meta_title = seo?.seo_meta_title ?? global?.seo_meta_title ?? this.tt('Thành Khang Tecsat - Thiết bị công nghiệp & Phụ tùng thang cuốn')
-            const seo_meta_description = seo?.seo_meta_description ?? global?.seo_meta_description ?? this.tt('Cung cấp linh kiện thang cuốn, thang nâng ô tô, xích công nghiệp Universal Chains, hệ thống băng tải và quạt trần công nghiệp BLDC HVLS.')
-            const seo_meta_robots = seo?.seo_meta_robots ?? global?.seo_meta_robots ?? 'robots.txt'
-            const seo_meta_keywords = seo?.seo_meta_keywords ?? global?.seo_meta_keywords ?? 'Thành Khang Tecsat, phụ tùng thang cuốn, xích công nghiệp, Universal Chains, quạt BLDC'
-            const seo_image = seo?.seo_image ?? (global?.seo_image && !global.seo_image.includes('funkystyle') && !global.seo_image.includes('khoqua') && !global.seo_image.includes('copy.jpg') && !global.seo_image.includes('hhmaker') ? global.seo_image : '/og-image.jpg')
-
-            const titleEl = document.querySelector('title')
-            if (titleEl) titleEl.innerHTML = seo_meta_title
-            document.querySelector('meta[property="og:title"]')?.setAttribute('content', seo_meta_title)
-            document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', seo_meta_title)
-
-            document.querySelector('meta[name="description"]')?.setAttribute('content', seo_meta_description)
-            document.querySelector('meta[property="og:description"]')?.setAttribute('content', seo_meta_description)
-            document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', seo_meta_description)
-
-            document.querySelector('meta[name="robots"]')?.setAttribute('content', seo_meta_robots)
-            document.querySelector('meta[name="keywords"]')?.setAttribute('content', seo_meta_keywords)
-
-            let absoluteSeoImage = seo_image
-            if (seo_image && !seo_image.startsWith('http://') && !seo_image.startsWith('https://')) {
-                absoluteSeoImage = window.location.origin + (seo_image.startsWith('/') ? '' : '/') + seo_image
+            const seo = this.$page.props?.seo || {}
+            const global = {
+                ...(this.$page.props?.global || {}),
+                ...(this.$page.props?.configs || {}),
             }
 
-            document.querySelector('meta[property="og:image"]')?.setAttribute('content', absoluteSeoImage)
+            const seo_meta_title =
+                seo.seo_meta_title ||
+                seo.title ||
+                global.seo_meta_title ||
+                global.general_site_name ||
+                global.general_business_name ||
+                ''
+            const seo_meta_description =
+                seo.seo_meta_description ||
+                seo.description ||
+                global.seo_meta_description ||
+                global.general_description ||
+                ''
+            const seo_meta_robots =
+                seo.seo_meta_robots || seo.robots || global.seo_meta_robots || 'index, follow'
+            const seo_meta_keywords =
+                seo.seo_meta_keywords || seo.keywords || global.seo_meta_keywords || ''
+            const seo_image = seo.seo_image || seo.image || global.seo_image || ''
+            const seo_canonical = seo.seo_canonical || seo.canonical || window.location.href
+
+            if (seo_meta_title) {
+                const titleEl = document.querySelector('title')
+                if (titleEl) titleEl.textContent = seo_meta_title
+                document.querySelector('meta[property="og:title"]')?.setAttribute('content', seo_meta_title)
+                document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', seo_meta_title)
+            }
+
+            if (seo_meta_description) {
+                document.querySelector('meta[name="description"]')?.setAttribute('content', seo_meta_description)
+                document
+                    .querySelector('meta[property="og:description"]')
+                    ?.setAttribute('content', seo_meta_description)
+                document
+                    .querySelector('meta[name="twitter:description"]')
+                    ?.setAttribute('content', seo_meta_description)
+            }
+
+            document.querySelector('meta[name="robots"]')?.setAttribute('content', seo_meta_robots)
+
+            if (seo_meta_keywords) {
+                document.querySelector('meta[name="keywords"]')?.setAttribute('content', seo_meta_keywords)
+            }
+
+            if (seo_image) {
+                let absoluteSeoImage = seo_image
+                if (!seo_image.startsWith('http://') && !seo_image.startsWith('https://')) {
+                    absoluteSeoImage = window.location.origin + (seo_image.startsWith('/') ? '' : '/') + seo_image
+                }
+                document.querySelector('meta[property="og:image"]')?.setAttribute('content', absoluteSeoImage)
+                document.querySelector('meta[name="twitter:image"]')?.setAttribute('content', absoluteSeoImage)
+            }
+
             document.querySelector('meta[property="og:url"]')?.setAttribute('content', window.location.href)
-            document.querySelector('link[rel="canonical"]')?.setAttribute('href', window.location.href)
+            document.querySelector('link[rel="canonical"]')?.setAttribute('href', seo_canonical)
         },
     },
 }
 </script>
 
 <style>
-/* Đảm bảo lớp overflow-hidden ngăn cuộn */
 body.overflow-hidden {
     overflow: hidden;
 }

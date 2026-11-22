@@ -1,172 +1,261 @@
 <template>
-    <section v-if="displayServices.length > 0" v-scroll-reveal id="services-section" class="py-12 md:py-20 bg-dark-bg">
-        <div class="app-container">
-            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 lg:gap-12">
-                <!-- Left Title (Figma Node 2261:5529: 320px width, 38px font-bold, line-height 46px) -->
-                <div class="lg:w-[320px] flex-shrink-0">
-                    <h2
-                        class="text-2xl sm:text-3xl lg:text-[38px] font-bold text-[#FAFAFA] uppercase tracking-tight leading-[1.2] lg:leading-[46px] font-sans"
-                    >
-                        {{ tt('TỔNG QUAN VỀ DỊCH VỤ') }}
-                    </h2>
-                </div>
+    <section
+        v-if="hasContent"
+        id="why-choose-us-section"
+        class="bg-[#FAFAFA] pt-8 md:pt-16 lg:pt-0 pb-5"
+    >
+        <!-- Top Title Row -->
+        <div v-if="trust?.heading" class="app-container mb-6 md:mb-8">
+            <div class="flex items-center gap-[10px]">
+                <span class="w-3 h-3 rounded-[2px] bg-[#005EA4] shrink-0" aria-hidden="true" />
+                <h2 class="font-bold text-[16px] md:text-[18px] leading-[1.6] text-[#005EA4]">
+                    {{ trust.heading }}
+                </h2>
+            </div>
+        </div>
 
-                <!-- Right 3 Service Cards (Figma Node 2261:5541: 3 cards, 241x316px, rounded 12px, gap 24px) -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full lg:w-[772px] justify-items-center">
-                    <Link
-                        v-for="(service, index) in displayServices"
-                        :key="index"
-                        :href="getServiceUrl(service)"
-                        class="relative rounded-[12px] w-full max-w-[280px] md:max-w-[241px] h-[316px] p-[20px_24px] flex flex-col items-center justify-between text-center transition-transform duration-300 ease-out hover:-translate-y-2 hover:shadow-2xl group cursor-pointer block no-underline focus:outline-none focus:ring-2 focus:ring-[#2970FF]/50 border border-white/5"
-                        :class="getHoverShadow(service, index)"
-                        :style="{
-                            background: getServiceGradient(service, index),
-                        }"
+        <!-- Full-Bleed Trust Banner (Figma 595:15398 — 1440x578 Desktop) -->
+        <div
+            class="relative w-full overflow-hidden bg-[#00284B] min-h-[540px] lg:min-h-0 lg:aspect-[1440/578] flex items-center"
+        >
+            <!-- Background Photo -->
+            <picture v-if="bannerUrl" class="absolute inset-0 block w-full h-full pointer-events-none select-none">
+                <source
+                    v-if="bannerMobileUrl && bannerMobileUrl !== bannerUrl"
+                    media="(max-width: 767px)"
+                    :srcset="bannerMobileUrl"
+                />
+                <img
+                    :src="bannerUrl"
+                    :alt="trust?.banner?.alt || trust?.heading || ''"
+                    class="w-full h-full object-cover object-center"
+                    loading="lazy"
+                    decoding="async"
+                />
+            </picture>
+
+            <!-- Dark Contrast Overlay (Figma 595:15400) -->
+            <div class="absolute inset-0 bg-[#011229]/50 pointer-events-none" aria-hidden="true" />
+
+            <!-- Desktop 5-Node Wave Diagram (lg+, when <= 5 pillars) -->
+            <div
+                v-if="useWaveLayout"
+                class="hidden lg:flex items-center justify-center relative z-10 w-full"
+            >
+                <div class="relative w-[1152px] h-[260px] shrink-0 lg:scale-[0.84] xl:scale-100 origin-center">
+                    <!-- 4 Concave Metaball Bridges -->
+                    <div
+                        v-if="trustItems.length >= 2"
+                        class="absolute flex items-center justify-center left-[71.28px] top-[35.92px] w-[249.025px] h-[187.202px] pointer-events-none select-none"
+                        aria-hidden="true"
                     >
-                        <!-- 3D Glass Icon at Top (Figma: 120x120px) -->
-                        <div class="w-[120px] h-[120px] flex items-center justify-center flex-shrink-0">
+                        <div class="flex-none rotate-[-24.58deg]">
+                            <div class="relative w-[227.226px] h-[101.909px]">
+                                <img
+                                    src="/assets/svg/homepage/trust-bridge-1.svg"
+                                    alt=""
+                                    class="block w-full h-full max-w-none"
+                                    aria-hidden="true"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        v-if="trustItems.length >= 3"
+                        class="absolute flex items-center justify-center left-[327px] top-[35.92px] w-[249.025px] h-[187.202px] pointer-events-none select-none"
+                        aria-hidden="true"
+                    >
+                        <div class="flex-none -scale-y-100 rotate-[-155.42deg]">
+                            <div class="relative w-[227.226px] h-[101.909px]">
+                                <img
+                                    src="/assets/svg/homepage/trust-bridge-2.svg"
+                                    alt=""
+                                    class="block w-full h-full max-w-none"
+                                    aria-hidden="true"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        v-if="trustItems.length >= 4"
+                        class="absolute flex items-center justify-center left-[576px] top-[36px] w-[249.025px] h-[187.202px] pointer-events-none select-none"
+                        aria-hidden="true"
+                    >
+                        <div class="flex-none rotate-[-24.58deg]">
+                            <div class="relative w-[227.226px] h-[101.909px]">
+                                <img
+                                    src="/assets/svg/homepage/trust-bridge-3.svg"
+                                    alt=""
+                                    class="block w-full h-full max-w-none"
+                                    aria-hidden="true"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        v-if="trustItems.length >= 5"
+                        class="absolute flex items-center justify-center left-[832px] top-[35.92px] w-[249.025px] h-[187.202px] pointer-events-none select-none"
+                        aria-hidden="true"
+                    >
+                        <div class="flex-none -scale-y-100 rotate-[-155.42deg]">
+                            <div class="relative w-[227.226px] h-[101.909px]">
+                                <img
+                                    src="/assets/svg/homepage/trust-bridge-2.svg"
+                                    alt=""
+                                    class="block w-full h-full max-w-none"
+                                    aria-hidden="true"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Circular Icon Nodes + Text Boxes (all items <= 5) -->
+                    <template v-for="(item, idx) in trustItems" :key="item.id || idx">
+                        <!-- Circular Icon Node (140x140) -->
+                        <div
+                            class="absolute w-[140px] h-[140px]"
+                            :class="DESKTOP_NODE_POSITIONS[idx].circleClass"
+                        >
                             <img
-                                :src="getServiceImage(service)"
-                                :alt="service.title"
-                                class="w-full h-full object-contain drop-shadow-2xl group-hover:scale-110 transition-transform duration-500 ease-out select-none"
-                                loading="lazy"
-                                @error="handleImageError($event, service)"
+                                :src="DESKTOP_NODE_POSITIONS[idx].ring"
+                                alt=""
+                                class="absolute inset-0 w-[140px] h-[140px] max-w-none pointer-events-none"
+                                aria-hidden="true"
                             />
+                            <div
+                                class="absolute left-[10px] top-[10px] w-[120px] h-[120px] rounded-full bg-[#00284B] flex items-center justify-center overflow-hidden"
+                            >
+                                <img
+                                    v-if="item.icon?.url"
+                                    :src="item.icon.url"
+                                    :alt="item.icon.alt || item.title || ''"
+                                    width="60"
+                                    height="60"
+                                    class="w-[60px] h-[60px] object-contain"
+                                    loading="lazy"
+                                    decoding="async"
+                                />
+                            </div>
                         </div>
 
-                        <!-- Card Content: Title & Short Description (Figma Node 2261:5544: 193x138px) -->
-                        <div class="w-full max-w-[193px] flex flex-col justify-between items-center text-center gap-2.5">
-                            <h3 class="text-[24px] font-extrabold text-[#FAFAFA] group-hover:text-white transition-colors tracking-tight font-sans leading-[32px] text-center">
-                                {{ tt(service.title) }}
+                        <!-- Node Text Box -->
+                        <div
+                            class="absolute flex flex-col gap-[4px] leading-[1.6] break-words"
+                            :class="DESKTOP_NODE_POSITIONS[idx].textClass"
+                        >
+                            <h3 class="font-bold text-[24px] leading-[1.6] text-[#FAFAFA]">
+                                {{ item.title }}
                             </h3>
-                            <p class="text-[16px] text-[#D1E0FF] leading-[24px] font-normal text-center">
-                                {{ tt(service.description) }}
+                            <p v-if="item.description" class="font-medium text-[14px] leading-[1.6] text-[#F8FAFC]">
+                                {{ item.description }}
                             </p>
                         </div>
-                    </Link>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Mobile, Tablet, or Desktop Extended Grid (when > 5 CMS pillars — zero silent truncation) -->
+            <div
+                :class="useWaveLayout ? 'lg:hidden' : ''"
+                class="relative z-10 w-full py-10 md:py-12"
+            >
+                <div class="app-container">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                        <article
+                            v-for="(item, idx) in trustItems"
+                            :key="item.id || idx"
+                            class="flex items-start gap-4 rounded-[8px] bg-[#00284B]/65 backdrop-blur-[2px] border border-[#C9E0FF]/25 p-4"
+                        >
+                            <div
+                                class="w-14 h-14 rounded-full bg-[#00284B] border-4 border-[#C9E0FF] flex items-center justify-center shrink-0"
+                            >
+                                <img
+                                    v-if="item.icon?.url"
+                                    :src="item.icon.url"
+                                    :alt="item.icon.alt || item.title || ''"
+                                    width="28"
+                                    height="28"
+                                    class="w-7 h-7 object-contain"
+                                    loading="lazy"
+                                    decoding="async"
+                                />
+                            </div>
+                            <div class="min-w-0 flex-1 flex flex-col gap-1">
+                                <h3 class="font-bold text-[18px] leading-[1.4] text-[#FAFAFA]">
+                                    {{ item.title }}
+                                </h3>
+                                <p v-if="item.description" class="font-medium text-[14px] leading-[1.6] text-[#F8FAFC]">
+                                    {{ item.description }}
+                                </p>
+                            </div>
+                        </article>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 </template>
 
-<script>
-import { Link } from '@inertiajs/inertia-vue3'
+<script setup>
+import { computed } from 'vue'
 
-const tt = (s) => s
+const DESKTOP_NODE_POSITIONS = [
+    {
+        circleClass: 'left-0 top-[120px]',
+        ring: '/assets/svg/homepage/trust-ring-outer.svg',
+        textClass: 'left-0 top-[-12px] w-[197px] text-left',
+    },
+    {
+        circleClass: 'left-[253px] top-0',
+        ring: '/assets/svg/homepage/trust-ring-alt.svg',
+        textClass: 'left-[225px] top-[164px] w-[205px] text-center',
+    },
+    {
+        circleClass: 'left-[506px] top-[120px]',
+        ring: '/assets/svg/homepage/trust-ring-outer.svg',
+        textClass: 'left-[478px] top-[-34px] w-[197px] text-center',
+    },
+    {
+        circleClass: 'left-[759px] top-0',
+        ring: '/assets/svg/homepage/trust-ring-outer.svg',
+        textClass: 'left-[722px] top-[164px] w-[221px] text-center',
+    },
+    {
+        circleClass: 'left-[1012px] top-[120px]',
+        ring: '/assets/svg/homepage/trust-ring-outer.svg',
+        textClass: 'left-[955px] top-[-12px] w-[197px] text-right',
+    },
+]
 
-export default {
-    name: 'ServicesSection',
-    components: {
-        Link,
+const props = defineProps({
+    trust: {
+        type: Object,
+        default: () => null,
     },
-    props: {
-        heading: {
-            type: String,
-            default: tt('TỔNG QUAN VỀ DỊCH VỤ'),
-        },
-        services: {
-            type: Array,
-            default: () => [],
-        },
-    },
-    data() {
-        return {};
-    },
-    computed: {
-        displayServices() {
-            if (this.services && Array.isArray(this.services) && this.services.length > 0) {
-                return this.services;
-            }
-            return [];
-        },
-    },
-    methods: {
-        getServiceImage(service) {
-            // 1. If service.image is a valid string
-            if (typeof service?.image === 'string' && service.image.trim()) {
-                return service.image;
-            }
-            // 2. If service.image is an object with valid url
-            if (service?.image?.url && typeof service.image.url === 'string' && service.image.url.trim()) {
-                return service.image.url;
-            }
-            // 3. Robust fallback mapping based on slug and title
-            const slug = (service?.slug || '').toLowerCase();
-            const title = (service?.title || '').toLowerCase();
+})
 
-            if (slug.includes('gia-cong') || title.includes(this.tt('gia công')) || title.includes('machin') || slug.includes('print')) {
-                return '/assets/images/homepage/service-giacong-3d.png';
-            }
-            if (slug.includes('thiet-ke') || title.includes(this.tt('thiết kế')) || slug.includes('design') || title.includes('design')) {
-                return '/assets/images/homepage/service-thietke-3d.png';
-            }
-            if (slug.includes('custom') || title.includes('custom') || title.includes('làm đồ')) {
-                return '/assets/images/homepage/service-custom-3d.png';
-            }
-            return '/assets/images/homepage/service-giacong-3d.png';
-        },
-        handleImageError(event, service) {
-            const slug = (service?.slug || '').toLowerCase();
-            const title = (service?.title || '').toLowerCase();
-            if (slug.includes('gia-cong') || title.includes(this.tt('gia công')) || title.includes('machin') || slug.includes('print')) {
-                event.target.src = '/assets/images/homepage/service-giacong-3d.png';
-            } else if (slug.includes('custom') || title.includes('custom') || title.includes('làm đồ')) {
-                event.target.src = '/assets/images/homepage/service-custom-3d.png';
-            } else {
-                event.target.src = '/assets/images/homepage/service-thietke-3d.png';
-            }
-        },
-        getServiceGradient(service, index) {
-            // Thẻ giữa (index 1) dùng nền Slate Dark #30374F theo chuẩn giao diện
-            if (index === 1) {
-                return 'linear-gradient(180deg, #111322 20%, #30374F 100%)';
-            }
-            if (service && service.gradient) {
-                return service.gradient;
-            }
-            return 'linear-gradient(180deg, #111322 20%, #2970FF 94%)';
-        },
-        getHoverShadow(service, index) {
-            if (index === 1) {
-                return 'hover:shadow-[#30374F]/50';
-            }
-            if (service && service.hoverShadow) {
-                return service.hoverShadow;
-            }
-            return 'hover:shadow-[#2970FF]/30';
-        },
-        getServiceUrl(service) {
-            const slugMap = {
-                'Linh kiện Thang cuốn': 'phu-tung-thang-cuon',
-                'Escalator Spare Parts': 'phu-tung-thang-cuon',
-                [this.tt('Linh kiện Thang cuốn')]: 'phu-tung-thang-cuon',
-                'Xích tải & Băng tải': 'xich-tai-cong-nghiep',
-                'Industrial Chains & Conveyors': 'xich-tai-cong-nghiep',
-                [this.tt('Xích tải & Băng tải')]: 'xich-tai-cong-nghiep',
-                'Quạt công nghiệp BLDC': 'quat-cong-nghiep-bldc',
-                'BLDC Industrial Fans': 'quat-cong-nghiep-bldc',
-                [this.tt('Quạt công nghiệp BLDC')]: 'quat-cong-nghiep-bldc',
-                'Dịch vụ kỹ thuật công nghiệp': 'industrial-engineering',
-                'Industrial Engineering Services': 'industrial-engineering',
-                [this.tt('Dịch vụ kỹ thuật công nghiệp')]: 'industrial-engineering',
-            };
-            const title = service?.title || '';
-            const slug = service?.slug || slugMap[title] || (
-                title.toLowerCase().includes('quạt') || title.toLowerCase().includes('bldc') || title.toLowerCase().includes('fan') ? 'quat-cong-nghiep-bldc' :
-                title.toLowerCase().includes('xích') || title.toLowerCase().includes('băng tải') || title.toLowerCase().includes('chain') ? 'xich-tai-cong-nghiep' :
-                'industrial-engineering'
-            );
-            try {
-                if (typeof route === 'function') {
-                    return this.route ? this.route('services.show', { slug }) : route('services.show', { slug });
-                }
-            } catch (e) {
-                // Fallback if Ziggy helper is unavailable
-            }
-            const locale = this.$page?.props?.locale?.current || 'vi';
-            return locale === 'en' ? `/en/services/${slug}` : `/dich-vu/${slug}`;
-        },
-    },
-}
+const trustItems = computed(() => {
+    const list = props.trust?.items
+    if (!Array.isArray(list)) return []
+    return list.filter((item) => item && typeof item === 'object' && (item.title || item.description))
+})
+
+const useWaveLayout = computed(() => trustItems.value.length <= DESKTOP_NODE_POSITIONS.length)
+
+const bannerUrl = computed(() => {
+    const url = props.trust?.banner?.url
+    return typeof url === 'string' && url.trim().length > 0 ? url : ''
+})
+
+const bannerMobileUrl = computed(() => {
+    const url = props.trust?.banner?.mobile_url
+    return typeof url === 'string' && url.trim().length > 0 ? url : ''
+})
+
+const hasContent = computed(() => {
+    return Boolean(props.trust?.heading || trustItems.value.length > 0)
+})
 </script>

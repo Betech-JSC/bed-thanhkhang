@@ -1,119 +1,185 @@
 <template>
-    <footer id="footer-section" class="bg-[#111322] text-secondary pt-[60px] pb-6">
-        <div class="app-container space-y-11">
-            <!-- 4 Column Grid (Figma 2701:1522 / 2226:3250) -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-                <!-- Column 1: Brand Info (5 cols / 361px) (Figma I2701:1522;2226:3251) -->
-                <div class="lg:col-span-5 space-y-5">
-                    <Link :href="route('home')" class="inline-flex items-center gap-3 group">
-                        <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[#2970FF] to-[#00359E] text-white font-black text-base tracking-wider shadow-md">
-                            TK
-                        </span>
-                        <span class="flex flex-col leading-none">
-                            <span class="text-white font-extrabold text-lg tracking-wider uppercase group-hover:text-[#84ADFF] transition-colors">THÀNH KHANG</span>
-                            <span class="text-[#84ADFF] font-semibold text-xs tracking-[0.24em] uppercase mt-1">TECSAT</span>
-                        </span>
+    <footer id="footer-section" class="w-full bg-surface text-ink-body border-t border-gray-200 antialiased">
+        <!-- Footer Top Content (Figma 595:15535 — bg #FAFAFA, pt-10 pb-[60px]) -->
+        <div class="app-container-wide pt-10 pb-12 lg:pb-[60px]">
+            <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10 lg:gap-12 xl:gap-16">
+                <!-- Left Brand Column (lg:w-[360px], Logo 203x68) -->
+                <div class="w-full lg:w-[360px] shrink-0 space-y-4">
+                    <Link
+                        v-if="resolvedLogoUrl"
+                        :href="safeRoute('home', undefined, '/')"
+                        class="inline-block rounded-cta focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                        :aria-label="companyName || tt('Trang chủ')"
+                    >
+                        <img
+                            :src="resolvedLogoUrl"
+                            :alt="companyName || 'Thanh Khang Tecsat'"
+                            width="203"
+                            height="68"
+                            class="h-[52px] sm:h-[60px] lg:h-[68px] w-auto max-w-[240px] object-contain"
+                            @error="onLogoError"
+                        />
                     </Link>
-                    <div class="space-y-2 max-w-[361px]">
-                        <h3 class="text-xl lg:text-[22px] font-semibold text-[#F5F8FF] tracking-normal leading-[30px]">
-                            {{ tt('CÔNG TY TNHH DỊCH VỤ KỸ THUẬT THÀNH KHANG TECSAT') }}
+
+                    <div v-if="companyName || companyDescription" class="space-y-2.5">
+                        <h3 v-if="companyName" class="text-[18px] lg:text-[20px] font-bold leading-[1.4] text-dark">
+                            {{ companyName }}
                         </h3>
-                        <p class="text-sm sm:text-base text-[#D1E0FF] leading-[22px] font-medium">
-                            {{ tt(displayAddress) }}
+                        <p
+                            v-if="companyDescription"
+                            class="text-[14px] font-medium leading-[1.6] text-ink-body"
+                        >
+                            {{ companyDescription }}
                         </p>
                     </div>
                 </div>
 
-                <!-- Column 2: Trang chủ / Điều hướng (2 cols) (Figma I2701:1522;2226:3263) -->
-                <div class="lg:col-span-2 space-y-6 pt-1">
-                    <h4 class="text-base font-bold text-[#D1E0FF] tracking-normal font-sans leading-[22px]">
-                        {{ tt('Trang chủ') }}
-                    </h4>
-                    <ul class="space-y-4 text-sm">
-                        <li>
-                            <Link :href="route('products.index')" class="text-[#F5F8FF] hover:text-[#2970FF] transition-colors leading-[20px] font-medium">
-                                {{ tt('Sản phẩm') }}
-                            </Link>
-                        </li>
-                        <li>
-                            <Link :href="route('histories.index')" class="text-[#F5F8FF] hover:text-[#2970FF] transition-colors leading-[20px] font-medium">
-                                {{ tt('Giới thiệu') }}
-                            </Link>
-                        </li>
-                        <li>
-                            <Link :href="route('process.index')" class="text-[#F5F8FF] hover:text-[#2970FF] transition-colors leading-[20px] font-medium">
-                                {{ tt('Quy trình') }}
-                            </Link>
-                        </li>
-                    </ul>
-                </div>
+                <!-- Right 3 Columns (Trang chủ | Chính sách | Thông tin liên hệ) -->
+                <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 xl:gap-12">
+                    <!-- Column 1: Trang chủ -->
+                    <div class="lg:col-span-3 space-y-4">
+                        <h4 class="text-[16px] font-bold leading-[1.5] text-dark">
+                            {{ tt('Trang chủ') }}
+                        </h4>
+                        <ul class="space-y-3 text-[14px] font-medium leading-[1.6]">
+                            <li v-for="(item, index) in navLinks" :key="index">
+                                <Link
+                                    :href="item.href"
+                                    class="text-ink-body hover:text-primary transition-colors focus:outline-none focus-visible:underline"
+                                >
+                                    {{ item.title }}
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
 
-                <!-- Column 3: Dịch vụ (2 cols) (Figma I2701:1522;2226:3270) -->
-                <div class="lg:col-span-2 space-y-6 pt-1">
-                    <h4 class="text-base font-bold text-[#D1E0FF] tracking-normal font-sans leading-[22px]">
-                        {{ tt('Dịch vụ') }}
-                    </h4>
-                    <ul class="space-y-4 text-sm">
-                        <li>
-                            <Link :href="route('services.index')" class="text-[#F5F8FF] hover:text-[#2970FF] transition-colors leading-[20px] font-medium">
-                                {{ tt('Linh kiện Thang cuốn - Thang máy') }}
-                            </Link>
-                        </li>
-                        <li>
-                            <Link :href="route('services.index')" class="text-[#F5F8FF] hover:text-[#2970FF] transition-colors leading-[20px] font-medium">
-                                {{ tt('Xích tải & Băng tải Công nghiệp') }}
-                            </Link>
-                        </li>
-                        <li>
-                            <Link :href="route('services.index')" class="text-[#F5F8FF] hover:text-[#2970FF] transition-colors leading-[20px] font-medium">
-                                {{ tt('Quạt công nghiệp BLDC HVLS') }}
-                            </Link>
-                        </li>
-                    </ul>
-                </div>
+                    <!-- Column 2: Chính sách (100% Dynamic from $page.props.data.policies — zero fake fallback) -->
+                    <div v-if="policyLinks.length > 0" class="lg:col-span-4 space-y-4">
+                        <h4 class="text-[16px] font-bold leading-[1.5] text-dark">
+                            {{ tt('Chính sách') }}
+                        </h4>
+                        <ul class="space-y-3 text-[14px] font-medium leading-[1.6]">
+                            <li v-for="(item, index) in policyLinks" :key="index">
+                                <Link
+                                    :href="item.url"
+                                    class="text-ink-body hover:text-primary transition-colors focus:outline-none focus-visible:underline"
+                                >
+                                    {{ item.title }}
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
 
-                <!-- Column 4: Liên hệ tư vấn (3 cols) (Figma I2701:1522;2226:3276) -->
-                <div class="lg:col-span-3 space-y-6 pt-1">
-                    <h4 class="text-base font-bold text-[#D1E0FF] tracking-normal font-sans leading-[22px]">
-                        {{ tt('Liên hệ tư vấn') }}
-                    </h4>
-                    <div class="space-y-4 text-sm font-medium">
-                        <a
-                            :href="'tel:' + displayHotline.replace(/\s+/g, '')"
-                            class="group flex items-center gap-2 text-[#F5F8FF] hover:text-[#2970FF] transition-colors leading-[20px]"
-                        >
-                            <svg class="w-6 h-6 p-0.5 text-[#F5F8FF] group-hover:text-[#2970FF] transition-colors shrink-0" viewBox="0 0 48 48" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M28.0993 12C30.0528 12.3811 31.8481 13.3365 33.2555 14.7439C34.6628 16.1512 35.6182 17.9465 35.9993 19.9M28.0993 4C32.1579 4.45087 35.9425 6.26835 38.8318 9.15402C41.7211 12.0397 43.5433 15.822 43.9993 19.88M20.4533 27.7261C18.0501 25.323 16.1525 22.6057 14.7606 19.7065C14.6408 19.4571 14.581 19.3324 14.535 19.1746C14.3715 18.6139 14.4889 17.9254 14.8289 17.4505C14.9246 17.3169 15.0389 17.2026 15.2676 16.974C15.9668 16.2747 16.3164 15.9251 16.5449 15.5736C17.4069 14.2478 17.4069 12.5386 16.5449 11.2129C16.3164 10.8613 15.9668 10.5117 15.2676 9.81249L14.8778 9.42275C13.8149 8.35986 13.2835 7.82842 12.7127 7.53973C11.5776 6.96559 10.2371 6.96559 9.10195 7.53973C8.53119 7.82842 7.99975 8.35987 6.93686 9.42275L6.62159 9.73802C5.56235 10.7973 5.03273 11.3269 4.62823 12.047C4.17939 12.846 3.85666 14.0869 3.85939 15.0034C3.86185 15.8293 4.02206 16.3937 4.34247 17.5226C6.06441 23.5894 9.31336 29.3141 14.0893 34.0901C18.8653 38.8661 24.59 42.115 30.6568 43.8369C31.7857 44.1574 32.3501 44.3176 33.176 44.32C34.0925 44.3228 35.3335 44 36.1325 43.5512C36.8525 43.1467 37.3822 42.6171 38.4414 41.5578L38.7567 41.2426C39.8196 40.1797 40.351 39.6482 40.6397 39.0775C41.2138 37.9423 41.2138 36.6018 40.6397 35.4667C40.351 34.8959 39.8196 34.3645 38.7567 33.3016L38.3669 32.9119C37.6677 32.2127 37.3181 31.863 36.9666 31.6345C35.6408 30.7725 33.9316 30.7725 32.6058 31.6345C32.2543 31.863 31.9047 32.2127 31.2055 32.9119C30.9768 33.1405 30.8625 33.2548 30.7289 33.3505C30.254 33.6905 29.5655 33.8079 29.0048 33.6445C28.847 33.5985 28.7223 33.5386 28.473 33.4189C25.5737 32.0269 22.8564 30.1293 20.4533 27.7261Z" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span>{{ displayHotline }}</span>
-                        </a>
-                        <a
-                            :href="'mailto:' + displayEmail"
-                            class="group flex items-center gap-2 text-[#F5F8FF] hover:text-[#2970FF] transition-colors leading-[20px]"
-                        >
-                            <svg class="w-6 h-6 p-0.5 text-[#F5F8FF] group-hover:text-[#2970FF] transition-colors shrink-0" viewBox="0 0 48 48" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M42.9999 36L29.7143 24M18.2857 24L5.00007 36M4 14L20.3298 25.4309C21.6522 26.3565 22.3134 26.8193 23.0325 26.9986C23.6678 27.157 24.3322 27.157 24.9675 26.9986C25.6866 26.8193 26.3478 26.3565 27.6702 25.4309L44 14M13.6 40H34.4C37.7603 40 39.4405 40 40.7239 39.346C41.8529 38.7708 42.7708 37.8529 43.346 36.7239C44 35.4405 44 33.7603 44 30.4V17.6C44 14.2397 44 12.5595 43.346 11.2761C42.7708 10.1471 41.8529 9.2292 40.7239 8.65396C39.4405 8 37.7603 8 34.4 8H13.6C10.2397 8 8.55953 8 7.27606 8.65396C6.14708 9.2292 5.2292 10.1471 4.65396 11.2761C4 12.5595 4 14.2397 4 17.6V30.4C4 33.7603 4 35.4405 4.65396 36.7239C5.2292 37.8529 6.14708 38.7708 7.27606 39.346C8.55953 40 10.2397 40 13.6 40Z" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span>{{ displayEmail }}</span>
-                        </a>
+                    <!-- Column 3: Thông tin liên hệ (Bound to $page.props.configs || $page.props.global) -->
+                    <div class="sm:col-span-2 lg:col-span-5 space-y-4">
+                        <h4 class="text-[16px] font-bold leading-[1.5] text-dark">
+                            {{ tt('Thông tin liên hệ') }}
+                        </h4>
+                        <div class="space-y-3.5 text-[14px] font-medium leading-[1.6] text-ink-body">
+                            <a
+                                v-if="displayHotline"
+                                :href="'tel:' + cleanHotline"
+                                class="flex items-start gap-3 text-ink-body hover:text-primary transition-colors focus:outline-none focus-visible:underline"
+                            >
+                                <img
+                                    src="/assets/svg/icons/footer-phone.svg"
+                                    alt=""
+                                    aria-hidden="true"
+                                    width="24"
+                                    height="24"
+                                    class="w-6 h-6 shrink-0 mt-0.5"
+                                />
+                                <span class="break-words">{{ displayHotline }}</span>
+                            </a>
+
+                            <a
+                                v-if="displayEmail"
+                                :href="'mailto:' + displayEmail"
+                                class="flex items-start gap-3 text-ink-body hover:text-primary transition-colors focus:outline-none focus-visible:underline"
+                            >
+                                <img
+                                    src="/assets/svg/icons/footer-mail.svg"
+                                    alt=""
+                                    aria-hidden="true"
+                                    width="24"
+                                    height="24"
+                                    class="w-6 h-6 shrink-0 mt-0.5"
+                                />
+                                <span class="break-all sm:break-words">{{ displayEmail }}</span>
+                            </a>
+
+                            <div v-if="displayAddress || displayShowroomAddress" class="flex items-start gap-3">
+                                <img
+                                    src="/assets/svg/icons/footer-pin.svg"
+                                    alt=""
+                                    aria-hidden="true"
+                                    width="24"
+                                    height="24"
+                                    class="w-6 h-6 shrink-0 mt-0.5"
+                                />
+                                <div class="space-y-1.5 min-w-0">
+                                    <p v-if="displayAddress" class="break-words">
+                                        <span class="font-semibold text-dark">{{ tt('Trụ sở') }}:</span>
+                                        {{ displayAddress }}
+                                    </p>
+                                    <p v-if="displayShowroomAddress" class="break-words">
+                                        <span class="font-semibold text-dark">{{ tt('VPGD/Showroom') }}:</span>
+                                        {{ displayShowroomAddress }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Bottom Copyright Bar (Figma I2701:1522;2226:3288: border-t 1px solid #F5F8FF) -->
-            <div
-                class="pt-6 border-t border-[#F5F8FF] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs leading-[20px] text-[#D1E0FF]"
-            >
-                <p class="font-normal">© {{ tt('Bản quyền') }} {{ currentYear }} THÀNH KHANG TECSAT</p>
-                <div class="flex flex-wrap items-center justify-center sm:justify-end gap-6 sm:gap-10 font-medium">
-                    <Link
-                        v-for="(item, index) in policyLinks"
-                        :key="index"
-                        :href="item.url"
-                        class="text-[#D1E0FF] hover:text-white transition-colors"
+        <!-- Bottom Bar (Figma 595:15535 — bg #00284B, py-3) -->
+        <div class="w-full bg-dark py-3">
+            <div class="app-container-wide flex flex-col sm:flex-row items-center justify-between gap-3">
+                <p
+                    v-if="companyName"
+                    class="text-[12px] font-normal leading-[1.6] text-secondary text-center sm:text-left"
+                >
+                    &copy; Copyright {{ currentYear }} {{ companyName }}
+                </p>
+
+                <div v-if="facebookHref || linkedinHref" class="flex items-center gap-4">
+                    <a
+                        v-if="facebookHref"
+                        :href="facebookHref"
+                        :target="isExternalUrl(facebookHref) ? '_blank' : undefined"
+                        :rel="isExternalUrl(facebookHref) ? 'noopener noreferrer' : undefined"
+                        class="w-8 h-8 inline-flex items-center justify-center rounded-cta hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+                        aria-label="Facebook"
                     >
-                        {{ item.title }}
-                    </Link>
+                        <img
+                            src="/assets/svg/icons/footer-facebook.svg"
+                            alt=""
+                            aria-hidden="true"
+                            width="20"
+                            height="20"
+                            class="w-5 h-5 object-contain"
+                        />
+                    </a>
+
+                    <a
+                        v-if="linkedinHref"
+                        :href="linkedinHref"
+                        :target="isExternalUrl(linkedinHref) ? '_blank' : undefined"
+                        :rel="isExternalUrl(linkedinHref) ? 'noopener noreferrer' : undefined"
+                        class="w-8 h-8 inline-flex items-center justify-center rounded-cta hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+                        aria-label="LinkedIn"
+                    >
+                        <img
+                            src="/assets/svg/icons/footer-linkedin.svg"
+                            alt=""
+                            aria-hidden="true"
+                            width="20"
+                            height="20"
+                            class="w-5 h-5 object-contain"
+                        />
+                    </a>
                 </div>
             </div>
         </div>
@@ -122,6 +188,8 @@
 
 <script>
 import { Link } from '@inertiajs/inertia-vue3'
+
+const DEFAULT_LOGO_URL = '/assets/images/logo/logo-thanhkhang.png'
 
 export default {
     name: 'Footer',
@@ -145,54 +213,162 @@ export default {
     data() {
         return {
             currentYear: new Date().getFullYear(),
+            logoFallbackStage: 0,
         }
     },
     computed: {
         currentLocale() {
             return this.$inertia?.page?.props?.locale?.current || this.$page?.props?.locale?.current || 'vi'
         },
-        policyLinks() {
-            const isEn = this.currentLocale === 'en'
-            const policies = [
-                {
-                    title: this.tt('Chính sách bảo mật'),
-                    slug: isEn ? 'privacy-policy' : 'chinh-sach-bao-mat',
-                },
-                {
-                    title: this.tt('Chính sách bán hàng & Thanh toán'),
-                    slug: isEn ? 'sales-policy' : 'chinh-sach-ban-hang',
-                },
-                {
-                    title: this.tt('Chính sách bảo hành'),
-                    slug: isEn ? 'warranty-policy' : 'chinh-sach-bao-hanh',
-                },
-            ]
-            return policies.map((item) => ({
-                ...item,
-                url: this.getPolicyUrl(item.slug),
-            }))
+        siteConfig() {
+            return {
+                ...(this.$page?.props?.global || {}),
+                ...(this.$page?.props?.configs || {}),
+            }
         },
-        displayAddress() {
-            const raw = this.address || this.$page.props.global?.general_address || this.tt('Tầng 25, Tòa nhà TNR, 54A Nguyễn Chí Thanh, Phường Láng Thượng, Quận Đống Đa, Hà Nội')
-            return this.tt(raw)
+        cmsLogoUrl() {
+            const raw = this.siteConfig.general_logo || this.siteConfig.logo || ''
+            return typeof raw === 'string' ? raw.trim() : ''
+        },
+        resolvedLogoUrl() {
+            if (this.logoFallbackStage >= 2) return ''
+            if (this.logoFallbackStage === 0 && this.cmsLogoUrl) {
+                return this.cmsLogoUrl
+            }
+            return DEFAULT_LOGO_URL
+        },
+        companyName() {
+            return (
+                this.siteConfig.general_business_name ||
+                this.siteConfig.company_name ||
+                this.siteConfig.general_site_name ||
+                ''
+            )
+        },
+        companyDescription() {
+            return (
+                this.siteConfig.general_description ||
+                this.siteConfig.company_description ||
+                this.siteConfig.general_site_name ||
+                this.siteConfig.site_name ||
+                ''
+            )
         },
         displayHotline() {
-            return this.hotline || this.$page.props.global?.general_phone || '0967 732 665'
+            return this.hotline || this.siteConfig.hotline || this.siteConfig.general_phone || this.siteConfig.phone || ''
+        },
+        cleanHotline() {
+            return String(this.displayHotline || '').replace(/[^\d+]/g, '')
         },
         displayEmail() {
-            return this.email || this.$page.props.global?.general_email || 'info@dvktthanhkhang.vn'
+            return this.email || this.siteConfig.general_email || this.siteConfig.email || ''
+        },
+        displayAddress() {
+            return this.address || this.siteConfig.general_address || this.siteConfig.address || ''
+        },
+        displayShowroomAddress() {
+            const showroom = this.siteConfig.showroom_address || ''
+            if (!showroom || showroom === this.displayAddress) return ''
+            return showroom
+        },
+        facebookHref() {
+            return (
+                this.siteConfig.general_facebook ||
+                this.siteConfig.facebook ||
+                this.siteConfig.social_facebook ||
+                ''
+            )
+        },
+        linkedinHref() {
+            return (
+                this.siteConfig.general_linkedin ||
+                this.siteConfig.linkedin ||
+                this.siteConfig.social_linkedin ||
+                ''
+            )
+        },
+        navLinks() {
+            const isEn = this.currentLocale === 'en'
+
+            return [
+                {
+                    title: this.tt('Sản phẩm'),
+                    href: this.safeRoute('products.index', undefined, isEn ? '/en/products' : '/san-pham'),
+                },
+                {
+                    title: this.tt('Giới thiệu'),
+                    href: this.safeRoute('histories.index', undefined, isEn ? '/en/about-us' : '/gioi-thieu'),
+                },
+                {
+                    title: this.tt('Quy trình'),
+                    href: this.safeRoute('process.index', undefined, isEn ? '/en/process' : '/quy-trinh'),
+                },
+                {
+                    title: this.tt('Tin tức'),
+                    href: this.safeRoute('posts', undefined, isEn ? '/en/posts' : '/tin-tuc'),
+                },
+                {
+                    title: this.tt('Liên hệ'),
+                    href: this.safeRoute('contact', undefined, isEn ? '/en/contact' : '/lien-he'),
+                },
+            ]
+        },
+        policyLinks() {
+            const cmsPolicies = this.$page?.props?.data?.policies || []
+
+            if (!Array.isArray(cmsPolicies) || cmsPolicies.length === 0) {
+                return []
+            }
+
+            return cmsPolicies
+                .filter((item) => item && (item.title || item.name))
+                .map((item) => ({
+                    title: item.title || item.name,
+                    url: item.url || this.getPolicyUrl(item.seo_slug || item.slug),
+                }))
+        },
+    },
+    watch: {
+        cmsLogoUrl() {
+            this.logoFallbackStage = 0
         },
     },
     methods: {
-        getPolicyUrl(slug) {
-            if (typeof this.route === 'function') {
-                try {
-                    return this.route('policies.show', slug)
-                } catch (e) {
-                    // Fallback to localized URL
+        safeRoute(name, params, fallback = '/') {
+            if (typeof this.route === 'function' && typeof this.routes === 'function') {
+                const allRoutes = this.routes() || {}
+                const localizedName =
+                    typeof this.routeLocaleName === 'function' ? this.routeLocaleName(name) : name
+                if (allRoutes[localizedName] || allRoutes[name]) {
+                    try {
+                        const url = this.route(name, params)
+                        if (url && url !== '#') return url
+                    } catch (e) {
+                        // Fall through to fallback
+                    }
                 }
             }
-            return this.currentLocale === 'en' ? `/en/policies/${slug}` : `/chinh-sach/${slug}`
+            return fallback
+        },
+        getPolicyUrl(slug) {
+            if (slug) {
+                return this.safeRoute(
+                    'policies.show',
+                    slug,
+                    this.currentLocale === 'en' ? `/en/policies/${slug}` : `/chinh-sach/${slug}`
+                )
+            }
+            return this.safeRoute('policies.index', undefined, '/chinh-sach')
+        },
+        isExternalUrl(url) {
+            return typeof url === 'string' && /^https?:\/\//i.test(url)
+        },
+        onLogoError() {
+            if (this.logoFallbackStage === 0 && this.cmsLogoUrl && this.cmsLogoUrl !== DEFAULT_LOGO_URL) {
+                this.logoFallbackStage = 1
+            } else {
+                this.logoFallbackStage = 2
+            }
         },
     },
 }

@@ -209,6 +209,7 @@ class Contact extends BaseModel
         $formSourceLabel = match ($formSource) {
             'product_quote_modal' => 'Form báo giá sản phẩm',
             'home_consultation_modal' => 'Modal tư vấn trang chủ',
+            'home_contact_section' => 'Form báo giá trang chủ',
             default => 'Trang liên hệ',
         };
 

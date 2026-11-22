@@ -10,56 +10,56 @@
 }
 
 .btn.btn-primary {
-    // STYLE - Brand Primary Electric Blue 8px rounded with glow
-    @apply py-[10px] px-[18px] rounded-[8px] border border-primary bg-primary text-white button-1 font-bold font-sans uppercase transform transition-all duration-200;
+    // STYLE - Brand Primary Blue
+    @apply py-[10px] px-[18px] rounded-[4px] border border-primary bg-primary text-white button-1 font-bold font-sans uppercase transform transition-all duration-200;
 
     &:hover {
-        @apply bg-[#155EEF] border-[#155EEF] text-white;
-        box-shadow: 0 4px 14px rgba(0, 82, 255, 0.4);
+        @apply bg-primary-hover border-primary-hover text-white;
+        box-shadow: 0 4px 14px rgba(0, 94, 164, 0.35);
     }
 
     &:active {
-        @apply bg-[#0040C1] border-[#0040C1];
+        @apply bg-primary-active border-primary-active;
     }
 }
 
 .btn.btn-service {
     // STYLE
-    @apply py-[10px] px-[18px] rounded-[8px] border border-primary bg-primary text-white button-1 font-bold font-sans uppercase transform transition-all duration-200;
+    @apply py-[10px] px-[18px] rounded-[4px] border border-primary bg-primary text-white button-1 font-bold font-sans uppercase transform transition-all duration-200;
 
     &:hover {
-        @apply bg-[#155EEF] border-[#155EEF] text-white;
-        box-shadow: 0 4px 14px rgba(0, 82, 255, 0.4);
+        @apply bg-primary-hover border-primary-hover text-white;
+        box-shadow: 0 4px 14px rgba(0, 94, 164, 0.35);
     }
 }
 
 .btn.btn-footer {
     // STYLE
-    @apply py-[10px] px-[18px] rounded-[8px] border border-gray-700 bg-dark-surface text-white button-1 font-bold font-sans uppercase transform transition-all duration-200;
+    @apply py-[10px] px-[18px] rounded-[4px] border border-gray-700 bg-dark text-white button-1 font-bold font-sans uppercase transform transition-all duration-200;
 
     &:hover {
         @apply bg-primary border-primary text-white;
-        box-shadow: 0 4px 14px rgba(0, 82, 255, 0.4);
+        box-shadow: 0 4px 14px rgba(0, 94, 164, 0.35);
     }
 }
 
 .btn.btn-download {
     // STYLE
-    @apply py-[10px] px-[18px] rounded-[8px] border border-primary bg-primary text-white button-1 font-bold font-sans uppercase transform transition-all duration-200;
+    @apply py-[10px] px-[18px] rounded-[4px] border border-primary bg-primary text-white button-1 font-bold font-sans uppercase transform transition-all duration-200;
 
     &:hover {
-        @apply bg-[#155EEF] border-[#155EEF] text-white;
-        box-shadow: 0 4px 14px rgba(0, 82, 255, 0.4);
+        @apply bg-primary-hover border-primary-hover text-white;
+        box-shadow: 0 4px 14px rgba(0, 94, 164, 0.35);
     }
 }
 
 .btn.btn-download-resource {
     // STYLE
-    @apply py-[10px] px-[18px] rounded-[8px] border border-primary bg-primary text-white button-1 font-bold font-sans uppercase transform transition-all duration-200;
+    @apply py-[10px] px-[18px] rounded-[4px] border border-primary bg-primary text-white button-1 font-bold font-sans uppercase transform transition-all duration-200;
 
     &:hover {
-        @apply bg-[#155EEF] border-[#155EEF] text-white;
-        box-shadow: 0 4px 14px rgba(0, 82, 255, 0.4);
+        @apply bg-primary-hover border-primary-hover text-white;
+        box-shadow: 0 4px 14px rgba(0, 94, 164, 0.35);
     }
 }
 

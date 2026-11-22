@@ -1,169 +1,151 @@
 <template>
-    <section v-scroll-reveal id="brand-story-section" class="py-12 md:py-20 lg:py-24 overflow-hidden bg-dark-bg">
-        <div class="app-container">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
-                <!-- Left: Founder Geometric Graphic (Figma Node 2261:5697) -->
-                <div class="lg:col-span-6 flex justify-center">
-                    <div class="relative w-full max-w-[520px]">
-                        <img
-                            :src="founderImage"
-                            :alt="tt('Thành Khang Tecsat - Thiết bị & Giải pháp Kỹ thuật Công nghiệp')"
-                            class="w-full h-auto object-contain select-none drop-shadow-2xl"
-                            loading="lazy"
-                        />
-                    </div>
-                </div>
-
-                <!-- Right: Story Content & Metrics (Figma Node 2261:5710) -->
-                <div class="lg:col-span-6 space-y-6 sm:space-y-4">
-                    <!-- Text Header -->
-                    <div class="space-y-3">
-                        <span class="text-sm sm:text-base font-normal text-[#D1E0FF] tracking-wider uppercase">
-                            {{ tt(subtitle) }}
-                        </span>
-                        <h2
-                            class="text-2xl sm:text-3xl lg:text-[38px] lg:leading-[46px] font-bold text-[#FAFAFA] uppercase tracking-tight font-sans"
-                        >
-                            {{ tt(title) }}
-                        </h2>
-                    </div>
-
-                    <!-- Story Paragraphs -->
-                    <div class="space-y-4 text-sm sm:text-base text-[#D1E0FF] leading-[24px] font-normal">
-                        <p v-for="(paragraph, pIdx) in formattedParagraphs" :key="pIdx">
-                            {{ paragraph }}
+    <section
+        v-if="hasContent"
+        id="about-intro-section"
+        class="bg-surface py-8 md:py-16 lg:pt-20 lg:pb-10"
+    >
+        <div class="app-container flex flex-col gap-6 md:gap-8">
+            <!-- Row 1 (Top Row): Eyebrow + Lead Heading | 2 Square/Portrait Photos -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
+                <!-- Left Column -->
+                <div class="flex flex-col justify-between gap-4 lg:gap-6">
+                    <div v-if="about.eyebrow" class="flex items-center gap-[10px]">
+                        <span class="w-3 h-3 rounded-[2px] bg-[#005EA4] shrink-0" aria-hidden="true" />
+                        <p class="font-bold text-[16px] md:text-[18px] leading-[1.6] text-[#005EA4]">
+                            {{ about.eyebrow }}
                         </p>
                     </div>
 
-                    <!-- 3 Metrics Strip (Figma Node 2701:1398 / 2701:1419: 10+, 500+, 95% with 1px white divider, centered text, 8px gap) -->
-                    <div class="grid grid-cols-3 gap-2 sm:gap-3 lg:gap-3 pt-4 max-w-[543px]">
-                        <div
-                            v-for="(stat, sIdx) in displayStats"
-                            :key="sIdx"
-                            class="flex flex-col items-center justify-between text-center min-h-[98px] gap-2 px-1 sm:px-3 lg:px-5"
-                            :class="sIdx < storyStats.length - 1 ? 'border-r border-white/60 sm:border-r sm:border-white' : ''"
-                        >
-                            <div class="text-2xl sm:text-3xl lg:text-[38px] font-bold text-[#FAFAFA] tracking-tight font-sans leading-[46px] text-center w-full">
-                                {{ stat.number }}
-                            </div>
-                            <div class="text-xs sm:text-sm lg:text-base text-[#FAFAFA] font-normal leading-[22px] text-center w-full">
-                                <span v-html="stat.label"></span>
-                            </div>
-                        </div>
+                    <h2
+                        v-if="about.lead_highlight || about.lead_rest"
+                        class="font-bold text-[20px] md:text-[24px] leading-[1.55] md:leading-[1.6] tracking-normal"
+                    >
+                        <span v-if="about.lead_highlight" class="text-[#005EA4]">{{ about.lead_highlight }}</span>{{ about.lead_highlight && about.lead_rest ? ' ' : '' }}<span v-if="about.lead_rest" class="text-[#9AA4B2]">{{ about.lead_rest }}</span>
+                    </h2>
+                </div>
+
+                <!-- Right Column: 2 Top Images (268x272) -->
+                <div v-if="topImages.length > 0" class="grid grid-cols-2 gap-3 md:gap-6">
+                    <div
+                        v-for="(img, idx) in topImages"
+                        :key="img.id || idx"
+                        class="aspect-[268/272] w-full overflow-hidden rounded-[4px] bg-[#EEF2F6]"
+                    >
+                        <img
+                            :src="img.url"
+                            :alt="img.alt || about.eyebrow || ''"
+                            class="w-full h-full object-cover object-center"
+                            loading="lazy"
+                            decoding="async"
+                            width="268"
+                            height="272"
+                        />
                     </div>
+                </div>
+            </div>
+
+            <!-- Row 2 (Bottom Row): Wide Photo (560x363) | Body Paragraphs + Commitment Quote + CTA -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-end">
+                <!-- Left Column: Wide Photo -->
+                <div
+                    v-if="wideImage"
+                    class="aspect-[560/363] w-full overflow-hidden rounded-[4px] bg-[#EEF2F6]"
+                >
+                    <img
+                        :src="wideImage.url"
+                        :alt="wideImage.alt || about.eyebrow || ''"
+                        class="w-full h-full object-cover object-center"
+                        loading="lazy"
+                        decoding="async"
+                        width="560"
+                        height="363"
+                    />
+                </div>
+
+                <!-- Right Column: Narrative & CTA -->
+                <div class="flex flex-col items-start justify-end gap-6 md:gap-10">
+                    <div
+                        v-if="paragraphs.length > 0 || about.commitment_quote || about.commitment_sub"
+                        class="space-y-4 text-[15px] md:text-[16px] leading-[1.6] font-normal text-[#364152]"
+                    >
+                        <p v-for="(paragraph, idx) in paragraphs" :key="idx">
+                            {{ paragraph }}
+                        </p>
+
+                        <p
+                            v-if="about.commitment_quote || about.commitment_sub"
+                            class="font-bold text-[#005EA4]"
+                        >
+                            <template v-if="about.commitment_quote">{{ about.commitment_quote }}</template>
+                            <br v-if="about.commitment_quote && about.commitment_sub" />
+                            <template v-if="about.commitment_sub">{{ about.commitment_sub }}</template>
+                        </p>
+                    </div>
+
+                    <Link
+                        v-if="about.cta_text && about.cta_link && isInertiaLink(about.cta_link)"
+                        :href="about.cta_link"
+                        class="inline-flex items-center justify-center gap-2 px-6 py-[10px] rounded-[4px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[15px] md:text-[16px] leading-[1.6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
+                    >
+                        {{ about.cta_text }}
+                    </Link>
+                    <a
+                        v-else-if="about.cta_text && about.cta_link"
+                        :href="about.cta_link"
+                        class="inline-flex items-center justify-center gap-2 px-6 py-[10px] rounded-[4px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[15px] md:text-[16px] leading-[1.6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
+                    >
+                        {{ about.cta_text }}
+                    </a>
                 </div>
             </div>
         </div>
     </section>
 </template>
 
-<script>
-const tt = (s) => s;
+<script setup>
+import { computed } from 'vue'
+import { Link } from '@inertiajs/inertia-vue3'
 
-export default {
-    name: 'BrandStorySection',
-    computed: {
-        displayStats() {
-            const isEn = (this.$page?.props?.locale?.current === 'en') || (this.$i18n?.locale === 'en');
-            if (isEn) {
-                return [
-                    {
-                        number: '10+',
-                        label: 'Years of Experience<br />in the Industry',
-                    },
-                    {
-                        number: '500+',
-                        label: 'Models & Finished<br />Products',
-                    },
-                    {
-                        number: '95%',
-                        label: 'Satisfied Clients<br />& Partners',
-                    },
-                ];
-            }
-            return this.storyStats;
-        },
-        formattedParagraphs() {
-            const rawContent = this.description || this.story;
-            if (!rawContent) return [];
-
-            const splitTextIntoParagraphs = (val) => {
-                if (!val) return [];
-                if (typeof val === 'string') {
-                    return val
-                        .split(/(?:\s*\/n\s*|\s*\\n\s*|\r?\n|<br\s*\/?>)/gi)
-                        .map((p) => p.trim())
-                        .filter(Boolean);
-                }
-                return [val];
-            };
-
-            const translateFn = (txt) => {
-                if (typeof this.tt === 'function') {
-                    return this.tt(txt);
-                }
-                return txt;
-            };
-
-            let paragraphs = [];
-            if (Array.isArray(rawContent)) {
-                for (const item of rawContent) {
-                    paragraphs.push(...splitTextIntoParagraphs(item));
-                }
-            } else {
-                const translatedWhole = translateFn(rawContent);
-                if (translatedWhole && translatedWhole !== rawContent) {
-                    paragraphs = splitTextIntoParagraphs(translatedWhole);
-                } else {
-                    paragraphs = splitTextIntoParagraphs(rawContent);
-                }
-            }
-
-            return paragraphs.map((p) => translateFn(p));
-        },
+const props = defineProps({
+    about: {
+        type: Object,
+        default: null,
     },
-    props: {
-        founderImage: {
-            type: String,
-            default: '/assets/images/homepage/founder-composite.png',
-        },
-        subtitle: {
-            type: String,
-            default: tt('VỀ THÀNH KHANG TECSAT'),
-        },
-        title: {
-            type: String,
-            default: tt('ĐỒNG HÀNH CÙNG VẬN HÀNH CÔNG NGHIỆP BỀN BỈ'),
-        },
-        story: {
-            type: [String, Array],
-            default: () => [
-                'Thành Khang Tecsat là đơn vị chuyên cung cấp giải pháp và thiết bị công nghiệp B2B hàng đầu trong lĩnh vực linh kiện thang cuốn - thang máy, hệ thống băng tải và xích tải công nghiệp Universal Chains.',
-                'Bên cạnh vật tư truyền động chính xác, chúng tôi còn tiên phong triển khai giải pháp tiết kiệm điện với dòng quạt trần công nghiệp BLDC HVLS, cam kết chất lượng chuẩn OEM và dịch vụ kỹ thuật tận tâm.',
-            ],
-        },
-        description: {
-            type: [String, Array],
-            default: 'Thành Khang Tecsat là đơn vị chuyên cung cấp giải pháp và thiết bị công nghiệp B2B hàng đầu trong lĩnh vực linh kiện thang cuốn - thang máy, hệ thống băng tải và xích tải công nghiệp Universal Chains. /n Bên cạnh vật tư truyền động chính xác, chúng tôi còn tiên phong triển khai giải pháp tiết kiệm điện với dòng quạt trần công nghiệp BLDC HVLS, cam kết chất lượng chuẩn OEM và dịch vụ kỹ thuật tận tâm.',
-        },
-    },
-    data() {
-        return {
-            storyStats: [
-                {
-                    number: '10+',
-                    label: this.tt ? this.tt('Năm hoạt động<br />trong lĩnh vực') : 'Năm hoạt động<br />trong lĩnh vực',
-                },
-                {
-                    number: '500+',
-                    label: this.tt ? this.tt('Mẫu mã và sản<br />phẩm hoàn thiện') : 'Mẫu mã và sản<br />phẩm hoàn thiện',
-                },
-                {
-                    number: '95%',
-                    label: this.tt ? this.tt('Khách hàng hài<br />lòng với dịch vụ') : 'Khách hàng hài<br />lòng với dịch vụ',
-                },
-            ],
-        };
-    },
-};
+})
+
+const validImages = computed(() => {
+    const list = props.about?.images
+    if (!Array.isArray(list)) return []
+    return list.filter((img) => img && typeof img.url === 'string' && img.url.trim().length > 0)
+})
+
+const topImages = computed(() => validImages.value.slice(0, 2))
+
+const wideImage = computed(() => validImages.value[2] || null)
+
+const paragraphs = computed(() => {
+    const list = props.about?.paragraphs
+    if (!Array.isArray(list)) return []
+    return list
+        .map((item) => (typeof item === 'string' ? item.trim() : ''))
+        .filter((item) => item.length > 0)
+})
+
+const hasContent = computed(() => {
+    if (!props.about || typeof props.about !== 'object') return false
+    return Boolean(
+        props.about.eyebrow ||
+            props.about.lead_highlight ||
+            props.about.lead_rest ||
+            paragraphs.value.length > 0 ||
+            props.about.commitment_quote ||
+            props.about.commitment_sub ||
+            validImages.value.length > 0
+    )
+})
+
+function isInertiaLink(href) {
+    if (!href || typeof href !== 'string') return false
+    return href.startsWith('/') && !href.startsWith('//')
+}
 </script>

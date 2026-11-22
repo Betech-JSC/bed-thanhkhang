@@ -99,9 +99,12 @@ class ContactController extends Controller
 
             $phone = $data['Số điện thoại']
                 ?? $data['phone']
+                ?? $data['Phone']
                 ?? $contact['phone']
+                ?? $contact['Phone']
                 ?? $contact['Số điện thoại']
                 ?? $request->input('phone')
+                ?? $request->input('Phone')
                 ?? $request->input('Số điện thoại')
                 ?? null;
 
@@ -159,6 +162,61 @@ class ContactController extends Controller
 
             if (empty($contact['type'])) {
                 $contact['type'] = 'CONTACT_FORM';
+            }
+
+            // Safe, non-breaking server-side validation
+            $locale = function_exists('current_locale') ? current_locale() : app()->getLocale();
+            $isEn = $locale === 'en';
+            $formSource = $data['form_source']
+                ?? $contact['form_source']
+                ?? $request->input('form_source')
+                ?? null;
+            $isAdviseOnlyPhone = ($contact['type'] === 'ADVISE_FORM');
+            $trimmedName = trim((string) ($name ?? ''));
+            $trimmedPhone = trim((string) ($phone ?? ''));
+            $trimmedEmail = trim((string) ($email ?? ''));
+            $validationErrors = [];
+
+            if (!$isAdviseOnlyPhone && $trimmedName === '') {
+                $validationErrors['name'] = $isEn
+                    ? 'Please enter your full name.'
+                    : 'Vui lòng nhập họ và tên.';
+            }
+
+            if ($trimmedPhone === '') {
+                $validationErrors['phone'] = $isEn
+                    ? 'Please enter your phone number.'
+                    : 'Vui lòng nhập số điện thoại.';
+            } else {
+                $digitsOnly = preg_replace('/\D+/', '', $trimmedPhone);
+                if (strlen($digitsOnly) < 8 || strlen($digitsOnly) > 15) {
+                    $validationErrors['phone'] = $isEn
+                        ? 'Please enter a valid phone number (8-15 digits).'
+                        : 'Số điện thoại không hợp lệ (8-15 chữ số).';
+                }
+            }
+
+            if ($formSource === 'home_contact_section' && $trimmedEmail === '') {
+                $validationErrors['email'] = $isEn
+                    ? 'Please enter your email address.'
+                    : 'Vui lòng nhập địa chỉ email.';
+            } elseif ($trimmedEmail !== '' && !filter_var($trimmedEmail, FILTER_VALIDATE_EMAIL)) {
+                $validationErrors['email'] = $isEn
+                    ? 'Please enter a valid email address.'
+                    : 'Địa chỉ email không hợp lệ.';
+            }
+
+            if (!empty($validationErrors)) {
+                $firstMessage = reset($validationErrors);
+                if (!$request->header('X-Inertia') && ($request->wantsJson() || $request->ajax())) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $firstMessage,
+                        'errors' => $validationErrors,
+                    ], 422);
+                }
+
+                return redirect()->back()->withErrors($validationErrors)->withInput();
             }
 
             if (isset($contact['images']) && !empty($contact['images'])) {

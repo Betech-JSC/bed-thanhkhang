@@ -1,13 +1,118 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
-@import './customize/content.scss';
+
+:root {
+    /* Brand Color Palette (Figma Homepage Option 6 - 595:15360) */
+    --color-primary: #005EA4;
+    --color-primary-hover: #004D86;
+    --color-primary-active: #003967;
+    --color-primary-info: #0075E7;
+
+    --color-secondary: #C9E0FF;
+    --color-secondary-hover: #81BDFF;
+
+    --color-dark: #00284B;
+    --color-dark-slate: #364152;
+
+    --color-surface: #FAFAFA;
+    --color-surface-white: #FFFFFF;
+    --color-surface-50: #F8FAFC;
+    --color-surface-100: #EEF2F6;
+    --color-surface-gray-light: #F1F1F1;
+
+    --color-gray-600: #4B5565;
+    --color-gray-500: #697586;
+    --color-gray-400: #9AA4B2;
+    --color-gray-300: #D6D6D6;
+    --color-gray-200: #E3E8EF;
+    --color-btn-slide: rgba(57, 76, 107, 0.8);
+
+    /* Shadow */
+    --shadow-xs: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+
+    /* Typography */
+    --font-sans: 'Open Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --text-h1: 3rem;          /* 48px */
+    --text-h1-mobile: 2rem;   /* 32px */
+    --text-h2: 1.75rem;       /* 28px */
+    --text-h2-mobile: 1.5rem; /* 24px */
+    --text-h3: 1.5rem;        /* 24px */
+    --text-h3-mobile: 1.25rem;/* 20px */
+    --text-h4: 1.25rem;       /* 20px */
+    --text-h4-mobile: 1.125rem;/* 18px */
+
+    --text-body-xl: 1.25rem;  /* 20px */
+    --text-body-lg: 1.125rem; /* 18px */
+    --text-body-md: 1rem;     /* 16px */
+    --text-body-sm: 0.875rem; /* 14px */
+    --text-body-xs: 0.75rem;  /* 12px */
+
+    /* Layout & Gutters */
+    --container-max-width: 1280px;
+    --container-content-width: 1152px;
+    --gutter-mobile: 1rem;
+    --gutter-desktop: 2rem;
+}
 
 @layer base {
 
     html,
     body {
         overflow-x: clip;
+        font-family: var(--font-sans);
+        color: var(--color-gray-600);
+        background-color: var(--color-surface);
+        font-size: var(--text-body-md);
+        line-height: 1.6;
+    }
+
+    body,
+    button,
+    input,
+    select,
+    textarea {
+        font-family: var(--font-sans);
+    }
+
+    h1 {
+        font-size: var(--text-h1-mobile);
+        line-height: 1.3;
+        font-weight: 700;
+        @screen md {
+            font-size: var(--text-h1);
+            line-height: 1.4;
+        }
+    }
+
+    h2 {
+        font-size: var(--text-h2-mobile);
+        line-height: 1.4;
+        font-weight: 700;
+        @screen md {
+            font-size: var(--text-h2);
+            line-height: 1.5;
+        }
+    }
+
+    h3 {
+        font-size: var(--text-h3-mobile);
+        line-height: 1.5;
+        font-weight: 700;
+        @screen md {
+            font-size: var(--text-h3);
+            line-height: 1.6;
+        }
+    }
+
+    h4 {
+        font-size: var(--text-h4-mobile);
+        line-height: 1.5;
+        font-weight: 700;
+        @screen md {
+            font-size: var(--text-h4);
+            line-height: 1.6;
+        }
     }
 
     @font-face {
@@ -21,8 +126,31 @@
 }
 
 @layer components {
+    /* 1152px inner content width (+ 2x32px desktop gutter = 1216px) — Header / About / Categories / Blog / Contact */
     .app-container {
-        @apply w-full max-w-[1216px] mx-auto px-4 sm:px-6 lg:px-8;
+        @apply w-full max-w-[1216px] mx-auto px-4 md:px-8;
+    }
+
+    /* 1280px inner content width (+ 2x32px desktop gutter = 1344px) — Hero / Footer */
+    .app-container-wide {
+        @apply w-full max-w-[1344px] mx-auto px-4 md:px-8;
+    }
+
+    /* Responsive Figma Heading Scale Utilities */
+    .heading-h1 {
+        @apply font-sans font-bold text-h1-mobile md:text-h1;
+    }
+
+    .heading-h2 {
+        @apply font-sans font-bold text-h2-mobile md:text-h2;
+    }
+
+    .heading-h3 {
+        @apply font-sans font-bold text-h3-mobile md:text-h3;
+    }
+
+    .heading-h4 {
+        @apply font-sans font-bold text-h4-mobile md:text-h4;
     }
 }
 
@@ -33,11 +161,11 @@
 
 // @import '@core/scss/base';
 @import 'customize/tokens-products-catalog.scss';
+@import 'customize/type.scss';
 @import 'customize/button.scss';
 @import 'banner.scss';
 @import 'customize/card-blog.scss';
 @import 'customize/content.scss';
-@import 'customize/type.scss';
 
 /* width */
 ::-webkit-scrollbar {
@@ -47,18 +175,18 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: #080C14;
+    background: var(--color-surface-100);
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #0052FF;
+    background: var(--color-primary);
     border-radius: 4px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: #155EEF;
+    background: var(--color-primary-hover);
 }
 
 /* Hide scrollbar utility */

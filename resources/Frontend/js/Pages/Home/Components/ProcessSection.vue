@@ -1,234 +1,147 @@
 <template>
     <section
-        v-scroll-reveal
+        v-if="hasContent"
         id="process-section"
-        class="relative w-full overflow-hidden text-white bg-dark-bg"
-        style="background: linear-gradient(0deg, #111322 20%, #2970FF 94%);"
+        class="relative w-full bg-[#FAFAFA] overflow-x-clip"
     >
-        <!-- Centered Main Canvas matching Figma Node 2701:1425 (1440px x 892px) -->
+        <!-- Right-Side Decorative Wave Background Layer (Desktop lg+, Figma 595:15444) -->
         <div
-            class="relative z-10 w-full max-w-[1440px] mx-auto min-h-[600px] lg:h-[892px] flex flex-col lg:flex-row items-stretch"
+            class="hidden lg:block pointer-events-none select-none absolute inset-y-0 right-0 w-full max-w-[1440px]"
+            aria-hidden="true"
+            style="mask-image: url('/assets/svg/homepage/process-wave-mask.svg'); -webkit-mask-image: url('/assets/svg/homepage/process-wave-mask.svg'); mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat; mask-size: 1440px 954px; -webkit-mask-size: 1440px 954px; mask-position: right top; -webkit-mask-position: right top;"
         >
-            <!-- Left Column: 3D Wave Graphic + 05 Hero Headline (Figma Node 2701:1426 & 2701:1429: width 639px) -->
+            <img
+                src="/assets/images/homepage/process-wave-bg.png"
+                alt=""
+                class="w-full h-full object-cover object-right"
+                loading="lazy"
+                decoding="async"
+            />
+        </div>
+
+        <!-- Main 2-Column Layout Container (1440x954 Desktop) -->
+        <div class="relative z-10 w-full flex flex-col lg:flex-row lg:items-stretch lg:min-h-[954px]">
+            <!-- Left Column: Full-Bleed Sprocket Photo Banner + Intro Copy -->
             <div
-                class="w-full lg:w-[639px] shrink-0 relative min-h-[460px] sm:min-h-[520px] lg:h-full flex flex-col justify-center px-6 sm:px-12 lg:pl-[144px] lg:pr-10 py-12"
+                class="relative w-full lg:w-[51.32%] lg:shrink-0 bg-[#00284B] lg:rounded-tr-[8px] lg:rounded-br-[8px] aspect-[375/340] sm:aspect-[16/10] lg:aspect-auto lg:min-h-[954px]"
             >
-                <!-- Background 3D Wave Graphic flush with left viewport edge up to divider -->
-                <div
-                    class="absolute inset-y-0 left-0 right-0 overflow-hidden pointer-events-none select-none"
-                    style="left: min(0px, calc((1440px - 100vw) / 2));"
-                >
-                    <img
-                        :src="processImage"
-                        alt="Thành Khang Tecsat Industrial Process"
-                        class="w-full h-full object-cover object-left-center select-none pointer-events-none"
-                        loading="lazy"
+                <!-- Clipped Background Image & Scrim Layer (preserves lg:sticky on foreground text) -->
+                <div class="absolute inset-0 overflow-hidden lg:rounded-tr-[8px] lg:rounded-br-[8px] pointer-events-none select-none">
+                    <picture v-if="bannerUrl" class="block w-full h-full">
+                        <source
+                            v-if="bannerMobileUrl && bannerMobileUrl !== bannerUrl"
+                            media="(max-width: 767px)"
+                            :srcset="bannerMobileUrl"
+                        />
+                        <img
+                            :src="bannerUrl"
+                            :alt="process?.banner?.alt || process?.heading || ''"
+                            class="w-full h-full object-cover object-center"
+                            loading="lazy"
+                            decoding="async"
+                        />
+                    </picture>
+
+                    <div
+                        class="absolute inset-0 bg-gradient-to-b from-[#001427]/55 via-[#001427]/20 to-transparent lg:from-[#001427]/30 lg:via-transparent"
+                        aria-hidden="true"
                     />
                 </div>
 
-                <!-- Giant 05 & Headline directly overlaid on 3D Graphic (Figma Node 2701:1429) -->
-                <div class="relative z-10 max-w-[435px]">
-                    <div
-                        class="process-giant-number text-[72px] sm:text-[96px] lg:text-[120px] font-bold text-[#FAFAFA] leading-none tracking-tight font-sans select-none drop-shadow-md"
-                    >
-                        {{ stepCount }}
+                <!-- Intro Text Container aligned to .app-container left margin -->
+                <div
+                    class="relative z-10 w-full h-full flex flex-col justify-start px-4 py-8 md:px-8 md:py-12 lg:py-[80px] lg:pl-[max(2rem,calc((100vw-1152px)/2))] lg:pr-10"
+                >
+                    <div class="w-full max-w-[488px] lg:sticky lg:top-[104px] flex flex-col gap-3 lg:gap-0">
+                        <h2
+                            v-if="process?.heading"
+                            class="font-bold text-[22px] sm:text-[26px] lg:text-[28px] leading-[1.45] lg:leading-[1.6] lg:min-h-[100px] text-[#FAFAFA] uppercase break-words"
+                        >
+                            {{ process.heading }}
+                        </h2>
+                        <p
+                            v-if="process?.description"
+                            class="font-medium text-[14px] md:text-[16px] leading-[1.6] text-[#E3E8EF] break-words"
+                        >
+                            {{ process.description }}
+                        </p>
                     </div>
-
-                    <h2
-                        class="text-2xl sm:text-3xl lg:text-[38px] font-bold text-[#FAFAFA] leading-tight lg:leading-[53px] font-sans uppercase mt-4 sm:mt-6 lg:mt-8 tracking-normal drop-shadow-sm"
-                    >
-                        <template v-if="titleParts">
-                            <span>{{ titleParts.prefix }}</span> <span class="inline-block whitespace-nowrap">{{ titleParts.brand }}</span>
-                        </template>
-                        <template v-else>
-                            {{ tt(title) }}
-                        </template>
-                    </h2>
                 </div>
             </div>
 
-            <!-- Right Column: Description & 5-Step Process (Figma Node 2701:1432 Frame 243: width 657px, height 652px with solid left stroke #B5B5B5) -->
+            <!-- Right Column: 4 Stacked Process Step Cards -->
             <div
-                class="w-full lg:w-[801px] shrink-0 lg:h-full relative flex flex-col justify-center px-6 sm:px-10 lg:px-0 py-10 lg:py-0"
+                class="w-full lg:flex-1 flex flex-col justify-center lg:justify-start px-4 py-8 md:px-8 md:py-12 lg:pt-[80px] lg:pb-[90px] lg:pl-[64px] lg:pr-[max(2rem,calc((100vw-1152px)/2))]"
             >
-                <div
-                    class="relative w-full max-w-[616px] lg:max-w-none lg:w-[657px] lg:h-[652px] flex flex-col justify-between lg:border-l lg:border-solid lg:border-[#B5B5B5] lg:pl-[41px]"
+                <ol
+                    v-if="displaySteps.length > 0"
+                    class="w-full flex flex-col gap-4 md:gap-6 lg:gap-[40px]"
                 >
-                    <p
-                        class="text-sm sm:text-base text-[#FAFAFA] leading-relaxed lg:leading-[24px] font-normal max-w-[616px]"
+                    <li
+                        v-for="(step, idx) in displaySteps"
+                        :key="step.id || idx"
+                        :class="[
+                            'w-full rounded-[12px] shadow-[2px_2px_3px_rgba(0,0,0,0.25)] px-5 py-5 md:pl-[40px] md:pr-[24px] md:py-[24px] min-h-[140px] md:min-h-[166px] flex items-start gap-5 md:gap-[32px] text-[#C9E0FF]',
+                            STEP_BG_CLASSES[Math.min(idx, STEP_BG_CLASSES.length - 1)],
+                        ]"
                     >
-                        {{ tt(description) }}
-                    </p>
-
-                    <!-- 5 Steps Minimalist Rows (Figma Node 2701:1434 Frame 245) -->
-                    <div v-if="displaySteps.length > 0" class="mt-8 sm:mt-10 lg:mt-0 max-w-[616px] w-full">
-                        <div
-                            v-for="(step, idx) in displaySteps"
-                            :key="step.number || idx"
-                            class="border-t border-[#B5B5B5] transition-colors duration-200 group hover:bg-white/[0.05]"
+                        <span
+                            class="font-bold text-[44px] sm:text-[56px] lg:text-[64px] leading-[1.1] lg:leading-[1.6] text-[#C9E0FF] shrink-0 w-[36px] md:w-[42px] text-center select-none"
                         >
-                            <button
-                                type="button"
-                                @click="toggleStep(idx)"
-                                class="w-full min-h-[64px] py-3.5 flex items-center gap-5 sm:gap-6 text-left cursor-pointer select-none focus:outline-none"
+                            {{ step.number || String(idx + 1) }}
+                        </span>
+                        <div class="flex-1 min-w-0 flex flex-col gap-1 justify-center">
+                            <h3 class="font-bold text-[18px] md:text-[20px] leading-[1.5] md:leading-[1.6] text-[#C9E0FF] break-words">
+                                {{ step.title }}
+                            </h3>
+                            <p
+                                v-if="step.description"
+                                class="font-normal text-[14px] md:text-[16px] leading-[1.6] text-[#C9E0FF] break-words"
                             >
-                                <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center">
-                                    <svg
-                                        class="w-7 h-7 sm:w-8 sm:h-8 text-[#FCFCFC] transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-1"
-                                        :class="{ 'rotate-90': activeStep === idx }"
-                                        viewBox="0 0 80 80"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            d="M23.3334 56.6663L56.6667 23.333M56.6667 56.6663V23.333H23.3334"
-                                            stroke="currentColor"
-                                            stroke-width="4"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                        />
-                                    </svg>
-                                </div>
-                                <span
-                                    class="text-lg sm:text-xl lg:text-[24px] font-medium text-[#FAFAFA] group-hover:text-white transition-colors leading-[34px] flex-1"
-                                >
-                                    {{ tt(step.title) }}
-                                </span>
-                            </button>
-                            <Transition
-                                enter-active-class="transition-all duration-200 ease-out"
-                                enter-from-class="opacity-0 -translate-y-1"
-                                enter-to-class="opacity-100 translate-y-0"
-                                leave-active-class="transition-all duration-150 ease-in"
-                                leave-from-class="opacity-100 translate-y-0"
-                                leave-to-class="opacity-0 -translate-y-1"
-                            >
-                                <div
-                                    v-if="step.detail && activeStep === idx"
-                                    class="pb-4 pl-14 sm:pl-16 pr-4 text-xs sm:text-sm text-[#D1E0FF] leading-relaxed"
-                                >
-                                    {{ tt(step.detail) }}
-                                </div>
-                            </Transition>
+                                {{ step.description }}
+                            </p>
                         </div>
-                    </div>
-                </div>
+                    </li>
+                </ol>
             </div>
         </div>
     </section>
 </template>
 
-<script>
-const tt = (s) => s;
+<script setup>
+import { computed } from 'vue'
 
-export default {
-    name: 'ProcessSection',
-    props: {
-        processImage: {
-            type: String,
-            default: '/assets/images/homepage/process-banner-figma.png',
-        },
-        stepCount: {
-            type: String,
-            default: '05',
-        },
-        title: {
-            type: String,
-            default: 'BƯỚC TRONG QUY TRÌNH CUNG ỨNG CHUYÊN NGHIỆP & MINH BẠCH TẠI THÀNH KHANG TECSAT',
-        },
-        description: {
-            type: String,
-            default:
-                'Đối tác gửi mã linh kiện, thông số bước xích hoặc bản vẽ kỹ thuật, đội ngũ kỹ sư Thành Khang Tecsat sẽ đối chiếu chuẩn OEM, tư vấn vật liệu và giải pháp vận hành tối ưu cùng chứng chỉ CO/CQ đầy đủ.',
-        },
-        steps: {
-            type: Array,
-            default: () => [],
-        },
-        customSteps: {
-            type: Array,
-            default: null,
-        },
-    },
-    data() {
-        return {
-            activeStep: null,
-            defaultSteps: [
-                {
-                    number: '01',
-                    title: 'Tiếp nhận & Khảo sát',
-                    detail: 'Tiếp nhận thông số kỹ thuật, mã linh kiện OEM, bản vẽ CAD (.STEP, .DWG) hoặc khảo sát thực tế hệ thống thang cuốn, băng tải, nhà xưởng.',
-                },
-                {
-                    number: '02',
-                    title: 'Đối chiếu & Báo giá',
-                    detail: 'Kỹ sư đối chiếu tiêu chuẩn Universal Chains / EN 115 / DIN, đề xuất vật liệu (40Cr, Inox 304/316, POM, EPDM) và gửi báo giá chi tiết.',
-                },
-                {
-                    number: '03',
-                    title: 'Chuẩn bị & Kiểm định',
-                    detail: 'Xuất kho linh kiện chính hãng hoặc gia công OEM chuẩn dung sai, kiểm định cơ tính và hoàn thiện hồ sơ chứng từ CO/CQ.',
-                },
-                {
-                    number: '04',
-                    title: 'Đóng gói & Bàn giao',
-                    detail: 'Đóng gói kiện gỗ/pallet chuẩn công nghiệp chống ẩm va đập và vận chuyển an toàn đến tận công trình, nhà máy trên toàn quốc.',
-                },
-                {
-                    number: '05',
-                    title: 'Lắp đặt & Bảo hành',
-                    detail: 'Hỗ trợ kỹ thuật nghiệm thu lắp đặt, chạy thử ổn định và áp dụng chính sách bảo hành chính hãng dài hạn.',
-                },
-            ],
-        };
-    },
-    computed: {
-        displaySteps() {
-            const rawList =
-                Array.isArray(this.steps) && this.steps.length > 0
-                    ? this.steps
-                    : Array.isArray(this.customSteps) && this.customSteps.length > 0
-                    ? this.customSteps
-                    : this.defaultSteps;
+const STEP_BG_CLASSES = [
+    'bg-[#005EA4]',
+    'bg-[#004D86]',
+    'bg-[#003967]',
+    'bg-[#00284B]',
+]
 
-            const homeTitleMap = {
-                'liên hệ': 'Tiếp nhận & Khảo sát',
-                'báo giá': 'Đối chiếu & Báo giá',
-                'chuẩn bị': 'Chuẩn bị & Kiểm định',
-                'đóng gói': 'Đóng gói & Bàn giao',
-                'gửi hàng': 'Lắp đặt & Bảo hành',
-            };
-
-            return rawList.map((item, idx) => {
-                const fallback = this.defaultSteps[idx] || {};
-                const rawTitle = String(item.title || item.name || fallback.title || '').trim();
-                const cleanTitle = rawTitle.replace(/^(?:(?:Bước|Step)\s*\d+\s*[:.\-–]?\s*|\d+\s*[.:\-–]\s*)+/i, '').trim();
-                const mappedTitle = homeTitleMap[cleanTitle.toLowerCase()] || cleanTitle;
-                return {
-                    number: item.number || String(idx + 1).padStart(2, '0'),
-                    title: mappedTitle || rawTitle || fallback.title || '',
-                    detail: item.detail || item.description || item.content || fallback.detail || '',
-                };
-            });
-        },
-        titleParts() {
-            const rawTitle = typeof this.tt === 'function' ? this.tt(this.title) : this.title;
-            if (!rawTitle) return null;
-
-            const match = rawTitle.match(/^(.*?)[\s\u00A0]+(HH[\s\u00A0]+MAKER)$/i);
-            if (match) {
-                return {
-                    prefix: match[1].trim(),
-                    brand: match[2].trim(),
-                };
-            }
-            return null;
-        },
+const props = defineProps({
+    process: {
+        type: Object,
+        default: () => null,
     },
-    methods: {
-        toggleStep(idx) {
-            this.activeStep = this.activeStep === idx ? null : idx;
-        },
-    },
-};
+})
+
+const displaySteps = computed(() => {
+    const list = props.process?.steps
+    if (!Array.isArray(list)) return []
+    return list.filter((step) => step && typeof step === 'object' && (step.title || step.description))
+})
+
+const bannerUrl = computed(() => {
+    const url = props.process?.banner?.url
+    return typeof url === 'string' && url.trim().length > 0 ? url : ''
+})
+
+const bannerMobileUrl = computed(() => {
+    const url = props.process?.banner?.mobile_url
+    return typeof url === 'string' && url.trim().length > 0 ? url : ''
+})
+
+const hasContent = computed(() => {
+    return Boolean(props.process?.heading || props.process?.description || displaySteps.value.length > 0)
+})
 </script>

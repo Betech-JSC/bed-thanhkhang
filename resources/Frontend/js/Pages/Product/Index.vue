@@ -550,9 +550,15 @@ export default {
         },
         activeSubcategoryLabel() {
             if (!this.filters.subcategory) return null;
+            const targetSub = String(this.filters.subcategory).toLowerCase();
             for (const cat of this.displayCategories) {
-                if (cat.subcategories) {
-                    const found = cat.subcategories.find(s => s.id === this.filters.subcategory);
+                if (Array.isArray(cat.subcategories)) {
+                    const found = cat.subcategories.find(
+                        (s) =>
+                            String(s.id || '').toLowerCase() === targetSub ||
+                            String(s.slug || '').toLowerCase() === targetSub ||
+                            (s.rawId !== undefined && String(s.rawId) === String(this.filters.subcategory))
+                    );
                     if (found) return found.name;
                 }
             }
@@ -785,33 +791,58 @@ export default {
         },
         initSearchFromUrl() {
             let categoryParam = null;
+            let subcategoryParam = null;
             let searchVal = null;
 
             if (typeof window !== 'undefined' && window.location?.search) {
                 const params = new URLSearchParams(window.location.search);
                 categoryParam = params.get('category');
+                subcategoryParam = params.get('subcategory');
                 searchVal = params.get('search') || params.get('keyword') || params.get('q');
             }
 
-            if (!categoryParam && this.$page?.url && this.$page.url.includes('?')) {
+            if ((!categoryParam || !subcategoryParam || !searchVal) && this.$page?.url && this.$page.url.includes('?')) {
                 const urlParams = new URLSearchParams(this.$page.url.split('?')[1]);
-                categoryParam = urlParams.get('category');
+                if (!categoryParam) {
+                    categoryParam = urlParams.get('category');
+                }
+                if (!subcategoryParam) {
+                    subcategoryParam = urlParams.get('subcategory');
+                }
                 if (!searchVal) {
                     searchVal = urlParams.get('search') || urlParams.get('keyword') || urlParams.get('q');
                 }
             }
 
             if (!categoryParam) {
-                categoryParam = this.$page?.props?.ziggy?.query?.category || this.$attrs?.route?.params?.category;
+                categoryParam =
+                    this.$page?.props?.route?.query?.category ||
+                    this.$page?.props?.ziggy?.query?.category ||
+                    this.$attrs?.route?.params?.category;
+            }
+            if (!subcategoryParam) {
+                subcategoryParam =
+                    this.$page?.props?.route?.query?.subcategory ||
+                    this.$page?.props?.ziggy?.query?.subcategory ||
+                    this.$attrs?.route?.params?.subcategory;
             }
             if (!searchVal) {
-                searchVal = this.$page?.props?.ziggy?.query?.search || this.$attrs?.route?.params?.search;
+                searchVal =
+                    this.$page?.props?.route?.query?.search ||
+                    this.$page?.props?.ziggy?.query?.search ||
+                    this.$attrs?.route?.params?.search;
             }
 
             if (categoryParam && typeof categoryParam === 'string' && categoryParam.trim()) {
                 this.filters.category = categoryParam.trim();
             } else if (typeof window !== 'undefined' && (!window.location.search || window.location.search === '')) {
                 this.filters.category = 'all';
+            }
+
+            if (subcategoryParam && typeof subcategoryParam === 'string' && subcategoryParam.trim()) {
+                this.filters.subcategory = subcategoryParam.trim();
+            } else {
+                this.filters.subcategory = null;
             }
 
             if (searchVal && typeof searchVal === 'string' && searchVal.trim()) {

@@ -36,7 +36,7 @@
             'quy-trinh' => ['vi' => 'quy-trinh', 'en' => 'en/process'],
         ];
 
-        $appUrl = rtrim(config('app.url') ?: 'https://dvktthanhkhang.vn', '/');
+        $appUrl = rtrim((string) (config('app.url') ?: request()->getSchemeAndHttpHost()), '/');
         
         $viPath = null;
         $enPath = null;
@@ -92,11 +92,16 @@
     <link rel="alternate" hreflang="x-default" href="{{ $hreflangDefault }}" />
 
     @php
+        $currentLocale = app()->getLocale() ?: (function_exists('current_locale') ? current_locale() : config('app.locale', 'vi'));
         try {
             $global = \Illuminate\Support\Facades\Schema::hasTable('settings')
                 ? cache_response(
-                    'global_settings',
-                    function () {
+                    'global_settings_' . $currentLocale,
+                    function () use ($currentLocale) {
+                        if (method_exists(\App\Models\Config::class, 'getGeneralSettings')) {
+                            return \App\Models\Config::getGeneralSettings($currentLocale);
+                        }
+
                         return settings()
                             ->group('general')
                             ->all();
@@ -104,6 +109,11 @@
                     'settings',
                 )
                 : [];
+            if (method_exists(\App\Models\Config::class, 'normalizeGeneralSettings')) {
+                $global = \App\Models\Config::normalizeGeneralSettings(is_array($global) ? $global : [], $currentLocale);
+            } else {
+                $global = is_array($global) ? $global : [];
+            }
         } catch (\Throwable $e) {
             $global = [];
         }
@@ -118,56 +128,51 @@
     @php
         $url = url()->current();
 
-        $businessName = $global['general_business_name'] ?? 'Thành Khang Tecsat';
+        $businessName = trim((string) ($global['general_business_name'] ?? $global['company_name'] ?? ''));
         $separator = $global['seo_title_separator'] ?? '|';
 
-        $site = $global['seo_site_name'] ?? 'Thành Khang Tecsat';
-        $canonical = $seo['seo_canonical'] ?? $url;
+        $site = trim((string) ($global['seo_site_name'] ?? $global['general_site_name'] ?? $businessName));
+        $canonical = $seo['seo_canonical'] ?? $seo['canonical'] ?? $url;
 
         // Kiểm tra trang lỗi
         $isError = (isset($status) && in_array($status, [404, 500, 503, 403])) || request()->is('error*');
 
         if ($isError) {
-            $title = ($status ?? 404) . ' - Không tìm thấy trang | Thành Khang Tecsat';
-            $description = 'Địa chỉ truy cập không tồn tại hoặc đã bị thay đổi trên hệ thống Thành Khang Tecsat.';
+            $title = ($status ?? 404) . ' - Not Found' . ($businessName !== '' ? ' ' . $separator . ' ' . $businessName : '');
+            $description = null;
             $robots = 'noindex, nofollow';
         } else {
-            $title = $seo['seo_meta_title'] ?? $seo['title'] ?? ($global['seo_meta_title'] ?? env('APP_NAME'));
-            $description = $seo['seo_meta_description'] ?? $seo['description'] ?? ($global['seo_meta_description'] ?? null);
-            $robots = $seo['seo_meta_robots'] ?? ($global['seo_meta_robots'] ?? 'index');
+            $title = $seo['seo_meta_title'] ?? $seo['title'] ?? ($global['seo_meta_title'] ?? ($site !== '' ? $site : null));
+            $description = $seo['seo_meta_description'] ?? $seo['description'] ?? ($global['seo_meta_description'] ?? ($global['general_description'] ?? null));
+            $robots = $seo['seo_meta_robots'] ?? $seo['robots'] ?? ($global['seo_meta_robots'] ?? 'index, follow');
         }
 
-        // Ưu tiên ảnh từ $seo; nếu lấy từ $global, phải lọc sạch không dính domain/asset cũ
-        $rawImage = $seo['seo_image'] ?? $seo['image'] ?? null;
-        if (empty($rawImage)) {
-            $globalImage = $global['seo_image'] ?? null;
-            if (!empty($globalImage) && !Str::contains($globalImage, ['funkystyle', 'khoqua', 'copy.jpg', 'hhmaker'])) {
-                $rawImage = $globalImage;
-            } else {
-                $rawImage = '/og-image.jpg';
+        // Ưu tiên ảnh từ $seo -> $global['seo_image'] (Zero hardcoded fallback image)
+        $rawImage = $seo['seo_image'] ?? $seo['image'] ?? ($global['seo_image'] ?? null);
+        $image = null;
+
+        if (!empty($rawImage) && is_string($rawImage)) {
+            $rawImage = trim($rawImage);
+            if ($rawImage !== '') {
+                if (!Str::startsWith($rawImage, ['http://', 'https://'])) {
+                    $hostDomain = request()->getSchemeAndHttpHost() ?: rtrim((string) config('app.url'), '/');
+                    $rawImage = rtrim($hostDomain, '/') . '/' . ltrim($rawImage, '/');
+                }
+
+                $parsed = parse_url($rawImage);
+                if (!empty($parsed['host'])) {
+                    $encodedPath = implode('/', array_map('rawurlencode', explode('/', $parsed['path'] ?? '')));
+                    $image = ($parsed['scheme'] ?? 'https') . '://' . $parsed['host'] . (isset($parsed['port']) ? ':' . $parsed['port'] : '') . $encodedPath;
+                    if (isset($parsed['query'])) {
+                        $image .= '?' . $parsed['query'];
+                    }
+                } else {
+                    $image = $rawImage;
+                }
             }
         }
 
-        // Nếu là đường dẫn tương đối (bắt đầu bằng "/"), nối domain từ request thực tế
-        if (!Str::startsWith($rawImage, ['http://', 'https://'])) {
-            $hostDomain = request()->getSchemeAndHttpHost() ?: (config('app.url') ?: 'https://dvktthanhkhang.vn');
-            $rawImage = rtrim($hostDomain, '/') . '/' . ltrim($rawImage, '/');
-        }
-
-        // Parse URL và encode lại đúng phần path
-        $parsed = parse_url($rawImage);
-
-        $encodedPath = implode('/', array_map('rawurlencode', explode('/', $parsed['path'] ?? '')));
-
-        $image = ($parsed['scheme'] ?? 'https') . '://' . ($parsed['host'] ?? 'dvktthanhkhang.vn') . $encodedPath;
-
-        if (isset($parsed['query'])) {
-            $image .= '?' . $parsed['query'];
-        } elseif (!str_contains($image, '?')) {
-            $image .= '?v=20261110';
-        }
-
-        $keywords = $seo['seo_meta_keywords'] ?? ($global['seo_meta_keywords'] ?? null);
+        $keywords = $seo['seo_meta_keywords'] ?? $seo['keywords'] ?? ($global['seo_meta_keywords'] ?? null);
 
         if ($title) {
             SEOMeta::setTitle($title);
@@ -217,21 +222,31 @@
 
     {!! SEO::generate() !!}
 
-    <!-- Fallback Open Graph & Twitter Cards Tags for Social Media Crawlers -->
+    <!-- Open Graph & Twitter Cards Tags (CMS-driven) -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ $url }}">
-    <meta property="og:title" content="{{ $title }}">
-    <meta property="og:description" content="{{ $description }}">
-    <meta property="og:image" content="{{ $image }}">
-    <meta property="og:image:secure_url" content="{{ $image }}">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="{{ $title }}">
-    <meta property="og:site_name" content="{{ $site ?? 'Thành Khang Tecsat' }}">
+    @if (!empty($title))
+        <meta property="og:title" content="{{ $title }}">
+        <meta name="twitter:title" content="{{ $title }}">
+    @endif
+    @if (!empty($description))
+        <meta property="og:description" content="{{ $description }}">
+        <meta name="twitter:description" content="{{ $description }}">
+    @endif
+    @if (!empty($image))
+        <meta property="og:image" content="{{ $image }}">
+        <meta property="og:image:secure_url" content="{{ $image }}">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        @if (!empty($title))
+            <meta property="og:image:alt" content="{{ $title }}">
+        @endif
+        <meta name="twitter:image" content="{{ $image }}">
+    @endif
+    @if (!empty($site))
+        <meta property="og:site_name" content="{{ $site }}">
+    @endif
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ $title }}">
-    <meta name="twitter:description" content="{{ $description }}">
-    <meta name="twitter:image" content="{{ $image }}">
 
     @isset($schemas)
         @foreach ($schemas as $schema)
@@ -241,38 +256,67 @@
         @endforeach
     @endisset
 
-    <!-- Schema LocalBusiness & Organization -->
+    <!-- Dynamic Schema LocalBusiness & Organization (100% CMS-driven from $global) -->
     @php
-        $localBusinessSchema = [
-            '@context' => 'https://schema.org',
-            '@type' => 'LocalBusiness',
-            '@id' => 'https://dvktthanhkhang.vn/#organization',
-            'name' => 'Công ty TNHH Dịch vụ Kỹ thuật Thành Khang Tecsat',
-            'alternateName' => 'Thành Khang Tecsat',
-            'url' => 'https://dvktthanhkhang.vn',
-            'logo' => 'https://dvktthanhkhang.vn/og-image.jpg',
-            'image' => 'https://dvktthanhkhang.vn/og-image.jpg',
-            'description' => 'Nhà cung cấp giải pháp & thiết bị công nghiệp B2B: linh kiện thang cuốn, thang nâng ô tô, xích tải Universal Chains, hệ thống băng tải và quạt trần công nghiệp BLDC HVLS.',
-            'telephone' => '0967732665',
-            'email' => 'info@dvktthanhkhang.vn',
-            'address' => [
-                '@type' => 'PostalAddress',
-                'streetAddress' => 'Tầng 25, Tòa nhà TNR, 54A Nguyễn Chí Thanh, Phường Láng Thượng',
-                'addressLocality' => 'Quận Đống Đa',
-                'addressRegion' => 'Hà Nội',
-                'addressCountry' => 'VN',
-            ],
-            'openingHoursSpecification' => [
-                '@type' => 'OpeningHoursSpecification',
-                'dayOfWeek' => ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-                'opens' => '08:00',
-                'closes' => '17:30',
-            ],
-            'priceRange' => '$$',
-            'sameAs' => [
-                'https://www.facebook.com/thanhkhangtecsat',
-            ],
-        ];
+        $schemaAppUrl = rtrim((string) (config('app.url') ?: request()->getSchemeAndHttpHost()), '/');
+        $schemaLogo = $global['general_logo'] ?? $global['logo'] ?? null;
+        if (!empty($schemaLogo) && is_string($schemaLogo) && !Str::startsWith($schemaLogo, ['http://', 'https://'])) {
+            $schemaLogo = $schemaAppUrl . '/' . ltrim($schemaLogo, '/');
+        }
+        $schemaSameAs = array_values(array_filter([
+            $global['general_facebook'] ?? $global['facebook'] ?? null,
+            $global['general_linkedin'] ?? $global['linkedin'] ?? null,
+            $global['general_tiktok'] ?? $global['tiktok'] ?? null,
+            $global['general_youtube'] ?? $global['youtube'] ?? null,
+            $global['general_instagram'] ?? $global['instagram'] ?? null,
+        ], static fn($v) => is_string($v) && preg_match('/^https?:\/\//i', trim($v))));
+
+        $localBusinessSchema = null;
+        if ($businessName !== '') {
+            $localBusinessSchema = [
+                '@context' => 'https://schema.org',
+                '@type' => 'LocalBusiness',
+                '@id' => $schemaAppUrl . '/#organization',
+                'name' => $businessName,
+                'url' => $schemaAppUrl,
+            ];
+            if (!empty($site) && $site !== $businessName) {
+                $localBusinessSchema['alternateName'] = $site;
+            }
+            if (!empty($schemaLogo)) {
+                $localBusinessSchema['logo'] = $schemaLogo;
+            }
+            if (!empty($image)) {
+                $localBusinessSchema['image'] = $image;
+            }
+            $schemaDesc = trim((string) ($global['general_description'] ?? $description ?? ''));
+            if ($schemaDesc !== '') {
+                $localBusinessSchema['description'] = $schemaDesc;
+            }
+            $schemaPhone = trim((string) ($global['general_phone'] ?? $global['phone'] ?? $global['hotline'] ?? ''));
+            if ($schemaPhone !== '') {
+                $localBusinessSchema['telephone'] = $schemaPhone;
+            }
+            $schemaEmail = trim((string) ($global['general_email'] ?? $global['email'] ?? ''));
+            if ($schemaEmail !== '') {
+                $localBusinessSchema['email'] = $schemaEmail;
+            }
+            $schemaAddress = trim((string) ($global['general_address'] ?? $global['address'] ?? ''));
+            if ($schemaAddress !== '') {
+                $localBusinessSchema['address'] = [
+                    '@type' => 'PostalAddress',
+                    'streetAddress' => $schemaAddress,
+                    'addressCountry' => 'VN',
+                ];
+            }
+            $schemaHours = trim((string) ($global['general_working_hours'] ?? $global['working_hours'] ?? ''));
+            if ($schemaHours !== '') {
+                $localBusinessSchema['openingHours'] = $schemaHours;
+            }
+            if (!empty($schemaSameAs)) {
+                $localBusinessSchema['sameAs'] = $schemaSameAs;
+            }
+        }
 
         // Tự động sinh BreadcrumbList nếu controller chưa cung cấp
         $hasBreadcrumb = false;
@@ -385,9 +429,11 @@
         }
     @endphp
 
-    <script type="application/ld+json">
-        {!! json_encode($localBusinessSchema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) !!}
-    </script>
+    @if (!empty($localBusinessSchema))
+        <script type="application/ld+json">
+            {!! json_encode($localBusinessSchema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) !!}
+        </script>
+    @endif
 
     @if ($autoBreadcrumb)
         <script type="application/ld+json">
@@ -397,10 +443,10 @@
 
     <script src="/build/frontend/registerSW.js"></script>
 
-        <!-- Fonts (Be Vietnam Pro & Inter) -->
+    <!-- Fonts (Open Sans primary + Inter fallback, Vietnamese subset auto-served by Google Fonts) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="/assets/js/flickity/flickity.min.css" />
     <script src="/assets/js/flickity/flickity.pkgd.min.js"></script>

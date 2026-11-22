@@ -74,9 +74,12 @@ class Policy extends BaseModel
         if ($this->is_active) {
             if (Route::has($default_locale . ".policies.show")) {
                 foreach ($this->translations as $translation) {
-                    $urls[strtoupper($translation->locale)] = route("$translation->locale.policies.show", [
-                        'slug' => $translation->seo_slug ?? $translation->slug
-                    ]);
+                    $routeName = "$translation->locale.policies.show";
+                    if (Route::has($routeName)) {
+                        $urls[strtoupper($translation->locale)] = route($routeName, [
+                            'slug' => $translation->seo_slug ?? $translation->slug
+                        ], false);
+                    }
                 }
             }
         }
@@ -97,17 +100,23 @@ class Policy extends BaseModel
     {
         $transVi = $this->translate('vi');
         $transEn = $this->translate('en');
+        $locale = current_locale();
+        $slug = $this->seo_slug ?? $this->slug;
+        $routeName = $locale . '.policies.show';
+        $relativeUrl = (!empty($slug) && Route::has($routeName))
+            ? route($routeName, ['slug' => $slug], false)
+            : ($this->current_url ?: null);
 
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'slug' => $this->seo_slug ?? $this->slug,
+            'slug' => $slug,
             'slug_vi' => $transVi ? ($transVi->seo_slug ?? $transVi->slug) : null,
             'slug_en' => $transEn ? ($transEn->seo_slug ?? $transEn->slug) : null,
             'content' => transform_richtext($this->content),
             'formatted_updated_at' => $this->formatted_updated_at,
             'icon' => $this->icon,
-            'url' => $this->current_url
+            'url' => $relativeUrl
         ];
     }
 

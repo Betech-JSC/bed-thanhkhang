@@ -448,14 +448,6 @@ const colors = {
 
     },
 
-    'gray': {
-
-        90: '#21272A',
-
-        100: '#FFFFFF'
-
-    },
-
     'gray-blue': {
 
         25: '#FCFCFD',
@@ -644,25 +636,27 @@ const colors = {
 
         25: '#FCFCFD',
 
-        50: '#F9FAFB',
+        50: '#F8FAFC',
 
-        100: '#F2F4F7',
+        100: '#EEF2F6',
 
-        200: '#EAECF0',
+        200: '#E3E8EF',
 
-        300: '#D0D5DD',
+        300: '#D6D6D6',
 
-        400: '#98A2B3',
+        400: '#9AA4B2',
 
-        500: '#667085',
+        500: '#697586',
 
-        600: '#475467',
+        600: '#4B5565',
 
-        700: '#344054',
+        700: '#364152',
 
         800: '#1D2939',
 
         900: '#101828',
+
+        light: '#F1F1F1',
 
     },
 
@@ -748,18 +742,18 @@ const colors = {
     },
 
     info: {
-        DEFAULT: '#2E90FA',
+        DEFAULT: '#0075E7',
         25: '#F5FAFF',
         50: '#EFF8FF',
         100: '#D1E9FF',
         200: '#B2DDFF',
         300: '#84CAFF',
         400: '#53B1FD',
-        500: '#2E90FA',
-        600: '#1570EF',
-        700: '#175CD3',
-        800: '#1849A9',
-        900: '#194185',
+        500: '#0075E7',
+        600: '#005EA4',
+        700: '#004D86',
+        800: '#003967',
+        900: '#00284B',
     },
 
 
@@ -842,6 +836,23 @@ module.exports = {
 
 
 
+        container: {
+            center: true,
+            padding: {
+                DEFAULT: '1rem',
+                sm: '1rem',
+                md: '2rem',
+                lg: '2rem',
+                xl: '2rem',
+            },
+            screens: {
+                sm: '640px',
+                md: '768px',
+                lg: '1024px',
+                xl: '1280px',
+            },
+        },
+
         extend: {
 
             spacing: {
@@ -854,24 +865,76 @@ module.exports = {
 
                 ...colors,
 
+                // Thành Khang Brand Palette (Figma Homepage Option 6 - 595:15360)
                 primary: {
-                    DEFAULT: "#2970FF",
-                    hover: "#155EEF",
-                    active: "#0040C1",
-                    50: "#EFF4FF",
-                    100: "#D1E0FF",
-                    200: "#B2CCFF",
-                    300: "#84ADFF",
-                    400: "#528BFF",
-                    500: "#2970FF",
-                    600: "#155EEF",
-                    700: "#0040C1",
-                    800: "#003194",
-                    900: "#002266"
+                    DEFAULT: '#005EA4',
+                    hover: '#004D86',
+                    active: '#003967',
+                    info: '#0075E7',
+                    50: '#F0F7FF',
+                    100: '#C9E0FF',
+                    200: '#81BDFF',
+                    300: '#479BFF',
+                    400: '#0075E7',
+                    500: '#005EA4',
+                    600: '#004D86',
+                    700: '#003967',
+                    800: '#00284B',
+                    900: '#001C36',
                 },
-                'brand-blue': '#2970FF',
+                secondary: {
+                    DEFAULT: '#C9E0FF',
+                    hover: '#81BDFF',
+                    100: '#C9E0FF',
+                    200: '#81BDFF',
+                },
+                surface: {
+                    DEFAULT: '#FAFAFA',
+                    white: '#FFFFFF',
+                    50: '#F8FAFC',
+                    100: '#EEF2F6',
+                    'gray-light': '#F1F1F1',
+                    light: '#FCFCFC',
+                },
+                ink: {
+                    DEFAULT: '#00284B',
+                    heading: '#00284B',
+                    body: '#4B5565',
+                    subtle: '#697586',
+                    muted: '#9AA4B2',
+                    light: '#FCFCFC',
+                },
+                'btn-slide': 'rgba(57, 76, 107, 0.8)',
+                'brand-blue': '#005EA4',
+                'brand-primary': '#005EA4',
+                'brand-primary-hover': '#004D86',
+                'brand-primary-active': '#003967',
+                'brand-secondary': '#C9E0FF',
+                'brand-secondary-hover': '#81BDFF',
+                'brand-dark': '#00284B',
+                'brand-info': '#0075E7',
+                'brand-surface': '#FAFAFA',
 
-                // Figma Dark Tech Standard Colors (Nodes 2352:10717, 2261:5474, 2367:2088)
+                // Dark brand token + legacy dark-tech backward-compatible subkeys
+                dark: {
+                    DEFAULT: '#00284B',
+                    800: '#00284B',
+                    700: '#364152',
+                    slate: '#364152',
+                    'bg': '#111322',
+                    'bg-alt': '#0B0F19',
+                    'surface': '#171B30',
+                    'surface-light': '#1E2B45',
+                    'card': '#171B30',
+                    'border': '#404968',
+                    'border-light': '#5D6B98',
+                    'text': '#FAFAFA',
+                    'text-secondary': '#B9C0D4',
+                    'text-muted': '#64748B',
+                    'text-dim': '#475467',
+                },
+
+                // Backward-compatible legacy flat dark-tech aliases (used by unmigrated inner pages)
                 'dark-bg': '#111322',
                 'dark-bg-alt': '#0B0F19',
                 'dark-surface': '#171B30',
@@ -881,28 +944,26 @@ module.exports = {
                 'dark-border': '#404968',
                 'dark-border-light': '#5D6B98',
 
-                // Direct Figma color aliases
-                'figma-bg': '#111322',
-                'figma-card': '#171B30',
-                'figma-hero': '#0B0D19',
-                'figma-border': '#404968',
-                'figma-border-light': '#5D6B98',
-                'figma-blue': '#2970FF',
+                // Direct Figma color aliases (backward-compatible)
+                'figma-bg': '#FAFAFA',
+                'figma-card': '#FFFFFF',
+                'figma-hero': '#00284B',
+                'figma-border': '#E3E8EF',
+                'figma-border-light': '#D6D6D6',
+                'figma-blue': '#005EA4',
                 'figma-white': '#FAFAFA',
-                'figma-subtext': '#B9C0D4',
-                'figma-blue-text': '#D1E0FF',
+                'figma-subtext': '#4B5565',
+                'figma-blue-text': '#C9E0FF',
 
-                // Dark Tech Text Color Tokens
+                // Text Color Tokens (backward-compatible)
                 'text-white': '#FAFAFA',
-                'text-secondary': '#B9C0D4',
-                'text-muted': '#64748B',
-                'text-dim': '#475467',
-                'text-blue': '#D1E0FF',
+                'text-secondary': '#4B5565',
+                'text-muted': '#9AA4B2',
+                'text-dim': '#697586',
+                'text-blue': '#C9E0FF',
 
-                // Direct color aliases for text-* and bg-* syntax flexibility
-                secondary: '#B9C0D4',
-                muted: '#64748B',
-                dim: '#475467',
+                muted: '#9AA4B2',
+                dim: '#697586',
 
                 /**
                  * @deprecated LEGACY COLOR ALIASES
@@ -919,25 +980,11 @@ module.exports = {
                     'fks': '#18191E'
                 },
 
-                dark: {
-                    'bg': '#111322',
-                    'bg-alt': '#0B0F19',
-                    'surface': '#171B30',
-                    'surface-light': '#1E2B45',
-                    'card': '#171B30',
-                    'border': '#404968',
-                    'border-light': '#5D6B98',
-                    'text': '#FAFAFA',
-                    'text-secondary': '#B9C0D4',
-                    'text-muted': '#64748B',
-                    'text-dim': '#475467'
-                }
-
             },
 
             boxShadow: {
 
-                xs: '0px 1px 2px rgba(16, 24, 40, 0.05)',
+                xs: '0 1px 2px 0 rgba(16, 24, 40, 0.05)',
 
                 sm: '0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06)',
 
@@ -953,29 +1000,42 @@ module.exports = {
 
                 'xs-error-100': '0px 1px 2px rgba(16, 24, 40, 0.05), 0px 0px 0px 4px #fee4e2',
 
-                'xs-primary-300': '0px 1px 2px rgba(16, 24, 40, 0.05), 0px 0px 0px 4px #EFF8FF',
-                'glow-primary': '0px 4px 14px rgba(0, 82, 255, 0.4)',
-                'glow-primary-lg': '0px 8px 24px rgba(0, 82, 255, 0.5)',
+                'xs-primary-300': '0px 1px 2px rgba(16, 24, 40, 0.05), 0px 0px 0px 4px #C9E0FF',
+                'glow-primary': '0px 4px 14px rgba(0, 94, 164, 0.35)',
+                'glow-primary-lg': '0px 8px 24px rgba(0, 94, 164, 0.45)',
                 'card-dark': '0 4px 20px rgba(0, 0, 0, 0.5)',
                 'panel-dark': '0 8px 32px rgba(0, 0, 0, 0.6)',
                 'glow-cyan': '0 0 20px rgba(0, 240, 255, 0.35)',
-                'glow-primary-subtle': '0 0 16px rgba(0, 82, 255, 0.25)',
+                'glow-primary-subtle': '0 0 16px rgba(0, 94, 164, 0.25)',
             },
 
             fontSize: {
-                // Semantic Heading & Text Tokens (Figma Nodes 2352:10717, 2261:5474, 2367:2088)
-                h1: ['38px', { lineHeight: '46px', letterSpacing: '-0.01em', fontWeight: '700' }],
-                h2: ['28px', { lineHeight: '36px', letterSpacing: '0', fontWeight: '700' }],
-                h3: ['20px', { lineHeight: '28px', letterSpacing: '0', fontWeight: '600' }],
-                body: ['16px', { lineHeight: '26px', letterSpacing: '0' }],
+                // Thành Khang Figma Typography Scale (595:15360)
+                h1: ['3rem', { lineHeight: '1.4', fontWeight: '700' }],           // 48px / 1.4 / 700 (Desktop)
+                'h1-mobile': ['2rem', { lineHeight: '1.3', fontWeight: '700' }], // 32px / 1.3 / 700 (Mobile)
+                h2: ['1.75rem', { lineHeight: '1.5', fontWeight: '700' }],       // 28px / 1.5 / 700 (Desktop)
+                'h2-mobile': ['1.5rem', { lineHeight: '1.4', fontWeight: '700' }], // 24px / 1.4 / 700 (Mobile)
+                h3: ['1.5rem', { lineHeight: '1.6', fontWeight: '700' }],        // 24px / 1.6 / 700 (Desktop)
+                'h3-mobile': ['1.25rem', { lineHeight: '1.5', fontWeight: '700' }], // 20px / 1.5 / 700 (Mobile)
+                h4: ['1.25rem', { lineHeight: '1.6', fontWeight: '700' }],       // 20px / 1.6 / 700 (Desktop)
+                'h4-mobile': ['1.125rem', { lineHeight: '1.5', fontWeight: '700' }], // 18px / 1.5 / 700 (Mobile)
+
+                // Body Scale
+                'body-xl': ['1.25rem', { lineHeight: '1.6' }],   // 20px / 1.6
+                'body-lg': ['1.125rem', { lineHeight: '1.6' }],  // 18px / 1.6
+                'body-md': ['1rem', { lineHeight: '1.6' }],      // 16px / 1.6 (default)
+                body: ['1rem', { lineHeight: '1.6' }],           // 16px / 1.6 alias
+                'body-sm': ['0.875rem', { lineHeight: '1.6' }],  // 14px / 1.6
+                'body-xs': ['0.75rem', { lineHeight: '1.6' }],   // 12px / 1.6
+
                 caption: ['14px', { lineHeight: '20px', letterSpacing: '0' }],
                 'caption-sm': ['13px', { lineHeight: '16px', letterSpacing: '0', fontWeight: '600' }],
                 'caption-xs': ['12px', { lineHeight: '16px', letterSpacing: '0', fontWeight: '600' }],
 
-                'display-hero': ['38px', { lineHeight: '46px', letterSpacing: '-0.01em' }],
-                'display-banner': ['32px', { lineHeight: '38px', letterSpacing: '-0.01em' }],
-                'display-section': ['28px', { lineHeight: '34px', letterSpacing: '0' }],
-                'display-card': ['24px', { lineHeight: '30px', letterSpacing: '0' }],
+                'display-hero': ['48px', { lineHeight: '1.4', letterSpacing: '0' }],
+                'display-banner': ['32px', { lineHeight: '1.3', letterSpacing: '0' }],
+                'display-section': ['28px', { lineHeight: '1.5', letterSpacing: '0' }],
+                'display-card': ['24px', { lineHeight: '1.6', letterSpacing: '0' }],
                 'display-step': ['42px', { lineHeight: '51px', letterSpacing: '0' }],
                 'display-2xl': ['4.5rem', { lineHeight: '5.625rem', letterSpacing: '-0.02em' }], // 72px / 90px
                 'display-xl': ['3.75rem', { lineHeight: '4.5rem', letterSpacing: '-0.02em' }],   // 60px / 72px
@@ -991,6 +1051,7 @@ module.exports = {
             },
 
             borderRadius: {
+                cta: '4px',
                 btn: '8px',
                 card: '16px',
                 input: '10px',
@@ -998,20 +1059,17 @@ module.exports = {
                 pill: '9999px',
             },
 
-
-
-
             typography: (theme) => ({
 
                 DEFAULT: {
 
                     css: {
 
-                        color: theme('colors.gray.700'),
+                        color: theme('colors.gray.600'),
 
                         a: {
 
-                            color: '#0000EE',
+                            color: theme('colors.primary.DEFAULT'),
 
                         },
 
@@ -1021,22 +1079,22 @@ module.exports = {
 
             }),
 
-
-
             fontFamily: {
 
-                display: ['Inter', 'Be Vietnam Pro', 'sans-serif'],
-                sans: ['Inter', 'Be Vietnam Pro', 'sans-serif'],
+                sans: ['"Open Sans"', 'Inter', 'system-ui', 'sans-serif'],
+                display: ['"Open Sans"', 'Inter', 'system-ui', 'sans-serif'],
+                body: ['"Open Sans"', 'Inter', 'system-ui', 'sans-serif'],
                 mono: ['VCR_OSD_MONO', 'monospace'],
 
             },
 
-
-
             maxWidth: {
                 canvas: '1440px',
+                container: '1280px',
+                'container-wide': '1344px',   // 1280px inner + 2x32px desktop gutter
+                'container-narrow': '1216px', // 1152px inner + 2x32px desktop gutter
                 content: '1152px',
-                hero: '1279px',
+                hero: '1280px',
                 '60vw': '60vw',
                 '70vw': '70vw',
                 '80vw': '80vw',
@@ -1045,26 +1103,6 @@ module.exports = {
 
             aspectRatio: {
                 square: '1 / 1',
-            },
-
-
-
-            container: {
-                center: true,
-                padding: {
-                    DEFAULT: '1rem',
-                    md: '1.5rem',
-                    lg: '2rem',
-                    xl: '2rem',
-                    '2xl': '2rem',
-                },
-                screens: {
-                    sm: '640px',
-                    md: '768px',
-                    lg: '1024px',
-                    xl: '1280px',
-                    '2xl': '1440px',
-                },
             },
 
         },
