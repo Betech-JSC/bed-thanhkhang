@@ -48,9 +48,9 @@
                     />
                 </div>
 
-                <!-- Intro Text Container aligned to .app-container left margin -->
+                <!-- Intro Text Container aligned to .app-container left margin (1280px inner width) -->
                 <div
-                    class="relative z-10 w-full h-full flex flex-col justify-start px-4 py-8 md:px-8 md:py-12 lg:py-[80px] lg:pl-[max(2rem,calc((100vw-1152px)/2))] lg:pr-10"
+                    class="relative z-10 w-full h-full flex flex-col justify-start px-4 py-8 md:px-8 md:py-12 lg:py-[80px] lg:pl-[max(2rem,calc((100vw-1280px)/2))] lg:pr-10"
                 >
                     <div class="w-full max-w-[488px] lg:sticky lg:top-[104px] flex flex-col gap-3 lg:gap-0">
                         <h2
@@ -71,7 +71,7 @@
 
             <!-- Right Column: 4 Stacked Process Step Cards -->
             <div
-                class="w-full lg:flex-1 flex flex-col justify-center lg:justify-start px-4 py-8 md:px-8 md:py-12 lg:pt-[80px] lg:pb-[90px] lg:pl-[64px] lg:pr-[max(2rem,calc((100vw-1152px)/2))]"
+                class="w-full lg:flex-1 flex flex-col justify-center lg:justify-start px-4 py-8 md:px-8 md:py-12 lg:pt-[80px] lg:pb-[90px] lg:pl-[64px] lg:pr-[max(2rem,calc((100vw-1280px)/2))]"
             >
                 <ol
                     v-if="displaySteps.length > 0"

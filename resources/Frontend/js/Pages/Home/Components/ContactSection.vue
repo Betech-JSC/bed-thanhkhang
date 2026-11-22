@@ -49,7 +49,7 @@
         <div class="app-container relative z-10">
             <div class="flex flex-col lg:flex-row lg:items-stretch justify-between gap-8 lg:gap-[64px]">
                 <!-- Left Column: Title, Subtitle & Live CMS Contact Details -->
-                <div class="w-full lg:w-[462px] lg:min-h-[508px] shrink-0 flex flex-col justify-between gap-8">
+                <div class="w-full lg:w-[462px] xl:w-[512px] lg:min-h-[508px] shrink-0 flex flex-col justify-between gap-8">
                     <div v-if="heading || description">
                         <h2
                             v-if="heading"
