@@ -1,3 +1,9 @@
+<!--    
+        Name: Contact.vue
+        Author: Alex Vu
+        Date: 25/11/26 
+-->
+
 <template>
     <Head>
         <title>{{ pageTitle }}</title>
@@ -475,7 +481,6 @@ import BaseModal from '@/Components/Base/BaseModal.vue'
 const props = defineProps({
     agencies: { type: Array, default: () => [] },
     faqs: { type: Array, default: () => [] },
-    faqList: { type: Array, default: () => [] },
     seo: { type: Object, default: () => null },
 })
 
@@ -485,11 +490,8 @@ const key = { tt: (s) => s }
 const page = usePage()
 const isEn = computed(() => (page.props.value?.locale?.current || 'vi') === 'en')
 
-// Shared site settings (HandleInertiaFrontendRequests shares `global`; `configs` merged defensively)
-const site = computed(() => ({
-    ...(page.props.value?.global || {}),
-    ...(page.props.value?.configs || {}),
-}))
+// Shared site settings (HandleInertiaFrontendRequests shares `global`)
+const site = computed(() => page.props.value?.global || {})
 
 const safeRoute = (name, params, fallback) => {
     const proxy = instance?.proxy
@@ -612,13 +614,10 @@ const offices = computed(() => {
 
 const activeOfficeIndex = ref(0)
 const activeOffice = computed(() => offices.value[activeOfficeIndex.value] || offices.value[0] || null)
-const mapsQueryUrl = (office) =>
-    office?.map || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(office?.location || office?.title || '')}`
-const directionsHref = computed(() => mapsQueryUrl(activeOffice.value))
-const satelliteHref = computed(() =>
-    activeOffice.value?.map ||
-    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activeOffice.value?.location || '')}&basemap=satellite`
-)
+const mapsUrl = (office, extra = '') =>
+    office?.map || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(office?.location || office?.title || '')}${extra}`
+const directionsHref = computed(() => mapsUrl(activeOffice.value))
+const satelliteHref = computed(() => mapsUrl(activeOffice.value, '&basemap=satellite'))
 
 // Illustrated map geometry from Figma 940:2761 (canvas 680×607)
 const MAP_W = 680
@@ -658,15 +657,7 @@ const activeFaq = ref(0)
 const toggleFaq = (index) => {
     activeFaq.value = activeFaq.value === index ? null : index
 }
-const faqItems = computed(() => {
-    const source = Array.isArray(props.faqs) && props.faqs.length ? props.faqs : props.faqList
-    return (Array.isArray(source) ? source : [])
-        .map((item) => ({
-            question: item.question || item.title || '',
-            answer: item.answer || item.content || item.description || '',
-        }))
-        .filter((item) => item.question)
-})
+const faqItems = computed(() => (Array.isArray(props.faqs) ? props.faqs : []).filter((item) => item?.question))
 
 // ---------- Form ----------
 const form = useForm({ name: '', company: '', email: '', phone: '', content: '' })
