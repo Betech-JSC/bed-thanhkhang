@@ -426,6 +426,13 @@ class Config extends Model
             $phone,
         ]);
 
+        // Display VN 10-digit numbers as "0967 732 665"; anything else is left exactly as entered.
+        $fmtPhone = fn ($p) => preg_match('/^0\d{9}$/', $d = preg_replace('/\D/', '', (string) $p))
+            ? preg_replace('/^(\d{4})(\d{3})(\d{3})$/', '$1 $2 $3', $d)
+            : $p;
+        $phone = $fmtPhone($phone);
+        $hotline = $fmtPhone($hotline);
+
         $email = $pickNonEmpty([
             $raw['general_email'] ?? null,
             $raw['email'] ?? null,

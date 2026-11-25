@@ -591,7 +591,7 @@ const offices = computed(() => {
         .map((a) => ({
             title: a.title,
             location: a.location || '',
-            phone: a.phone || displayPhone.value,
+            phone: a.phone ? String(a.phone).replace(/^\D*(0\d{3})\D*(\d{3})\D*(\d{3})\D*$/, '$1 $2 $3') : displayPhone.value,
             hours: displayHours.value,
             map: a.link_google_map || '',
         }))
