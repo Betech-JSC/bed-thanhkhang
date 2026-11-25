@@ -904,6 +904,13 @@ module.exports = {
                     muted: '#9AA4B2',
                     light: '#FCFCFC',
                 },
+                // Figma form-field neutrals (Gray/300, Gray/500, Gray/700 — Liên hệ 939:2577)
+                field: {
+                    border: '#D6D6D6',
+                    placeholder: '#808080',
+                    label: '#424242',
+                    required: '#FF4749',
+                },
                 'btn-slide': 'rgba(57, 76, 107, 0.8)',
                 'brand-blue': '#005EA4',
                 'brand-primary': '#005EA4',
@@ -1027,6 +1034,10 @@ module.exports = {
                 body: ['1rem', { lineHeight: '1.6' }],           // 16px / 1.6 alias
                 'body-sm': ['0.875rem', { lineHeight: '1.6' }],  // 14px / 1.6
                 'body-xs': ['0.75rem', { lineHeight: '1.6' }],   // 12px / 1.6
+
+                // Figma "PC/Heading" styles used on Liên hệ (939:2577)
+                'pc-h3': ['2.25rem', { lineHeight: '1.4', fontWeight: '700' }],  // 36px / 1.4 / 700
+                'pc-h5': ['1.75rem', { lineHeight: '1.6', fontWeight: '700' }],  // 28px / 1.6 / 700
 
                 caption: ['14px', { lineHeight: '20px', letterSpacing: '0' }],
                 'caption-sm': ['13px', { lineHeight: '16px', letterSpacing: '0', fontWeight: '600' }],
