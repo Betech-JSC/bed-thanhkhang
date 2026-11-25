@@ -37,7 +37,7 @@
                     </div>
                 </div>
 
-                <!-- Right 3 Columns (Trang chủ | Chính sách | Thông tin liên hệ) -->
+                <!-- Right 3 Columns (Danh mục sản phẩm | Chính sách | Thông tin liên hệ) -->
                 <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 xl:gap-12">
                     <!-- Column 1: Danh mục sản phẩm (Figma 217:3867 — CMS product_categories; falls back to site nav) -->
                     <div class="lg:col-span-3 space-y-4">
@@ -111,7 +111,7 @@
                                 <span class="break-all sm:break-words">{{ displayEmail }}</span>
                             </a>
 
-                            <div v-if="displayAddress" class="flex items-start gap-2">
+                            <div v-for="row in addressRows" :key="row.label" class="flex items-start gap-2">
                                 <img
                                     src="/assets/svg/icons/footer-pin.svg"
                                     alt=""
@@ -120,18 +120,7 @@
                                     height="24"
                                     class="w-6 h-6 shrink-0"
                                 />
-                                <p class="break-words min-w-0">{{ tt('Trụ sở') }}: {{ displayAddress }}</p>
-                            </div>
-                            <div v-if="displayShowroomAddress" class="flex items-start gap-2">
-                                <img
-                                    src="/assets/svg/icons/footer-pin.svg"
-                                    alt=""
-                                    aria-hidden="true"
-                                    width="24"
-                                    height="24"
-                                    class="w-6 h-6 shrink-0"
-                                />
-                                <p class="break-words min-w-0">{{ tt('VPGD & Showroom') }}: {{ displayShowroomAddress }}</p>
+                                <p class="break-words min-w-0">{{ row.label }}: {{ row.value }}</p>
                             </div>
                         </div>
                     </div>
@@ -260,7 +249,6 @@ export default {
             )
         },
         taxCode() {
-            // Not present in Config::normalizeGeneralSettings today — renders only when CMS adds it.
             return this.siteConfig.general_tax_code || this.siteConfig.tax_code || ''
         },
         footerCategoryLinks() {
@@ -291,6 +279,12 @@ export default {
             const showroom = this.siteConfig.showroom_address || ''
             if (!showroom || showroom === this.displayAddress) return ''
             return showroom
+        },
+        addressRows() {
+            return [
+                { label: this.tt('Trụ sở'), value: this.displayAddress },
+                { label: this.tt('VPGD & Showroom'), value: this.displayShowroomAddress },
+            ].filter((row) => row.value)
         },
         facebookHref() {
             return (

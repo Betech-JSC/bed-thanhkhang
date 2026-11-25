@@ -120,66 +120,21 @@
                     @submit.prevent="submitContact"
                 >
                     <div class="flex flex-col gap-4">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-3">
-                            <div class="flex flex-col gap-1">
-                                <label for="contact-name" class="text-body-sm font-medium text-field-label">
-                                    {{ tt('Họ và tên') }}<span class="text-field-required">*</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-4 sm:gap-x-3">
+                            <div v-for="field in formFields" :key="field.key" class="flex flex-col gap-1">
+                                <label :for="field.id" class="text-body-sm font-medium text-field-label">
+                                    {{ field.label }}<span v-if="field.required" class="text-field-required">*</span>
                                 </label>
                                 <input
-                                    id="contact-name"
-                                    v-model="form.name"
-                                    type="text"
-                                    autocomplete="name"
-                                    :placeholder="tt('Nguyễn Văn A')"
-                                    :class="fieldClass('name')"
-                                    :aria-invalid="!!fieldError('name')"
+                                    :id="field.id"
+                                    v-model="form[field.key]"
+                                    :type="field.type"
+                                    :autocomplete="field.autocomplete"
+                                    :placeholder="field.placeholder"
+                                    :class="fieldClass(field.key)"
+                                    :aria-invalid="field.required ? !!fieldError(field.key) : undefined"
                                 />
-                                <p v-if="fieldError('name')" class="text-body-xs text-field-required">{{ fieldError('name') }}</p>
-                            </div>
-                            <div class="flex flex-col gap-1">
-                                <label for="contact-company" class="text-body-sm font-medium text-field-label">
-                                    {{ tt('Tên công ty/ Đơn vị') }}
-                                </label>
-                                <input
-                                    id="contact-company"
-                                    v-model="form.company"
-                                    type="text"
-                                    autocomplete="organization"
-                                    :placeholder="tt('Công ty TNHH ABC')"
-                                    :class="fieldClass('company')"
-                                />
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-3">
-                            <div class="flex flex-col gap-1">
-                                <label for="contact-email" class="text-body-sm font-medium text-field-label">
-                                    {{ tt('Email') }}<span class="text-field-required">*</span>
-                                </label>
-                                <input
-                                    id="contact-email"
-                                    v-model="form.email"
-                                    type="email"
-                                    autocomplete="email"
-                                    placeholder="example@congty.com"
-                                    :class="fieldClass('email')"
-                                    :aria-invalid="!!fieldError('email')"
-                                />
-                                <p v-if="fieldError('email')" class="text-body-xs text-field-required">{{ fieldError('email') }}</p>
-                            </div>
-                            <div class="flex flex-col gap-1">
-                                <label for="contact-phone" class="text-body-sm font-medium text-field-label">
-                                    {{ tt('Số điện thoại') }}<span class="text-field-required">*</span>
-                                </label>
-                                <input
-                                    id="contact-phone"
-                                    v-model="form.phone"
-                                    type="tel"
-                                    autocomplete="tel"
-                                    placeholder="0901 234 567"
-                                    :class="fieldClass('phone')"
-                                    :aria-invalid="!!fieldError('phone')"
-                                />
-                                <p v-if="fieldError('phone')" class="text-body-xs text-field-required">{{ fieldError('phone') }}</p>
+                                <p v-if="field.required && fieldError(field.key)" class="text-body-xs text-field-required">{{ fieldError(field.key) }}</p>
                             </div>
                         </div>
                         <div class="flex flex-col gap-[6px]">
@@ -256,18 +211,18 @@
                                     class="absolute -translate-x-1/2 -translate-y-1/2 block focus:outline-none group"
                                     :style="pos(pin.left, pin.top)"
                                     :aria-label="pin.office.title"
-                                    :aria-pressed="activeOfficeIndex === pin.index"
-                                    @click="activeOfficeIndex = pin.index"
+                                    :aria-pressed="activeOfficeIndex === i"
+                                    @click="activeOfficeIndex = i"
                                 >
                                     <!-- Button is the dot itself (anchored by its centre); label floats above without shifting the dot -->
                                     <span
                                         class="hidden sm:block absolute bottom-full left-1/2 -translate-x-1/2 mb-[6px] rounded-[8px] px-3 py-[6px] text-body-xs font-bold whitespace-nowrap shadow-xs border group-focus-visible:ring-2 group-focus-visible:ring-primary"
-                                        :class="activeOfficeIndex === pin.index ? 'bg-dark border-primary text-surface' : 'bg-white border-gray-modern-300 text-dark'"
+                                        :class="activeOfficeIndex === i ? 'bg-dark border-primary text-surface' : 'bg-white border-gray-modern-300 text-dark'"
                                     >
                                         {{ pin.office.title }}
                                     </span>
                                     <img
-                                        :src="activeOfficeIndex === pin.index ? '/assets/figma/lien-he/pin-primary.svg' : '/assets/figma/lien-he/pin-secondary.svg'"
+                                        :src="activeOfficeIndex === i ? '/assets/figma/lien-he/pin-primary.svg' : '/assets/figma/lien-he/pin-secondary.svg'"
                                         alt=""
                                         aria-hidden="true"
                                         width="40"
@@ -486,7 +441,6 @@ const props = defineProps({
 
 const instance = getCurrentInstance()
 const trans = (text) => (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(text) : text)
-const key = { tt: (s) => s }
 const page = usePage()
 const isEn = computed(() => (page.props.value?.locale?.current || 'vi') === 'en')
 
@@ -529,7 +483,7 @@ const pageDescription = computed(
 )
 
 // Safe fallbacks (Figma values) — used only when the CMS key is empty. Reported to Hub as missing keys.
-const displayPhone = computed(() => site.value.hotline || site.value.general_phone || '0967 732 665')
+const displayPhone = computed(() => site.value.hotline || '0967 732 665')
 const cleanPhone = computed(() => String(displayPhone.value).replace(/[^\d+]/g, ''))
 const displayEmail = computed(() => site.value.general_email || 'info@dvktthanhkhang.vn')
 const displayHours = computed(() => site.value.general_working_hours || '08:00 – 17:30 (T2 – T6)')
@@ -649,7 +603,7 @@ const PIN_ANCHORS = [
     { left: 225, top: 384 },
 ]
 const mapPins = computed(() =>
-    offices.value.slice(0, PIN_ANCHORS.length).map((office, index) => ({ ...PIN_ANCHORS[index], office, index }))
+    offices.value.slice(0, PIN_ANCHORS.length).map((office, index) => ({ ...PIN_ANCHORS[index], office }))
 )
 
 // ---------- FAQ (CMS) ----------
@@ -663,6 +617,45 @@ const faqItems = computed(() => (Array.isArray(props.faqs) ? props.faqs : []).fi
 const form = useForm({ name: '', company: '', email: '', phone: '', content: '' })
 const clientErrors = reactive({ name: '', email: '', phone: '' })
 const showSuccessModal = ref(false)
+
+const formFields = computed(() => [
+    {
+        key: 'name',
+        id: 'contact-name',
+        label: trans('Họ và tên'),
+        type: 'text',
+        autocomplete: 'name',
+        placeholder: trans('Nguyễn Văn A'),
+        required: true,
+    },
+    {
+        key: 'company',
+        id: 'contact-company',
+        label: trans('Tên công ty/ Đơn vị'),
+        type: 'text',
+        autocomplete: 'organization',
+        placeholder: trans('Công ty TNHH ABC'),
+        required: false,
+    },
+    {
+        key: 'email',
+        id: 'contact-email',
+        label: trans('Email'),
+        type: 'email',
+        autocomplete: 'email',
+        placeholder: 'example@congty.com',
+        required: true,
+    },
+    {
+        key: 'phone',
+        id: 'contact-phone',
+        label: trans('Số điện thoại'),
+        type: 'tel',
+        autocomplete: 'tel',
+        placeholder: '0901 234 567',
+        required: true,
+    },
+])
 
 const fieldError = (field) => clientErrors[field] || form.errors[field] || ''
 const fieldClass = (field) => [
@@ -703,19 +696,15 @@ const submitContact = () => {
     if (!validate()) return
 
     form.transform((data) => ({
-        name: data.name,
-        company: data.company,
-        phone: data.phone,
-        email: data.email,
-        content: data.content,
+        ...data,
         contact: {
             type: 'CONTACT_FORM',
             data: {
-                [key.tt('Họ và tên')]: data.name,
-                [key.tt('Tên công ty/ Đơn vị')]: data.company,
-                [key.tt('Số điện thoại')]: data.phone,
+                'Họ và tên': data.name,
+                'Tên công ty/ Đơn vị': data.company,
+                'Số điện thoại': data.phone,
                 Email: data.email,
-                [key.tt('Lời nhắn')]: data.content,
+                'Lời nhắn': data.content,
             },
         },
     }))
