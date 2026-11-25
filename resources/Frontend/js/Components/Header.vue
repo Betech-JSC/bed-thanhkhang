@@ -73,22 +73,26 @@
 
             <!-- Desktop Navigation (5 items per Figma 595:15540) -->
             <nav
-                class="hidden lg:flex items-center gap-5 xl:gap-8"
+                class="hidden lg:flex items-stretch self-stretch gap-5 xl:gap-8"
                 :aria-label="tt('Điều hướng chính')"
             >
                 <template v-for="(menu, index) in menus" :key="index">
                     <div
-                        class="relative flex items-center"
+                        class="relative flex items-center self-stretch"
                         @mouseenter="menu.hasDropdown ? openDesktopDropdown(menu.type) : closeDesktopDropdown()"
                     >
-                        <div class="inline-flex items-center gap-1">
+                        <!-- Figma 979:30014 — 72px item, inactive Gray modern/500, active Main blue/600 + 3px underline -->
+                        <div
+                            class="inline-flex items-center gap-1 h-full border-b-[3px] transition-colors"
+                            :class="isMenuActive(menu) ? 'border-primary-600' : 'border-transparent'"
+                        >
                             <Link
                                 :href="menu.href"
-                                class="py-2 text-[14px] font-bold uppercase leading-[1.4] tracking-normal whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-cta"
+                                class="py-2 text-[14px] font-bold uppercase leading-[1.6] tracking-normal whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-cta"
                                 :class="
                                     isMenuActive(menu)
-                                        ? 'text-primary'
-                                        : 'text-dark hover:text-primary'
+                                        ? 'text-primary-600'
+                                        : 'text-ink-subtle hover:text-primary'
                                 "
                                 @click="closeDesktopDropdown"
                             >

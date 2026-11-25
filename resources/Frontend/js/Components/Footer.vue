@@ -31,18 +31,21 @@
                         >
                             {{ companyDescription }}
                         </p>
+                        <p v-if="taxCode" class="pt-2 text-[14px] font-medium leading-[1.6] text-ink-body">
+                            {{ tt('Mã số thuế') }}: {{ taxCode }}
+                        </p>
                     </div>
                 </div>
 
-                <!-- Right 3 Columns (Trang chủ | Chính sách | Thông tin liên hệ) -->
+                <!-- Right 3 Columns (Danh mục sản phẩm | Chính sách | Thông tin liên hệ) -->
                 <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 xl:gap-12">
-                    <!-- Column 1: Trang chủ -->
+                    <!-- Column 1: Danh mục sản phẩm (Figma 217:3867 — CMS product_categories; falls back to site nav) -->
                     <div class="lg:col-span-3 space-y-4">
-                        <h4 class="text-[16px] font-bold leading-[1.5] text-dark">
-                            {{ tt('Trang chủ') }}
+                        <h4 class="text-[16px] font-bold leading-[1.4] text-dark">
+                            {{ footerCategoryLinks.length ? tt('Danh mục sản phẩm') : tt('Trang chủ') }}
                         </h4>
                         <ul class="space-y-3 text-[14px] font-medium leading-[1.6]">
-                            <li v-for="(item, index) in navLinks" :key="index">
+                            <li v-for="(item, index) in (footerCategoryLinks.length ? footerCategoryLinks : navLinks)" :key="index">
                                 <Link
                                     :href="item.href"
                                     class="text-ink-body hover:text-primary transition-colors focus:outline-none focus-visible:underline"
@@ -108,25 +111,16 @@
                                 <span class="break-all sm:break-words">{{ displayEmail }}</span>
                             </a>
 
-                            <div v-if="displayAddress || displayShowroomAddress" class="flex items-start gap-3">
+                            <div v-for="row in addressRows" :key="row.label" class="flex items-start gap-2">
                                 <img
                                     src="/assets/svg/icons/footer-pin.svg"
                                     alt=""
                                     aria-hidden="true"
                                     width="24"
                                     height="24"
-                                    class="w-6 h-6 shrink-0 mt-0.5"
+                                    class="w-6 h-6 shrink-0"
                                 />
-                                <div class="space-y-1.5 min-w-0">
-                                    <p v-if="displayAddress" class="break-words">
-                                        <span class="font-semibold text-dark">{{ tt('Trụ sở') }}:</span>
-                                        {{ displayAddress }}
-                                    </p>
-                                    <p v-if="displayShowroomAddress" class="break-words">
-                                        <span class="font-semibold text-dark">{{ tt('VPGD/Showroom') }}:</span>
-                                        {{ displayShowroomAddress }}
-                                    </p>
-                                </div>
+                                <p class="break-words min-w-0">{{ row.label }}: {{ row.value }}</p>
                             </div>
                         </div>
                     </div>
@@ -254,6 +248,21 @@ export default {
                 ''
             )
         },
+        taxCode() {
+            return this.siteConfig.general_tax_code || this.siteConfig.tax_code || ''
+        },
+        footerCategoryLinks() {
+            const raw = this.$page?.props?.product_categories || this.$page?.props?.data?.product_categories || []
+            if (!Array.isArray(raw) || raw.length === 0) return []
+            const base = this.safeRoute('products.index', undefined, this.currentLocale === 'en' ? '/en/products' : '/san-pham')
+            return raw
+                .filter((cat) => cat && (cat.title || cat.name) && !(Number(cat.parent_id) > 0))
+                .slice(0, 6)
+                .map((cat) => ({
+                    title: cat.title || cat.name,
+                    href: cat.url || (cat.slug ? `${base}?category=${encodeURIComponent(cat.slug)}` : base),
+                }))
+        },
         displayHotline() {
             return this.hotline || this.siteConfig.hotline || this.siteConfig.general_phone || this.siteConfig.phone || ''
         },
@@ -270,6 +279,12 @@ export default {
             const showroom = this.siteConfig.showroom_address || ''
             if (!showroom || showroom === this.displayAddress) return ''
             return showroom
+        },
+        addressRows() {
+            return [
+                { label: this.tt('Trụ sở'), value: this.displayAddress },
+                { label: this.tt('VPGD & Showroom'), value: this.displayShowroomAddress },
+            ].filter((row) => row.value)
         },
         facebookHref() {
             return (
