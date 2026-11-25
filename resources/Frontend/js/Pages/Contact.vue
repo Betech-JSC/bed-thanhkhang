@@ -19,7 +19,7 @@
         <!-- ======================================================== -->
         <section class="relative w-full overflow-hidden bg-dark min-h-[260px] lg:min-h-[252px] flex items-center">
             <img
-                src="/assets/figma/lien-he/hero-bg.png"
+                src="/assets/figma/lien-he/hero-bg.webp"
                 alt=""
                 aria-hidden="true"
                 width="1440"
@@ -375,12 +375,12 @@
             <div class="relative w-full overflow-hidden bg-dark min-h-[300px] lg:h-[362px] flex items-center justify-center">
                 <div class="cta-texture cta-texture--left" aria-hidden="true">
                     <div class="cta-texture__inner cta-texture__inner--left">
-                        <img src="/assets/figma/lien-he/cta-texture.png" alt="" width="1584" height="672" />
+                        <img src="/assets/figma/lien-he/cta-texture.webp" alt="" width="1584" height="672" />
                     </div>
                 </div>
                 <div class="cta-texture cta-texture--right" aria-hidden="true">
                     <div class="cta-texture__inner cta-texture__inner--right">
-                        <img src="/assets/figma/lien-he/cta-texture.png" alt="" width="1584" height="672" />
+                        <img src="/assets/figma/lien-he/cta-texture.webp" alt="" width="1584" height="672" />
                     </div>
                 </div>
 
