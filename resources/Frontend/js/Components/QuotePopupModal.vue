@@ -53,7 +53,7 @@
                             <div class="quote-chain-rot quote-chain-rot--top-right">
                                 <div class="quote-chain-img quote-chain-img--top-right">
                                     <img
-                                        src="/assets/figma/quote-popup/chain-texture.png"
+                                        src="/assets/figma/quote-popup/chain-texture.webp"
                                         alt=""
                                         class="w-full h-full object-cover max-w-none"
                                         loading="lazy"
@@ -71,7 +71,7 @@
                             <div class="quote-chain-rot quote-chain-rot--bottom-left">
                                 <div class="quote-chain-img quote-chain-img--bottom-left">
                                     <img
-                                        src="/assets/figma/quote-popup/chain-texture.png"
+                                        src="/assets/figma/quote-popup/chain-texture.webp"
                                         alt=""
                                         class="w-full h-full object-cover max-w-none"
                                         loading="lazy"
