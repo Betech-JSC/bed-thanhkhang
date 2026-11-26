@@ -525,7 +525,7 @@
 import { Link } from '@inertiajs/inertia-vue3'
 import SearchModal from '@/Components/SearchModal.vue'
 
-const DEFAULT_LOGO_URL = '/assets/images/logo/logo-thanhkhang.png'
+const DEFAULT_LOGO_URL = '/assets/images/logo/logo-thanhkhang.webp'
 
 export default {
     name: 'Header',

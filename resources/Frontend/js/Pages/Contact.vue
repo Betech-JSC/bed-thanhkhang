@@ -19,7 +19,7 @@
         <!-- ======================================================== -->
         <section class="relative w-full overflow-hidden bg-dark min-h-[220px] lg:min-h-[252px] flex items-center">
             <img
-                src="/assets/images/posts/tin-tuc-hero.png"
+                src="/assets/images/posts/tin-tuc-hero.webp"
                 alt=""
                 aria-hidden="true"
                 width="1440"

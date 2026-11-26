@@ -183,7 +183,7 @@
 <script>
 import { Link } from '@inertiajs/inertia-vue3'
 
-const DEFAULT_LOGO_URL = '/assets/images/logo/logo-thanhkhang.png'
+const DEFAULT_LOGO_URL = '/assets/images/logo/logo-thanhkhang.webp'
 
 export default {
     name: 'Footer',

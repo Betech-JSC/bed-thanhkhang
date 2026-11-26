@@ -13,7 +13,7 @@
         <!-- ======================================================== -->
         <section class="relative w-full overflow-hidden bg-dark min-h-[220px] lg:min-h-[252px] flex items-center">
             <img
-                src="/assets/images/posts/tin-tuc-hero.png"
+                src="/assets/images/posts/tin-tuc-hero.webp"
                 alt=""
                 aria-hidden="true"
                 width="1440"
@@ -340,12 +340,12 @@
             >
                 <div class="cta-texture cta-texture--left opacity-25 pointer-events-none select-none" aria-hidden="true">
                     <div class="cta-texture__inner cta-texture__inner--left">
-                        <img src="/assets/images/posts/cta-chain.png" alt="" width="1584" height="672" loading="lazy" />
+                        <img src="/assets/images/posts/cta-chain.webp" alt="" width="1584" height="672" loading="lazy" />
                     </div>
                 </div>
                 <div class="cta-texture cta-texture--right opacity-25 pointer-events-none select-none" aria-hidden="true">
                     <div class="cta-texture__inner cta-texture__inner--right">
-                        <img src="/assets/images/posts/cta-chain.png" alt="" width="1584" height="672" loading="lazy" />
+                        <img src="/assets/images/posts/cta-chain.webp" alt="" width="1584" height="672" loading="lazy" />
                     </div>
                 </div>
 
@@ -593,10 +593,10 @@ const isNewPost = (index) =>
 
 // ---------- Post Helpers ----------
 const postImage = (post) => {
-    if (!post) return '/assets/images/posts/tin-tuc-hero.png'
+    if (!post) return '/assets/images/posts/tin-tuc-hero.webp'
     if (typeof post.image === 'string' && post.image.trim()) return post.image
     if (post.image?.url) return post.image.url
-    return '/assets/images/posts/tin-tuc-hero.png'
+    return '/assets/images/posts/tin-tuc-hero.webp'
 }
 
 const postHref = (post) => {
