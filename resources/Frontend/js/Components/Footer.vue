@@ -279,7 +279,7 @@ export default {
             )
         },
         taxCode() {
-            return this.siteConfig.general_tax_code || this.siteConfig.tax_code || ''
+            return this.siteConfig.tax_code || this.siteConfig.general_tax_code || this.siteConfig.mst || ''
         },
         footerCategoryLinks() {
             const raw = Array.isArray(this.siteConfig?.product_categories)

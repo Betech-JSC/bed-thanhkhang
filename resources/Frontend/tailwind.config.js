@@ -912,13 +912,14 @@ module.exports = {
                 ink: {
                     DEFAULT: '#00284B',
                     heading: '#00284B',
+                    dark: '#202939',
                     body: '#4B5565',
-                    dark: '#364152',
                     subtle: '#697586',
                     muted: '#9AA4B2',
                     light: '#FCFCFC',
                 },
-                // Figma form-field neutrals (Contact 979:32726 & 939:2577)
+                'badge-border': '#D9D9D9',
+                // Figma form-field neutrals (Contact 979:32726 & Liên hệ 939:2577)
                 field: {
                     border: '#D6D6D6',
                     placeholder: '#808080',
@@ -1034,12 +1035,16 @@ module.exports = {
                 'panel-dark': '0 8px 32px rgba(0, 0, 0, 0.6)',
                 'glow-cyan': '0 0 20px rgba(0, 240, 255, 0.35)',
                 'glow-primary-subtle': '0 0 16px rgba(0, 94, 164, 0.25)',
+                'card-featured': '0px 8px 24px -4px rgba(18, 26, 38, 0.06)',
             },
 
             fontSize: {
-                // Thành Khang Figma Official Typography Scale (Desktop 979:32231 & Mobile 1190:6335)
+                // Thành Khang Figma Official Typography Scale (Desktop 979:32231, Mobile 1190:6335 & Tin tức - chi tiết 967:28751)
                 h1: ['3rem', { lineHeight: '4.1875rem', fontWeight: '700', letterSpacing: '0' }],           // 48px / 67px (~1.4) / 700 (Desktop Hero 979:32441)
                 'h1-mobile': ['1.75rem', { lineHeight: '2.25rem', fontWeight: '700', letterSpacing: '0' }], // 28px / 36px (~1.286) / 700 (Mobile Hero 1190:6365)
+                'h1-page': ['2.25rem', { lineHeight: '1.4', fontWeight: '700' }],                           // 36px / 1.4 / 700 (Figma PC/Heading/H3/bold)
+                'h1-article': ['2.25rem', { lineHeight: '1.35', fontWeight: '700' }],                       // 36px / 1.35 / 700 (Figma Tin tức - chi tiết 967:28751)
+                'h1-page-mobile': ['1.75rem', { lineHeight: '1.3', fontWeight: '700' }],                    // 28px / 1.3 / 700 (Mobile)
                 h2: ['1.75rem', { lineHeight: '2.8125rem', fontWeight: '700', letterSpacing: '0' }],        // 28px / 45px (~1.6) / 700 (Desktop Section Banner 979:32319 / 979:32379)
                 'h2-mobile': ['1.25rem', { lineHeight: '1.75rem', fontWeight: '700', letterSpacing: '0' }], // 20px / 28px (1.4) / 700 (Mobile Section Banner 1191:6451)
                 h3: ['1.5rem', { lineHeight: '2.375rem', fontWeight: '700', letterSpacing: '0' }],          // 24px / 38px (~1.583) / 700 (Desktop Lead / Pillar 979:32253 / 979:32298)
@@ -1135,6 +1140,7 @@ module.exports = {
                 'container-content': '1216px',
                 content: '1152px',
                 hero: '1280px',
+                'quote-popup': '1000px',
                 '60vw': '60vw',
                 '70vw': '70vw',
                 '80vw': '80vw',

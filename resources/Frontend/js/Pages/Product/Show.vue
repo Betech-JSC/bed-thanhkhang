@@ -346,6 +346,7 @@ import SpecTable from '@/Components/Product/SpecTable.vue'
 import RelatedProducts from '@/Components/Product/RelatedProducts.vue'
 import EmptyState from '@/Components/EmptyState.vue'
 import ProductCtaBanner from './Components/ProductCtaBanner.vue'
+import { openQuoteModal } from '@/composables/useQuoteModal'
 
 export default {
     name: 'ProductShow',
@@ -906,21 +907,13 @@ export default {
             this.activeTab = tabKey
         },
         handleRequestQuote() {
-            const contactUrl = this.contactUrl
-            const queryParams = {}
-            if (this.currentTitle) queryParams.product = this.currentTitle
-            if (this.currentCategory) queryParams.category = this.currentCategory
-            if (this.productMaterial) queryParams.material = this.productMaterial
-            if (this.productColor) queryParams.color = this.productColor
-
-            if (this.$inertia) {
-                this.$inertia.visit(contactUrl, {
-                    data: queryParams,
-                })
-            } else if (typeof window !== 'undefined') {
-                const qs = new URLSearchParams(queryParams).toString()
-                window.location.href = qs ? `${contactUrl}?${qs}` : contactUrl
-            }
+            openQuoteModal({
+                source: 'product_detail',
+                product: this.currentTitle,
+                category: this.currentCategory,
+                material: this.productMaterial,
+                color: this.productColor,
+            })
         },
     },
 }
