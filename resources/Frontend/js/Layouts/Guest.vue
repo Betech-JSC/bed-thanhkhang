@@ -5,13 +5,17 @@
         <Footer v-if="!isMigrated" />
         <SocialFixed />
         <NotificationPopup />
+        <QuotePopupModal />
         <!-- <CursorIcon /> -->
     </div>
 </template>
 
 <script>
+import QuotePopupModal from '@/Components/QuotePopupModal.vue'
+
 export default {
     components: {
+        QuotePopupModal,
     },
     computed: {
         isMigrated() {

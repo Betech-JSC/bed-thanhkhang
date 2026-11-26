@@ -893,6 +893,7 @@ module.exports = {
                     white: '#FFFFFF',
                     50: '#F8FAFC',
                     100: '#EEF2F6',
+                    200: '#E3E8EF',
                     'gray-light': '#F1F1F1',
                     light: '#FCFCFC',
                 },
@@ -1113,6 +1114,7 @@ module.exports = {
                 'container-narrow': '1216px', // 1152px inner + 2x32px desktop gutter
                 content: '1152px',
                 hero: '1280px',
+                'quote-popup': '1000px',
                 '60vw': '60vw',
                 '70vw': '70vw',
                 '80vw': '80vw',

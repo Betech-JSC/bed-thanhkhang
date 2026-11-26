@@ -5,18 +5,21 @@
             <slot />
         </main>
         <Footer />
+        <QuotePopupModal />
     </div>
 </template>
 
 <script>
 import Header from '@/Components/Header.vue'
 import Footer from '@/Components/Footer.vue'
+import QuotePopupModal from '@/Components/QuotePopupModal.vue'
 
 export default {
     name: 'MainLayout',
     components: {
         Header,
         Footer,
+        QuotePopupModal,
     },
     watch: {
         '$page.url': function () {

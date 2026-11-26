@@ -19,7 +19,14 @@
     --color-surface-white: #FFFFFF;
     --color-surface-50: #F8FAFC;
     --color-surface-100: #EEF2F6;
+    --color-surface-200: #E3E8EF;
     --color-surface-gray-light: #F1F1F1;
+
+    /* Form field neutrals (Figma Liên hệ & Quote Popup 1264:49742) */
+    --color-field-border: #D6D6D6;
+    --color-field-placeholder: #808080;
+    --color-field-label: #424242;
+    --color-field-required: #FF4749;
 
     --color-gray-800: #202939;
     --color-gray-600: #4B5565;
@@ -46,6 +53,7 @@
     --text-h3-mobile: 1.25rem;/* 20px */
     --text-h4: 1.25rem;       /* 20px */
     --text-h4-mobile: 1.125rem;/* 18px */
+    --text-pc-h5: 1.75rem;    /* 28px */
 
     --text-body-xl: 1.25rem;  /* 20px */
     --text-body-lg: 1.125rem; /* 18px */
@@ -56,6 +64,7 @@
     /* Layout & Gutters */
     --container-max-width: 1280px;
     --container-content-width: 1280px;
+    --quote-popup-max-width: 1000px;
     --gutter-mobile: 1rem;
     --gutter-desktop: 2rem;
 }

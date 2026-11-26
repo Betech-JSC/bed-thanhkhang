@@ -207,12 +207,13 @@
                 </button>
 
                 <div class="flex items-center gap-3 shrink-0">
-                    <Link
-                        :href="safeRoute('contact', undefined, '/lien-he')"
-                        class="inline-flex items-center justify-center whitespace-nowrap rounded-cta bg-primary hover:bg-primary-hover active:bg-primary-active text-surface text-[14px] font-medium leading-[1.4] px-5 py-2 shadow-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                    <button
+                        type="button"
+                        @click="handleOpenQuoteModal"
+                        class="inline-flex items-center justify-center whitespace-nowrap rounded-cta bg-primary hover:bg-primary-hover active:bg-primary-active text-surface text-[14px] font-medium leading-[1.4] px-5 py-2 shadow-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 cursor-pointer"
                     >
                         {{ tt('Nhận báo giá') }}
-                    </Link>
+                    </button>
                     <a
                         v-if="contactPhone"
                         :href="'tel:' + cleanPhone"
@@ -461,13 +462,13 @@
                 <!-- Drawer Bottom: CTAs + Contact Info from CMS -->
                 <div class="p-5 pt-4 border-t border-gray-200 bg-surface-50 space-y-4">
                     <div class="flex flex-col gap-2.5">
-                        <Link
-                            :href="safeRoute('contact', undefined, '/lien-he')"
-                            @click="closeDrawer"
-                            class="w-full min-h-[44px] inline-flex items-center justify-center rounded-cta bg-primary hover:bg-primary-hover active:bg-primary-active text-surface text-[14px] font-medium shadow-xs transition-colors"
+                        <button
+                            type="button"
+                            @click="handleOpenQuoteModalFromDrawer"
+                            class="w-full min-h-[44px] inline-flex items-center justify-center rounded-cta bg-primary hover:bg-primary-hover active:bg-primary-active text-surface text-[14px] font-medium shadow-xs transition-colors cursor-pointer"
                         >
                             {{ tt('Nhận báo giá') }}
-                        </Link>
+                        </button>
                         <a
                             v-if="contactPhone"
                             :href="'tel:' + cleanPhone"
@@ -524,6 +525,7 @@
 <script>
 import { Link } from '@inertiajs/inertia-vue3'
 import SearchModal from '@/Components/SearchModal.vue'
+import { openQuoteModal } from '@/composables/useQuoteModal'
 
 const DEFAULT_LOGO_URL = '/assets/images/logo/logo-thanhkhang.webp'
 
@@ -812,6 +814,14 @@ export default {
             if (typeof document !== 'undefined') {
                 document.body.classList.remove('overflow-hidden')
             }
+        },
+        handleOpenQuoteModal() {
+            this.closeDesktopDropdown()
+            openQuoteModal({ source: 'header_desktop' })
+        },
+        handleOpenQuoteModalFromDrawer() {
+            this.closeDrawer()
+            openQuoteModal({ source: 'header_mobile_drawer' })
         },
         toggleMobileCategory(id) {
             const idx = this.expandedMobileCategoryIds.indexOf(id)
