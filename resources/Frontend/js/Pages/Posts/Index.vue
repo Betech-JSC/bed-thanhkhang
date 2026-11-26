@@ -16,15 +16,12 @@
                 src="/assets/images/posts/tin-tuc-hero.webp"
                 alt=""
                 aria-hidden="true"
-                width="1024"
-                height="701"
-                class="absolute inset-0 w-full h-full object-cover object-[50%_44%] pointer-events-none select-none"
+                width="1920"
+                height="336"
+                class="absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none"
                 loading="eager"
             />
-            <div
-                class="absolute inset-y-0 left-0 w-full lg:w-[898px] bg-gradient-to-r from-[#01101E]/80 to-transparent pointer-events-none"
-                aria-hidden="true"
-            />
+            <div class="hero-scrim absolute inset-0 pointer-events-none" aria-hidden="true" />
             <div class="app-container relative z-10 py-10 lg:py-0">
                 <div class="flex flex-col gap-6 max-w-[580px]">
                     <nav :aria-label="tt('Breadcrumb')" class="flex items-center gap-2 text-[14px]">
@@ -630,6 +627,16 @@ const formatDate = (raw) => {
 </script>
 
 <style scoped>
+.hero-scrim {
+    background: linear-gradient(
+        90deg,
+        rgba(1, 16, 30, 0.94) 0%,
+        rgba(1, 16, 30, 0.88) 13%,
+        rgba(1, 16, 30, 0.72) 27%,
+        rgba(1, 16, 30, 0.35) 39%,
+        rgba(1, 16, 30, 0) 53%
+    );
+}
 .cta-texture {
     display: none;
     position: absolute;
