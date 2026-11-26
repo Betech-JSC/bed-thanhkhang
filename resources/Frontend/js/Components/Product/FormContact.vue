@@ -16,6 +16,7 @@
                     />
                 </div>
                 <button
+                    type="button"
                     @click="onSubmitContact()"
                     :disabled="isLoading"
                     class="flex items-center justify-center w-[100px] h-full bg-yellow-500 hover:bg-yellow-700 duration-200 rounded-r-lg disabled:bg-gray-200 disabled:text-gray-400 disabled:pointer-events-none"
@@ -33,14 +34,14 @@
             </div>
         </div>
         <div
-            v-if="showDesc"
+            v-if="showDesc && hotlineDisplay"
             class="text-center text-gray-700 caption-custom mt-3.5"
         >
             {{ tt("Hoặc đặt hàng trực tiếp qua hotline:") }}
             <a
-                href="tel:0772924425"
+                :href="'tel:' + hotlineClean"
                 class="font-bold text-orange-500 caption-custom"
-                >{{ tt("0772924425") }}</a
+                >{{ hotlineDisplay }}</a
             >
             <br />
             {{ tt("(Miễn phí cước gọi)") }}
@@ -54,7 +55,7 @@
         <template v-slot:desc>
             {{
                 tt(
-                    "Nhà thuốc Phương Chính sẽ liên hệ quý khách trong thời gian sớm nhất"
+                    "Đội ngũ kỹ thuật sẽ liên hệ quý khách trong thời gian sớm nhất"
                 )
             }}
         </template>
@@ -71,12 +72,14 @@ export default {
         },
         product: {
             type: Object,
-            default: {},
+            default: () => ({}),
         },
     },
 
     data() {
-        const { id, slug, title } = this.product;
+        const product =
+            this.product && typeof this.product === "object" ? this.product : {};
+        const { id, slug, title } = product;
 
         return {
             FORM_DATA_PRODUCT: { id, slug, title },
@@ -99,7 +102,33 @@ export default {
         };
     },
 
+    computed: {
+        hotlineDisplay() {
+            const g = this.$page?.props?.global || {};
+            return g.hotline || g.general_phone || g.phone || "";
+        },
+        hotlineClean() {
+            return String(this.hotlineDisplay).replace(/[^\d+]/g, "");
+        },
+    },
+
     methods: {
+        safeRoute(name, params, fallback = "/") {
+            if (typeof this.route === "function" && typeof this.routes === "function") {
+                const allRoutes = this.routes() || {};
+                const localizedName =
+                    typeof this.routeLocaleName === "function" ? this.routeLocaleName(name) : name;
+                if (allRoutes[localizedName] || allRoutes[name]) {
+                    try {
+                        const url = this.route(name, params);
+                        if (url && url !== "#") return url;
+                    } catch (e) {
+                        // Fall through to fallback
+                    }
+                }
+            }
+            return fallback;
+        },
         onChange(value) {
             this.form.contact.data.Phone = value;
             this.validate = validateField(value, this.rules.phone);
@@ -113,7 +142,7 @@ export default {
             if (!this.validate || this.isLoading) return;
 
             this.isLoading = true;
-            const BASE_URL = this.route("contact.store");
+            const BASE_URL = this.safeRoute("contact.store", undefined, "/contacts");
             const { status } = await axios.post(BASE_URL, this.form);
 
             if (status === 200) {

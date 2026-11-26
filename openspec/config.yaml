@@ -1,17 +1,11 @@
 schema: spec-driven
 
 context: |
-  Project: bed-hhmaker (Hệ thống Website <DOMAIN_DESCRIPTION> CMS doanh nghiệp)
+  Project: bed-thanhkhang (Hệ thống Website & CMS doanh nghiệp B2B của Công ty TNHH Dịch vụ Kỹ thuật Thành Khang Tecsat — cung ứng phụ tùng thang cuốn & thang máy đồng bộ, xích tải & băng tải công nghiệp, giải pháp quạt trần công nghiệp BLDC tiết kiệm điện)
   Tech Stack:
-    # Ví dụ A — Laravel + Inertia + Vue 3 (BED CMS hoặc Standard Laravel):
-    # - Backend: PHP 8.1+, Laravel 9/10, MySQL, Ziggy, Multi-locale
-    # - Frontend: Vue 3 (Composition API / <script setup>), Inertia.js, Vite, Tailwind CSS 3, PrimeVue 3, Sass, Pinia, vue-i18n
-    # - UI Paths: resources/Frontend/js/{Components,Layouts,Pages} (hoặc resources/js/{Components,Layouts,Pages})
-    #
-    # Ví dụ B — Next.js + React:
-    # - Framework: Next.js 14/15 (App Router), React 18/19, TypeScript, Tailwind CSS
-    # - UI Paths: src/app, src/components, src/lib
-    - Điền stack thực tế của dự án tại đây (đối chiếu từ composer.json / package.json).
+    - Backend: PHP ^8.0.2, Laravel ^9.19, MySQL, jamstackvietnam/essentials, astrotomic/laravel-translatable, tightenco/ziggy, đa ngôn ngữ (vi mặc định, en). Inertia shared props qua app/Http/Middleware/HandleInertiaFrontendRequests.php ($page.props.global, $page.props.product_categories, $page.props.data, $page.props.locale, $page.props.route, $page.props.seo).
+    - Frontend: Vue 3.2.31, @inertiajs/inertia-vue3 ^0.6.0 (CSR + SSR), Vite 3.0.0 (vite.frontend.config.js), Tailwind CSS 3.2.7 (resources/Frontend/tailwind.config.js), Sass 1.55.0, Pinia 2.0.23, vue-i18n 9.2.2, ziggy-js 1.5.0.
+    - UI & Asset Paths: resources/Frontend/views/app.blade.php, resources/Frontend/js/{Components,Layouts,Pages}, resources/Frontend/scss/, tài nguyên tĩnh public/assets/{images,svg}, lệnh build yarn frontend:build.
 
   Engineering & Governance Rules:
     - Ngôn ngữ tài liệu OpenSpec (proposal, specs, design, tasks): Tiếng Việt rõ ràng, thuật ngữ kỹ thuật giữ chuẩn tiếng Anh.

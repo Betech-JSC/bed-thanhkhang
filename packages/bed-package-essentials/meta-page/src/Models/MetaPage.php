@@ -26,6 +26,36 @@ class MetaPage extends BaseModel
         'url' => 'required',
     ];
 
+    protected static function booted()
+    {
+        static::saved(function () {
+            static::clearMetaPageCaches();
+        });
+
+        static::deleted(function () {
+            static::clearMetaPageCaches();
+        });
+    }
+
+    public static function clearMetaPageCaches(): void
+    {
+        try {
+            \Illuminate\Support\Facades\Cache::tags(['meta_pages'])->flush();
+        } catch (\Throwable $e) {
+            // Ignore if cache driver does not support tags
+        }
+
+        $locales = config('app.locales', ['vi', 'en']);
+        foreach ($locales as $locale) {
+            \Illuminate\Support\Facades\Cache::forget('home_page_data_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('history_index_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('products_index_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('documents_index_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('contact_index_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('process_index_' . $locale);
+        }
+    }
+
     public function transform()
     {
         return [

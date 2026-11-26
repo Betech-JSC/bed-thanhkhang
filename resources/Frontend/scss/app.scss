@@ -3,14 +3,18 @@
 @import 'tailwindcss/utilities';
 
 :root {
-    /* Brand Color Palette (Figma Homepage Option 6 - 595:15360) */
+    /* Brand Color Palette (Figma Official Desktop 979:32231 & Mobile 1190:6335) */
     --color-primary: #005EA4;
     --color-primary-hover: #004D86;
     --color-primary-active: #003967;
     --color-primary-info: #0075E7;
+    --color-primary-sub-hover: #007FD9;
+    --color-primary-accent: #009FFF;
 
     --color-secondary: #C9E0FF;
     --color-secondary-hover: #81BDFF;
+    --color-secondary-disabled: #EDF6FF;
+    --color-secondary-disabled-text: #5BA4FB;
 
     --color-dark: #00284B;
     --color-dark-slate: #364152;
@@ -19,40 +23,77 @@
     --color-surface-white: #FFFFFF;
     --color-surface-50: #F8FAFC;
     --color-surface-100: #EEF2F6;
+    --color-surface-200: #E3E8EF;
+    --color-surface-300: #CDD5DF;
     --color-surface-gray-light: #F1F1F1;
+    --color-surface-light: #FCFCFC;
 
+    --color-ink-heading: #00284B;
+    --color-gray-700: #364152;
     --color-gray-600: #4B5565;
     --color-gray-500: #697586;
     --color-gray-400: #9AA4B2;
     --color-gray-300: #D6D6D6;
+    --color-field-border: #D6D6D6;
     --color-gray-200: #E3E8EF;
+    --color-border: #E3E8EF;
+    --color-border-hover: #CDD5DF;
     --color-btn-slide: rgba(57, 76, 107, 0.8);
+    --color-zalo: #0068FF;
+    --color-hotline: #008910;
 
     /* Shadow */
     --shadow-xs: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+    --shadow-process-card: 2px 2px 6px 0px rgba(0, 0, 0, 0.25);
 
-    /* Typography */
+    /* Typography (Open Sans Primary + Inter Secondary) */
     --font-sans: 'Open Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --text-h1: 3rem;          /* 48px */
-    --text-h1-mobile: 2rem;   /* 32px */
-    --text-h2: 1.75rem;       /* 28px */
-    --text-h2-mobile: 1.5rem; /* 24px */
-    --text-h3: 1.5rem;        /* 24px */
-    --text-h3-mobile: 1.25rem;/* 20px */
-    --text-h4: 1.25rem;       /* 20px */
-    --text-h4-mobile: 1.125rem;/* 18px */
+    --font-inter: 'Inter', 'Open Sans', system-ui, sans-serif;
 
-    --text-body-xl: 1.25rem;  /* 20px */
-    --text-body-lg: 1.125rem; /* 18px */
-    --text-body-md: 1rem;     /* 16px */
-    --text-body-sm: 0.875rem; /* 14px */
-    --text-body-xs: 0.75rem;  /* 12px */
+    --text-h1: 3rem;                  /* 48px (Desktop Hero 979:32441) */
+    --leading-h1: 4.1875rem;          /* 67px (~1.4) */
+    --text-h1-mobile: 1.75rem;        /* 28px (Mobile Hero 1190:6365) */
+    --leading-h1-mobile: 2.25rem;     /* 36px (~1.286) */
 
-    /* Layout & Gutters */
-    --container-max-width: 1280px;
-    --container-content-width: 1280px;
-    --gutter-mobile: 1rem;
-    --gutter-desktop: 2rem;
+    --text-h2: 1.75rem;               /* 28px (Desktop Section Banner 979:32319 / 979:32379) */
+    --leading-h2: 2.8125rem;          /* 45px (~1.6) */
+    --text-h2-mobile: 1.25rem;        /* 20px (Mobile Section Banner 1191:6451) */
+    --leading-h2-mobile: 1.75rem;     /* 28px (1.4) */
+
+    --text-h3: 1.5rem;                /* 24px (Desktop Lead / Pillar 979:32253 / 979:32298) */
+    --leading-h3: 2.375rem;           /* 38px (~1.583) */
+    --text-h3-mobile: 1.125rem;       /* 18px (Mobile Lead 1190:6458) */
+    --leading-h3-mobile: 1.6875rem;   /* 27px (1.5) */
+
+    --text-h4: 1.25rem;               /* 20px (Desktop Card / Footer Brand 184:1292 / 353:9442) */
+    --leading-h4: 2rem;               /* 32px (1.6) */
+    --text-h4-mobile: 1rem;           /* 16px (Mobile Section / Card 1190:6395 / 1191:6392) */
+    --leading-h4-mobile: 1.5rem;      /* 24px (1.5) */
+
+    --text-section-eyebrow: 1.125rem; /* 18px (Desktop Section Eyebrow 979:32237) */
+
+    --text-body-xl: 1.25rem;          /* 20px */
+    --text-body-lg: 1.125rem;         /* 18px */
+    --text-body-md: 1rem;             /* 16px */
+    --text-body-sm: 0.875rem;         /* 14px */
+    --text-body-sm-mobile: 0.8125rem; /* 13px */
+    --text-body-xs: 0.75rem;          /* 12px */
+
+    /* Layout, Dual-Grid Containers & Gutters */
+    --container-max-width: 1344px;        /* 1280px inner + 2x32px desktop gutter */
+    --container-wide-inner: 1280px;       /* Hero 979:32435 & Footer 979:32406 */
+    --container-narrow-max-width: 1216px; /* 1152px inner + 2x32px desktop gutter */
+    --container-content-width: 1152px;    /* Header 979:32411 & Home 6 Body Sections */
+    --gutter-mobile: 1rem;                /* 16px (px-4) */
+    --gutter-desktop: 2rem;               /* 32px (px-8) */
+
+    /* Header Metrics (Desktop 979:32411 = 118px; Mobile 1190:6336 = 92px) */
+    --header-topbar-height-desktop: 46px;
+    --header-mainbar-height-desktop: 72px;
+    --header-height-desktop: 118px;
+    --header-topbar-height-mobile: 31px;
+    --header-mainbar-height-mobile: 61px;
+    --header-height-mobile: 92px;
 }
 
 @layer base {
@@ -77,41 +118,41 @@
 
     h1 {
         font-size: var(--text-h1-mobile);
-        line-height: 1.3;
+        line-height: var(--leading-h1-mobile);
         font-weight: 700;
         @screen md {
             font-size: var(--text-h1);
-            line-height: 1.4;
+            line-height: var(--leading-h1);
         }
     }
 
     h2 {
         font-size: var(--text-h2-mobile);
-        line-height: 1.4;
+        line-height: var(--leading-h2-mobile);
         font-weight: 700;
         @screen md {
             font-size: var(--text-h2);
-            line-height: 1.5;
+            line-height: var(--leading-h2);
         }
     }
 
     h3 {
         font-size: var(--text-h3-mobile);
-        line-height: 1.5;
+        line-height: var(--leading-h3-mobile);
         font-weight: 700;
         @screen md {
             font-size: var(--text-h3);
-            line-height: 1.6;
+            line-height: var(--leading-h3);
         }
     }
 
     h4 {
         font-size: var(--text-h4-mobile);
-        line-height: 1.5;
+        line-height: var(--leading-h4-mobile);
         font-weight: 700;
         @screen md {
             font-size: var(--text-h4);
-            line-height: 1.6;
+            line-height: var(--leading-h4);
         }
     }
 
@@ -126,18 +167,19 @@
 }
 
 @layer components {
-    /* 1280px inner content width (+ 2x32px desktop gutter = 1344px) — Global Container */
+    /* 1280px inner content width (+ 2x32px desktop gutter = 1344px) — Global / Wide Container */
     .app-container {
         @apply w-full max-w-[1344px] mx-auto px-4 md:px-8;
     }
 
-    /* 1280px inner content width (+ 2x32px desktop gutter = 1344px) — Hero / Footer */
+    /* 1280px inner content width (+ 2x32px desktop gutter = 1344px) — Hero (979:32435) & Footer (979:32406) */
     .app-container-wide {
         @apply w-full max-w-[1344px] mx-auto px-4 md:px-8;
     }
 
-    /* 1152px inner content width (Figma Liên hệ 1440 − 2×144px) + 2x32px desktop gutter = 1216px */
-    .app-container-narrow {
+    /* 1152px inner content width (+ 2x32px desktop gutter = 1216px) — Header (979:32411) & Home Body Sections */
+    .app-container-narrow,
+    .app-container-content {
         @apply w-full max-w-[1216px] mx-auto px-4 md:px-8;
     }
 

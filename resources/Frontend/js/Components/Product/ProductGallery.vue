@@ -2,6 +2,7 @@
     <div class="w-full flex flex-col-reverse md:flex-row gap-5 items-start">
         <!-- Thumbnail Column (Figma 2390:5337, Desktop: vertical 140px, Mobile: horizontal) -->
         <div
+            v-if="galleryList.length > 0"
             class="flex md:flex-col gap-3 md:gap-5 overflow-x-auto md:overflow-y-auto w-full md:w-[120px] lg:w-[140px] shrink-0 pb-2 md:pb-0 scrollbar-none"
         >
             <button
@@ -18,11 +19,20 @@
                 :aria-label="tt('Xem góc ảnh ') + (index + 1)"
             >
                 <img
+                    v-if="!failedUrls[item.thumb || item.url]"
                     :src="item.thumb || item.url"
                     :alt="item.alt ? tt(item.alt) : (tt('Góc nhìn ') + (index + 1))"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
+                    @error="handleImageError(item.thumb || item.url)"
                 />
+                <div
+                    v-else
+                    class="w-full h-full bg-[#1C2238] flex items-center justify-center"
+                    aria-hidden="true"
+                >
+                    <span class="w-6 h-[2px] rounded bg-[#404968]"></span>
+                </div>
                 <span
                     v-if="currentIndex === index"
                     class="absolute inset-0 bg-blue-500/10 pointer-events-none"
@@ -31,9 +41,16 @@
         </div>
 
         <!-- Main Product Image Frame (Figma 2390:5344: 464x600 px, rounded-[12px], bg-[#D1D2D2]) -->
-        <div class="relative flex-1 w-full lg:w-[464px] h-[360px] sm:h-[460px] md:h-[520px] lg:h-[600px] rounded-[12px] overflow-hidden bg-[#D1D2D2] group">
+        <div
+            :class="[
+                'relative flex-1 w-full h-[360px] sm:h-[460px] md:h-[520px] lg:h-[600px] rounded-[12px] overflow-hidden group',
+                galleryList.length > 0 ? 'lg:w-[464px]' : '',
+                hasActiveMainImage ? 'bg-[#D1D2D2]' : 'bg-[#1C2238] border border-[#30374F]',
+            ]"
+        >
             <!-- Image Container with Zoom effect on hover -->
             <div
+                v-if="hasActiveMainImage"
                 class="relative w-full h-full flex items-center justify-center overflow-hidden cursor-zoom-in"
                 @mousemove="handleMouseMove"
                 @mouseleave="handleMouseLeave"
@@ -44,7 +61,18 @@
                     :alt="currentImage.alt ? tt(currentImage.alt) : tt('Ảnh sản phẩm chi tiết')"
                     :style="zoomStyle"
                     class="w-full h-full object-cover transition-transform duration-200 select-none will-change-transform"
+                    @error="handleImageError(currentImage.url)"
                 />
+            </div>
+            <!-- Neutral empty state frame when product has no images -->
+            <div
+                v-else
+                class="w-full h-full flex flex-col items-center justify-center gap-3 p-6 text-center"
+            >
+                <span class="w-12 h-[3px] rounded-[2px] bg-[#404968]" aria-hidden="true"></span>
+                <span class="text-sm text-[#9AA4B2] font-sans">
+                    {{ tt('Hình ảnh sản phẩm đang được cập nhật') }}
+                </span>
             </div>
 
             <!-- Navigation Chevrons on Mobile -->
@@ -75,7 +103,7 @@
         <!-- Lightbox Fullscreen Modal -->
         <Teleport to="body">
             <div
-                v-if="isFullscreen"
+                v-if="isFullscreen && hasActiveMainImage"
                 class="fixed inset-0 z-50 bg-black/95 backdrop-blur-lg flex items-center justify-center p-4"
                 @click="toggleFullscreen"
             >
@@ -102,8 +130,6 @@
 </template>
 
 <script>
-const tt = (s) => s
-
 export default {
     name: 'ProductGallery',
     props: {
@@ -123,39 +149,62 @@ export default {
             zoomOriginX: 50,
             zoomOriginY: 50,
             isFullscreen: false,
+            failedUrls: {},
         }
+    },
+    watch: {
+        images() {
+            this.currentIndex = 0
+            this.failedUrls = {}
+            this.isFullscreen = false
+        },
     },
     computed: {
         galleryList() {
-            if (this.images && Array.isArray(this.images) && this.images.length > 0) {
-                return this.images.map((item, idx) => {
-                    if (typeof item === 'string') {
-                        return {
-                            url: item,
-                            thumb: item,
-                            alt: `${this.tt(this.productTitle)} - ${this.tt('Góc nhìn ')}${idx + 1}`,
-                        };
-                    }
-                    return {
-                        url: item.url || item.path || '/images/products/thanhkhang/xich-bac-thang-thuong-mai/commercial-type.webp',
-                        thumb: item.thumb || item.url || item.path || '/images/products/thanhkhang/xich-bac-thang-thuong-mai/commercial-type.webp',
-                        alt: item.alt || item.title || `${this.tt(this.productTitle)} - ${this.tt('Góc nhìn ')}${idx + 1}`,
-                        tag: item.tag || null,
-                    };
-                });
+            if (!Array.isArray(this.images) || this.images.length === 0) {
+                return []
             }
 
-            return [
-                {
-                    url: '/images/products/thanhkhang/xich-bac-thang-thuong-mai/commercial-type.webp',
-                    thumb: '/images/products/thanhkhang/xich-bac-thang-thuong-mai/commercial-type.webp',
-                    alt: this.tt(this.productTitle),
-                    tag: null,
-                },
-            ];
+            const title = this.productTitle ? String(this.productTitle).trim() : ''
+            return this.images
+                .map((item, idx) => {
+                    if (typeof item === 'string') {
+                        const url = item.trim()
+                        if (!url) return null
+                        return {
+                            url,
+                            thumb: url,
+                            alt: title
+                                ? `${title} - ${this.tt('Góc nhìn ')}${idx + 1}`
+                                : `${this.tt('Góc nhìn ')}${idx + 1}`,
+                        }
+                    }
+                    if (item && typeof item === 'object') {
+                        const url = String(item.url || item.path || '').trim()
+                        if (!url) return null
+                        const thumb = String(item.thumb || url).trim()
+                        return {
+                            url,
+                            thumb,
+                            alt:
+                                item.alt ||
+                                item.title ||
+                                (title
+                                    ? `${title} - ${this.tt('Góc nhìn ')}${idx + 1}`
+                                    : `${this.tt('Góc nhìn ')}${idx + 1}`),
+                            tag: item.tag || null,
+                        }
+                    }
+                    return null
+                })
+                .filter(Boolean)
         },
         currentImage() {
             return this.galleryList[this.currentIndex] || this.galleryList[0] || {}
+        },
+        hasActiveMainImage() {
+            const url = this.currentImage?.url
+            return Boolean(url && !this.failedUrls[url])
         },
         zoomStyle() {
             if (!this.isZoomed) {
@@ -171,14 +220,20 @@ export default {
         },
     },
     methods: {
+        handleImageError(url) {
+            if (!url) return
+            this.failedUrls = { ...this.failedUrls, [url]: true }
+        },
         selectImage(index) {
             this.currentIndex = index
         },
         prevImage() {
+            if (this.galleryList.length === 0) return
             this.currentIndex =
                 this.currentIndex === 0 ? this.galleryList.length - 1 : this.currentIndex - 1
         },
         nextImage() {
+            if (this.galleryList.length === 0) return
             this.currentIndex =
                 this.currentIndex === this.galleryList.length - 1 ? 0 : this.currentIndex + 1
         },
@@ -194,6 +249,7 @@ export default {
             this.isZoomed = false
         },
         toggleFullscreen() {
+            if (!this.hasActiveMainImage) return
             this.isFullscreen = !this.isFullscreen
         },
     },

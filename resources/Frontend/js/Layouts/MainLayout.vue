@@ -1,7 +1,10 @@
 <template>
-    <div class="min-h-screen flex flex-col bg-surface text-ink-body font-sans selection:bg-primary selection:text-white">
+    <div
+        class="min-h-screen flex flex-col bg-surface text-ink-body font-sans antialiased selection:bg-primary selection:text-white"
+        style="--header-height-desktop: 118px; --header-height-mobile: 92px;"
+    >
         <Header />
-        <main class="flex-grow">
+        <main id="main-content" class="flex-grow">
             <slot />
         </main>
         <Footer />

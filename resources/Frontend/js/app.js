@@ -2,18 +2,20 @@ import MainLayout from '@/Layouts/MainLayout.vue'
 import { createInertiaApp, Head, Link } from '@inertiajs/inertia-vue3'
 import { Inertia } from '@inertiajs/inertia'
 import { InertiaProgress } from '@inertiajs/progress'
-import messages from '@intlify/unplugin-vue-i18n/messages'
-import i18nMessages from '../../../public/build/locales/i18n.js'
-import viJson from '../lang/vi.json'
-import enJson from '../lang/en.json'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
 import { createPinia } from 'pinia'
 import { createApp, h } from 'vue'
-import { createI18n } from 'vue-i18n'
 import { ObserveVisibility } from 'vue3-observe-visibility'
 import { vScrollReveal } from '@/composables/useScrollReveal.js'
+import {
+    createFrontendI18n,
+    provideFrontendI18n,
+    resolveLocaleFromProps,
+    syncI18nLocale,
+    translateMessage,
+} from '@/composables/useTranslate.js'
 import route from 'ziggy-js'
 import { Ziggy } from '../../../public/build/ziggy.frontend.js'
 
@@ -43,26 +45,6 @@ axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 window.axios = axios
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || import.meta.env.VITE_APP_NAME
-const rawMerged = { ...messages, ...i18nMessages }
-const mergedMessages = {
-    ...rawMerged,
-    vi: {
-        ...(rawMerged.vi || {}),
-        ...viJson,
-        ui: {
-            ...(rawMerged.vi?.ui || {}),
-            ...viJson,
-        },
-    },
-    en: {
-        ...(rawMerged.en || {}),
-        ...enJson,
-        ui: {
-            ...(rawMerged.en?.ui || {}),
-            ...enJson,
-        },
-    },
-}
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -79,27 +61,20 @@ createInertiaApp({
         const app_instance = createApp({ render: () => h(app, props) })
             .use(plugin)
             .use(pinia)
-        const i18n = createI18n({
-            locale: props.initialPage.props.locale?.current || 'vi',
-            fallbackLocale: props.initialPage.props.locale?.default || 'vi',
-            legacy: false,
-            globalInjection: true,
-            messages: mergedMessages,
-            missingWarn: false,
-            fallbackWarn: false,
-        })
+        const i18n = createFrontendI18n(
+            props.initialPage.props.locale?.current || 'vi',
+            props.initialPage.props.locale?.default || 'vi'
+        )
 
         // Synchronize i18n locale when Inertia navigates
         Inertia.on('navigate', (event) => {
-            const nextLocale = event.detail.page.props.locale?.current
-            if (nextLocale && i18n.global) {
-                if (typeof i18n.global.locale === 'object' && 'value' in i18n.global.locale) {
-                    i18n.global.locale.value = nextLocale
-                } else {
-                    i18n.global.locale = nextLocale
-                }
+            const nextLocale = resolveLocaleFromProps(event.detail.page.props, '')
+            if (nextLocale) {
+                syncI18nLocale(i18n, nextLocale)
             }
         })
+
+        provideFrontendI18n(app_instance, i18n)
 
         app_instance
             .use(i18n)
@@ -115,7 +90,10 @@ createInertiaApp({
                         if (name.startsWith('vi.') || name.startsWith('en.')) {
                             return Ziggy.routes && Ziggy.routes[name] ? name : name
                         }
-                        const locale = this.$inertia?.page?.props?.locale?.current || this.$page?.props?.locale?.current || props.initialPage?.props?.locale?.current || 'vi'
+                        const locale = resolveLocaleFromProps(
+                            this.$page?.props || this.$inertia?.page?.props || props.initialPage?.props,
+                            'vi'
+                        )
                         if (!locale) return name
                         const localeName = locale + '.' + name
 
@@ -139,63 +117,17 @@ createInertiaApp({
                         return Ziggy.routes
                     },
                     tt(text) {
-                        if (!text) return ''
-                        const locale = this.$inertia?.page?.props?.locale?.current || this.$page?.props?.locale?.current || 'vi'
-
-                        if (this.$i18n) {
-                            if (typeof this.$i18n.locale === 'object' && this.$i18n.locale.value !== locale) {
-                                this.$i18n.locale.value = locale
-                            } else if (typeof this.$i18n.locale === 'string' && this.$i18n.locale !== locale) {
-                                this.$i18n.locale = locale
-                            }
-                        }
-
-                        // 1. Check direct translation map first
-                        try {
-                            const currentMsgs = this.$i18n?.messages?.[locale] || mergedMessages?.[locale]
-                            if (currentMsgs?.ui?.[text]) {
-                                return currentMsgs.ui[text]
-                            }
-                            if (currentMsgs?.[text]) {
-                                return currentMsgs[text]
-                            }
-
-                            // Robust newline handling: literal \n, normal space, or trimmed
-                            if (typeof text === 'string') {
-                                if (text.includes('\n')) {
-                                    const literalSlashN = text.replace(/\r?\n/g, '\\n')
-                                    if (currentMsgs?.ui?.[literalSlashN]) {
-                                        return currentMsgs.ui[literalSlashN]
-                                    }
-                                    const singleSpaced = text.replace(/\r?\n/g, ' ')
-                                    if (currentMsgs?.ui?.[singleSpaced]) {
-                                        return currentMsgs.ui[singleSpaced]
-                                    }
-                                }
-                                const trimmed = text.trim()
-                                if (trimmed !== text) {
-                                    if (currentMsgs?.ui?.[trimmed]) {
-                                        return currentMsgs.ui[trimmed]
-                                    }
-                                    if (currentMsgs?.[trimmed]) {
-                                        return currentMsgs[trimmed]
-                                    }
-                                }
-                            }
-                        } catch (e) {}
-
-                        // 2. Vue-i18n $te / $t checks
-                        if (typeof this.$te === 'function' && this.$te(`ui.${text}`)) {
-                            return this.$t(`ui.${text}`)
-                        }
-                        if (typeof this.$te === 'function' && this.$te(text)) {
-                            return this.$t(text)
-                        }
-
-                        return text
+                        const locale = resolveLocaleFromProps(
+                            this.$page?.props || this.$inertia?.page?.props || props.initialPage?.props,
+                            'vi'
+                        )
+                        return translateMessage(text, locale, i18n)
                     },
                     toMoney: function (value) {
-                        const locale = this.$inertia?.page?.props?.locale?.current || this.$page?.props?.locale?.current || 'vi'
+                        const locale = resolveLocaleFromProps(
+                            this.$page?.props || this.$inertia?.page?.props || props.initialPage?.props,
+                            'vi'
+                        )
                         let options = {}
                         if (locale === 'vi') {
                             options = {

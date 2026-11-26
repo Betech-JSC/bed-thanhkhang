@@ -3,7 +3,21 @@
         id="contact-section"
         class="relative w-full bg-[#00284B] overflow-hidden py-10 md:py-16 lg:pt-[125px] lg:pb-[124px]"
     >
-        <!-- Decorative Chain Accent 1: Bottom-Left (native RGBA transparency, behind content, Figma 595:15499) -->
+        <!-- Mobile Top-Right Decorative Chain Accent (Figma 1193:6560) -->
+        <div
+            class="md:hidden pointer-events-none select-none absolute -right-[20px] top-0 w-[260px] z-0 opacity-85"
+            aria-hidden="true"
+        >
+            <img
+                src="/assets/images/homepage/contact-chain-deco.png"
+                alt=""
+                class="w-full h-auto block"
+                loading="lazy"
+                decoding="async"
+            />
+        </div>
+
+        <!-- Decorative Chain Accent 1: Bottom-Left (Figma 1171:41664) -->
         <div
             class="hidden md:block pointer-events-none select-none absolute -left-[120px] -bottom-[155px] w-[560px] -rotate-[6deg] z-0 opacity-95"
             aria-hidden="true"
@@ -17,7 +31,7 @@
             />
         </div>
 
-        <!-- Decorative Chain Accent 2: Top-Right (sweeping diagonally behind frosted card, Figma 595:15502) -->
+        <!-- Decorative Chain Accent 2: Top-Right (sweeping diagonally behind form card) -->
         <div
             class="hidden lg:block pointer-events-none select-none absolute -right-[120px] -top-[55px] w-[760px] rotate-[24deg] z-0 opacity-95"
             aria-hidden="true"
@@ -31,7 +45,7 @@
             />
         </div>
 
-        <!-- Decorative Chain Accent 3: Bottom-Right (sweeping diagonally behind bottom-right of frosted card, Figma 595:15532) -->
+        <!-- Decorative Chain Accent 3: Bottom-Right -->
         <div
             class="hidden lg:block pointer-events-none select-none absolute -right-[130px] -bottom-[85px] w-[620px] -rotate-[18deg] z-0 opacity-95"
             aria-hidden="true"
@@ -45,144 +59,200 @@
             />
         </div>
 
-        <!-- Main Content Grid -->
-        <div class="app-container relative z-10">
-            <div class="flex flex-col lg:flex-row lg:items-stretch justify-between gap-8 lg:gap-[64px]">
-                <!-- Left Column: Title, Subtitle & Live CMS Contact Details -->
-                <div class="w-full lg:w-[462px] xl:w-[512px] lg:min-h-[508px] shrink-0 flex flex-col justify-between gap-8">
+        <!-- Main Content Grid (Figma 1171:41662 — 1152px narrow container: Left 462px + 63px gap + Form 627px = 1152px) -->
+        <div class="app-container-narrow relative z-10">
+            <div class="flex flex-col lg:flex-row lg:items-stretch justify-between gap-7 lg:gap-[63px]">
+                <!-- Left Column: Title, Subtitle & 4 B2B Assurance Badges (Figma 1171:41666 & 1193:6489) -->
+                <div
+                    class="w-full lg:w-[462px] lg:min-h-[508px] shrink-0 flex flex-col justify-between gap-5 lg:gap-8"
+                >
                     <div v-if="heading || description">
                         <h2
                             v-if="heading"
-                            class="font-bold text-[24px] sm:text-[26px] lg:text-[28px] leading-[1.6] lg:min-h-[100px] text-[#FAFAFA] uppercase break-words"
+                            class="font-bold text-[20px] sm:text-[24px] lg:text-[28px] leading-[28px] lg:leading-[1.6] lg:min-h-[100px] text-[#FAFAFA] uppercase break-words"
                         >
                             {{ heading }}
                         </h2>
                         <p
                             v-if="description"
-                            class="font-medium text-[15px] sm:text-[16px] leading-[1.6] text-[#9AA4B2] mt-3 lg:mt-0 break-words"
+                            class="font-normal lg:font-medium text-[14px] sm:text-[15px] lg:text-[16px] leading-[22px] lg:leading-[1.6] text-[#9AA4B2] mt-2.5 lg:mt-0 break-words"
                         >
                             {{ description }}
                         </p>
                     </div>
 
-                    <!-- Live CMS Contact Info (Bound to $page.props.global / configs) -->
-                    <div class="flex flex-col gap-[12px]">
-                        <a
-                            v-if="displayHotline"
-                            :href="'tel:' + cleanHotline"
-                            class="flex items-center gap-2 text-[14px] font-medium leading-[1.6] text-[#EEF2F6] hover:text-[#C9E0FF] transition-colors focus:outline-none focus-visible:underline"
-                        >
-                            <img
-                                src="/assets/svg/icons/contact-phone.svg"
-                                alt=""
-                                aria-hidden="true"
-                                width="24"
-                                height="24"
-                                class="w-6 h-6 shrink-0"
-                            />
-                            <span class="break-words">Hotline: {{ displayHotline }}</span>
-                        </a>
-
-                        <a
-                            v-if="displayEmail"
-                            :href="'mailto:' + displayEmail"
-                            class="flex items-center gap-2 text-[14px] font-medium leading-[1.6] text-[#EEF2F6] hover:text-[#C9E0FF] transition-colors focus:outline-none focus-visible:underline"
-                        >
-                            <img
-                                src="/assets/svg/icons/contact-mail.svg"
-                                alt=""
-                                aria-hidden="true"
-                                width="24"
-                                height="24"
-                                class="w-6 h-6 shrink-0"
-                            />
-                            <span class="break-all sm:break-words">Email: {{ displayEmail }}</span>
-                        </a>
-
+                    <!-- 4 B2B Assurance Badges (Figma 1171:41676 & 1193:6493 — CMS dynamic override or i18n keys, zero static script arrays) -->
+                    <div
+                        v-if="dynamicBadges.length > 0"
+                        class="flex flex-col gap-3 lg:gap-5"
+                    >
                         <div
-                            v-if="displayAddress"
-                            class="flex items-start gap-2 text-[14px] font-medium leading-[1.6] text-[#EEF2F6]"
+                            v-for="(badge, idx) in dynamicBadges"
+                            :key="badge.id || idx"
+                            class="flex items-center gap-3 lg:gap-4"
                         >
-                            <img
-                                src="/assets/svg/icons/contact-pin.svg"
-                                alt=""
+                            <span
+                                class="w-9 h-9 lg:w-10 lg:h-10 rounded-[6px] lg:rounded-[8px] bg-[#FAFAFA] lg:bg-[#EEF2F6] flex items-center justify-center shrink-0"
                                 aria-hidden="true"
-                                width="24"
-                                height="24"
-                                class="w-6 h-6 shrink-0"
-                            />
-                            <span class="break-words">
-                                {{ isEn ? 'Headquarters' : 'Trụ sở' }}: {{ displayAddress }}
+                            >
+                                <img
+                                    v-if="badge.icon"
+                                    :src="badge.icon"
+                                    alt=""
+                                    width="20"
+                                    height="20"
+                                    class="w-5 h-5 object-contain"
+                                />
+                            </span>
+                            <span class="font-bold text-[14px] lg:text-[16px] leading-[20px] lg:leading-[26px] text-[#FAFAFA] lg:text-[#EEF2F6] break-words">
+                                {{ badge.title || badge.text }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div v-else class="flex flex-col gap-3 lg:gap-5">
+                        <div class="flex items-center gap-3 lg:gap-4">
+                            <span
+                                class="w-9 h-9 lg:w-10 lg:h-10 rounded-[6px] lg:rounded-[8px] bg-[#FAFAFA] lg:bg-[#EEF2F6] flex items-center justify-center shrink-0"
+                                aria-hidden="true"
+                            >
+                                <img
+                                    src="/assets/svg/homepage/contact-assurance-factory.svg"
+                                    alt=""
+                                    width="20"
+                                    height="20"
+                                    class="w-5 h-5 object-contain"
+                                />
+                            </span>
+                            <span class="font-bold text-[14px] lg:text-[16px] leading-[20px] lg:leading-[26px] text-[#FAFAFA] lg:text-[#EEF2F6] break-words">
+                                {{ t('Giá gốc nhà máy (Không trung gian)') }}
                             </span>
                         </div>
 
-                        <div
-                            v-if="displayShowroomAddress"
-                            class="flex items-start gap-2 text-[14px] font-medium leading-[1.6] text-[#EEF2F6]"
-                        >
-                            <img
-                                src="/assets/svg/icons/contact-pin.svg"
-                                alt=""
+                        <div class="flex items-center gap-3 lg:gap-4">
+                            <span
+                                class="w-9 h-9 lg:w-10 lg:h-10 rounded-[6px] lg:rounded-[8px] bg-[#FAFAFA] lg:bg-[#EEF2F6] flex items-center justify-center shrink-0"
                                 aria-hidden="true"
-                                width="24"
-                                height="24"
-                                class="w-6 h-6 shrink-0"
-                            />
-                            <span class="break-words">
-                                {{ isEn ? 'Office & Showroom' : 'VPGD & Showroom' }}: {{ displayShowroomAddress }}
+                            >
+                                <img
+                                    src="/assets/svg/homepage/contact-assurance-delivery.svg"
+                                    alt=""
+                                    width="20"
+                                    height="20"
+                                    class="w-5 h-5 object-contain"
+                                />
+                            </span>
+                            <span class="font-bold text-[14px] lg:text-[16px] leading-[20px] lg:leading-[26px] text-[#FAFAFA] lg:text-[#EEF2F6] break-words">
+                                {{ t('Giao hàng tận chân công trình') }}
+                            </span>
+                        </div>
+
+                        <div class="flex items-center gap-3 lg:gap-4">
+                            <span
+                                class="w-9 h-9 lg:w-10 lg:h-10 rounded-[6px] lg:rounded-[8px] bg-[#FAFAFA] lg:bg-[#EEF2F6] flex items-center justify-center shrink-0"
+                                aria-hidden="true"
+                            >
+                                <img
+                                    src="/assets/svg/homepage/contact-assurance-cocq.svg"
+                                    alt=""
+                                    width="20"
+                                    height="20"
+                                    class="w-5 h-5 object-contain"
+                                />
+                            </span>
+                            <span class="font-bold text-[14px] lg:text-[16px] leading-[20px] lg:leading-[26px] text-[#FAFAFA] lg:text-[#EEF2F6] break-words">
+                                {{ t('Đầy đủ CO/CQ, Hoá đơn VAT') }}
+                            </span>
+                        </div>
+
+                        <div class="flex items-center gap-3 lg:gap-4">
+                            <span
+                                class="w-9 h-9 lg:w-10 lg:h-10 rounded-[6px] lg:rounded-[8px] bg-[#FAFAFA] lg:bg-[#EEF2F6] flex items-center justify-center shrink-0"
+                                aria-hidden="true"
+                            >
+                                <img
+                                    src="/assets/svg/homepage/contact-assurance-discount.svg"
+                                    alt=""
+                                    width="20"
+                                    height="20"
+                                    class="w-5 h-5 object-contain"
+                                />
+                            </span>
+                            <span class="font-bold text-[14px] lg:text-[16px] leading-[20px] lg:leading-[26px] text-[#FAFAFA] lg:text-[#EEF2F6] break-words">
+                                {{ t('Chiết khấu cao cho nhà thầu') }}
                             </span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Right Column: Frosted Quote Form Card -->
+                <!-- Right Column: Quote Form Card (Figma 1171:41702 627x508 bg-[#E3E8EF] & Figma 1193:6514 358x578) -->
                 <div
-                    class="w-full flex-1 min-w-0 backdrop-blur-[3px] bg-[rgba(201,224,255,0.8)] rounded-[8px] p-6 sm:p-8 lg:p-[40px] flex flex-col justify-between"
+                    class="w-full lg:w-[627px] lg:min-h-[508px] min-w-0 backdrop-blur-[6px] bg-[#E3E8EF] rounded-[8px] px-4 py-5 sm:p-6 lg:p-[40px] flex flex-col justify-between"
                 >
                     <form
                         @submit.prevent="submitForm"
                         novalidate
-                        class="flex flex-col justify-between h-full gap-6"
+                        class="flex flex-col justify-between h-full gap-5 lg:gap-[32px]"
                     >
-                        <div class="flex flex-col gap-[16px]">
-                            <!-- Field 1: Full Name (required) -->
-                            <div>
-                                <label
-                                    for="home-contact-name"
-                                    class="block text-[14px] font-medium leading-[1.6] text-[#424242] mb-[4px]"
-                                >
-                                    {{ isEn ? 'Full Name*' : 'Họ và tên*' }}
-                                </label>
-                                <input
-                                    id="home-contact-name"
-                                    v-model="form.name"
-                                    type="text"
-                                    name="name"
-                                    autocomplete="name"
-                                    required
-                                    :placeholder="isEn ? 'John Doe' : 'Nguyễn Văn A'"
-                                    :aria-invalid="Boolean(fieldErrors.name)"
-                                    :aria-describedby="fieldErrors.name ? 'home-contact-name-error' : undefined"
-                                    class="w-full bg-white border rounded-[8px] px-[12px] py-[8px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] text-[16px] font-normal leading-[1.6] text-[#1A1A1A] placeholder:text-[#808080] focus:outline-none focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-colors"
-                                    :class="fieldErrors.name ? 'border-[#D92D20]' : 'border-[#D6D6D6]'"
-                                    @input="clearFieldError('name')"
-                                />
-                                <p
-                                    v-if="fieldErrors.name"
-                                    id="home-contact-name-error"
-                                    role="alert"
-                                    class="text-[13px] font-medium text-[#B42318] mt-1"
-                                >
-                                    {{ fieldErrors.name }}
-                                </p>
+                        <div class="flex flex-col gap-3 lg:gap-[16px]">
+                            <!-- Row 1: Full Name* + Company / Organization (Figma 1171:41704) -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label
+                                        for="home-contact-name"
+                                        class="block text-[14px] font-medium leading-[22px] text-[#4B5565] mb-[4px]"
+                                    >
+                                        {{ isEn ? 'Full Name*' : 'Họ và tên*' }}
+                                    </label>
+                                    <input
+                                        id="home-contact-name"
+                                        v-model="form.name"
+                                        type="text"
+                                        name="name"
+                                        autocomplete="name"
+                                        required
+                                        :placeholder="isEn ? 'John Doe' : 'Nguyễn Văn A'"
+                                        :aria-invalid="Boolean(fieldErrors.name)"
+                                        :aria-describedby="fieldErrors.name ? 'home-contact-name-error' : undefined"
+                                        class="w-full h-[42px] bg-white border rounded-[8px] px-[12px] py-[8px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] text-[16px] font-normal leading-[1.6] text-[#1A1A1A] placeholder:text-[#808080] focus:outline-none focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-colors"
+                                        :class="fieldErrors.name ? 'border-[#D92D20]' : 'border-[#D6D6D6]'"
+                                        @input="clearFieldError('name')"
+                                    />
+                                    <p
+                                        v-if="fieldErrors.name"
+                                        id="home-contact-name-error"
+                                        role="alert"
+                                        class="text-[13px] font-medium text-[#B42318] mt-1"
+                                    >
+                                        {{ fieldErrors.name }}
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <label
+                                        for="home-contact-company"
+                                        class="block text-[14px] font-medium leading-[22px] text-[#4B5565] mb-[4px]"
+                                    >
+                                        {{ t('Tên công ty/ Đơn vị') }}
+                                    </label>
+                                    <input
+                                        id="home-contact-company"
+                                        v-model="form.company"
+                                        type="text"
+                                        name="company"
+                                        autocomplete="organization"
+                                        :placeholder="t('Công ty TNHH ABC')"
+                                        class="w-full h-[42px] bg-white border border-[#D6D6D6] rounded-[8px] px-[12px] py-[8px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] text-[16px] font-normal leading-[1.6] text-[#1A1A1A] placeholder:text-[#808080] focus:outline-none focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-colors"
+                                    />
+                                </div>
                             </div>
 
-                            <!-- Field 2 & 3: Email + Phone (2-column row) -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-[12px]">
+                            <!-- Row 2: Email* + Phone* (Figma 1171:41707) -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
                                     <label
                                         for="home-contact-email"
-                                        class="block text-[14px] font-medium leading-[1.6] text-[#424242] mb-[4px]"
+                                        class="block text-[14px] font-medium leading-[22px] text-[#4B5565] mb-[4px]"
                                     >
                                         Email*
                                     </label>
@@ -196,7 +266,7 @@
                                         :placeholder="isEn ? 'example@company.com' : 'example@congty.com'"
                                         :aria-invalid="Boolean(fieldErrors.email)"
                                         :aria-describedby="fieldErrors.email ? 'home-contact-email-error' : undefined"
-                                        class="w-full bg-white border rounded-[8px] px-[12px] py-[8px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] text-[16px] font-normal leading-[1.6] text-[#1A1A1A] placeholder:text-[#808080] focus:outline-none focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-colors"
+                                        class="w-full h-[42px] bg-white border rounded-[8px] px-[12px] py-[8px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] text-[16px] font-normal leading-[1.6] text-[#1A1A1A] placeholder:text-[#808080] focus:outline-none focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-colors"
                                         :class="fieldErrors.email ? 'border-[#D92D20]' : 'border-[#D6D6D6]'"
                                         @input="clearFieldError('email')"
                                     />
@@ -213,7 +283,7 @@
                                 <div>
                                     <label
                                         for="home-contact-phone"
-                                        class="block text-[14px] font-medium leading-[1.6] text-[#424242] mb-[4px]"
+                                        class="block text-[14px] font-medium leading-[22px] text-[#4B5565] mb-[4px]"
                                     >
                                         {{ isEn ? 'Phone Number*' : 'Số điện thoại*' }}
                                     </label>
@@ -227,7 +297,7 @@
                                         :placeholder="isEn ? '(+84) 901 234 567' : '0901 234 567'"
                                         :aria-invalid="Boolean(fieldErrors.phone)"
                                         :aria-describedby="fieldErrors.phone ? 'home-contact-phone-error' : undefined"
-                                        class="w-full bg-white border rounded-[8px] px-[12px] py-[8px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] text-[16px] font-normal leading-[1.6] text-[#1A1A1A] placeholder:text-[#808080] focus:outline-none focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-colors"
+                                        class="w-full h-[42px] bg-white border rounded-[8px] px-[12px] py-[8px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] text-[16px] font-normal leading-[1.6] text-[#1A1A1A] placeholder:text-[#808080] focus:outline-none focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-colors"
                                         :class="fieldErrors.phone ? 'border-[#D92D20]' : 'border-[#D6D6D6]'"
                                         @input="clearFieldError('phone')"
                                     />
@@ -242,11 +312,11 @@
                                 </div>
                             </div>
 
-                            <!-- Field 4: Message / Note (optional) -->
+                            <!-- Row 3: Message / Note (Figma 1171:41710 h-[152px] Desktop, 1193:6548 h-[120px] Mobile) -->
                             <div>
                                 <label
                                     for="home-contact-note"
-                                    class="block text-[14px] font-medium leading-[1.6] text-[#424242] mb-[4px]"
+                                    class="block text-[14px] font-medium leading-[22px] text-[#424242] mb-[4px] lg:mb-[6px]"
                                 >
                                     {{ isEn ? 'Message' : 'Lời nhắn' }}
                                 </label>
@@ -254,7 +324,7 @@
                                     id="home-contact-note"
                                     v-model="form.note"
                                     name="note"
-                                    rows="5"
+                                    rows="4"
                                     :placeholder="
                                         isEn
                                             ? 'Enter your quotation details (product, quantity, required delivery time...)'
@@ -262,7 +332,7 @@
                                     "
                                     :aria-invalid="Boolean(fieldErrors.note)"
                                     :aria-describedby="fieldErrors.note ? 'home-contact-note-error' : undefined"
-                                    class="w-full min-h-[146px] resize-y bg-white border rounded-[8px] px-[12px] py-[8px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] text-[16px] font-normal leading-[1.6] text-[#1A1A1A] placeholder:text-[#808080] focus:outline-none focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-colors"
+                                    class="block w-full h-[120px] lg:h-[152px] resize-y bg-white border rounded-[8px] px-[12px] py-[8px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] text-[16px] font-normal leading-[1.6] text-[#1A1A1A] placeholder:text-[#808080] focus:outline-none focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-colors"
                                     :class="fieldErrors.note ? 'border-[#D92D20]' : 'border-[#D6D6D6]'"
                                     @input="clearFieldError('note')"
                                 />
@@ -300,21 +370,17 @@
                             {{ submitError }}
                         </div>
 
-                        <!-- Left-Aligned Primary Submit Button (Figma 595:15531) -->
+                        <!-- Full-Width Primary Submit Button (Figma 1171:41711 547x46 & Figma 1193:6554 326x42) -->
                         <button
                             type="submit"
                             :disabled="isSubmitting"
-                            class="self-start bg-[#005EA4] hover:bg-[#004c86] active:bg-[#003d6d] text-[#FAFAFA] font-medium text-[16px] leading-[1.6] px-[24px] py-[10px] rounded-[4px] inline-flex items-center justify-center gap-2 transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer min-h-[46px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
+                            class="w-full h-[42px] lg:h-[46px] bg-[#005EA4] hover:bg-[#004c86] active:bg-[#003d6d] text-[#FAFAFA] font-medium text-[14px] lg:text-[16px] leading-[1.6] px-[24px] rounded-[4px] inline-flex items-center justify-center gap-2 transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
                         >
                             <span>
                                 {{
                                     isSubmitting
-                                        ? isEn
-                                            ? 'Sending...'
-                                            : 'Đang gửi...'
-                                        : isEn
-                                            ? 'Get Consultation Now'
-                                            : 'Nhận tư vấn ngay'
+                                        ? t('Đang gửi...')
+                                        : t('Gửi yêu cầu báo giá')
                                 }}
                             </span>
                         </button>
@@ -327,7 +393,7 @@
 
 <script setup>
 import { computed, getCurrentInstance, reactive, ref } from 'vue'
-import { usePage } from '@inertiajs/inertia-vue3'
+import { useTranslate } from '@/composables/useTranslate.js'
 
 const props = defineProps({
     contactSection: {
@@ -336,44 +402,22 @@ const props = defineProps({
     },
 })
 
-const page = usePage()
 const instance = getCurrentInstance()
-
-const currentLocale = computed(() => {
-    const loc = page.props.value?.locale
-    if (typeof loc === 'string') return loc
-    return loc?.current || 'vi'
-})
-
-const isEn = computed(() => currentLocale.value === 'en')
-
-const siteConfig = computed(() => ({
-    ...(page.props.value?.global || {}),
-    ...(page.props.value?.configs || {}),
-}))
+const { translate: t, isEn } = useTranslate()
 
 const heading = computed(() => (props.contactSection?.title || '').trim())
 
 const description = computed(() => (props.contactSection?.description || '').trim())
 
-const displayHotline = computed(
-    () => siteConfig.value.hotline || siteConfig.value.general_phone || siteConfig.value.phone || ''
-)
-
-const cleanHotline = computed(() => String(displayHotline.value || '').replace(/[^\d+]/g, ''))
-
-const displayEmail = computed(() => siteConfig.value.general_email || siteConfig.value.email || '')
-
-const displayAddress = computed(() => siteConfig.value.general_address || siteConfig.value.address || '')
-
-const displayShowroomAddress = computed(() => {
-    const showroom = siteConfig.value.showroom_address || ''
-    if (!showroom || showroom === displayAddress.value) return ''
-    return showroom
+const dynamicBadges = computed(() => {
+    const list = props.contactSection?.badges
+    if (!Array.isArray(list)) return []
+    return list.filter((item) => item && typeof item === 'object' && (item.title || item.text))
 })
 
 const form = reactive({
     name: '',
+    company: '',
     email: '',
     phone: '',
     note: '',
@@ -479,14 +523,17 @@ async function submitForm() {
     isSubmitting.value = true
     submitError.value = ''
 
+    const trimmedCompany = form.company.trim()
     const payload = {
         type: 'CONTACT_FORM',
         name: form.name.trim(),
+        company: trimmedCompany,
         email: form.email.trim(),
         phone: form.phone.trim(),
         note: form.note.trim(),
         data: {
             name: form.name.trim(),
+            company: trimmedCompany,
             email: form.email.trim(),
             phone: form.phone.trim(),
             note: form.note.trim(),
@@ -534,6 +581,7 @@ async function submitForm() {
         if (responseData && responseData.success === true) {
             submitSuccess.value = true
             form.name = ''
+            form.company = ''
             form.email = ''
             form.phone = ''
             form.note = ''

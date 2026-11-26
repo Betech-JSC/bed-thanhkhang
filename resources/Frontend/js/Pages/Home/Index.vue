@@ -9,30 +9,30 @@
             <meta property="og:type" content="website" />
         </Head>
 
-        <!-- 1. Hero Banner Section (Figma Node 595:15536 — CMS HOME_SLIDER) -->
+        <!-- 1. Hero Banner Section (Figma Node 1171:41716 / 1190:6357 — CMS HOME_SLIDER) -->
         <HeroSection :sliders="normalizedSliders" />
 
-        <!-- Body Sections Wrapper (Figma Node 595:15361 — 80px desktop vertical rhythm & bottom gap before Footer) -->
-        <div class="flex flex-col lg:gap-[80px] lg:pb-[80px] bg-[#FAFAFA]">
-            <!-- 2. About Intro Section (Figma Node 595:15362 — CMS aboutSection) -->
-            <BrandStorySection :about="aboutSection" />
-
-            <!-- 3. Product Categories Section (Figma Node 595:15380 — CMS categories & categoriesCtaBanner) -->
+        <!-- Body Sections Wrapper (Figma Node 1171:41527 — 80px desktop vertical rhythm & bottom gap before Footer, 0px mobile outer gap) -->
+        <div class="flex flex-col gap-0 lg:gap-[80px] lg:pb-[80px] bg-[#FAFAFA]">
+            <!-- 2. Product Categories Section (Figma Node 1171:41528 / 1190:6392 — CMS categories & categoriesCtaBanner) -->
             <ProductsSection
                 :categories="categories"
                 :cta-banner="categoriesCtaBanner"
             />
 
-            <!-- 4. Why Choose Us Section (Figma Node 595:15394 — CMS trustSection) -->
+            <!-- 3. About Intro Section (Figma Node 1171:41542 / 1190:6454 — CMS aboutSection) -->
+            <BrandStorySection :about="aboutSection" />
+
+            <!-- 4. Why Choose Us Section (Figma Node 1171:41560 / 1191:6399 — CMS trustSection) -->
             <ServicesSection :trust="trustSection" />
 
-            <!-- 5. Process Section (Figma Node 595:15441 — CMS processSection) -->
+            <!-- 5. Process Section (Figma Node 1171:41607 / 1191:6449 — CMS processSection) -->
             <ProcessSection :process="processSection" />
 
-            <!-- 6. Blog / News Section (Figma Node 595:15483 — CMS featured_posts) -->
+            <!-- 6. Blog / News Section (Figma Node 1171:41649 / 1191:6474 — CMS featured_posts) -->
             <BlogSection :posts="featured_posts" />
 
-            <!-- 7. Contact & Quote Form Section (Figma Node 595:15496 — CMS contactSection & global) -->
+            <!-- 7. Contact & Quote Form Section (Figma Node 1171:41662 / 1193:6488 — CMS contactSection) -->
             <ContactSection :contact-section="contactSection" />
         </div>
     </div>

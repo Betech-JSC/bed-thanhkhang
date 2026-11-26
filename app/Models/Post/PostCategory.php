@@ -20,6 +20,7 @@ class PostCategory extends BaseModel
 
     public const TYPE_POST = 'POST';
     public const TYPE_PROJECT = 'PROJECT';
+    public const TYPE_DOCUMENT = 'DOCUMENT';
 
     public const STATUS_LIST = [
         self::STATUS_ACTIVE => 'Kích hoạt',
@@ -28,6 +29,7 @@ class PostCategory extends BaseModel
 
     public const TYPE_LIST = [
         self::TYPE_POST => 'Bài viết',
+        self::TYPE_DOCUMENT => 'Danh mục tài liệu',
     ];
 
     public $with = ['translations'];
@@ -112,6 +114,8 @@ class PostCategory extends BaseModel
             Cache::forget('posts_index_' . $locale);
             Cache::forget('projects_index_' . $locale);
             Cache::forget('prizes_index_' . $locale);
+            Cache::forget('documents_index_' . $locale);
+            Cache::forget('documents_library_' . $locale);
             Cache::forget('home_page_data_' . $locale);
             Cache::forget('inertia_layout_shared_data_' . $locale);
 
@@ -258,6 +262,16 @@ class PostCategory extends BaseModel
             ->where('type', self::TYPE_PROJECT)
             ->get()
             ->map(fn($item) => $item->transform());
+    }
+
+    public function getDocuments()
+    {
+        return static::query()
+            ->active()
+            ->where('type', self::TYPE_DOCUMENT)
+            ->orderByPosition()
+            ->orderBy('id', 'asc')
+            ->get();
     }
 
     public function transform()

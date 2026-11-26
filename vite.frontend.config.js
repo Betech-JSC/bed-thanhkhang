@@ -10,6 +10,7 @@ const libraryDir = './node_modules/@toannguyen112/bed-library-essentials'
 const rootDir = dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
+    cacheDir: 'node_modules/.vite/frontend',
     plugins: [
         laravel({
             input: 'resources/Frontend/js/app.js',
@@ -77,5 +78,13 @@ export default defineConfig({
     server: {
         host: '127.0.0.1',
         port: 5174,
+        watch: {
+            ignored: [
+                '**/storage/**',
+                '**/bootstrap/cache/**',
+                '**/graphify-out/**',
+                '**/.git/**',
+            ],
+        },
     },
 })

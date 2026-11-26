@@ -173,10 +173,15 @@ class Product extends BaseModel
 
         foreach ($locales as $locale) {
             \Illuminate\Support\Facades\Cache::forget('products_index_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('documents_index_' . $locale);
             \Illuminate\Support\Facades\Cache::forget('galleries_index_' . $locale);
             \Illuminate\Support\Facades\Cache::forget('home_page_data_' . $locale);
             \Illuminate\Support\Facades\Cache::forget('inertia_layout_shared_data_' . $locale);
             \Illuminate\Support\Facades\Cache::forget('search_page_data_' . $locale . '_');
+
+            if ($model && !empty($model->id)) {
+                \Illuminate\Support\Facades\Cache::forget('product_show_' . $model->id . '_' . $locale);
+            }
 
             foreach ($slugs as $slug) {
                 \Illuminate\Support\Facades\Cache::forget('product_show_' . $slug . '_' . $locale);
@@ -556,7 +561,9 @@ class Product extends BaseModel
 
     public function transformDetails()
     {
-        $images = $variant['images'] ?? collect($this->images)
+        $images = collect($this->images)
+            ->filter()
+            ->values()
             ->map(function ($item) {
                 $detail = $this->getImageDetail($item);
                 if (is_array($item)) {
@@ -645,17 +652,14 @@ class Product extends BaseModel
             }
         }
 
-        if (empty($normalizedSpecs)) {
-            $normalizedSpecs = static::getDefaultSpecificationsFor($this);
-        }
-
         if (\Illuminate\Support\Facades\Schema::hasColumn('products', 'specifications')) {
-            $this->attributes['specifications'] = json_encode($normalizedSpecs, JSON_UNESCAPED_UNICODE);
+            $this->attributes['specifications'] = !empty($normalizedSpecs)
+                ? json_encode($normalizedSpecs, JSON_UNESCAPED_UNICODE)
+                : null;
         } else {
             unset($this->attributes['specifications']);
         }
 
-        $defaultMeta = static::getDefaultPdpMetadataFor($this);
         $rawMeta = $this->attributes['pdp_metadata'] ?? null;
         $storedMeta = is_array($rawMeta) ? $rawMeta : (is_string($rawMeta) ? json_decode($rawMeta, true) : []);
         if (!is_array($storedMeta)) {
@@ -666,7 +670,7 @@ class Product extends BaseModel
             $storedMeta = array_merge($storedMeta, request()->input('pdp_metadata'));
         }
 
-        $syncedMeta = array_merge($defaultMeta, array_filter($storedMeta, fn($v) => $v !== null && $v !== ''));
+        $syncedMeta = array_filter($storedMeta, fn($v) => $v !== null && $v !== '' && $v !== []);
         if (!empty($this->image_color_label)) {
             $syncedMeta['image_color_label'] = $this->image_color_label;
         }
@@ -675,7 +679,9 @@ class Product extends BaseModel
         }
 
         if (\Illuminate\Support\Facades\Schema::hasColumn('products', 'pdp_metadata')) {
-            $this->attributes['pdp_metadata'] = json_encode($syncedMeta, JSON_UNESCAPED_UNICODE);
+            $this->attributes['pdp_metadata'] = !empty($syncedMeta)
+                ? json_encode($syncedMeta, JSON_UNESCAPED_UNICODE)
+                : null;
         } else {
             unset($this->attributes['pdp_metadata']);
         }
@@ -712,13 +718,39 @@ class Product extends BaseModel
             }
         }
 
-        return static::getDefaultSpecificationsFor($this);
+        $isEn = (app()->getLocale() === 'en' || (function_exists('current_locale') && current_locale() === 'en'));
+        $columnSpecs = [
+            ['attr' => 'sku', 'vi' => 'Mã sản phẩm', 'en' => 'Part Number / SKU'],
+            ['attr' => 'print_technology', 'vi' => 'Tiêu chuẩn / Công nghệ chế tạo', 'en' => 'Standard / Process'],
+            ['attr' => 'material', 'vi' => 'Vật liệu', 'en' => 'Material'],
+            ['attr' => 'sample_size', 'vi' => 'Kích thước / Bước xích', 'en' => 'Dimensions / Pitch'],
+            ['attr' => 'layer_height', 'vi' => 'Tải trọng làm việc', 'en' => 'Working Load'],
+            ['attr' => 'nozzle_size', 'vi' => 'Xử lý bề mặt', 'en' => 'Surface Finish'],
+            ['attr' => 'infill', 'vi' => 'Tiêu chuẩn áp dụng', 'en' => 'Applicable Standard'],
+            ['attr' => 'support_material', 'vi' => 'Chứng chỉ / Kiểm định', 'en' => 'Certification'],
+            ['attr' => 'lead_time', 'vi' => 'Tiến độ cung ứng', 'en' => 'Supply & Lead Time'],
+        ];
+
+        $specs = [];
+        foreach ($columnSpecs as $item) {
+            $val = $this->getAttribute($item['attr']);
+            if (is_string($val) || is_numeric($val)) {
+                $trimmed = trim((string) $val);
+                if ($trimmed !== '') {
+                    $specs[] = [
+                        'label' => $isEn ? $item['en'] : $item['vi'],
+                        'value' => $trimmed,
+                    ];
+                }
+            }
+        }
+
+        return $specs;
     }
 
     public function resolvePdpMetadata(?array $specifications = null): array
     {
         $specifications = $specifications ?? $this->resolveSpecifications();
-        $defaults = static::getDefaultPdpMetadataFor($this);
 
         $rawMeta = $this->attributes['pdp_metadata'] ?? null;
         $storedMeta = is_array($rawMeta) ? $rawMeta : (is_string($rawMeta) ? json_decode($rawMeta, true) : []);
@@ -726,135 +758,44 @@ class Product extends BaseModel
             $storedMeta = [];
         }
 
-        $merged = array_merge($defaults, array_filter($storedMeta, fn($v) => $v !== null && $v !== ''));
+        $pickStr = static function (...$values): ?string {
+            foreach ($values as $value) {
+                if (is_string($value) || is_numeric($value)) {
+                    $trimmed = trim((string) $value);
+                    if ($trimmed !== '') {
+                        return $trimmed;
+                    }
+                }
+            }
+            return null;
+        };
 
-        $colorLabel = !empty($this->image_color_label)
-            ? $this->image_color_label
-            : ($merged['image_color_label'] ?? $defaults['image_color_label']);
+        $colorLabel = $pickStr($this->image_color_label, $storedMeta['image_color_label'] ?? null, $storedMeta['color'] ?? null);
+        $customLabel = $pickStr($this->customization_label, $storedMeta['customization_label'] ?? null, $storedMeta['customization'] ?? null);
 
-        $customLabel = !empty($this->customization_label)
-            ? $this->customization_label
-            : ($merged['customization_label'] ?? $defaults['customization_label']);
-
-        return [
-            'print_technology' => $this->print_technology ?: ($merged['print_technology'] ?? ''),
-            'material' => $this->material ?: ($merged['material'] ?? ''),
-            'lead_time' => $this->lead_time ?: ($merged['lead_time'] ?? ''),
-            'sample_size' => $this->sample_size ?: ($merged['sample_size'] ?? ''),
-            'layer_height' => $this->layer_height ?: ($merged['layer_height'] ?? ''),
-            'nozzle_size' => $this->nozzle_size ?: ($merged['nozzle_size'] ?? ''),
-            'infill' => $this->infill ?: ($merged['infill'] ?? ''),
-            'support_material' => $this->support_material ?: ($merged['support_material'] ?? ''),
+        return array_merge($storedMeta, [
+            'print_technology' => $pickStr($this->print_technology, $storedMeta['print_technology'] ?? null),
+            'material' => $pickStr($this->material, $storedMeta['material'] ?? null),
+            'lead_time' => $pickStr($this->lead_time, $storedMeta['lead_time'] ?? null),
+            'sample_size' => $pickStr($this->sample_size, $storedMeta['sample_size'] ?? null),
+            'layer_height' => $pickStr($this->layer_height, $storedMeta['layer_height'] ?? null),
+            'nozzle_size' => $pickStr($this->nozzle_size, $storedMeta['nozzle_size'] ?? null),
+            'infill' => $pickStr($this->infill, $storedMeta['infill'] ?? null),
+            'support_material' => $pickStr($this->support_material, $storedMeta['support_material'] ?? null),
             'color' => $colorLabel,
             'image_color_label' => $colorLabel,
             'customization' => $customLabel,
             'customization_label' => $customLabel,
-            'story_title' => $merged['story_title'] ?? $defaults['story_title'],
-            'story_intro' => $merged['story_intro'] ?? $defaults['story_intro'],
-            'feature1_title' => $merged['feature1_title'] ?? $defaults['feature1_title'],
-            'feature1_desc' => $merged['feature1_desc'] ?? $defaults['feature1_desc'],
-            'feature2_title' => $merged['feature2_title'] ?? $defaults['feature2_title'],
-            'feature2_desc' => $merged['feature2_desc'] ?? $defaults['feature2_desc'],
+            'story_title' => $pickStr($storedMeta['story_title'] ?? null),
+            'story_intro' => $pickStr($storedMeta['story_intro'] ?? null),
+            'feature1_title' => $pickStr($storedMeta['feature1_title'] ?? null),
+            'feature1_desc' => $pickStr($storedMeta['feature1_desc'] ?? null),
+            'feature2_title' => $pickStr($storedMeta['feature2_title'] ?? null),
+            'feature2_desc' => $pickStr($storedMeta['feature2_desc'] ?? null),
             'specifications' => $specifications,
-            'manufacturing_info' => $merged['manufacturing_info'] ?? $defaults['manufacturing_info'],
-            'care_instructions' => $merged['care_instructions'] ?? $defaults['care_instructions'],
-        ];
-    }
-
-    public static function getDefaultPdpMetadataFor(self $product): array
-    {
-        $isEn = (app()->getLocale() === 'en' || (function_exists('current_locale') && current_locale() === 'en'));
-
-        if ($isEn) {
-            return [
-                'image_color_label' => 'Industrial Standard',
-                'customization_label' => 'Part No. · Specs · Quantity',
-                'story_title' => $product->title ?: 'Precision Industrial Component',
-                'story_intro' => $product->description ?: 'Genuine Universal Chains industrial component distributed by Thanh Khang Tecsat with full CO/CQ certification.',
-                'feature1_title' => 'Structure & Metallurgy',
-                'feature1_desc' => 'Manufactured from high-tensile alloy and carbon steel with precision heat treatment for heavy-duty continuous operation.',
-                'feature2_title' => 'Standards & Maintenance',
-                'feature2_desc' => 'Engineered to ISO / JB/T / DIN / ANSI industrial standards. Periodic lubrication and pitch elongation inspection are recommended.',
-                'manufacturing_info' => [
-                    [
-                        'title' => 'Genuine Industrial Supply',
-                        'desc' => 'Supplied with complete Certificate of Origin (CO) and Certificate of Quality (CQ) for B2B projects.',
-                    ],
-                    [
-                        'title' => 'Precision Quality Control',
-                        'desc' => 'Inspected for dimensional pitch accuracy, tensile proof load, and surface hardness prior to dispatch.',
-                    ],
-                    [
-                        'title' => 'Technical Fitment Support',
-                        'desc' => 'Thanh Khang Tecsat engineering team verifies sprocket compatibility and operating clearances.',
-                    ],
-                ],
-                'care_instructions' => [
-                    'Inspect chain elongation and roller wear periodically according to equipment operating hours.',
-                    'Use manufacturer-recommended industrial lubricants suited to ambient temperature and dust conditions.',
-                    'Replace drive and driven chain pairs simultaneously on escalators and vertical lifts to maintain synchronization.',
-                ],
-            ];
-        }
-
-        return [
-            'image_color_label' => 'Tiêu chuẩn công nghiệp',
-            'customization_label' => 'Mã phụ tùng · Quy cách · Số lượng',
-            'story_title' => $product->title ?: 'Linh kiện cơ khí công nghiệp chính hãng',
-            'story_intro' => $product->description ?: 'Linh kiện cơ khí công nghiệp chính hãng do Thành Khang Tecsat phân phối, đáp ứng tiêu chuẩn vận hành liên tục và đầy đủ hồ sơ CO/CQ.',
-            'feature1_title' => 'Cấu tạo & Vật liệu',
-            'feature1_desc' => 'Chế tạo từ thép hợp kim và thép carbon cường độ cao, nhiệt luyện chính xác giúp chống mài mòn và chịu tải trọng kéo lớn.',
-            'feature2_title' => 'Tiêu chuẩn & Bảo trì',
-            'feature2_desc' => 'Tuân thủ các tiêu chuẩn công nghiệp quốc tế (ISO, JB/T, DIN, ANSI). Khuyến nghị kiểm tra độ giãn bước và bôi trơn định kỳ.',
-            'manufacturing_info' => [
-                [
-                    'title' => 'Phân phối chính hãng B2B',
-                    'desc' => 'Cung cấp đầy đủ chứng chỉ xuất xứ (CO), chứng nhận chất lượng (CQ) và hóa đơn VAT cho dự án.',
-                ],
-                [
-                    'title' => 'Kiểm định thông số cơ khí',
-                    'desc' => 'Kiểm tra dung sai bước xích, tải trọng kéo đứt và độ cứng bề mặt trước khi xuất kho bàn giao.',
-                ],
-                [
-                    'title' => 'Hỗ trợ kỹ thuật lắp đặt',
-                    'desc' => 'Đội ngũ kỹ sư Thành Khang Tecsat hỗ trợ đối chiếu bản vẽ, mã phụ tùng và thông số ăn khớp đĩa xích.',
-                ],
-            ],
-            'care_instructions' => [
-                'Kiểm tra độ giãn bước xích và độ mòn con lăn định kỳ theo số giờ vận hành của thiết bị.',
-                'Sử dụng dầu/mỡ bôi trơn công nghiệp phù hợp với tải trọng và điều kiện môi trường làm việc.',
-                'Đối với thang cuốn và thang nâng, nên thay đồng bộ cả hai dải xích trái/phải để đảm bảo độ đồng bộ.',
-            ],
-        ];
-    }
-
-    public static function getDefaultSpecificationsFor(self $product): array
-    {
-        $isEn = (app()->getLocale() === 'en' || (function_exists('current_locale') && current_locale() === 'en'));
-        $specs = [];
-
-        if (!empty($product->sku)) {
-            $specs[] = [
-                'label' => $isEn ? 'Part Number / SKU' : 'Mã sản phẩm',
-                'value' => (string) $product->sku,
-            ];
-        }
-
-        if (!empty($product->material)) {
-            $specs[] = [
-                'label' => $isEn ? 'Material' : 'Vật liệu',
-                'value' => (string) $product->material,
-            ];
-        }
-
-        if (!empty($product->lead_time)) {
-            $specs[] = [
-                'label' => $isEn ? 'Supply & Lead Time' : 'Tiến độ cung ứng',
-                'value' => (string) $product->lead_time,
-            ];
-        }
-
-        return $specs;
+            'manufacturing_info' => is_array($storedMeta['manufacturing_info'] ?? null) ? array_values($storedMeta['manufacturing_info']) : [],
+            'care_instructions' => is_array($storedMeta['care_instructions'] ?? null) ? array_values($storedMeta['care_instructions']) : [],
+        ]);
     }
 
     public function optionsMappingThumbnail($options, $primaryOptionValues)

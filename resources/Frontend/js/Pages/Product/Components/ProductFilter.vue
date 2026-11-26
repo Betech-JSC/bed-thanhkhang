@@ -1,470 +1,514 @@
 <template>
-    <div class="w-full lg:w-[240px] space-y-3">
-        <!-- Main Filter Card (Figma 2701:5303 - Cao 464px, bg #30374F, r 12px) -->
-        <div class="bg-[#30374F] rounded-[12px] p-4 flex flex-col gap-4 shadow-lg min-h-[464px]">
-            <!-- Header on mobile with close button -->
-            <div class="flex items-center justify-between pb-2 border-b border-[#404968] lg:hidden">
-                <span class="text-sm font-bold text-white uppercase tracking-wider">{{ tt('Bộ lọc sản phẩm') }}</span>
-                <button
-                    type="button"
-                    @click="$emit('close')"
-                    class="p-1 text-[#B9C0D4] hover:text-white rounded transition-colors"
-                >
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Title: DANH MỤC SẢN PHẨM (Figma 2701:5304) -->
-            <h4 class="text-sm font-semibold text-[#B9C0D4] uppercase leading-[21px]">
+    <div
+        v-if="normalizedTree.length > 0"
+        class="w-full lg:w-[264px] bg-[#FAFAFA] flex flex-col select-none"
+    >
+        <!-- Mobile Drawer Header (< lg) -->
+        <div
+            v-if="showMobileHeader"
+            class="flex items-center justify-between pb-3 mb-3 border-b border-[#CDD5DF] lg:hidden"
+        >
+            <h2 class="text-[18px] leading-[28px] font-bold text-[#00284B] uppercase font-sans">
                 {{ tt('DANH MỤC SẢN PHẨM') }}
-            </h4>
-
-            <!-- 1. Search Box (Figma 2701:5305 - h 46px, bg #111322, r 8px) -->
-            <div class="relative w-full h-[46px] bg-[#111322] border border-[#5D6B98] rounded-lg px-[13px] flex items-center justify-between gap-2 focus-within:border-[#84ADFF] transition-colors">
-                <input
-                    type="text"
-                    :value="filters.search"
-                    @input="updateFilter('search', $event.target.value)"
-                    :placeholder="tt('Tìm kiếm sản phẩm…')"
-                    class="w-full bg-transparent text-sm leading-5 text-[#FAFAFA] placeholder-[#B9C0D4] focus:outline-none pr-2"
-                />
-                <!-- Clear Search button or Search Icon on the RIGHT -->
-                <button
-                    v-if="filters.search"
-                    type="button"
-                    @click="updateFilter('search', '')"
-                    class="text-[#B9C0D4] hover:text-white shrink-0 ml-1"
-                >
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-                <svg
-                    v-else
-                    class="w-5 h-5 text-[#B9C0D4] shrink-0 pointer-events-none"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-            </div>
-
-            <!-- 2. Danh mục sản phẩm (Figma 2701:5309 - 4 mục chuẩn, h 44px, có chevron xổ ra) -->
-            <div class="flex flex-col gap-1">
-                <div
-                    v-for="cat in categoryTree"
-                    :key="cat.id"
-                    class="flex flex-col"
-                >
-                    <!-- Category Item Row -->
-                    <div
-                        @click="handleCategoryClick(cat)"
-                        class="w-full h-[44px] px-3 rounded-lg text-sm leading-5 flex items-center justify-between transition-colors duration-200 text-left cursor-pointer select-none group"
-                        :class="
-                            isCategorySelected(cat)
-                                ? 'bg-[#404968] text-[#FAFAFA] font-medium'
-                                : 'text-[#EFF1F5] hover:bg-[#404968]/50 hover:text-white'
-                        "
-                    >
-                        <span class="truncate pr-2">{{ cat.name }}</span>
-
-                        <!-- Chevron Icon ở đằng sau các mục có danh mục con (Figma 2701:5314, 5317, 5320) -->
-                        <button
-                            v-if="cat.hasChevron"
-                            type="button"
-                            @click.stop="toggleCategoryExpand(cat.id)"
-                            class="w-6 h-6 flex items-center justify-center shrink-0 text-[#EFF1F5] group-hover:text-white transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
-                            :class="{ 'rotate-90': isCategoryExpanded(cat.id) }"
-                            :aria-expanded="isCategoryExpanded(cat.id)"
-                            :title="tt('Mở rộng danh mục con')"
-                        >
-                            <svg class="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor">
-                                <path d="M6 12L10 8L6 4" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <!-- Subcategories Accordion (Xổ ra các mục con mượt 60fps bằng CSS Grid 0fr <-> 1fr) -->
-                    <div
-                        v-if="cat.hasChevron && cat.subcategories && cat.subcategories.length"
-                        class="subcategory-accordion-grid"
-                        :class="{ 'is-expanded': isCategoryExpanded(cat.id) }"
-                        :aria-hidden="!isCategoryExpanded(cat.id)"
-                    >
-                        <div class="overflow-hidden min-h-0">
-                            <div class="flex flex-col gap-1 pl-4 pr-1 py-1 my-0.5">
-                                <button
-                                    v-for="sub in cat.subcategories"
-                                    :key="sub.id"
-                                    type="button"
-                                    :tabindex="isCategoryExpanded(cat.id) ? 0 : -1"
-                                    @click="selectSubcategory(cat, sub.id)"
-                                    class="w-full h-8 px-3 rounded-md text-xs leading-4 flex items-center justify-between text-left transition-colors duration-150 cursor-pointer select-none"
-                                    :class="
-                                        isSubcategorySelected(sub.id)
-                                            ? 'bg-[#2970FF]/25 text-[#84ADFF] font-medium border border-[#2970FF]/50 shadow-sm'
-                                            : 'text-[#B9C0D4] hover:bg-[#404968]/40 hover:text-[#FAFAFA]'
-                                    "
-                                >
-                                    <span class="truncate">{{ sub.name }}</span>
-                                    <span
-                                        v-if="isSubcategorySelected(sub.id)"
-                                        class="w-1.5 h-1.5 rounded-full bg-[#84ADFF] shrink-0"
-                                    ></span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 3. Lọc theo nhu cầu (Figma 2701:5321 - gap 12px, checkbox TRƯỚC label) -->
-            <div class="pt-2 flex flex-col gap-3">
-                <h4 class="text-sm font-semibold text-[#B9C0D4] uppercase leading-[21px]">
-                    {{ tt('LỌC THEO NHU CẦU') }}
-                </h4>
-                <div class="flex flex-col gap-3">
-                    <button
-                        v-for="purpose in purposes"
-                        :key="purpose"
-                        type="button"
-                        @click="togglePurpose(purpose)"
-                        class="w-full h-5 px-3 flex items-center gap-3 text-left group cursor-pointer focus:outline-none select-none"
-                    >
-                        <!-- Checkbox nằm TRƯỚC (bên trái label), kích thước 16x16, bo góc 4px (Figma 2701:5325, 5328, 5331) -->
-                        <div
-                            class="w-4 h-4 rounded-[4px] border flex items-center justify-center transition-colors shrink-0"
-                            :class="
-                                isPurposeSelected(purpose)
-                                    ? 'bg-[#2970FF] border-[#2970FF]'
-                                    : 'border-[#5D6B98] bg-transparent group-hover:border-[#EFF1F5]'
-                            "
-                        >
-                            <svg
-                                v-if="isPurposeSelected(purpose)"
-                                class="w-3 h-3 text-white"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                            >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                    clip-rule="evenodd"
-                                />
-                            </svg>
-                        </div>
-
-                        <!-- Label text nằm SAU (bên phải checkbox), cách checkbox đúng 12px (gap-3) -->
-                        <span
-                            class="text-sm leading-5 transition-colors"
-                            :class="
-                                isPurposeSelected(purpose)
-                                    ? 'text-[#FAFAFA] font-medium'
-                                    : 'text-[#EFF1F5] group-hover:text-white'
-                            "
-                        >
-                            {{ purpose }}
-                        </span>
-                    </button>
-                </div>
-            </div>
-            <!-- Đã XÓA nút "Đặt lại bộ lọc" bên sidebar theo đúng yêu cầu feedback của User -->
+            </h2>
+            <button
+                type="button"
+                @click="$emit('close')"
+                class="w-11 h-11 -mr-2 inline-flex items-center justify-center rounded-[4px] text-[#364152] hover:text-[#00284B] hover:bg-[#EEF2F6] transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]"
+                :aria-label="tt('Đóng bộ lọc')"
+            >
+                <span aria-hidden="true" class="text-[22px] leading-none font-normal">&times;</span>
+            </button>
         </div>
 
-        <!-- Custom Request Box (Figma 2701:5333 - Cao 156px, bg #30374F, r 12px) -->
-        <div class="bg-[#30374F] rounded-[12px] p-4 flex flex-col justify-between h-[156px] shadow-lg">
-            <div class="flex flex-col gap-3">
-                <h4 class="text-sm font-medium text-[#FAFAFA] leading-[20px]">
-                    {{ tt('Tuỳ chỉnh sản phẩm') }}
-                </h4>
-                <p class="text-[13px] text-[#B9C0D4] leading-[18px]">
-                    {{ tt('Màu sắc, kích thước và cá nhân hoá được tư vấn theo nhu cầu ?') }}
-                </p>
-            </div>
-            <Link
-                :href="route('contact')"
-                class="w-full h-10 rounded-lg text-[#F5F8FF] text-base font-medium flex items-center justify-center transition-colors duration-200 active:scale-[0.98] shadow-md hover:shadow-lg hover:opacity-95 select-none"
-                style="background: linear-gradient(90deg, #2970FF 0%, #00359E 89%);"
+        <!-- Section Heading (Figma 979:30396: 20px/32px Bold #00284B) -->
+        <h2
+            v-if="!showMobileHeader"
+            class="text-[20px] leading-[32px] font-bold text-[#00284B] uppercase font-sans mb-3"
+        >
+            {{ tt('DANH MỤC SẢN PHẨM') }}
+        </h2>
+
+        <!-- 3-Tier Category Tree Accordion (L0 -> L1 -> L2 from props.categories) -->
+        <div v-if="normalizedTree.length > 0" class="w-full flex flex-col">
+            <div
+                v-for="root in normalizedTree"
+                :key="root.id"
+                class="w-full flex flex-col"
             >
-                {{ tt('Liên hệ tư vấn') }}
-            </Link>
+                <!-- L0 Root Row (Figma 979:30397 / 979:30434 / 979:30437) -->
+                <button
+                    type="button"
+                    @click="handleRootClick(root)"
+                    class="w-full min-h-[51px] py-[12px] border-b border-[#CDD5DF] flex items-center justify-between gap-4 text-left cursor-pointer transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]"
+                    :aria-expanded="root.children.length > 0 ? isRootExpanded(root.id) : undefined"
+                >
+                    <span
+                        class="text-[16px] leading-[26px] font-bold font-sans transition-colors"
+                        :class="
+                            isRootActive(root)
+                                ? 'text-[#005EA4]'
+                                : 'text-[#364152] group-hover:text-[#00284B]'
+                        "
+                    >
+                        {{ root.title }}
+                    </span>
+
+                    <img
+                        v-if="root.children.length > 0"
+                        :src="
+                            isRootExpanded(root.id)
+                                ? '/assets/figma/san-pham/filter-chevron-down.svg'
+                                : '/assets/figma/san-pham/filter-chevron-right.svg'
+                        "
+                        alt=""
+                        aria-hidden="true"
+                        width="20"
+                        height="20"
+                        class="w-5 h-5 shrink-0"
+                    />
+                    <span
+                        v-else
+                        class="w-[14px] h-[14px] rounded-[2px] shrink-0 flex items-center justify-center transition-colors"
+                        :class="
+                            isIdSelected(root.id)
+                                ? ''
+                                : 'border border-[#9AA4B2] bg-transparent group-hover:border-[#005EA4]'
+                        "
+                    >
+                        <img
+                            v-if="isIdSelected(root.id)"
+                            src="/assets/figma/san-pham/filter-checkbox-checked.svg"
+                            alt=""
+                            aria-hidden="true"
+                            width="14"
+                            height="14"
+                            class="w-[14px] h-[14px]"
+                        />
+                    </span>
+                </button>
+
+                <!-- L1 + L2 Expanded Panel (Figma 979:30400: bg #EEF2F6, padding 24px, gap 20px) -->
+                <div
+                    v-if="root.children.length > 0"
+                    class="filter-accordion-grid"
+                    :class="{ 'is-expanded': isRootExpanded(root.id) }"
+                    :aria-hidden="!isRootExpanded(root.id)"
+                >
+                    <div class="overflow-hidden min-h-0">
+                        <div class="w-full bg-[#EEF2F6] p-6 flex flex-col gap-5">
+                            <template v-for="l1 in root.children" :key="l1.id">
+                                <!-- L1 WITH L2 Children (e.g. "Xích thang cuốn", Figma 979:30405) -->
+                                <div v-if="l1.children.length > 0" class="w-full flex flex-col gap-3">
+                                    <div class="w-full min-h-[44px] lg:min-h-[22px] flex items-center justify-between gap-2">
+                                        <!-- Clickable Label + Group Checkbox -->
+                                        <button
+                                            type="button"
+                                            role="checkbox"
+                                            :aria-checked="
+                                                getGroupState(l1) === 'checked'
+                                                    ? 'true'
+                                                    : getGroupState(l1) === 'indeterminate'
+                                                    ? 'mixed'
+                                                    : 'false'
+                                            "
+                                            :tabindex="isRootExpanded(root.id) ? 0 : -1"
+                                            @click="toggleL1Group(l1)"
+                                            class="flex-1 min-w-0 min-h-[44px] lg:min-h-[22px] flex items-center gap-2 text-left cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] rounded-[2px]"
+                                        >
+                                            <span
+                                                class="text-[14px] leading-[22px] font-sans transition-colors break-words"
+                                                :class="
+                                                    getGroupState(l1) !== 'unchecked'
+                                                        ? 'font-medium text-[#00284B]'
+                                                        : 'font-normal text-[#364152] group-hover:text-[#00284B]'
+                                                "
+                                            >
+                                                {{ l1.title }}
+                                            </span>
+
+                                            <span
+                                                class="w-[14px] h-[14px] rounded-[2px] shrink-0 flex items-center justify-center transition-colors"
+                                                :class="
+                                                    getGroupState(l1) === 'checked'
+                                                        ? ''
+                                                        : getGroupState(l1) === 'indeterminate'
+                                                        ? 'bg-[#005EA4]'
+                                                        : 'border border-[#9AA4B2] bg-transparent group-hover:border-[#005EA4]'
+                                                "
+                                            >
+                                                <img
+                                                    v-if="getGroupState(l1) === 'checked'"
+                                                    src="/assets/figma/san-pham/filter-checkbox-checked.svg"
+                                                    alt=""
+                                                    aria-hidden="true"
+                                                    width="14"
+                                                    height="14"
+                                                    class="w-[14px] h-[14px]"
+                                                />
+                                                <span
+                                                    v-else-if="getGroupState(l1) === 'indeterminate'"
+                                                    class="w-2 h-[2px] bg-[#FAFAFA] rounded-[1px]"
+                                                    aria-hidden="true"
+                                                />
+                                            </span>
+                                        </button>
+
+                                        <!-- Expand / Collapse L2 Toggle Button (Figma 979:30410) -->
+                                        <button
+                                            type="button"
+                                            :tabindex="isRootExpanded(root.id) ? 0 : -1"
+                                            @click.stop="toggleL1Expand(l1.id)"
+                                            class="w-11 h-11 lg:w-5 lg:h-5 flex items-center justify-center shrink-0 cursor-pointer rounded-[2px] hover:bg-[#E3E8EF] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]"
+                                            :aria-expanded="isL1Expanded(l1.id)"
+                                            :aria-label="tt('Mở rộng danh mục con')"
+                                        >
+                                            <img
+                                                :src="
+                                                    isL1Expanded(l1.id)
+                                                        ? '/assets/figma/san-pham/filter-chevron-down.svg'
+                                                        : '/assets/figma/san-pham/filter-chevron-right.svg'
+                                                "
+                                                alt=""
+                                                aria-hidden="true"
+                                                width="20"
+                                                height="20"
+                                                class="w-5 h-5"
+                                            />
+                                        </button>
+                                    </div>
+
+                                    <!-- L2 Leaf Items List (Figma 979:30411: px-[20px], gap-3) -->
+                                    <div
+                                        class="filter-accordion-grid"
+                                        :class="{ 'is-expanded': isL1Expanded(l1.id) }"
+                                        :aria-hidden="!isRootExpanded(root.id) || !isL1Expanded(l1.id)"
+                                    >
+                                        <div class="overflow-hidden min-h-0">
+                                            <div class="w-full px-5 flex flex-col gap-3">
+                                                <button
+                                                    v-for="l2 in l1.children"
+                                                    :key="l2.id"
+                                                    type="button"
+                                                    role="checkbox"
+                                                    :aria-checked="isIdSelected(l2.id) ? 'true' : 'false'"
+                                                    :tabindex="isRootExpanded(root.id) && isL1Expanded(l1.id) ? 0 : -1"
+                                                    @click="toggleId(l2.id)"
+                                                    class="w-full min-h-[44px] lg:min-h-[22px] flex items-center justify-between gap-2 text-left cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] rounded-[2px]"
+                                                >
+                                                    <span
+                                                        class="text-[14px] leading-[22px] font-sans transition-colors break-words"
+                                                        :class="
+                                                            isIdSelected(l2.id)
+                                                                ? 'font-medium text-[#00284B]'
+                                                                : 'font-normal text-[#364152] group-hover:text-[#00284B]'
+                                                        "
+                                                    >
+                                                        {{ l2.title }}
+                                                    </span>
+
+                                                    <span
+                                                        class="w-[14px] h-[14px] rounded-[2px] shrink-0 flex items-center justify-center transition-colors"
+                                                        :class="
+                                                            isIdSelected(l2.id)
+                                                                ? ''
+                                                                : 'border border-[#9AA4B2] bg-transparent group-hover:border-[#005EA4]'
+                                                        "
+                                                    >
+                                                        <img
+                                                            v-if="isIdSelected(l2.id)"
+                                                            src="/assets/figma/san-pham/filter-checkbox-checked.svg"
+                                                            alt=""
+                                                            aria-hidden="true"
+                                                            width="14"
+                                                            height="14"
+                                                            class="w-[14px] h-[14px]"
+                                                        />
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- L1 WITHOUT L2 Children (Leaf at L1, Figma 979:30401 / 979:30430) -->
+                                <button
+                                    v-else
+                                    type="button"
+                                    role="checkbox"
+                                    :aria-checked="isIdSelected(l1.id) ? 'true' : 'false'"
+                                    :tabindex="isRootExpanded(root.id) ? 0 : -1"
+                                    @click="toggleId(l1.id)"
+                                    class="w-full min-h-[44px] lg:min-h-[22px] flex items-center justify-start gap-2 text-left cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] rounded-[2px]"
+                                >
+                                    <span
+                                        class="text-[14px] leading-[22px] font-sans transition-colors break-words"
+                                        :class="
+                                            isIdSelected(l1.id)
+                                                ? 'font-medium text-[#00284B]'
+                                                : 'font-normal text-[#364152] group-hover:text-[#00284B]'
+                                        "
+                                    >
+                                        {{ l1.title }}
+                                    </span>
+
+                                    <span
+                                        class="w-[14px] h-[14px] rounded-[2px] shrink-0 flex items-center justify-center transition-colors"
+                                        :class="
+                                            isIdSelected(l1.id)
+                                                ? ''
+                                                : 'border border-[#9AA4B2] bg-transparent group-hover:border-[#005EA4]'
+                                        "
+                                    >
+                                        <img
+                                            v-if="isIdSelected(l1.id)"
+                                            src="/assets/figma/san-pham/filter-checkbox-checked.svg"
+                                            alt=""
+                                            aria-hidden="true"
+                                            width="14"
+                                            height="14"
+                                            class="w-[14px] h-[14px]"
+                                        />
+                                    </span>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
-<script>
-export default {
-    name: 'ProductFilter',
-    props: {
-        filters: {
-            type: Object,
-            required: true,
-        },
-        categories: {
-            type: Array,
-            default: () => [],
-        },
+<script setup>
+import { computed, ref, watch } from 'vue'
+
+const props = defineProps({
+    categories: {
+        type: Array,
+        default: () => [],
     },
-    emits: ['update:filters', 'reset', 'close'],
-    data() {
-        return {
-            // Danh sách các danh mục đang mở rộng mục con
-            expandedCategories: [],
-        }
+    selectedIds: {
+        type: Array,
+        default: () => [],
     },
-    computed: {
-        purposes() {
-            return [
-                this.tt('Thang cuốn thương mại & công cộng'),
-                this.tt('Bãi đỗ xe & Thang nâng ô tô'),
-                this.tt('Băng tải & Dây chuyền công nghiệp'),
-            ]
-        },
-        defaultCategoryTree() {
-            return [
-                {
-                    id: 'all',
-                    name: this.tt('Tất cả sản phẩm'),
-                    slug: 'all',
-                    hasChevron: false,
-                    subcategories: [],
-                },
-                {
-                    id: 'linh-kien-thang-cuon',
-                    name: this.tt('Linh kiện thang cuốn'),
-                    slug: 'linh-kien-thang-cuon',
-                    hasChevron: true,
-                    subcategories: [
-                        { id: 'xich-bac-thang-cuon', slug: 'xich-bac-thang-cuon', name: this.tt('Xích bậc thang cuốn') },
-                        { id: 'xich-bang-tai-hanh-khach', slug: 'xich-bang-tai-hanh-khach', name: this.tt('Xích băng tải hành khách') },
-                        { id: 'xich-dan-dong-chinh-thang-cuon', slug: 'xich-dan-dong-chinh-thang-cuon', name: this.tt('Xích dẫn động chính') },
-                    ],
-                },
-                {
-                    id: 'linh-kien-thang-nang-o-to',
-                    name: this.tt('Linh kiện thang nâng ô tô'),
-                    slug: 'linh-kien-thang-nang-o-to',
-                    hasChevron: true,
-                    subcategories: [
-                        { id: 'xich-bai-do-xe-tieu-chuan-lt', slug: 'xich-bai-do-xe-tieu-chuan-lt', name: this.tt('Xích bãi đỗ xe tiêu chuẩn LT') },
-                        { id: 'xich-bai-do-xe-tuan-hoan-dung', slug: 'xich-bai-do-xe-tuan-hoan-dung', name: this.tt('Xích tuần hoàn đứng') },
-                    ],
-                },
-                {
-                    id: 'he-thong-bang-tai-hanh-ly',
-                    name: this.tt('Hệ thống băng tải hành lý'),
-                    slug: 'he-thong-bang-tai-hanh-ly',
-                    hasChevron: false,
-                    subcategories: [],
-                },
-                {
-                    id: 'linh-kien-day-chuyen-dong-goi',
-                    name: this.tt('Linh kiện dây chuyền đóng gói'),
-                    slug: 'linh-kien-day-chuyen-dong-goi',
-                    hasChevron: false,
-                    subcategories: [],
-                },
-            ]
-        },
-        categoryTree() {
-            if (!Array.isArray(this.categories) || this.categories.length === 0) {
-                return this.defaultCategoryTree
-            }
-
-            // Nếu prop categories đã được chuẩn hóa sẵn từ Product/Index.vue (có mục 'all' và subcategories)
-            if (this.categories[0]?.id === 'all' && Array.isArray(this.categories[0]?.subcategories)) {
-                return this.categories
-            }
-
-            // Dựng cây danh mục động từ dữ liệu CMS (hỗ trợ cả cấu trúc lồng children/nodes và danh sách phẳng parent_id/default_parent)
-            const rawList = this.categories.filter(Boolean)
-            const childMap = {}
-            const roots = []
-
-            rawList.forEach((item) => {
-                const parentId = item.parent_id || item.default_parent?.id || 0
-                if (parentId && Number(parentId) > 0) {
-                    if (!childMap[parentId]) childMap[parentId] = []
-                    childMap[parentId].push(item)
-                } else {
-                    const slug = String(item.slug || '').toLowerCase()
-                    if (slug !== 'trang-tri-khong-gian' && slug !== 'space-decor') {
-                        roots.push(item)
-                    }
-                }
-            })
-
-            if (roots.length === 0) {
-                return this.defaultCategoryTree
-            }
-
-            const tree = [this.defaultCategoryTree[0]]
-
-            roots.forEach((root) => {
-                const slug = String(root.slug || root.id || '').toLowerCase()
-                const rawTitle = String(root.title || root.name || '').trim()
-
-                let fallback = null
-                if (slug.includes('thang-cuon') || slug.includes('escalator') || rawTitle.toLowerCase().includes('thang cuốn')) {
-                    fallback = this.defaultCategoryTree[1]
-                } else if (slug.includes('thang-nang') || slug.includes('parking') || rawTitle.toLowerCase().includes('thang nâng')) {
-                    fallback = this.defaultCategoryTree[2]
-                } else if (slug.includes('bang-tai') || slug.includes('baggage') || rawTitle.toLowerCase().includes('băng tải')) {
-                    fallback = this.defaultCategoryTree[3]
-                } else if (slug.includes('dong-goi') || slug.includes('packaging') || rawTitle.toLowerCase().includes('đóng gói')) {
-                    fallback = this.defaultCategoryTree[4]
-                }
-
-                const rawChildren =
-                    (Array.isArray(root.subcategories) && root.subcategories.length > 0 && root.subcategories) ||
-                    (Array.isArray(root.children) && root.children.length > 0 && root.children) ||
-                    (Array.isArray(root.nodes) && root.nodes.length > 0 && root.nodes) ||
-                    childMap[root.id] ||
-                    []
-
-                const mappedSubs =
-                    rawChildren.length > 0
-                        ? rawChildren.map((sub) => ({
-                              id: sub.slug || String(sub.id),
-                              rawId: sub.id,
-                              slug: sub.slug || String(sub.id),
-                              name: this.tt(sub.title || sub.name || ''),
-                          }))
-                        : fallback
-                        ? fallback.subcategories
-                        : []
-
-                let displayName = rawTitle ? this.tt(rawTitle) : fallback?.name || ''
-                if (rawTitle === 'Móc khoá & Phụ kiện' || rawTitle === 'Móc khóa & Phụ kiện') {
-                    displayName = this.tt('Móc khoá')
-                } else if (rawTitle === 'Trang trí & Đồ dùng') {
-                    displayName = this.tt('Văn phòng phẩm')
-                }
-
-                tree.push({
-                    id: fallback ? fallback.id : root.slug || String(root.id),
-                    rawId: root.id,
-                    name: displayName,
-                    slug: root.slug || fallback?.slug || String(root.id),
-                    hasChevron: mappedSubs.length > 0,
-                    subcategories: mappedSubs,
-                })
-            })
-
-            return tree
-        },
+    showMobileHeader: {
+        type: Boolean,
+        default: false,
     },
-    watch: {
-        'filters.category': {
-            immediate: true,
-            handler(val) {
-                if (val && val !== 'all') {
-                    // Tự động mở rộng danh mục nếu category được chọn
-                    const match = this.categoryTree.find(c => c.id === val || c.slug === val)
-                    if (match && match.hasChevron && !this.expandedCategories.includes(match.id)) {
-                        this.expandedCategories.push(match.id)
-                    }
+})
+
+const emit = defineEmits(['update:selectedIds', 'close'])
+
+function getRawChildren(node) {
+    if (!node || typeof node !== 'object') return []
+    if (Array.isArray(node.children) && node.children.length > 0) return node.children
+    if (Array.isArray(node.nodes) && node.nodes.length > 0) return node.nodes
+    if (Array.isArray(node.subcategories) && node.subcategories.length > 0) return node.subcategories
+    return []
+}
+
+function normalizeNode(node) {
+    if (!node || typeof node !== 'object') return null
+    const id = node.id
+    const title = String(node.title || node.name || '').trim()
+    if (!id || !title) return null
+
+    const rawChildren = getRawChildren(node)
+    const children = rawChildren.map(normalizeNode).filter(Boolean)
+
+    return {
+        id: Number.isNaN(Number(id)) ? String(id) : Number(id),
+        slug: String(node.slug || id),
+        title,
+        children,
+    }
+}
+
+const normalizedTree = computed(() => {
+    if (!Array.isArray(props.categories)) return []
+    return props.categories.map(normalizeNode).filter(Boolean)
+})
+
+const selectedSet = computed(
+    () => new Set((Array.isArray(props.selectedIds) ? props.selectedIds : []).map((id) => String(id)))
+)
+
+const expandedRootIds = ref([])
+const expandedL1Ids = ref([])
+const hasUserToggled = ref(false)
+
+function collectLeafIdsUnderNode(node) {
+    if (!node) return []
+    if (!node.children || node.children.length === 0) {
+        return [node.id]
+    }
+    return node.children.flatMap((child) => collectLeafIdsUnderNode(child))
+}
+
+function syncDefaultExpansion() {
+    const tree = normalizedTree.value
+    if (!tree.length) return
+
+    const nextRoots = new Set(hasUserToggled.value ? expandedRootIds.value.map(String) : [])
+    const nextL1s = new Set(hasUserToggled.value ? expandedL1Ids.value.map(String) : [])
+
+    // Auto-expand branches that contain any active selectedIds
+    let foundSelectedBranch = false
+    for (const root of tree) {
+        const rootLeafIds = collectLeafIdsUnderNode(root).map(String)
+        const rootSelfSelected = selectedSet.value.has(String(root.id))
+        const hasSelectedDescendant =
+            rootSelfSelected || rootLeafIds.some((id) => selectedSet.value.has(id))
+
+        if (hasSelectedDescendant) {
+            foundSelectedBranch = true
+            nextRoots.add(String(root.id))
+            for (const l1 of root.children) {
+                const l1LeafIds = collectLeafIdsUnderNode(l1).map(String)
+                if (
+                    selectedSet.value.has(String(l1.id)) ||
+                    l1LeafIds.some((id) => selectedSet.value.has(id))
+                ) {
+                    nextL1s.add(String(l1.id))
                 }
             }
         }
-    },
-    methods: {
-        isCategorySelected(cat) {
-            const current = this.filters.category
-            if (!current || current === 'all') return cat.id === 'all' || cat.slug === 'all'
-            return (
-                current === cat.id ||
-                current === cat.slug ||
-                (cat.rawId !== undefined && String(current) === String(cat.rawId))
-            )
-        },
-        isCategoryExpanded(catId) {
-            return this.expandedCategories.includes(catId)
-        },
-        toggleCategoryExpand(catId) {
-            const idx = this.expandedCategories.indexOf(catId)
-            if (idx > -1) {
-                this.expandedCategories.splice(idx, 1)
-            } else {
-                this.expandedCategories.push(catId)
-            }
-        },
-        isSubcategorySelected(subId) {
-            return this.filters.subcategory === subId
-        },
-        isPurposeSelected(purpose) {
-            if (!this.filters.purposes) return false
-            return this.filters.purposes.includes(purpose)
-        },
-        updateFilter(key, value) {
-            this.$emit('update:filters', {
-                ...this.filters,
-                [key]: value,
-            })
-        },
-        handleCategoryClick(cat) {
-            if (cat.id === 'all') {
-                this.expandedCategories = []
-                this.$emit('update:filters', {
-                    ...this.filters,
-                    category: 'all',
-                    subcategory: null,
-                })
-                return
-            }
+    }
 
-            // Điều khiển đóng/mở accordion danh mục mượt mà khi click vào hàng danh mục
-            if (cat.hasChevron) {
-                if (this.isCategorySelected(cat) && !this.filters.subcategory) {
-                    this.toggleCategoryExpand(cat.id)
-                } else {
-                    this.expandedCategories = [cat.id]
+    // Default initial state matching Figma 979:30394: first root & its L1 groups expanded
+    if (!hasUserToggled.value && !foundSelectedBranch) {
+        const firstRoot = tree[0]
+        if (firstRoot) {
+            nextRoots.add(String(firstRoot.id))
+            firstRoot.children.forEach((l1) => {
+                if (l1.children.length > 0) {
+                    nextL1s.add(String(l1.id))
                 }
-            }
+            })
+        }
+    }
 
-            this.$emit('update:filters', {
-                ...this.filters,
-                category: cat.id,
-                subcategory: null, // Xoá subcategory cụ thể khi chọn danh mục cha
+    expandedRootIds.value = Array.from(nextRoots)
+    expandedL1Ids.value = Array.from(nextL1s)
+}
+
+watch([normalizedTree, () => props.selectedIds], syncDefaultExpansion, {
+    immediate: true,
+    deep: true,
+})
+
+function isRootExpanded(rootId) {
+    return expandedRootIds.value.includes(String(rootId))
+}
+
+function isL1Expanded(l1Id) {
+    return expandedL1Ids.value.includes(String(l1Id))
+}
+
+function isIdSelected(id) {
+    return selectedSet.value.has(String(id))
+}
+
+function isRootActive(root) {
+    if (isIdSelected(root.id)) return true
+    const leafIds = collectLeafIdsUnderNode(root)
+    return leafIds.some((id) => isIdSelected(id))
+}
+
+function getGroupState(l1) {
+    const childIds = (l1.children || []).map((c) => c.id)
+    if (childIds.length === 0) {
+        return isIdSelected(l1.id) ? 'checked' : 'unchecked'
+    }
+    const selectedCount = childIds.filter((id) => isIdSelected(id)).length
+    if (selectedCount === 0) return 'unchecked'
+    if (selectedCount === childIds.length) return 'checked'
+    return 'indeterminate'
+}
+
+function handleRootClick(root) {
+    if (root.children.length === 0) {
+        toggleId(root.id)
+        return
+    }
+    hasUserToggled.value = true
+    const key = String(root.id)
+    const idx = expandedRootIds.value.indexOf(key)
+    if (idx > -1) {
+        expandedRootIds.value.splice(idx, 1)
+    } else {
+        expandedRootIds.value.push(key)
+        // Auto-expand L1 groups inside newly opened root if none are open yet
+        const anyL1Open = root.children.some((l1) => expandedL1Ids.value.includes(String(l1.id)))
+        if (!anyL1Open) {
+            root.children.forEach((l1) => {
+                if (l1.children.length > 0) {
+                    expandedL1Ids.value.push(String(l1.id))
+                }
             })
-        },
-        selectSubcategory(parentCat, subId) {
-            // Khi chọn subcategory, đảm bảo parent category cũng được kích hoạt
-            this.$emit('update:filters', {
-                ...this.filters,
-                category: parentCat.id,
-                subcategory: this.filters.subcategory === subId ? null : subId,
-            })
-        },
-        togglePurpose(purpose) {
-            const arr = [...(this.filters.purposes || [])]
-            const idx = arr.indexOf(purpose)
-            if (idx > -1) {
-                arr.splice(idx, 1)
-            } else {
-                arr.push(purpose)
+        }
+    }
+}
+
+function toggleL1Expand(l1Id) {
+    hasUserToggled.value = true
+    const key = String(l1Id)
+    const idx = expandedL1Ids.value.indexOf(key)
+    if (idx > -1) {
+        expandedL1Ids.value.splice(idx, 1)
+    } else {
+        expandedL1Ids.value.push(key)
+    }
+}
+
+function toggleId(id) {
+    const targetKey = String(id)
+    const current = [...(Array.isArray(props.selectedIds) ? props.selectedIds : [])]
+    const idx = current.findIndex((item) => String(item) === targetKey)
+    if (idx > -1) {
+        current.splice(idx, 1)
+    } else {
+        current.push(id)
+    }
+    emit('update:selectedIds', current)
+}
+
+function toggleL1Group(l1) {
+    const childIds = (l1.children || []).map((c) => c.id)
+    if (childIds.length === 0) {
+        toggleId(l1.id)
+        return
+    }
+
+    const state = getGroupState(l1)
+    const childKeySet = new Set(childIds.map(String))
+    const current = [...(Array.isArray(props.selectedIds) ? props.selectedIds : [])]
+
+    if (state === 'checked') {
+        const next = current.filter((item) => !childKeySet.has(String(item)))
+        emit('update:selectedIds', next)
+    } else {
+        const existingSet = new Set(current.map(String))
+        const next = [...current]
+        childIds.forEach((cid) => {
+            if (!existingSet.has(String(cid))) {
+                next.push(cid)
             }
-            this.updateFilter('purposes', arr)
-        },
-        resetFilters() {
-            this.expandedCategories = []
-            this.$emit('reset')
-        },
-    },
+        })
+        emit('update:selectedIds', next)
+    }
 }
 </script>
 
 <style scoped>
-.subcategory-accordion-grid {
+.filter-accordion-grid {
     display: grid;
     grid-template-rows: 0fr;
-    transition: grid-template-rows 280ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: grid-template-rows 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.subcategory-accordion-grid.is-expanded {
+.filter-accordion-grid.is-expanded {
     grid-template-rows: 1fr;
 }
 </style>

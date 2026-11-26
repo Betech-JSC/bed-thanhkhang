@@ -10,7 +10,11 @@ class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database.
-     * Safe, idempotent seeder calling official B2B Thanh Khang Tecsat seeders.
+     *
+     * Safe and idempotent entry point: loads roles/admin, settings/FAQs, policies,
+     * product catalog & hero banner, Home sections, About sections, Document banners,
+     * and default user accounts in a single `php artisan db:seed` run without
+     * truncating or duplicating existing records.
      *
      * @return void
      */
@@ -18,15 +22,30 @@ class DatabaseSeeder extends Seeder
     {
         error_reporting(E_ALL & ~E_DEPRECATED);
 
-        // Call official seeders
+        // Call all official Thanh Khang Tecsat seeders in deterministic order
         $this->call([
             RoleSeeder::class,
             ThanhKhangSettingSeeder::class,
             ThanhKhangPolicySeeder::class,
             ThanhKhangProductCatalogSeeder::class,
+            ThanhKhangProductHeroSeeder::class,
+            ThanhKhangHomeSliderSeeder::class,
+            ThanhKhangHomeAboutSeeder::class,
+            ThanhKhangHomeCategoriesCtaSeeder::class,
+            ThanhKhangHomeTrustSeeder::class,
+            ThanhKhangHomeProcessSeeder::class,
+            ThanhKhangHomeSamplePostsSeeder::class,
+            ThanhKhangHomeContactSeeder::class,
+            ThanhKhangAboutHeroSeeder::class,
+            ThanhKhangAboutStorySeeder::class,
+            ThanhKhangAboutMissionVisionSeeder::class,
+            ThanhKhangAboutStatsSeeder::class,
+            ThanhKhangAboutCompanionSeeder::class,
+            ThanhKhangDocumentBannerSeeder::class,
+            ThanhKhangDocumentLibrarySeeder::class,
         ]);
 
-        // Ensure default admin user exists safely without wiping existing users
+        // Ensure default users exist safely without wiping existing users
         User::firstOrCreate(
             ['email' => 'admin@gmail.com'],
             [

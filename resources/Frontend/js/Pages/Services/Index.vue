@@ -53,8 +53,9 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance } from 'vue'
-import { Head, usePage } from '@inertiajs/inertia-vue3'
+import { computed } from 'vue'
+import { Head } from '@inertiajs/inertia-vue3'
+import { useTranslate } from '@/composables/useTranslate.js'
 import ServiceBlock from './Components/ServiceBlock.vue'
 
 const props = defineProps({
@@ -64,23 +65,18 @@ const props = defineProps({
     },
 })
 
-const instance = getCurrentInstance()
-const i18n = {
-    tt: (text) => (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(text) : text),
-}
-const page = usePage()
-const currentLocale = computed(() => page.props.value?.locale?.current || 'vi')
+const { translate, currentLocale } = useTranslate()
 
 const pageTitle = computed(() =>
     currentLocale.value === 'en'
         ? 'Industrial Equipment & Technical Services - Thành Khang Tecsat'
-        : i18n.tt('Giải Pháp Thiết Bị Công Nghiệp & Kỹ Thuật - Thành Khang Tecsat')
+        : translate('Giải Pháp Thiết Bị Công Nghiệp & Kỹ Thuật - Thành Khang Tecsat')
 )
 
 const pageDescription = computed(() =>
     currentLocale.value === 'en'
         ? 'Thành Khang Tecsat supplies OEM escalator spare parts, Universal Chains industrial conveyors, and energy-saving BLDC HVLS ceiling fans.'
-        : i18n.tt('Thành Khang Tecsat cung cấp phụ tùng thang cuốn - thang máy, hệ thống băng tải & xích công nghiệp Universal Chains, và quạt trần công nghiệp BLDC HVLS chuẩn OEM.')
+        : translate('Thành Khang Tecsat cung cấp phụ tùng thang cuốn - thang máy, hệ thống băng tải & xích công nghiệp Universal Chains, và quạt trần công nghiệp BLDC HVLS chuẩn OEM.')
 )
 
 const fallbackServicesVi = [

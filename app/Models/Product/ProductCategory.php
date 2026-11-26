@@ -115,6 +115,7 @@ class ProductCategory extends BaseModel
         foreach ($locales as $locale) {
             \Illuminate\Support\Facades\Cache::forget('inertia_layout_shared_data_' . $locale);
             \Illuminate\Support\Facades\Cache::forget('products_index_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('documents_index_' . $locale);
             \Illuminate\Support\Facades\Cache::forget('home_page_data_' . $locale);
         }
     }
@@ -381,9 +382,9 @@ class ProductCategory extends BaseModel
                 'title' => $parent->title,
                 'slug' => $parent->seo_slug ?? $parent->slug,
                 'nodes' => $nodes,
-                'image' => $this->getImageDetail($this->image),
-                'image_mobile' => $this->getImageDetail($this->image_mobile),
-                'default_parent' => $this->default_parent
+                'image' => $parent->getImageDetail($parent->image),
+                'image_mobile' => $parent->getImageDetail($parent->image_mobile),
+                'default_parent' => $parent->default_parent
             ];
         });
     }
@@ -432,20 +433,48 @@ class ProductCategory extends BaseModel
                 ->where('status', self::STATUS_ACTIVE)
                 ->sortBy(fn($item) => ($item->position === null || $item->position === 0) ? PHP_INT_MAX : $item->position)
                 ->values()
-                ->map(fn($child) => [
-                    'id' => $child->id,
-                    'parent_id' => (int) ($child->parent_id ?? $this->id),
-                    'slug' => $child->seo_slug ?? $child->slug,
-                    'title' => $child->title,
-                    'name' => $child->title,
-                    'description' => $child->description,
-                    'position' => $child->position,
-                    'image' => $child->getImageDetail($child->image),
-                    'image_mobile' => $child->getImageDetail($child->image_mobile),
-                    'children' => [],
-                    'nodes' => [],
-                    'subcategories' => [],
-                ])
+                ->map(function ($child) {
+                    $rawGrandChildren = $child->relationLoaded('nodes')
+                        ? $child->nodes
+                        : ($child->relationLoaded('children')
+                            ? $child->children
+                            : $child->children()->active()->sortByPosition()->get());
+
+                    $grandChildren = collect($rawGrandChildren)
+                        ->where('status', self::STATUS_ACTIVE)
+                        ->sortBy(fn($item) => ($item->position === null || $item->position === 0) ? PHP_INT_MAX : $item->position)
+                        ->values()
+                        ->map(fn($grandChild) => [
+                            'id' => $grandChild->id,
+                            'parent_id' => (int) ($grandChild->parent_id ?? $child->id),
+                            'slug' => $grandChild->seo_slug ?? $grandChild->slug,
+                            'title' => $grandChild->title,
+                            'name' => $grandChild->title,
+                            'description' => $grandChild->description,
+                            'position' => $grandChild->position,
+                            'image' => $grandChild->getImageDetail($grandChild->image),
+                            'image_mobile' => $grandChild->getImageDetail($grandChild->image_mobile),
+                            'children' => [],
+                            'nodes' => [],
+                            'subcategories' => [],
+                        ])
+                        ->all();
+
+                    return [
+                        'id' => $child->id,
+                        'parent_id' => (int) ($child->parent_id ?? $this->id),
+                        'slug' => $child->seo_slug ?? $child->slug,
+                        'title' => $child->title,
+                        'name' => $child->title,
+                        'description' => $child->description,
+                        'position' => $child->position,
+                        'image' => $child->getImageDetail($child->image),
+                        'image_mobile' => $child->getImageDetail($child->image_mobile),
+                        'children' => $grandChildren,
+                        'nodes' => $grandChildren,
+                        'subcategories' => $grandChildren,
+                    ];
+                })
                 ->all();
         }
 
@@ -582,10 +611,10 @@ class ProductCategory extends BaseModel
             ];
         });
 
-        if ($banner->count() == 0 && $conditions['banner']) {
-            $banner = $this->parent->banner
-                ?? $this->parent->parent->banner
-                ?? $this->parent->parent->parent->banner
+        if ($banner->count() == 0 && !empty($conditions['banner'])) {
+            $banner = $this->parent?->banner
+                ?? $this->parent?->parent?->banner
+                ?? $this->parent?->parent?->parent?->banner
                 ?? [];
 
             $banner = collect($banner)->map(function ($item) {
@@ -671,9 +700,13 @@ class ProductCategory extends BaseModel
 
         if ($this->status == self::STATUS_ACTIVE) {
             foreach ($this->translations as $translation) {
-                $urls[strtoupper($translation->locale)] = route("$translation->locale.products.show", [
-                    'slug' => $translation->seo_slug ?? $translation->slug,
-                ]);
+                $categorySlug = trim((string) ($translation->seo_slug ?: $translation->slug ?: ''));
+                $routeName = "$translation->locale.products.index";
+                if (\Illuminate\Support\Facades\Route::has($routeName)) {
+                    $urls[strtoupper($translation->locale)] = $categorySlug !== ''
+                        ? route($routeName, ['category' => $categorySlug])
+                        : route($routeName);
+                }
             }
         }
         return $urls;

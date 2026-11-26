@@ -83,6 +83,14 @@ class SettingController extends Controller
             }
         }
 
+        if ($id === 'general') {
+            if (array_key_exists('general_tax_code', $validated) && !array_key_exists('tax_code', $validated)) {
+                $validated['tax_code'] = $validated['general_tax_code'];
+            } elseif (array_key_exists('tax_code', $validated) && !array_key_exists('general_tax_code', $validated)) {
+                $validated['general_tax_code'] = $validated['tax_code'];
+            }
+        }
+
         settings()->group($id)->set($validated);
 
         if (class_exists(\App\Models\Config::class) && method_exists(\App\Models\Config::class, 'clearBrandCaches')) {

@@ -1,118 +1,164 @@
 <template>
     <Link
         :href="productUrl"
-        class="group relative flex flex-col w-full lg:w-[273px] h-[419px] rounded-[12px] overflow-hidden bg-[#30374F] hover:-translate-y-1.5 hover:border-[#2970FF]/50 hover:shadow-2xl hover:shadow-[#2970FF]/20 border border-white/5 shadow-lg select-none transition-all duration-300"
+        class="group flex flex-col w-full h-full bg-white border border-[#E3E8EF] rounded-[4px] overflow-hidden transition-all duration-200 hover:border-[#005EA4]/45 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] select-none"
     >
-        <!-- Showcase Image Container (Locked 273x335px Frame) -->
-        <div class="relative w-full h-[335px] bg-[#D1D2D2] overflow-hidden shrink-0">
-            <!-- Best Choice Badge (Figma 2283:6509) -->
+        <!-- Product Image Frame (Figma 979:30462: 262x185 -> aspect-[262/185]) -->
+        <div class="relative w-full aspect-[262/185] bg-white overflow-hidden shrink-0">
+            <img
+                v-if="productImageSrc && !imageFailed"
+                :src="productImageSrc"
+                :alt="productImageAlt"
+                width="262"
+                height="185"
+                class="w-full h-full object-contain p-2 sm:p-3 select-none transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+                loading="lazy"
+                decoding="async"
+                @error="onImageError"
+            />
             <div
-                v-if="product.isBestChoice"
-                class="absolute top-[12px] left-[13px] z-20 w-[97px] h-[25px] rounded-[4px] px-2 py-1 bg-[#00359E] text-[#F5F8FF] text-xs font-medium leading-[17px] flex items-center justify-center shadow-sm pointer-events-none"
+                v-else
+                class="w-full h-full bg-[#EEF2F6] flex items-center justify-center p-4"
+                aria-hidden="true"
             >
-                {{ tt('Best choice') }}
+                <span class="w-10 h-[3px] rounded-[2px] bg-[#CDD5DF]" />
             </div>
-
-            <div class="w-full h-full relative overflow-hidden">
-                <!-- Product Showcase Image -->
-                <img
-                    :src="productImageSrc"
-                    :alt="productImageAlt"
-                    width="273"
-                    height="335"
-                    class="w-full h-full object-cover select-none group-hover:scale-105 transition-transform duration-500 ease-out"
-                    loading="lazy"
-                    decoding="async"
-                    @error="onImageError"
-                />
-            </div>
-
-            <!-- Subtle hover tint -->
-            <div
-                class="absolute inset-0 bg-[#00359E]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10"
-            ></div>
         </div>
 
-        <!-- Bottom Info Bar (Locked Height 84px, Figma 2283:6515) -->
-        <div class="relative h-[84px] w-full bg-[#30374F] overflow-hidden shrink-0">
-            <div class="w-full h-full px-2 py-3 flex flex-col justify-between gap-1">
+        <!-- Product Info & CTA (Figma I979:30462;754:22350) -->
+        <div class="flex-1 flex flex-col justify-between bg-white">
+            <!-- Title Container (Figma 754:22340: px 24px, pt 10px, min-h 98px desktop) -->
+            <div class="px-3 pt-2.5 sm:px-6 sm:pt-[10px] min-h-[70px] sm:min-h-[98px]">
                 <h3
-                    class="text-base font-bold text-[#F5F8FF] line-clamp-1 h-[22px] leading-[22px] font-sans group-hover:text-[#84ADFF] transition-colors"
-                    :title="tt(product.name || product.title)"
+                    class="text-[14px] leading-[20px] sm:text-[16px] sm:leading-[26px] font-bold text-[#00284B] font-sans line-clamp-3 break-words group-hover:text-[#005EA4] transition-colors"
+                    :title="productTitle"
                 >
-                    {{ tt(product.name || product.title) }}
+                    {{ productTitle }}
                 </h3>
-                <p class="text-xs text-[#B9C0D4] line-clamp-2 h-[34px] leading-[17px] font-normal">
-                    {{ product.description ? tt(product.description) : tt('Mô hình trưng bày · In theo yêu cầu') }}
-                </p>
+            </div>
+
+            <!-- Action Button Container (Figma 754:22349: p 24px, button h 38px) -->
+            <div class="p-3 sm:p-6 pt-3 sm:pt-6">
+                <span
+                    class="w-full h-[38px] px-4 rounded-[4px] bg-[#005EA4] group-hover:bg-[#004D86] group-active:bg-[#003967] text-[#FAFAFA] text-[13px] sm:text-[14px] leading-[22px] font-medium font-sans inline-flex items-center justify-center transition-colors"
+                >
+                    {{ tt('Xem chi tiết') }}
+                </span>
             </div>
         </div>
     </Link>
 </template>
 
-<script>
-export default {
-    name: 'ProductCard',
-    props: {
-        product: {
-            type: Object,
-            required: true,
-        },
+<script setup>
+import { computed, getCurrentInstance, ref, watch } from 'vue'
+import { Link } from '@inertiajs/inertia-vue3'
+import { useTranslate } from '@/composables/useTranslate.js'
+
+const props = defineProps({
+    product: {
+        type: Object,
+        required: true,
     },
-    mounted() {
-        if (typeof window !== 'undefined' && this.productImageSrc) {
-            const img = new window.Image();
-            img.src = this.productImageSrc;
+})
+
+const instance = getCurrentInstance()
+const { translate, currentLocale, isEn } = useTranslate()
+
+function safeRoute(name, params, fallback) {
+    const proxy = instance?.proxy
+    if (proxy && typeof proxy.route === 'function') {
+        if (typeof proxy.routes === 'function') {
+            const allRoutes = proxy.routes() || {}
+            const localizedName =
+                typeof proxy.routeLocaleName === 'function' ? proxy.routeLocaleName(name) : name
+            if (!allRoutes[localizedName] && !allRoutes[name]) {
+                return fallback
+            }
         }
-    },
-    computed: {
-        productUrl() {
-            if (typeof this.product.url === 'string' && this.product.url) {
-                return this.product.url;
-            }
-            if (this.product.url && typeof this.product.url === 'object') {
-                const current = (this.$page?.props?.locale?.current || 'VI').toUpperCase();
-                if (this.product.url[current]) return this.product.url[current];
-                const firstVal = Object.values(this.product.url)[0];
-                if (firstVal) return firstVal;
-            }
-            if (this.product.slug) {
-                return this.route('products.show', { slug: this.product.slug });
-            }
-            if (this.product.id) {
-                return this.route('products.show', { slug: this.product.id });
-            }
-            return this.route('products.index');
-        },
-        productImageSrc() {
-            let src = '/assets/images/products/figma-product-sample.png';
-            if (typeof this.product.image === 'string' && this.product.image) {
-                src = this.product.image;
-            } else if (this.product.image && typeof this.product.image === 'object') {
-                src = this.product.image.url || this.product.image.path || src;
-            } else if (typeof this.product.thumbnail === 'string' && this.product.thumbnail) {
-                src = this.product.thumbnail;
-            }
+        try {
+            const url = proxy.route(name, params)
+            if (url && url !== '#') return url
+        } catch (e) {
+            // Fall through to localized fallback
+        }
+    }
+    return fallback
+}
 
-            // Chuẩn hóa URL nếu có chứa /static// hoặc /static/assets/ hoặc /static/images/
-            if (typeof src === 'string') {
-                src = src.replace(/\/static\/\/?(assets\/|images\/)/g, '/$1')
-                         .replace(/\/static\/\//g, '/');
-            }
+const productTitle = computed(() => {
+    return String(props.product?.title || props.product?.name || '').trim()
+})
 
-            return src;
-        },
-        productImageAlt() {
-            if (this.product.image && typeof this.product.image === 'object' && this.product.image.alt) {
-                return this.product.image.alt;
-            }
-            return this.product.name || this.product.title || this.tt('Sản phẩm Thành Khang Tecsat');
-        },
-    },
-    methods: {
-        onImageError(e) {
-            e.target.src = '/assets/images/products/figma-product-sample.png';
-        },
-    },
+const productUrl = computed(() => {
+    const p = props.product
+    if (!p || typeof p !== 'object') {
+        return safeRoute('products.index', undefined, isEn.value ? '/en/products' : '/san-pham')
+    }
+    if (typeof p.url === 'string' && p.url.trim() !== '') {
+        return p.url.trim()
+    }
+    if (p.url && typeof p.url === 'object') {
+        const key = currentLocale.value.toUpperCase()
+        if (p.url[key]) return p.url[key]
+        const firstVal = Object.values(p.url)[0]
+        if (firstVal) return firstVal
+    }
+    if (p.slug) {
+        return safeRoute(
+            'products.show',
+            { slug: p.slug },
+            `${isEn.value ? '/en/products' : '/san-pham'}/${encodeURIComponent(p.slug)}`
+        )
+    }
+    if (p.id) {
+        return safeRoute(
+            'products.show',
+            { slug: p.id },
+            `${isEn.value ? '/en/products' : '/san-pham'}/${encodeURIComponent(p.id)}`
+        )
+    }
+    return safeRoute('products.index', undefined, isEn.value ? '/en/products' : '/san-pham')
+})
+
+function normalizeImageUrl(url) {
+    if (!url || typeof url !== 'string') return ''
+    let trimmed = url.trim()
+    if (!trimmed) return ''
+    trimmed = trimmed.replace(/\/static\/\/?(assets\/|images\/)/g, '/$1').replace(/\/static\/\//g, '/')
+    if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?\/(assets|images)\//i.test(trimmed)) {
+        return trimmed.replace(/^https?:\/\/[^/]+/i, '')
+    }
+    return trimmed
+}
+
+const productImageSrc = computed(() => {
+    const p = props.product
+    if (!p || typeof p !== 'object') return ''
+    let raw = ''
+    if (typeof p.image === 'string' && p.image) {
+        raw = p.image
+    } else if (p.image && typeof p.image === 'object') {
+        raw = p.image.url || p.image.path || ''
+    } else if (typeof p.thumbnail === 'string' && p.thumbnail) {
+        raw = p.thumbnail
+    }
+    return normalizeImageUrl(raw)
+})
+
+const productImageAlt = computed(() => {
+    const alt =
+        props.product?.image && typeof props.product.image === 'object'
+            ? props.product.image.alt
+            : ''
+    return String(alt || productTitle.value || '').trim()
+})
+
+const imageFailed = ref(false)
+watch(productImageSrc, () => {
+    imageFailed.value = false
+})
+
+function onImageError() {
+    imageFailed.value = true
 }
 </script>

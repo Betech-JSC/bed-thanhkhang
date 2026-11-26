@@ -11,6 +11,7 @@ import Components from 'unplugin-vue-components/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+    cacheDir: 'node_modules/.vite/backend',
     plugins: [
         laravel({
             input: "resources/Backend/js/app.js",
@@ -76,5 +77,13 @@ export default defineConfig({
     server: {
         host: '127.0.0.1',
         port: 5175,
+        watch: {
+            ignored: [
+                '**/storage/**',
+                '**/bootstrap/cache/**',
+                '**/graphify-out/**',
+                '**/.git/**',
+            ],
+        },
     },
 })

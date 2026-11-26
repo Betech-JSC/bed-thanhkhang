@@ -8,6 +8,7 @@ use App\Http\Controllers\Frontend\Auth\UserAuthController;
 use App\Http\Controllers\Frontend\HistoryController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\ContactController;
+use App\Http\Controllers\Frontend\DocumentController;
 use App\Http\Controllers\Frontend\ProductController;
 use App\Http\Controllers\Frontend\ProcessController;
 use App\Http\Controllers\Frontend\ServiceController;
@@ -67,6 +68,10 @@ Route::middleware(['meta_seo', 'opening'])->group(function () {
 
         // quy trình cung ứng & hỗ trợ kỹ thuật
         Route::get(Lang::uri('quy-trinh'), [ProcessController::class, 'index'])->name('process.index');
+
+        // tài liệu kỹ thuật & catalogue
+        Route::get(Lang::uri('documents'), [DocumentController::class, 'index'])->name('documents.index');
+        Route::get(Lang::uri('documents_library'), [DocumentController::class, 'library'])->name('documents.library');
 
         Route::post(Lang::uri('contacts'), [ContactController::class, 'store'])->name('contact.store');
 

@@ -27,22 +27,22 @@ class ThanhKhangProductCatalogSeeder extends Seeder
                 'linh-kien-thang-cuon' => [
                     'position' => 1,
                     'vi' => ['title' => 'Linh kiện thang cuốn', 'slug' => 'linh-kien-thang-cuon', 'desc' => 'Tổng kho xích bậc thang cuốn, xích băng tải hành khách, xích dẫn động và xích tay vịn chính hãng Universal Chains.'],
-                    'en' => ['title' => 'Escalator Spare Parts', 'slug' => 'escalator-spare-parts', 'desc' => 'Tổng kho xích bậc thang cuốn, xích băng tải hành khách, xích dẫn động và xích tay vịn chính hãng Universal Chains.'],
+                    'en' => ['title' => 'Escalator Spare Parts', 'slug' => 'escalator-spare-parts', 'desc' => 'Complete inventory of escalator step chains, passenger conveyor chains, main drive chains, and handrail drive chains from Universal Chains.'],
                 ],
                 'linh-kien-thang-nang-o-to' => [
                     'position' => 2,
                     'vi' => ['title' => 'Linh kiện thang nâng ô tô', 'slug' => 'linh-kien-thang-nang-o-to', 'desc' => 'Xích bãi đỗ xe lập thể và tuần hoàn đứng chịu tải trọng lớn cho hệ thống đỗ xe thông minh.'],
-                    'en' => ['title' => 'Car Parking Lift Components', 'slug' => 'car-parking-lift-components', 'desc' => 'Xích bãi đỗ xe lập thể và tuần hoàn đứng chịu tải trọng lớn cho hệ thống đỗ xe thông minh.'],
+                    'en' => ['title' => 'Car Parking Lift Components', 'slug' => 'car-parking-lift-components', 'desc' => 'Heavy-duty chains for multi-level puzzle parking and vertical rotary car parking lift systems.'],
                 ],
                 'he-thong-bang-tai-hanh-ly' => [
                     'position' => 3,
                     'vi' => ['title' => 'Hệ thống băng tải hành lý', 'slug' => 'he-thong-bang-tai-hanh-ly', 'desc' => 'Xích con lăn cạnh và xích con lăn trên chuyên dụng cho băng tải hành lý sân bay và kho vận logistics.'],
-                    'en' => ['title' => 'Baggage Conveyor Systems', 'slug' => 'baggage-conveyor-systems', 'desc' => 'Xích con lăn cạnh và xích con lăn trên chuyên dụng cho băng tải hành lý sân bay và kho vận logistics.'],
+                    'en' => ['title' => 'Baggage Conveyor Systems', 'slug' => 'baggage-conveyor-systems', 'desc' => 'Side roller and top roller conveyor chains engineered for airport baggage handling and logistics systems.'],
                 ],
                 'linh-kien-day-chuyen-dong-goi' => [
                     'position' => 4,
                     'vi' => ['title' => 'Linh kiện dây chuyền đóng gói', 'slug' => 'linh-kien-day-chuyen-dong-goi', 'desc' => 'Xích chốt rỗng, xích con lăn trên, xích cong/chống cong và xích tải M/FV series cho dây chuyền đóng gói và băng tải nhẹ.'],
-                    'en' => ['title' => 'Packaging Line Components', 'slug' => 'packaging-line-components', 'desc' => 'Xích chốt rỗng, xích con lăn trên, xích cong/chống cong và xích tải M/FV series cho dây chuyền đóng gói và băng tải nhẹ.'],
+                    'en' => ['title' => 'Packaging Line Components', 'slug' => 'packaging-line-components', 'desc' => 'Hollow pin chains, top roller chains, side-bow/anti-bow chains, and M/FV series conveyor chains for packaging machinery and light conveyors.'],
                 ],
             ];
 

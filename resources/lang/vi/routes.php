@@ -16,4 +16,6 @@ return [
     'prizes' => 'giai-thuong',
     'projects' => 'do-an',
     'quy-trinh' => 'quy-trinh',
+    'documents' => 'tai-lieu',
+    'documents_library' => 'tai-lieu/thu-vien',
 ];

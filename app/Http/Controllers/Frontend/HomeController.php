@@ -576,14 +576,11 @@ class HomeController extends Controller
 
     protected function getTermDictionary(): array
     {
-        return [
-            // Materials & Supply Terms
-            'Thép hợp kim / Thép carbon nhiệt luyện (Universal Chains)' => 'Heat-Treated Alloy / Carbon Steel (Universal Chains)',
-            'Thép hợp kim cường độ cao' => 'High-Tensile Alloy Steel',
-            'Thép carbon nhiệt luyện' => 'Heat-Treated Carbon Steel',
-            'Thép không gỉ công nghiệp' => 'Industrial Stainless Steel',
-            'Liên hệ đặt hàng & báo giá B2B' => 'Contact for B2B Order & Quotation',
-        ];
+        $dict = trans('ui', [], 'en');
+
+        return is_array($dict)
+            ? array_filter($dict, static fn($v, $k) => is_string($k) && is_string($v), ARRAY_FILTER_USE_BOTH)
+            : [];
     }
 
     protected function translateTerm(?string $term, string $locale): string

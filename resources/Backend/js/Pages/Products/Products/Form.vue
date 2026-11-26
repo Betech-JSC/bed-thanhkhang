@@ -6,16 +6,33 @@
                 <div class="card-header font-bold text-slate-800">
                     {{ tt('models.setting.general_information') }}
                 </div>
-                <div class="card-body">
-                    <Field
-                        v-model="form.title"
-                        :field="{
-                            type: 'text',
-                            name: 'title',
-                            label: 'Tên sản phẩm',
-                            placeholder: 'VD: Xích thang cuốn bước lớn TL133',
-                        }"
-                    />
+                <div class="card-body space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Field
+                            v-model="form.title"
+                            :field="{
+                                type: 'text',
+                                name: 'title',
+                                label: 'Tên sản phẩm',
+                                placeholder: 'VD: Xích thang cuốn bước lớn TL133',
+                            }"
+                        />
+                        <Field
+                            v-model="form.slug"
+                            :field="{
+                                type: 'text',
+                                name: 'slug',
+                                label: 'Slug đường dẫn',
+                                placeholder: 'VD: xich-thang-cuon-buoc-lon-tl133',
+                            }"
+                        />
+                    </div>
+                    <small v-if="form.id && form.url" class="block text-xs text-slate-500">
+                        <span v-for="(item, locale) in form.url" :key="locale" class="block">
+                            {{ locale }}:
+                            <a :href="item" target="_blank" class="link">{{ decodeURI(item) }}</a>
+                        </span>
+                    </small>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <Field
                             v-model="form.sku"
@@ -155,6 +172,68 @@
                             }"
                         />
                     </div>
+
+                    <!-- Bảng thông số kỹ thuật tùy biến (specifications JSON) -->
+                    <div class="pt-4 mt-2 border-t border-slate-200 space-y-3">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                                <h4 class="text-sm font-semibold text-slate-800">
+                                    Bảng thông số kỹ thuật chi tiết (Specifications)
+                                </h4>
+                                <p class="text-xs text-slate-500">
+                                    Thêm từng cặp tên thông số và giá trị hiển thị ở bảng Thông số kỹ thuật trên PDP.
+                                </p>
+                            </div>
+                            <button
+                                type="button"
+                                @click="addSpecificationRow(form)"
+                                class="px-3 py-1.5 text-xs font-medium rounded bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                            >
+                                + Thêm dòng thông số
+                            </button>
+                        </div>
+
+                        <div
+                            v-if="Array.isArray(form.specifications) && form.specifications.length > 0"
+                            class="space-y-2"
+                        >
+                            <div
+                                v-for="(spec, sIdx) in form.specifications"
+                                :key="sIdx"
+                                class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2.5 rounded border border-slate-200"
+                            >
+                                <div class="md:col-span-5">
+                                    <input
+                                        v-model="spec.label"
+                                        type="text"
+                                        class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-blue-500 focus:outline-none"
+                                        placeholder="Tên thông số (VD: Bước xích)"
+                                    />
+                                </div>
+                                <div class="md:col-span-6">
+                                    <input
+                                        v-model="spec.value"
+                                        type="text"
+                                        class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-blue-500 focus:outline-none"
+                                        placeholder="Giá trị (VD: 133.33 mm)"
+                                    />
+                                </div>
+                                <div class="md:col-span-1 flex justify-end">
+                                    <button
+                                        type="button"
+                                        @click="removeSpecificationRow(form, sIdx)"
+                                        class="px-2.5 py-1.5 text-xs font-medium rounded text-red-600 hover:bg-red-50 border border-red-200 transition-colors"
+                                        title="Xóa dòng"
+                                    >
+                                        Xóa
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <p v-else class="text-xs italic text-slate-400">
+                            Chưa có dòng thông số tùy chỉnh nào.
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -247,6 +326,8 @@
                     />
                 </div>
             </div>
+
+            <SeoFields :modelValue="form" @update:modelValue="form = $event" />
         </template>
         <template #aside="{ form }">
             <div class="card">
@@ -366,40 +447,60 @@ export default {
     },
 
     methods: {
+        addSpecificationRow(form) {
+            if (!Array.isArray(form.specifications)) {
+                form.specifications = []
+            }
+            form.specifications.push({ label: '', value: '' })
+        },
+        removeSpecificationRow(form, index) {
+            if (Array.isArray(form.specifications)) {
+                form.specifications.splice(index, 1)
+            }
+        },
         buildFormData(item = {}) {
-            const specs = Array.isArray(item?.specifications) ? item.specifications : []
-            const meta = item?.pdp_metadata && typeof item.pdp_metadata === 'object' ? item.pdp_metadata : {}
+            const safeItem = item && typeof item === 'object' ? item : {}
+            const specs = Array.isArray(safeItem.specifications)
+                ? safeItem.specifications.map((row) => ({
+                      label: row?.label ?? '',
+                      value: row?.value ?? '',
+                  }))
+                : []
+            const meta =
+                safeItem.pdp_metadata && typeof safeItem.pdp_metadata === 'object'
+                    ? safeItem.pdp_metadata
+                    : {}
 
             return {
-                ...item,
-                categories: item.categories ?? [],
-                price: item.price ?? null,
-                compare_at_price: item.compare_at_price ?? null,
-                print_technology: item.print_technology ?? specs[0]?.value ?? 'Gia công CNC chính xác',
-                material: item.material ?? specs[1]?.value ?? 'Thép hợp kim 40Cr/SCM435',
-                lead_time: item.lead_time ?? 'Sẵn kho / Giao hàng trong 3-7 ngày',
-                sample_size: item.sample_size ?? specs[2]?.value ?? 'Tiêu chuẩn catalog hoặc bản vẽ',
-                layer_height: item.layer_height ?? specs[3]?.value ?? 'Theo tiêu chuẩn tải trọng công nghiệp',
-                nozzle_size: item.nozzle_size ?? specs[4]?.value ?? 'Mạ kẽm / Thấm Nitơ / Tra mỡ chịu nhiệt',
-                infill: item.infill ?? specs[5]?.value ?? 'ISO 606 / DIN 8187 / JIS B1801',
-                support_material: item.support_material ?? specs[6]?.value ?? 'Đầy đủ CO/CQ, Test report nhà máy',
-                image_color_label: item.image_color_label ?? meta.image_color_label ?? 'Tiêu chuẩn nhà máy',
-                customization_label: item.customization_label ?? meta.customization_label ?? 'Kích thước · Tải trọng · Bản vẽ OEM',
+                ...safeItem,
+                slug: safeItem.slug ?? '',
+                categories: safeItem.categories ?? [],
+                price: safeItem.price ?? null,
+                compare_at_price: safeItem.compare_at_price ?? null,
+                print_technology: safeItem.print_technology ?? '',
+                material: safeItem.material ?? '',
+                lead_time: safeItem.lead_time ?? '',
+                sample_size: safeItem.sample_size ?? '',
+                layer_height: safeItem.layer_height ?? '',
+                nozzle_size: safeItem.nozzle_size ?? '',
+                infill: safeItem.infill ?? '',
+                support_material: safeItem.support_material ?? '',
+                image_color_label: safeItem.image_color_label ?? meta.image_color_label ?? '',
+                customization_label:
+                    safeItem.customization_label ?? meta.customization_label ?? '',
+                specifications: specs,
                 pdp_metadata: {
-                    story_title: meta.story_title ?? 'Giải pháp cơ khí & phụ tùng công nghiệp bền bỉ.',
-                    story_intro: meta.story_intro ?? item.description ?? '',
-                    feature1_title: meta.feature1_title ?? 'Độ bền cơ tính vượt trội',
-                    feature1_desc:
-                        meta.feature1_desc ??
-                        'Sản phẩm được gia công cơ khí chính xác, nhiệt luyện cao tần đạt độ cứng tiêu chuẩn, đảm bảo chống mài mòn và chịu tải trọng làm việc khắc nghiệt.',
-                    feature2_title: meta.feature2_title ?? 'Tư vấn kỹ thuật & Gia công theo bản vẽ',
-                    feature2_desc:
-                        meta.feature2_desc ??
-                        'Đội ngũ kỹ sư Thành Khang Tecsat sẵn sàng khảo sát thực địa tại nhà máy, tư vấn giải pháp tương thích 100% với dây chuyền hiện hữu.',
+                    ...meta,
+                    story_title: meta.story_title ?? '',
+                    story_intro: meta.story_intro ?? '',
+                    feature1_title: meta.feature1_title ?? '',
+                    feature1_desc: meta.feature1_desc ?? '',
+                    feature2_title: meta.feature2_title ?? '',
+                    feature2_desc: meta.feature2_desc ?? '',
                 },
-                images: item.images ?? [],
-                status: item.status ?? 'ACTIVE',
-                view_count: item.view_count ?? 0,
+                images: safeItem.images ?? [],
+                status: safeItem.status ?? 'ACTIVE',
+                view_count: safeItem.view_count ?? 0,
             }
         },
     },

@@ -91,8 +91,9 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance } from 'vue'
-import { Link, usePage } from '@inertiajs/inertia-vue3'
+import { computed } from 'vue'
+import { Link } from '@inertiajs/inertia-vue3'
+import { useTranslate } from '@/composables/useTranslate.js'
 
 const props = defineProps({
     title: {
@@ -121,12 +122,7 @@ const props = defineProps({
     },
 })
 
-const instance = getCurrentInstance()
-const i18n = {
-    tt: (text) => (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(text) : text),
-}
-const page = usePage()
-const isEn = computed(() => page.props.value?.locale?.current === 'en')
+const { translate, isEn } = useTranslate()
 
 const homeUrl = computed(() => (isEn.value ? '/en' : '/'))
 
@@ -143,18 +139,16 @@ const servicesUrl = computed(() => {
 const defaultDescription = computed(() =>
     isEn.value
         ? 'Together with Thành Khang Tecsat, verify technical specifications, material durability, and OEM standards so every escalator or conveyor component operates reliably in real-world service.'
-        : i18n.tt('Cùng Thành Khang Tecsat đối chiếu chính xác thông số kỹ thuật, vật liệu chịu tải và chuẩn OEM để mọi linh kiện thang cuốn, xích tải vận hành an toàn, bền bỉ.')
+        : translate('Cùng Thành Khang Tecsat đối chiếu chính xác thông số kỹ thuật, vật liệu chịu tải và chuẩn OEM để mọi linh kiện thang cuốn, xích tải vận hành an toàn, bền bỉ.')
 )
 
 const displayHeadline = computed(() => {
     if (props.headline && props.headline.trim() !== '') {
-        return i18n.tt(props.headline.trim())
+        return translate(props.headline.trim())
     }
 
-    const baseTitle = props.title || i18n.tt('Giải pháp kỹ thuật công nghiệp')
-    const rawTitle = (
-        (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(baseTitle) : baseTitle) || ''
-    ).trim()
+    const baseTitle = props.title || translate('Giải pháp kỹ thuật công nghiệp')
+    const rawTitle = String(translate(baseTitle) || '').trim()
 
     if (isEn.value) {
         if (!rawTitle) return 'Industrial Equipment & Spare Parts: Precision OEM Standards'
@@ -162,9 +156,9 @@ const displayHeadline = computed(() => {
         return `${rawTitle}: Precision OEM Standards`
     }
 
-    if (!rawTitle) return i18n.tt('Giải pháp kỹ thuật công nghiệp: Chuẩn xác từng thông số vận hành')
+    if (!rawTitle) return translate('Giải pháp kỹ thuật công nghiệp: Chuẩn xác từng thông số vận hành')
     if (rawTitle.includes(':')) return rawTitle
-    return `${rawTitle}: ${i18n.tt('Chuẩn xác từng thông số vận hành')}`
+    return `${rawTitle}: ${translate('Chuẩn xác từng thông số vận hành')}`
 })
 
 const imageSrc = computed(() => {
@@ -176,9 +170,9 @@ const displayInputItems = computed(() => {
         return props.inputItems
     }
     return [
-        i18n.tt('Ý tưởng'),
-        i18n.tt('Ảnh tham khảo'),
-        i18n.tt('Bản phác thảo'),
+        translate('Ý tưởng'),
+        translate('Ảnh tham khảo'),
+        translate('Bản phác thảo'),
     ]
 })
 
@@ -187,9 +181,9 @@ const displayProcessItems = computed(() => {
         return props.processItems
     }
     return [
-        i18n.tt('Tỉ lệ & hình khối'),
-        i18n.tt('Cấu trúc & chi tiết'),
-        i18n.tt('Khả năng chế tác'),
+        translate('Tỉ lệ & hình khối'),
+        translate('Cấu trúc & chi tiết'),
+        translate('Khả năng chế tác'),
     ]
 })
 </script>

@@ -2,21 +2,22 @@
     <section
         v-if="hasContent"
         id="why-choose-us-section"
-        class="bg-[#FAFAFA] pt-8 md:pt-16 lg:pt-0 pb-5"
+        class="bg-[#FAFAFA] pt-3 pb-0 md:pt-12 lg:pt-0 lg:pb-5"
     >
-        <!-- Top Title Row -->
-        <div v-if="trust?.heading" class="app-container mb-6 md:mb-8">
-            <div class="flex items-center gap-[10px]">
-                <span class="w-3 h-3 rounded-[2px] bg-[#005EA4] shrink-0" aria-hidden="true" />
-                <h2 class="font-bold text-[16px] md:text-[18px] leading-[1.6] text-[#005EA4]">
+        <!-- Top Title Row (Figma 1171:41561 / 1191:6400 — 1152px narrow container) -->
+        <div v-if="trust?.heading" class="app-container-narrow mb-4 md:mb-6 lg:mb-8">
+            <div class="flex items-center gap-2 lg:gap-[10px]">
+                <span class="w-[10px] h-[10px] lg:w-3 lg:h-3 rounded-[2px] bg-[#005EA4] shrink-0" aria-hidden="true" />
+                <h2 class="font-bold text-[16px] lg:text-[18px] leading-[24px] lg:leading-[1.6] text-[#005EA4]">
                     {{ trust.heading }}
                 </h2>
             </div>
         </div>
 
-        <!-- Full-Bleed Trust Banner (Figma 595:15398 — 1440x578 Desktop) -->
+        <!-- Full-Bleed Trust Banner (Figma 1171:41564 — 1440x578 Desktop; Figma 1191:6403 — 390x588 Mobile) -->
         <div
-            class="relative w-full overflow-hidden bg-[#00284B] min-h-[540px] lg:min-h-0 lg:aspect-[1440/578] flex items-center"
+            v-if="trustItems.length > 0"
+            class="relative w-full overflow-hidden bg-[#00284B] lg:aspect-[1440/578] flex items-center"
         >
             <!-- Background Photo -->
             <picture v-if="bannerUrl" class="absolute inset-0 block w-full h-full pointer-events-none select-none">
@@ -157,37 +158,41 @@
                 </div>
             </div>
 
-            <!-- Mobile, Tablet, or Desktop Extended Grid (when > 5 CMS pillars — zero silent truncation) -->
+            <!-- Mobile, Tablet, or Desktop Extended Grid (Figma 1191:6404 — py-7 px-4 gap-3 min-h-[92px] on Mobile) -->
             <div
                 :class="useWaveLayout ? 'lg:hidden' : ''"
-                class="relative z-10 w-full py-10 md:py-12"
+                class="relative z-10 w-full py-7 md:py-10"
             >
-                <div class="app-container">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                <div class="app-container-narrow">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5">
                         <article
                             v-for="(item, idx) in trustItems"
                             :key="item.id || idx"
-                            class="flex items-start gap-4 rounded-[8px] bg-[#00284B]/65 backdrop-blur-[2px] border border-[#C9E0FF]/25 p-4"
+                            class="min-h-[92px] flex items-center gap-3.5 rounded-[10px] bg-[#00284B]/[0.68] backdrop-blur-[2px] border border-[#C9E0FF]/[0.28] px-[15px] py-[13px]"
                         >
                             <div
-                                class="w-14 h-14 rounded-full bg-[#00284B] border-4 border-[#C9E0FF] flex items-center justify-center shrink-0"
+                                class="w-[60px] h-[60px] rounded-full bg-[#C9E0FF]/25 p-[5px] flex items-center justify-center shrink-0"
                             >
-                                <img
-                                    v-if="item.icon?.url"
-                                    :src="item.icon.url"
-                                    :alt="item.icon.alt || item.title || ''"
-                                    width="28"
-                                    height="28"
-                                    class="w-7 h-7 object-contain"
-                                    loading="lazy"
-                                    decoding="async"
-                                />
+                                <div
+                                    class="w-[50px] h-[50px] rounded-full bg-[#00284B] border-2 border-[#C9E0FF] flex items-center justify-center overflow-hidden"
+                                >
+                                    <img
+                                        v-if="item.icon?.url"
+                                        :src="item.icon.url"
+                                        :alt="item.icon.alt || item.title || ''"
+                                        width="24"
+                                        height="24"
+                                        class="w-6 h-6 object-contain"
+                                        loading="lazy"
+                                        decoding="async"
+                                    />
+                                </div>
                             </div>
-                            <div class="min-w-0 flex-1 flex flex-col gap-1">
-                                <h3 class="font-bold text-[18px] leading-[1.4] text-[#FAFAFA]">
+                            <div class="min-w-0 flex-1 flex flex-col gap-0.5">
+                                <h3 class="font-bold text-[16px] leading-[22px] text-[#FAFAFA]">
                                     {{ item.title }}
                                 </h3>
-                                <p v-if="item.description" class="font-medium text-[14px] leading-[1.6] text-[#F8FAFC]">
+                                <p v-if="item.description" class="font-normal text-[13px] leading-[20px] text-[#E3E8EF]">
                                     {{ item.description }}
                                 </p>
                             </div>
@@ -256,6 +261,6 @@ const bannerMobileUrl = computed(() => {
 })
 
 const hasContent = computed(() => {
-    return Boolean(props.trust?.heading || trustItems.value.length > 0)
+    return trustItems.value.length > 0
 })
 </script>

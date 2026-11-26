@@ -45,6 +45,7 @@
                         <!-- Hình ảnh sản phẩm cố định khung 273x352 (Figma image 15) -->
                         <div class="w-full h-[352px] bg-[#D1D2D2] relative overflow-hidden shrink-0">
                             <img
+                                v-if="hasValidImage(item, idx)"
                                 :src="item.image"
                                 :alt="item.title"
                                 width="273"
@@ -52,8 +53,15 @@
                                 class="w-full h-full object-cover select-none"
                                 loading="lazy"
                                 decoding="async"
-                                @error="handleImageError($event, item)"
+                                @error="handleImageError(item, idx)"
                             />
+                            <div
+                                v-else
+                                class="w-full h-full bg-[#1C2238] flex items-center justify-center p-6"
+                                aria-hidden="true"
+                            >
+                                <span class="w-10 h-[3px] rounded-[2px] bg-[#404968]"></span>
+                            </div>
                             <!-- Subtle highlight sheen on hover -->
                             <div class="absolute inset-0 bg-primary/10 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 pointer-events-none z-10"></div>
                         </div>
@@ -106,7 +114,13 @@ export default {
         return {
             currentOffset: 0,
             touchStartX: 0,
+            failedImageKeys: {},
         }
+    },
+    watch: {
+        products() {
+            this.failedImageKeys = {}
+        },
     },
     computed: {
         isEn() {
@@ -140,13 +154,36 @@ export default {
         tt(s) {
             return typeof this.$root?.tt === 'function' ? this.$root.tt(s) : s
         },
+        safeRoute(name, params, fallback = '/') {
+            if (typeof this.route === 'function' && typeof this.routes === 'function') {
+                const allRoutes = this.routes() || {}
+                const localizedName =
+                    typeof this.routeLocaleName === 'function' ? this.routeLocaleName(name) : name
+                if (allRoutes[localizedName] || allRoutes[name]) {
+                    try {
+                        const url = this.route(name, params)
+                        if (url && url !== '#') return url
+                    } catch (e) {
+                        // Fall through to fallback
+                    }
+                }
+            }
+            return fallback
+        },
+        getItemKey(item, idx) {
+            return String(item?.id ?? item?.slug ?? idx)
+        },
+        hasValidImage(item, idx) {
+            return Boolean(item?.image) && !this.failedImageKeys[this.getItemKey(item, idx)]
+        },
         getProductUrl(item) {
-            if (!item) return '/san-pham'
-            const isEn = (this.$page?.props?.locale?.current || '').toLowerCase() === 'en'
-            const prefix = isEn ? '/en/products' : '/san-pham'
+            const prefix = this.isEn ? '/en/products' : '/san-pham'
+            if (!item) {
+                return this.safeRoute('products.index', undefined, prefix)
+            }
 
             if (item.slug) {
-                return `${prefix}/${item.slug}`
+                return this.safeRoute('products.show', { slug: item.slug }, `${prefix}/${item.slug}`)
             }
             if (typeof item.url === 'string' && item.url) {
                 try {
@@ -157,7 +194,7 @@ export default {
                 }
             }
             if (item.url && typeof item.url === 'object') {
-                const locKey = isEn ? 'EN' : 'VI'
+                const locKey = this.isEn ? 'EN' : 'VI'
                 const matched = item.url[locKey] || Object.values(item.url)[0]
                 if (matched && typeof matched === 'string') {
                     try {
@@ -169,9 +206,9 @@ export default {
                 }
             }
             if (item.id) {
-                return `${prefix}/${item.id}`
+                return this.safeRoute('products.show', { slug: item.id }, `${prefix}/${item.id}`)
             }
-            return prefix
+            return this.safeRoute('products.index', undefined, prefix)
         },
         preloadImages() {
             if (typeof window === 'undefined') return
@@ -182,12 +219,9 @@ export default {
                 }
             })
         },
-        handleImageError(event, item) {
-            if (!event || !event.target) return
-            const fallback = '/images/products/thanhkhang/xich-bac-thang-thuong-mai/commercial-type.webp'
-            if (event.target.src !== fallback && !event.target.src.endsWith(fallback)) {
-                event.target.src = fallback
-            }
+        handleImageError(item, idx) {
+            const key = this.getItemKey(item, idx)
+            this.failedImageKeys = { ...this.failedImageKeys, [key]: true }
         },
         getMaxOffset() {
             const viewport = this.$refs.viewportRef

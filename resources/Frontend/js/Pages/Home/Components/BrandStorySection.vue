@@ -2,54 +2,72 @@
     <section
         v-if="hasContent"
         id="about-intro-section"
-        class="bg-surface py-8 md:py-16 lg:pt-20 lg:pb-10"
+        class="bg-[#FAFAFA] pt-3 pb-10 md:py-12 lg:py-0"
     >
-        <div class="app-container flex flex-col gap-6 md:gap-8">
-            <!-- Row 1 (Top Row): Eyebrow + Lead Heading | 2 Square/Portrait Photos -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
-                <!-- Left Column -->
-                <div class="flex flex-col justify-between gap-4 lg:gap-6">
-                    <div v-if="about.eyebrow" class="flex items-center gap-[10px]">
-                        <span class="w-3 h-3 rounded-[2px] bg-[#005EA4] shrink-0" aria-hidden="true" />
-                        <p class="font-bold text-[16px] md:text-[18px] leading-[1.6] text-[#005EA4]">
+        <div class="app-container-narrow flex flex-col gap-5 lg:gap-8">
+            <!-- Row 1 (Top Row on Desktop): Eyebrow + Lead Heading | 2 Top Photos (268x272) -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-8 items-stretch">
+                <!-- Left Column: Eyebrow + Lead Statement -->
+                <div class="flex flex-col justify-between gap-5 lg:gap-6">
+                    <div v-if="about.eyebrow" class="flex items-center gap-2 lg:gap-[10px]">
+                        <span class="w-[10px] h-[10px] lg:w-3 lg:h-3 rounded-[2px] bg-[#005EA4] shrink-0" aria-hidden="true" />
+                        <p class="font-bold text-[16px] lg:text-[18px] leading-[24px] lg:leading-[1.6] text-[#005EA4]">
                             {{ about.eyebrow }}
                         </p>
                     </div>
 
                     <h2
                         v-if="about.lead_highlight || about.lead_rest"
-                        class="font-bold text-[20px] md:text-[24px] leading-[1.55] md:leading-[1.6] tracking-normal"
+                        class="font-bold text-[18px] lg:text-[24px] leading-[27px] lg:leading-[38px] text-[#000000] tracking-normal"
                     >
-                        <span v-if="about.lead_highlight" class="text-[#005EA4]">{{ about.lead_highlight }}</span>{{ about.lead_highlight && about.lead_rest ? ' ' : '' }}<span v-if="about.lead_rest" class="text-[#9AA4B2]">{{ about.lead_rest }}</span>
+                        <span v-if="about.lead_highlight">{{ about.lead_highlight }}</span>{{ about.lead_highlight && about.lead_rest ? ' ' : '' }}<span v-if="about.lead_rest">{{ about.lead_rest }}</span>
                     </h2>
                 </div>
 
-                <!-- Right Column: 2 Top Images (268x272) -->
-                <div v-if="topImages.length > 0" class="grid grid-cols-2 gap-3 md:gap-6">
+                <!-- Right Column on Desktop / Combined 3-Photo Gallery on Mobile (Figma 1190:6459 & 1171:41549) -->
+                <div v-if="validImages.length > 0" class="flex flex-col gap-3">
+                    <div v-if="topImages.length > 0" class="grid grid-cols-2 gap-3 lg:gap-6">
+                        <div
+                            v-for="(img, idx) in topImages"
+                            :key="img.id || idx"
+                            class="aspect-[173/148] lg:aspect-[268/272] w-full overflow-hidden rounded-[6px] lg:rounded-[4px] bg-[#EEF2F6]"
+                        >
+                            <img
+                                :src="img.url"
+                                :alt="img.alt || about.eyebrow || ''"
+                                class="w-full h-full object-cover object-center"
+                                loading="lazy"
+                                decoding="async"
+                                width="268"
+                                height="272"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Mobile-Only 3rd Wide Featured Photo grouped right under top 2 photos (Figma 1190:6463 358x210) -->
                     <div
-                        v-for="(img, idx) in topImages"
-                        :key="img.id || idx"
-                        class="aspect-[268/272] w-full overflow-hidden rounded-[4px] bg-[#EEF2F6]"
+                        v-if="wideImage"
+                        class="lg:hidden aspect-[358/210] w-full overflow-hidden rounded-[6px] bg-[#EEF2F6]"
                     >
                         <img
-                            :src="img.url"
-                            :alt="img.alt || about.eyebrow || ''"
+                            :src="wideImage.url"
+                            :alt="wideImage.alt || about.eyebrow || ''"
                             class="w-full h-full object-cover object-center"
                             loading="lazy"
                             decoding="async"
-                            width="268"
-                            height="272"
+                            width="358"
+                            height="210"
                         />
                     </div>
                 </div>
             </div>
 
-            <!-- Row 2 (Bottom Row): Wide Photo (560x363) | Body Paragraphs + Commitment Quote + CTA -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-end">
-                <!-- Left Column: Wide Photo -->
+            <!-- Row 2 (Bottom Row on Desktop): Wide Photo (560x363) | Body Paragraphs + Commitment Quote + CTA -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-8 items-end">
+                <!-- Desktop-Only Left Column: Wide Photo (Figma 1171:41555 560x363) -->
                 <div
                     v-if="wideImage"
-                    class="aspect-[560/363] w-full overflow-hidden rounded-[4px] bg-[#EEF2F6]"
+                    class="hidden lg:block aspect-[560/363] w-full overflow-hidden rounded-[4px] bg-[#EEF2F6]"
                 >
                     <img
                         :src="wideImage.url"
@@ -62,20 +80,17 @@
                     />
                 </div>
 
-                <!-- Right Column: Narrative & CTA -->
-                <div class="flex flex-col items-start justify-end gap-6 md:gap-10">
+                <!-- Right Column: Narrative & CTA (Figma 1171:41557 & 1190:6464-6465) -->
+                <div class="flex flex-col items-start justify-end gap-5 lg:gap-10">
                     <div
                         v-if="paragraphs.length > 0 || about.commitment_quote || about.commitment_sub"
-                        class="space-y-4 text-[15px] md:text-[16px] leading-[1.6] font-normal text-[#364152]"
+                        class="space-y-4 text-[14px] lg:text-[16px] leading-[22px] lg:leading-[26px] font-normal text-[#364152] lg:text-[#000000]"
                     >
                         <p v-for="(paragraph, idx) in paragraphs" :key="idx">
                             {{ paragraph }}
                         </p>
 
-                        <p
-                            v-if="about.commitment_quote || about.commitment_sub"
-                            class="font-bold text-[#005EA4]"
-                        >
+                        <p v-if="about.commitment_quote || about.commitment_sub">
                             <template v-if="about.commitment_quote">{{ about.commitment_quote }}</template>
                             <br v-if="about.commitment_quote && about.commitment_sub" />
                             <template v-if="about.commitment_sub">{{ about.commitment_sub }}</template>
@@ -85,14 +100,14 @@
                     <Link
                         v-if="about.cta_text && about.cta_link && isInertiaLink(about.cta_link)"
                         :href="about.cta_link"
-                        class="inline-flex items-center justify-center gap-2 px-6 py-[10px] rounded-[4px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[15px] md:text-[16px] leading-[1.6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
+                        class="w-full lg:w-auto h-[42px] lg:h-[46px] inline-flex items-center justify-center gap-2 px-6 rounded-[4px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[14px] lg:text-[16px] leading-[22px] lg:leading-[1.6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
                     >
                         {{ about.cta_text }}
                     </Link>
                     <a
                         v-else-if="about.cta_text && about.cta_link"
                         :href="about.cta_link"
-                        class="inline-flex items-center justify-center gap-2 px-6 py-[10px] rounded-[4px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[15px] md:text-[16px] leading-[1.6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
+                        class="w-full lg:w-auto h-[42px] lg:h-[46px] inline-flex items-center justify-center gap-2 px-6 rounded-[4px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[14px] lg:text-[16px] leading-[22px] lg:leading-[1.6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
                     >
                         {{ about.cta_text }}
                     </a>

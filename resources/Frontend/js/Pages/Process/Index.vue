@@ -32,8 +32,9 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance } from 'vue'
-import { Head, usePage } from '@inertiajs/inertia-vue3'
+import { computed } from 'vue'
+import { Head } from '@inertiajs/inertia-vue3'
+import { useTranslate } from '@/composables/useTranslate.js'
 import ProcessHero from './Components/ProcessHero.vue'
 import ProcessStepper from './Components/ProcessStepper.vue'
 import ProcessStepItem from './Components/ProcessStepItem.vue'
@@ -62,19 +63,14 @@ const props = defineProps({
     },
 })
 
-const instance = getCurrentInstance()
-const i18n = {
-    tt: (text) => (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(text) : text),
-}
-const page = usePage()
-const currentLocale = computed(() => page.props.value?.locale?.current || 'vi')
+const { translate, currentLocale } = useTranslate()
 
 const pageTitle = computed(() => {
     return (
         props.seo?.title ||
         (currentLocale.value === 'en'
             ? 'Professional Supply & Technical Process - Thành Khang Tecsat'
-            : i18n.tt('Quy Trình Cung Ứng & Hỗ Trợ Kỹ Thuật Chuyên Nghiệp - Thành Khang Tecsat'))
+            : translate('Quy Trình Cung Ứng & Hỗ Trợ Kỹ Thuật Chuyên Nghiệp - Thành Khang Tecsat'))
     )
 })
 
@@ -83,7 +79,7 @@ const pageDescription = computed(() => {
         props.seo?.description ||
         (currentLocale.value === 'en'
             ? 'Explore Thành Khang Tecsat\'s 5-step industrial supply process: From receiving technical specs, OEM matching, transparent quotation, CO/CQ quality inspection to on-site delivery.'
-            : i18n.tt('Khám phá quy trình 5 bước cung ứng thiết bị & phụ tùng công nghiệp tại Thành Khang Tecsat: Từ tiếp nhận thông số, đối chiếu mã OEM, báo giá, kiểm định CO/CQ đến giao hàng tận nơi.'))
+            : translate('Khám phá quy trình 5 bước cung ứng thiết bị & phụ tùng công nghiệp tại Thành Khang Tecsat: Từ tiếp nhận thông số, đối chiếu mã OEM, báo giá, kiểm định CO/CQ đến giao hàng tận nơi.'))
     )
 })
 

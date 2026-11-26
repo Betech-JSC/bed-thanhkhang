@@ -115,6 +115,28 @@
         <span>Danh mục bài viết</span>
     </Link>
 
+    <!-- Tài liệu kỹ thuật -->
+    <Link
+        v-if="can('admin.documents.index')"
+        :href="route('admin.documents.index')"
+        :class="{ active: isUrl('admin.documents.*') }"
+        class="item"
+    >
+        <ph-file-text-light />
+        <span>Tài liệu kỹ thuật</span>
+    </Link>
+
+    <!-- Danh mục tài liệu -->
+    <Link
+        v-if="can('admin.document-categories.index')"
+        :href="route('admin.document-categories.index')"
+        :class="{ active: isUrl('admin.document-categories.*') }"
+        class="item"
+    >
+        <bx:category />
+        <span>Danh mục tài liệu</span>
+    </Link>
+
     <!-- Chính sách & Cam kết -->
     <Link
         v-if="can('admin.policies.index')"

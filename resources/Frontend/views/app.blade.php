@@ -34,6 +34,8 @@
             'chinh-sach' => ['vi' => 'chinh-sach', 'en' => 'en/policies'],
             'dich-vu' => ['vi' => 'dich-vu', 'en' => 'en/services'],
             'quy-trinh' => ['vi' => 'quy-trinh', 'en' => 'en/process'],
+            'tai-lieu' => ['vi' => 'tai-lieu', 'en' => 'en/documents'],
+            'tai-lieu/thu-vien' => ['vi' => 'tai-lieu/thu-vien', 'en' => 'en/documents/library'],
         ];
 
         $appUrl = rtrim((string) (config('app.url') ?: request()->getSchemeAndHttpHost()), '/');
@@ -417,6 +419,26 @@
                     'name' => $isEn ? 'Contact' : 'Liên hệ',
                     'item' => $appUrl . ($isEn ? '/en/contact' : '/lien-he'),
                 ];
+            } elseif (Str::startsWith($currentPath, ['tai-lieu/thu-vien', 'en/documents/library'])) {
+                $items[] = [
+                    '@type' => 'ListItem',
+                    'position' => 2,
+                    'name' => $isEn ? 'Documents' : 'Tài liệu',
+                    'item' => $appUrl . ($isEn ? '/en/documents' : '/tai-lieu'),
+                ];
+                $items[] = [
+                    '@type' => 'ListItem',
+                    'position' => 3,
+                    'name' => $isEn ? 'Technical Document Library' : 'Thư viện tài liệu kỹ thuật',
+                    'item' => $appUrl . ($isEn ? '/en/documents/library' : '/tai-lieu/thu-vien'),
+                ];
+            } elseif (Str::startsWith($currentPath, ['tai-lieu', 'en/documents'])) {
+                $items[] = [
+                    '@type' => 'ListItem',
+                    'position' => 2,
+                    'name' => $isEn ? 'Documents' : 'Tài liệu',
+                    'item' => $appUrl . ($isEn ? '/en/documents' : '/tai-lieu'),
+                ];
             }
 
             if (count($items) > 1) {
@@ -443,10 +465,10 @@
 
     <script src="/build/frontend/registerSW.js"></script>
 
-    <!-- Fonts (Open Sans primary + Inter fallback, Vietnamese subset auto-served by Google Fonts) -->
+    <!-- Fonts (Open Sans primary + Inter secondary, Vietnamese subset auto-served by Google Fonts) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="/assets/js/flickity/flickity.min.css" />
     <script src="/assets/js/flickity/flickity.pkgd.min.js"></script>

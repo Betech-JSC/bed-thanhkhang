@@ -65,8 +65,8 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance } from 'vue'
-import { usePage } from '@inertiajs/inertia-vue3'
+import { computed } from 'vue'
+import { useTranslate } from '@/composables/useTranslate.js'
 import CircularBadge from '@/Components/CircularBadge.vue'
 
 const props = defineProps({
@@ -76,32 +76,21 @@ const props = defineProps({
     },
 })
 
-const instance = getCurrentInstance()
-const tt = (key) => {
-    if (!key) return ''
-    const globalTt = instance?.appContext?.config?.globalProperties?.tt
-    if (typeof globalTt === 'function') {
-        return globalTt.call(instance?.proxy, key)
-    }
-    return key
-}
-
-const page = usePage()
-const currentLocale = computed(() => page.props.value?.locale || 'vi')
+const { translate, currentLocale } = useTranslate()
 
 const bgImage = computed(() => {
     return props.banner?.image?.url || '/assets/images/process/process-hero-banner.png'
 })
 
 const bgImageAlt = computed(() => {
-    return props.banner?.image?.alt || tt('Quy trình làm việc Thành Khang Tecsat - 5 bước chuẩn hóa')
+    return props.banner?.image?.alt || translate('Quy trình làm việc Thành Khang Tecsat - 5 bước chuẩn hóa')
 })
 
 const categoryText = computed(() => {
     if (props.banner?.subtitle && !props.banner.subtitle.includes('100%')) {
         return props.banner.subtitle
     }
-    return currentLocale.value === 'en' ? 'WORKFLOW PROCESS' : tt('QUY TRÌNH LÀM VIỆC')
+    return currentLocale.value === 'en' ? 'WORKFLOW PROCESS' : translate('QUY TRÌNH LÀM VIỆC')
 })
 
 const headlineText = computed(() => {
@@ -114,7 +103,7 @@ const headlineText = computed(() => {
     }
     return currentLocale.value === 'en'
         ? 'CLEAR AT EVERY STEP\nMETICULOUS IN EVERY PIECE'
-        : tt('RÕ RÀNG TỪNG BƯỚC\nCHỈN CHU TỪNG SẢN PHẨM')
+        : translate('RÕ RÀNG TỪNG BƯỚC\nCHỈN CHU TỪNG SẢN PHẨM')
 })
 
 const descriptionText = computed(() => {
@@ -127,10 +116,10 @@ const descriptionText = computed(() => {
     }
     return currentLocale.value === 'en'
         ? 'From initial inquiry to final handover, Thành Khang Tecsat works closely with your engineering team to verify specifications, align on OEM standards and lead time. Every milestone is communicated transparently.'
-        : tt('Từ lúc tiếp nhận thông số đến khi bàn giao thiết bị, Thành Khang Tecsat luôn đồng hành cùng đội ngũ kỹ thuật của doanh nghiệp để đối chiếu chuẩn OEM, thống nhất báo giá và tiến độ. Mọi giai đoạn đều minh bạch để chủ đầu tư dễ dàng theo dõi.')
+        : translate('Từ lúc tiếp nhận thông số đến khi bàn giao thiết bị, Thành Khang Tecsat luôn đồng hành cùng đội ngũ kỹ thuật của doanh nghiệp để đối chiếu chuẩn OEM, thống nhất báo giá và tiến độ. Mọi giai đoạn đều minh bạch để chủ đầu tư dễ dàng theo dõi.')
 })
 
-const ctaText = computed(() => props.banner?.primary_cta_text || tt('Khám phá 5 bước'))
+const ctaText = computed(() => props.banner?.primary_cta_text || translate('Khám phá 5 bước'))
 const ctaLink = computed(() => props.banner?.primary_cta_link || props.banner?.link || null)
 
 const scrollToSteps = () => {
