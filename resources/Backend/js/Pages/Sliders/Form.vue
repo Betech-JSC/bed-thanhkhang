@@ -43,7 +43,7 @@
                                 type: 'text',
                                 name: 'primary_cta_link',
                                 label: 'Nút chính - Đường dẫn',
-                                placeholder: 'VD: #featured-carousel hoặc /san-pham',
+                                placeholder: 'VD: #product-categories-section hoặc /san-pham',
                             }" />
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

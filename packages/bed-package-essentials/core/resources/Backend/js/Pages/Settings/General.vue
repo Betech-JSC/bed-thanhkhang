@@ -68,6 +68,14 @@
                             }"
                         />
                         <Field
+                            v-model="form.general_tax_code"
+                            :field="{
+                                name: 'general_tax_code',
+                                label: 'Mã số thuế doanh nghiệp',
+                                placeholder: 'VD: 0107621881',
+                            }"
+                        />
+                        <Field
                             v-model="form.general_address"
                             :field="{
                                 label: 'Địa chỉ',
@@ -372,7 +380,7 @@
                                 :field="{
                                     label: 'Nút CTA — Đường dẫn (EN)',
                                     name: 'home_about_cta_link_en',
-                                    placeholder: 'VD: /en/about',
+                                    placeholder: 'VD: /en/about-us',
                                 }"
                             />
                         </div>
@@ -425,6 +433,176 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Trang Giới thiệu — Câu chuyện Thành Khang (About Story Section) -->
+                <div class="card">
+                    <div class="card-header font-bold text-slate-800">
+                        Trang Giới thiệu — Câu chuyện Thành Khang (Section 2)
+                    </div>
+                    <div class="card-body">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.about_story_eyebrow"
+                                :field="{
+                                    label: 'Nhãn trên tiêu đề (VI)',
+                                    name: 'about_story_eyebrow',
+                                }"
+                            />
+                            <Field
+                                v-model="form.about_story_eyebrow_en"
+                                :field="{
+                                    label: 'Nhãn trên tiêu đề (EN)',
+                                    name: 'about_story_eyebrow_en',
+                                    placeholder: 'Để trống tự động lấy Tiếng Việt',
+                                }"
+                            />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.about_story_heading"
+                                :field="{
+                                    type: 'textarea',
+                                    rows: 2,
+                                    label: 'Tiêu đề câu chuyện (VI)',
+                                    name: 'about_story_heading',
+                                }"
+                            />
+                            <Field
+                                v-model="form.about_story_heading_en"
+                                :field="{
+                                    type: 'textarea',
+                                    rows: 2,
+                                    label: 'Tiêu đề câu chuyện (EN)',
+                                    name: 'about_story_heading_en',
+                                    placeholder: 'Để trống tự động lấy Tiếng Việt',
+                                }"
+                            />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.about_story_paragraph_1"
+                                :field="{
+                                    type: 'textarea',
+                                    rows: 3,
+                                    label: 'Đoạn mô tả 1 (VI)',
+                                    name: 'about_story_paragraph_1',
+                                }"
+                            />
+                            <Field
+                                v-model="form.about_story_paragraph_1_en"
+                                :field="{
+                                    type: 'textarea',
+                                    rows: 3,
+                                    label: 'Đoạn mô tả 1 (EN)',
+                                    name: 'about_story_paragraph_1_en',
+                                    placeholder: 'Để trống tự động lấy Tiếng Việt',
+                                }"
+                            />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.about_story_paragraph_2"
+                                :field="{
+                                    type: 'textarea',
+                                    rows: 3,
+                                    label: 'Đoạn mô tả 2 (VI)',
+                                    name: 'about_story_paragraph_2',
+                                }"
+                            />
+                            <Field
+                                v-model="form.about_story_paragraph_2_en"
+                                :field="{
+                                    type: 'textarea',
+                                    rows: 3,
+                                    label: 'Đoạn mô tả 2 (EN)',
+                                    name: 'about_story_paragraph_2_en',
+                                    placeholder: 'Để trống tự động lấy Tiếng Việt',
+                                }"
+                            />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.about_story_paragraph_3"
+                                :field="{
+                                    type: 'textarea',
+                                    rows: 3,
+                                    label: 'Đoạn mô tả 3 (VI)',
+                                    name: 'about_story_paragraph_3',
+                                }"
+                            />
+                            <Field
+                                v-model="form.about_story_paragraph_3_en"
+                                :field="{
+                                    type: 'textarea',
+                                    rows: 3,
+                                    label: 'Đoạn mô tả 3 (EN)',
+                                    name: 'about_story_paragraph_3_en',
+                                    placeholder: 'Để trống tự động lấy Tiếng Việt',
+                                }"
+                            />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.about_story_commitment"
+                                :field="{
+                                    label: 'Câu cam kết nhấn mạnh (VI)',
+                                    name: 'about_story_commitment',
+                                }"
+                            />
+                            <Field
+                                v-model="form.about_story_commitment_en"
+                                :field="{
+                                    label: 'Câu cam kết nhấn mạnh (EN)',
+                                    name: 'about_story_commitment_en',
+                                    placeholder: 'Để trống tự động lấy Tiếng Việt',
+                                }"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trang Giới thiệu — Đồng hành cùng khách hàng (About Companion Section) -->
+                <div class="card">
+                    <div class="card-header font-bold text-slate-800">
+                        Trang Giới thiệu — Đồng hành cùng khách hàng (Section 5)
+                    </div>
+                    <div class="card-body">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.about_companion_eyebrow"
+                                :field="{
+                                    label: 'Nhãn trên tiêu đề (VI)',
+                                    name: 'about_companion_eyebrow',
+                                }"
+                            />
+                            <Field
+                                v-model="form.about_companion_eyebrow_en"
+                                :field="{
+                                    label: 'Nhãn trên tiêu đề (EN)',
+                                    name: 'about_companion_eyebrow_en',
+                                    placeholder: 'Để trống tự động lấy Tiếng Việt',
+                                }"
+                            />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.about_companion_heading"
+                                :field="{
+                                    label: 'Tiêu đề khối Đồng hành (VI)',
+                                    name: 'about_companion_heading',
+                                }"
+                            />
+                            <Field
+                                v-model="form.about_companion_heading_en"
+                                :field="{
+                                    label: 'Tiêu đề khối Đồng hành (EN)',
+                                    name: 'about_companion_heading_en',
+                                    placeholder: 'Để trống tự động lấy Tiếng Việt',
+                                }"
+                            />
+                        </div>
+                    </div>
+                </div>
                 <SeoFields
                     :modelValue="form"
                     @update:modelValue="form = $event"
@@ -457,27 +635,30 @@ function parseJsonMedia(val) {
     return val
 }
 
+function buildGeneralFormData(item) {
+    const raw = { ...(item || {}) }
+    delete raw.tax_code
+
+    return {
+        id: 'general',
+        ...raw,
+        general_logo: parseJsonMedia(item?.general_logo),
+        general_tax_code: item?.general_tax_code || item?.tax_code || '',
+        map_iframe: item?.map_iframe || item?.general_map_iframe || '',
+    }
+}
+
 export default {
     components: { WrapSetting },
     props: ['item', 'schema'],
     data() {
         return {
-            formData: {
-                id: 'general',
-                ...this.item,
-                general_logo: parseJsonMedia(this.item?.general_logo),
-                map_iframe: this.item?.map_iframe || this.item?.general_map_iframe || '',
-            },
+            formData: buildGeneralFormData(this.item),
         }
     },
     watch: {
         item(newVal) {
-            this.formData = {
-                id: 'general',
-                ...newVal,
-                general_logo: parseJsonMedia(newVal?.general_logo),
-                map_iframe: newVal?.map_iframe || newVal?.general_map_iframe || '',
-            }
+            this.formData = buildGeneralFormData(newVal)
         },
     },
 }

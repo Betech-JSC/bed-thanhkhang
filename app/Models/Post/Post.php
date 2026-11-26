@@ -31,6 +31,7 @@ class Post extends BaseModel
     public const TYPE_LEARNING_ENV = 'LEARNING_ENV';
     public const TYPE_PRIZE = 'PRIZE';
     public const TYPE_PROJECT = 'PROJECT';
+    public const TYPE_DOCUMENT = 'DOCUMENT';
 
     public const STATUS_LIST = [
         self::STATUS_ACTIVE => 'Kích hoạt',
@@ -46,6 +47,7 @@ class Post extends BaseModel
         self::TYPE_LEARNING_ENV => 'Môi trường học',
         self::TYPE_PRIZE => 'Giải thưởng',
         self::TYPE_PROJECT => 'Đồ án',
+        self::TYPE_DOCUMENT => 'Tài liệu',
     ];
 
     public $with = ['translations', 'categories'];
@@ -199,7 +201,10 @@ class Post extends BaseModel
             Cache::forget('prizes_index_' . $locale);
             Cache::forget('projects_index_' . $locale);
             Cache::forget('posts_index_' . $locale);
+            Cache::forget('history_index_' . $locale);
             Cache::forget('process_index_' . $locale);
+            Cache::forget('documents_index_' . $locale);
+            Cache::forget('documents_library_' . $locale);
             Cache::forget('agencies_index_' . $locale);
             Cache::forget('contact_index_' . $locale);
             Cache::forget('feedback_index_' . $locale);

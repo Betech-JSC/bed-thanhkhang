@@ -52,8 +52,9 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance } from 'vue'
-import { Link, usePage } from '@inertiajs/inertia-vue3'
+import { computed } from 'vue'
+import { Link } from '@inertiajs/inertia-vue3'
+import { useTranslate } from '@/composables/useTranslate.js'
 
 const props = defineProps({
     currentSlug: {
@@ -66,12 +67,7 @@ const props = defineProps({
     },
 })
 
-const instance = getCurrentInstance()
-const i18n = {
-    tt: (text) => (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(text) : text),
-}
-const page = usePage()
-const isEn = computed(() => page.props.value?.locale?.current === 'en')
+const { isEn } = useTranslate()
 
 const getServiceHref = (slug) => {
     try {

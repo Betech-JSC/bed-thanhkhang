@@ -768,9 +768,13 @@ module.exports = {
 
     content: [
 
+        './resources/Frontend/views/**/*.blade.php',
+
         './resources/Frontend/js/**/*.blade.php',
 
         './resources/Frontend/js/**/*.vue',
+
+        './resources/Frontend/js/**/*.js',
 
         './node_modules/@toannguyen112/bed-library-essentials/src/components/**/*.vue',
 
@@ -839,9 +843,9 @@ module.exports = {
         container: {
             center: true,
             padding: {
-                DEFAULT: '1rem',
+                DEFAULT: '1rem', // 16px (px-4) on Mobile -> 358px content on 390px canvas
                 sm: '1rem',
-                md: '2rem',
+                md: '2rem',      // 32px (px-8) on Desktop
                 lg: '2rem',
                 xl: '2rem',
             },
@@ -849,14 +853,14 @@ module.exports = {
                 sm: '640px',
                 md: '768px',
                 lg: '1024px',
-                xl: '1280px',
+                xl: '1344px',    // 1280px inner content + 2x32px (px-8) desktop gutter
             },
         },
 
         extend: {
 
             spacing: {
-                section: '5rem',       // 80px
+                section: '5rem',       // 80px (Figma Desktop vertical section gap)
                 'section-lg': '7.5rem',  // 120px
                 gutter: '1.5rem',      // 24px
             },
@@ -865,13 +869,15 @@ module.exports = {
 
                 ...colors,
 
-                // Thành Khang Brand Palette (Figma Homepage Option 6 - 595:15360)
+                // Thành Khang Brand Palette (Figma Official Desktop 979:32231 & Mobile 1190:6335)
                 primary: {
                     DEFAULT: '#005EA4',
                     hover: '#004D86',
                     active: '#003967',
                     info: '#0075E7',
-                    50: '#F0F7FF',
+                    'sub-hover': '#007FD9',
+                    accent: '#009FFF',
+                    50: '#EDF6FF',
                     100: '#C9E0FF',
                     200: '#81BDFF',
                     300: '#479BFF',
@@ -885,8 +891,13 @@ module.exports = {
                 secondary: {
                     DEFAULT: '#C9E0FF',
                     hover: '#81BDFF',
+                    active: '#5BA4FB',
+                    disabled: '#EDF6FF',
+                    'disabled-text': '#5BA4FB',
+                    50: '#EDF6FF',
                     100: '#C9E0FF',
                     200: '#81BDFF',
+                    300: '#5BA4FB',
                 },
                 surface: {
                     DEFAULT: '#FAFAFA',
@@ -894,6 +905,7 @@ module.exports = {
                     50: '#F8FAFC',
                     100: '#EEF2F6',
                     200: '#E3E8EF',
+                    300: '#CDD5DF',
                     'gray-light': '#F1F1F1',
                     light: '#FCFCFC',
                 },
@@ -907,13 +919,15 @@ module.exports = {
                     light: '#FCFCFC',
                 },
                 'badge-border': '#D9D9D9',
-                // Figma form-field neutrals (Gray/300, Gray/500, Gray/700 — Liên hệ 939:2577)
+                // Figma form-field neutrals (Contact 979:32726 & Liên hệ 939:2577)
                 field: {
                     border: '#D6D6D6',
                     placeholder: '#808080',
                     label: '#424242',
                     required: '#FF4749',
                 },
+                zalo: '#0068FF',
+                hotline: '#008910',
                 'btn-slide': 'rgba(57, 76, 107, 0.8)',
                 'brand-blue': '#005EA4',
                 'brand-primary': '#005EA4',
@@ -1008,6 +1022,10 @@ module.exports = {
 
                 '3xl': '0px 32px 64px -12px rgba(16, 24, 40, 0.14)',
 
+                'process-card': '2px 2px 6px 0px rgba(0, 0, 0, 0.25)',
+
+                dropdown: '0px 12px 24px -4px rgba(0, 40, 75, 0.12), 0px 4px 8px -2px rgba(16, 24, 40, 0.06)',
+
                 'xs-error-100': '0px 1px 2px rgba(16, 24, 40, 0.05), 0px 0px 0px 4px #fee4e2',
 
                 'xs-primary-300': '0px 1px 2px rgba(16, 24, 40, 0.05), 0px 0px 0px 4px #C9E0FF',
@@ -1021,30 +1039,36 @@ module.exports = {
             },
 
             fontSize: {
-                // Thành Khang Figma Typography Scale (595:15360, 882:2212 & Tin tức - chi tiết 967:28751)
-                h1: ['3rem', { lineHeight: '1.4', fontWeight: '700' }],           // 48px / 1.4 / 700 (Desktop)
-                'h1-mobile': ['2rem', { lineHeight: '1.3', fontWeight: '700' }], // 32px / 1.3 / 700 (Mobile)
-                'h1-page': ['2.25rem', { lineHeight: '1.4', fontWeight: '700' }], // 36px / 1.4 / 700 (Figma PC/Heading/H3/bold)
-                'h1-article': ['2.25rem', { lineHeight: '1.35', fontWeight: '700' }], // 36px / 1.35 / 700 (Figma Tin tức - chi tiết 967:28751)
-                'h1-page-mobile': ['1.75rem', { lineHeight: '1.3', fontWeight: '700' }], // 28px / 1.3 / 700 (Mobile)
-                h2: ['1.75rem', { lineHeight: '1.6', fontWeight: '700' }],       // 28px / 1.6 / 700 (Desktop)
-                'h2-mobile': ['1.5rem', { lineHeight: '1.4', fontWeight: '700' }], // 24px / 1.4 / 700 (Mobile)
-                h3: ['1.5rem', { lineHeight: '1.4', fontWeight: '700' }],        // 24px / 1.4 / 700 (Desktop)
-                'h3-mobile': ['1.25rem', { lineHeight: '1.4', fontWeight: '700' }], // 20px / 1.4 / 700 (Mobile)
-                h4: ['1.25rem', { lineHeight: '1.6', fontWeight: '700' }],       // 20px / 1.6 / 700 (Desktop)
-                'h4-mobile': ['1.125rem', { lineHeight: '1.5', fontWeight: '700' }], // 18px / 1.5 / 700 (Mobile)
+                // Thành Khang Figma Official Typography Scale (Desktop 979:32231, Mobile 1190:6335 & Tin tức - chi tiết 967:28751)
+                h1: ['3rem', { lineHeight: '4.1875rem', fontWeight: '700', letterSpacing: '0' }],           // 48px / 67px (~1.4) / 700 (Desktop Hero 979:32441)
+                'h1-mobile': ['1.75rem', { lineHeight: '2.25rem', fontWeight: '700', letterSpacing: '0' }], // 28px / 36px (~1.286) / 700 (Mobile Hero 1190:6365)
+                'h1-page': ['2.25rem', { lineHeight: '1.4', fontWeight: '700' }],                           // 36px / 1.4 / 700 (Figma PC/Heading/H3/bold)
+                'h1-article': ['2.25rem', { lineHeight: '1.35', fontWeight: '700' }],                       // 36px / 1.35 / 700 (Figma Tin tức - chi tiết 967:28751)
+                'h1-page-mobile': ['1.75rem', { lineHeight: '1.3', fontWeight: '700' }],                    // 28px / 1.3 / 700 (Mobile)
+                h2: ['1.75rem', { lineHeight: '2.8125rem', fontWeight: '700', letterSpacing: '0' }],        // 28px / 45px (~1.6) / 700 (Desktop Section Banner 979:32319 / 979:32379)
+                'h2-mobile': ['1.25rem', { lineHeight: '1.75rem', fontWeight: '700', letterSpacing: '0' }], // 20px / 28px (1.4) / 700 (Mobile Section Banner 1191:6451)
+                h3: ['1.5rem', { lineHeight: '2.375rem', fontWeight: '700', letterSpacing: '0' }],          // 24px / 38px (~1.583) / 700 (Desktop Lead / Pillar 979:32253 / 979:32298)
+                'h3-mobile': ['1.125rem', { lineHeight: '1.6875rem', fontWeight: '700', letterSpacing: '0' }], // 18px / 27px (1.5) / 700 (Mobile Lead 1190:6458)
+                h4: ['1.25rem', { lineHeight: '2rem', fontWeight: '700', letterSpacing: '0' }],             // 20px / 32px (1.6) / 700 (Desktop Card / Footer Brand 184:1292 / 353:9442)
+                'h4-mobile': ['1rem', { lineHeight: '1.5rem', fontWeight: '700', letterSpacing: '0' }],     // 16px / 24px (1.5) / 700 (Mobile Section Header / Card 1190:6395 / 1191:6392)
+                'section-eyebrow': ['1.125rem', { lineHeight: '1.8125rem', fontWeight: '700', letterSpacing: '0' }], // 18px / 29px (1.6) / 700 (Desktop Section Header 979:32237)
 
-                // Body Scale
-                'body-xl': ['1.25rem', { lineHeight: '1.6' }],   // 20px / 1.6
-                'body-lg': ['1.125rem', { lineHeight: '1.6' }],  // 18px / 1.6
-                'body-md': ['1rem', { lineHeight: '1.6' }],      // 16px / 1.6 (default)
-                body: ['1rem', { lineHeight: '1.6' }],           // 16px / 1.6 alias
-                'body-sm': ['0.875rem', { lineHeight: '1.6' }],  // 14px / 1.6
-                'body-xs': ['0.75rem', { lineHeight: '1.6' }],   // 12px / 1.6
+                // Body Scale (Design System 42:4120 + Home 979:32231 / 1190:6335)
+                'body-xl': ['1.25rem', { lineHeight: '1.6' }],           // 20px / 32px
+                'body-lg': ['1.125rem', { lineHeight: '1.8125rem' }],    // 18px / 29px (~1.6)
+                'body-md': ['1rem', { lineHeight: '1.625rem' }],         // 16px / 26px (~1.6, default)
+                body: ['1rem', { lineHeight: '1.625rem' }],              // 16px / 26px alias
+                'body-sm': ['0.875rem', { lineHeight: '1.375rem' }],     // 14px / 22px (~1.57)
+                'body-sm-mobile': ['0.8125rem', { lineHeight: '1.25rem' }], // 13px / 20px (Mobile cards 1191:6398)
+                'body-xs': ['0.75rem', { lineHeight: '1.1875rem' }],     // 12px / 19px (~1.58)
 
-                // Figma "PC/Heading" styles used on Liên hệ (939:2577)
-                'pc-h3': ['2.25rem', { lineHeight: '1.4', fontWeight: '700' }],  // 36px / 1.4 / 700
-                'pc-h5': ['1.75rem', { lineHeight: '1.6', fontWeight: '700' }],  // 28px / 1.6 / 700
+                // Figma "Typography | PC" Design System Styles (42:4051)
+                'pc-h1': ['3.75rem', { lineHeight: '1.3', fontWeight: '700' }],  // 60px / 78px / 700
+                'pc-h2': ['3rem', { lineHeight: '1.4', fontWeight: '700' }],     // 48px / 67px / 700
+                'pc-h3': ['2.25rem', { lineHeight: '1.4', fontWeight: '700' }],  // 36px / 50px / 700
+                'pc-h4': ['2rem', { lineHeight: '1.5', fontWeight: '700' }],     // 32px / 48px / 700
+                'pc-h5': ['1.75rem', { lineHeight: '1.6', fontWeight: '700' }],  // 28px / 45px / 700
+                'pc-h6': ['1.5rem', { lineHeight: '1.4', fontWeight: '700' }],   // 24px / 34px / 700
 
                 caption: ['14px', { lineHeight: '20px', letterSpacing: '0' }],
                 'caption-sm': ['13px', { lineHeight: '16px', letterSpacing: '0', fontWeight: '600' }],
@@ -1099,19 +1123,21 @@ module.exports = {
 
             fontFamily: {
 
-                sans: ['"Open Sans"', 'Inter', 'system-ui', 'sans-serif'],
+                sans: ['"Open Sans"', 'Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+                display: ['"Open Sans"', 'Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+                body: ['"Open Sans"', 'Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
                 inter: ['Inter', '"Open Sans"', 'system-ui', 'sans-serif'],
-                display: ['"Open Sans"', 'Inter', 'system-ui', 'sans-serif'],
-                body: ['"Open Sans"', 'Inter', 'system-ui', 'sans-serif'],
                 mono: ['VCR_OSD_MONO', 'monospace'],
 
             },
 
             maxWidth: {
                 canvas: '1440px',
-                container: '1280px',
-                'container-wide': '1344px',   // 1280px inner + 2x32px desktop gutter
-                'container-narrow': '1216px', // 1152px inner + 2x32px desktop gutter
+                container: '1344px',          // 1280px inner + 2x32px desktop gutter
+                'container-inner': '1280px',
+                'container-wide': '1344px',   // 1280px inner + 2x32px desktop gutter (Hero 979:32435 & Footer 979:32406)
+                'container-narrow': '1216px', // 1152px inner + 2x32px desktop gutter (Header 979:32411 & Home 6 Body Sections)
+                'container-content': '1216px',
                 content: '1152px',
                 hero: '1280px',
                 'quote-popup': '1000px',

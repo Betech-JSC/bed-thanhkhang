@@ -141,6 +141,13 @@ class ConfigController extends Controller
             }
         }
 
+        if ($id === 'general' && array_key_exists('general_logo', $validated)) {
+            if (Config::resolveMediaSettingUrl($validated['general_logo']) === '') {
+                $validated['general_logo'] = '';
+                $validated['logo'] = '';
+            }
+        }
+
         settings()->group($id)->set($validated);
         Config::clearBrandCaches();
 

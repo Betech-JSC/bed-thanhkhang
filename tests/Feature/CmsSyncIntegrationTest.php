@@ -10,9 +10,13 @@ use App\Models\Post\Post;
 use App\Models\Product\ProductCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
+use JamstackVietnam\Core\Models\Admin;
 use JamstackVietnam\Core\Models\Setting;
 use JamstackVietnam\Slider\Models\Slider;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class CmsSyncIntegrationTest extends TestCase
@@ -45,6 +49,8 @@ class CmsSyncIntegrationTest extends TestCase
         $this->assertSame('', $emptyNormalized['logo']);
         $this->assertSame('', $emptyNormalized['general_phone']);
         $this->assertSame('', $emptyNormalized['general_email']);
+        $this->assertSame('', $emptyNormalized['general_tax_code']);
+        $this->assertSame('', $emptyNormalized['tax_code']);
         $this->assertSame('', $emptyNormalized['general_address']);
         $this->assertSame('', $emptyNormalized['showroom_address']);
         $this->assertSame('', $emptyNormalized['general_description']);
@@ -53,7 +59,7 @@ class CmsSyncIntegrationTest extends TestCase
         $this->assertSame('', $emptyNormalized['linkedin']);
         $this->assertSame('', $emptyNormalized['map_iframe']);
 
-        // Normalized when DB values exist
+        // Normalized when DB values exist (general_tax_code -> tax_code sync)
         $normalized = Config::normalizeGeneralSettings([
             'general_logo' => json_encode(['path' => '/storage/logo-test.png']),
             'general_business_name' => 'Thanh Khang Tecsat',
@@ -61,6 +67,7 @@ class CmsSyncIntegrationTest extends TestCase
             'showroom_address' => '54A Nguyễn Chí Thanh, Hà Nội',
             'general_phone' => '0967732665',
             'general_email' => 'info@dvktthanhkhang.vn',
+            'general_tax_code' => '0107621881',
             'general_facebook' => 'https://facebook.com/thanhkhangtecsat',
             'general_linkedin' => 'https://linkedin.com/company/thanhkhangtecsat',
             'map_iframe' => $rawIframe,
@@ -71,13 +78,22 @@ class CmsSyncIntegrationTest extends TestCase
         $this->assertEquals('Thanh Khang Tecsat', $normalized['company_name']);
         $this->assertEquals('Nhà cung cấp thiết bị công nghiệp B2B', $normalized['general_description']);
         $this->assertEquals('54A Nguyễn Chí Thanh, Hà Nội', $normalized['showroom_address']);
-        $this->assertEquals('0967732665', $normalized['phone']);
-        $this->assertEquals('0967732665', $normalized['hotline']);
+        $this->assertEquals('0967 732 665', $normalized['phone']);
+        $this->assertEquals('0967 732 665', $normalized['hotline']);
         $this->assertEquals('info@dvktthanhkhang.vn', $normalized['email']);
+        $this->assertSame('0107621881', $normalized['general_tax_code']);
+        $this->assertSame('0107621881', $normalized['tax_code']);
         $this->assertEquals('https://facebook.com/thanhkhangtecsat', $normalized['facebook']);
         $this->assertEquals('https://linkedin.com/company/thanhkhangtecsat', $normalized['linkedin']);
         $this->assertEquals('https://www.google.com/maps/embed?pb=!1m18!1m12', $normalized['map_iframe']);
         $this->assertEquals('https://www.google.com/maps/embed?pb=!1m18!1m12', $normalized['general_map_iframe']);
+
+        // Reverse two-way sync when only tax_code exists -> general_tax_code
+        $reverseTaxNormalized = Config::normalizeGeneralSettings([
+            'tax_code' => '0312345678',
+        ], 'vi');
+        $this->assertSame('0312345678', $reverseTaxNormalized['general_tax_code']);
+        $this->assertSame('0312345678', $reverseTaxNormalized['tax_code']);
     }
 
     public function test_admin_setting_general_rules_include_home_and_brand_fields(): void
@@ -86,6 +102,8 @@ class CmsSyncIntegrationTest extends TestCase
 
         $requiredKeys = [
             'general_logo',
+            'general_tax_code',
+            'tax_code',
             'general_description',
             'general_description_en',
             'showroom_address',
@@ -115,11 +133,31 @@ class CmsSyncIntegrationTest extends TestCase
             'home_contact_title_en',
             'home_contact_description',
             'home_contact_description_en',
+            'about_story_eyebrow',
+            'about_story_eyebrow_en',
+            'about_story_heading',
+            'about_story_heading_en',
+            'about_story_paragraph_1',
+            'about_story_paragraph_1_en',
+            'about_story_paragraph_2',
+            'about_story_paragraph_2_en',
+            'about_story_paragraph_3',
+            'about_story_paragraph_3_en',
+            'about_story_commitment',
+            'about_story_commitment_en',
+            'about_companion_eyebrow',
+            'about_companion_eyebrow_en',
+            'about_companion_heading',
+            'about_companion_heading_en',
         ];
 
         foreach ($requiredKeys as $key) {
             $this->assertArrayHasKey($key, $rules, "Setting::rules('general') missing key: {$key}");
         }
+
+        $configRules = Config::rules('general');
+        $this->assertArrayHasKey('general_tax_code', $configRules, "Config::rules('general') missing key: general_tax_code");
+        $this->assertArrayHasKey('tax_code', $configRules, "Config::rules('general') missing key: tax_code");
     }
 
     public function test_contact_normalize_lead_data_populates_bilingual_keys_and_lead_type(): void
@@ -435,5 +473,297 @@ class CmsSyncIntegrationTest extends TestCase
         $enPolicy = collect($enData['props']['data']['policies'])->firstWhere('slug', 'cms-warranty-policy');
         $this->assertNotNull($enPolicy);
         $this->assertSame('/en/policies/cms-warranty-policy', $enPolicy['url']);
+    }
+
+    public function test_policy_controller_returns_zero_fallback_when_empty_and_404_when_slug_not_found(): void
+    {
+        Policy::query()->forceDelete();
+        Policy::clearPolicyCaches();
+
+        // 1. JSON request when policies table is empty
+        $jsonRes = $this->getJson('/chinh-sach');
+        $jsonRes->assertStatus(200);
+        $jsonRes->assertExactJson([
+            'list_sidebar' => [],
+            'content' => null,
+            'seo' => [
+                'title' => null,
+                'description' => null,
+            ],
+        ]);
+
+        // 2. Inertia request when policies table is empty
+        $inertiaRes = $this->get('/chinh-sach', [
+            'X-Inertia' => 'true',
+            'X-Inertia-Version' => '',
+        ]);
+        $inertiaRes->assertStatus(200);
+        $inertiaData = $inertiaRes->json();
+        $this->assertSame('Policy', $inertiaData['component']);
+        $this->assertSame([], $inertiaData['props']['list_sidebar']);
+        $this->assertNull($inertiaData['props']['content']);
+
+        // 3. Missing slug returns 404 (not swallowed by Throwable catch)
+        $notFoundVi = $this->get('/chinh-sach/khong-ton-tai');
+        $notFoundVi->assertStatus(404);
+
+        $notFoundEn = $this->get('/en/policies/non-existent-policy');
+        $notFoundEn->assertStatus(404);
+    }
+
+    public function test_thanh_khang_setting_seeder_seeds_logo_idempotently_and_respects_cleared_logo(): void
+    {
+        \Illuminate\Support\Facades\DB::table('settings')->where('group', 'general')->delete();
+        Config::clearBrandCaches();
+
+        // 1. Seeder populates general_logo & logo when empty
+        $this->seed(\Database\Seeders\ThanhKhangSettingSeeder::class);
+
+        $seededSettings = Config::getGeneralSettings('vi');
+        $this->assertSame('/assets/images/logo/logo-thanhkhang.png', $seededSettings['general_logo']);
+        $this->assertSame('/assets/images/logo/logo-thanhkhang.png', $seededSettings['logo']);
+
+        // 2. Seeder does NOT overwrite custom Admin general_logo
+        settings()->group('general')->set([
+            'general_logo' => json_encode(['path' => '/storage/custom-admin-logo.png']),
+        ]);
+        Config::clearBrandCaches();
+
+        $this->seed(\Database\Seeders\ThanhKhangSettingSeeder::class);
+
+        $afterReseed = Config::getGeneralSettings('vi');
+        $this->assertSame('/storage/custom-admin-logo.png', $afterReseed['general_logo']);
+        $this->assertSame('/storage/custom-admin-logo.png', $afterReseed['logo']);
+
+        // 3. When Admin clears general_logo => '', normalizeGeneralSettings returns '' (does not revive legacy 'logo' key)
+        $clearedNormalized = Config::normalizeGeneralSettings([
+            'general_logo' => '',
+            'logo' => '/assets/images/logo/logo-thanhkhang.png',
+        ], 'vi');
+        $this->assertSame('', $clearedNormalized['general_logo']);
+        $this->assertSame('', $clearedNormalized['logo']);
+
+        settings()->group('general')->set([
+            'general_logo' => '',
+        ]);
+        Config::clearBrandCaches();
+        $clearedFromDb = Config::getGeneralSettings('vi');
+        $this->assertSame('', $clearedFromDb['general_logo']);
+        $this->assertSame('', $clearedFromDb['logo']);
+    }
+
+    public function test_home_term_dictionary_reads_from_lang_ui_and_product_schema_has_zero_hardcoded_fallback(): void
+    {
+        // Verify 5 material/supply dictionary entries in resources/lang/en/ui.php
+        $enUi = trans('ui', [], 'en');
+        $this->assertSame(
+            'Heat-Treated Alloy / Carbon Steel (Universal Chains)',
+            $enUi['Thép hợp kim / Thép carbon nhiệt luyện (Universal Chains)'] ?? null
+        );
+        $this->assertSame('High-Tensile Alloy Steel', $enUi['Thép hợp kim cường độ cao'] ?? null);
+        $this->assertSame('Heat-Treated Carbon Steel', $enUi['Thép carbon nhiệt luyện'] ?? null);
+        $this->assertSame('Industrial Stainless Steel', $enUi['Thép không gỉ công nghiệp'] ?? null);
+        $this->assertSame('Contact for B2B Order & Quotation', $enUi['Liên hệ đặt hàng & báo giá B2B'] ?? null);
+
+        // Create minimal active product with empty description and empty brand settings
+        \Illuminate\Support\Facades\DB::table('settings')->where('group', 'general')->delete();
+        Config::clearBrandCaches();
+
+        $product = new \App\Models\Product\Product([
+            'status' => \App\Models\Product\Product::STATUS_ACTIVE,
+            'sku' => 'TK-TEST-001',
+            'material' => 'Thép hợp kim cường độ cao',
+        ]);
+        $product->translateOrNew('vi')->fill([
+            'locale' => 'vi',
+            'status_locale' => \App\Models\Product\Product::STATUS_ACTIVE,
+            'title' => 'Xích tải thử nghiệm Zero Fallback',
+            'slug' => 'xich-tai-thu-nghiem-zero-fallback',
+            'description' => null,
+        ]);
+        $product->save();
+
+        $pdpRes = $this->getJson('/san-pham/xich-tai-thu-nghiem-zero-fallback');
+        $pdpRes->assertStatus(200);
+        $schemas = $pdpRes->json('seo.seo_schemas') ?? [];
+        $productSchema = collect($schemas)->firstWhere('@type', 'Product');
+        $this->assertNotNull($productSchema);
+        $this->assertSame('Xích tải thử nghiệm Zero Fallback', $productSchema['name']);
+        $this->assertSame('', $productSchema['description']);
+        $this->assertNull($productSchema['brand']['name']);
+
+        // Bilingual searchV2 reverse lookup using English term from en/ui.php
+        $searchRes = $this->getJson(route('api.search', ['locale' => 'en', 'keyword' => 'High-Tensile']));
+        $searchRes->assertStatus(200);
+        $foundProducts = $searchRes->json('products') ?? [];
+        $this->assertNotEmpty($foundProducts);
+        $this->assertSame('High-Tensile Alloy Steel', $foundProducts[0]['material']);
+    }
+
+    public function test_admin_saves_general_tax_code_and_logo_clears_brand_caches_and_updates_home_configs_props(): void
+    {
+        $role = Role::firstOrCreate(['name' => 'Super Admin', 'guard_name' => 'admin']);
+        Gate::before(fn () => true);
+
+        $admin = Admin::firstOrCreate(
+            ['email' => 'admin_cms_sync_e2e@jamstackvietnam.com'],
+            [
+                'name' => 'Admin CMS Sync E2E',
+                'password' => bcrypt('secret123'),
+                'status' => Admin::STATUS_ACTIVE,
+            ]
+        );
+        $admin->assignRole($role);
+
+        // 1. Seed initial settings and warm up frontend caches via GET /
+        settings()->group('general')->set([
+            'general_business_name' => 'Công ty Cũ Trước Khi Lưu',
+            'general_tax_code' => '0000000000',
+            'tax_code' => '0000000000',
+            'general_logo' => json_encode(['path' => '/storage/old-logo.png']),
+        ]);
+        Config::clearBrandCaches();
+
+        $warmRes = $this->get('/', [
+            'X-Inertia' => 'true',
+            'X-Inertia-Version' => '',
+        ]);
+        $warmRes->assertStatus(200);
+        $this->assertSame('0000000000', $warmRes->json('props.configs.tax_code'));
+        $this->assertSame('/storage/old-logo.png', $warmRes->json('props.configs.general_logo'));
+
+        Cache::put('global_settings', ['tax_code' => 'STALE_TAX'], 600);
+        Cache::put('global_settings_vi', ['tax_code' => 'STALE_TAX_VI'], 600);
+        $this->assertNotNull(Cache::get('global_settings'));
+        $this->assertNotNull(Cache::get('global_settings_vi'));
+        $this->assertNotNull(Cache::get('inertia_layout_shared_data_vi'));
+        $this->assertNotNull(Cache::get('home_page_data_vi'));
+
+        // 2. Admin saves general_tax_code & general_logo via SettingController@store
+        $postRes = $this->actingAs($admin, 'admin')->post(
+            route('admin.settings.store', ['id' => 'general']),
+            [
+                'id' => 'general',
+                'general_business_name' => 'Công ty TNHH Thành Khang E2E',
+                'general_tax_code' => '0107621881',
+                'general_logo' => ['path' => '/storage/logo-tax-e2e.png'],
+            ]
+        );
+        $this->assertTrue(in_array($postRes->getStatusCode(), [200, 302], true));
+        $postRes->assertSessionHasNoErrors();
+
+        // Verify SettingController@store immediately flushed all brand & home cache keys
+        $this->assertNull(Cache::get('global_settings'));
+        $this->assertNull(Cache::get('global_settings_vi'));
+        $this->assertNull(Cache::get('inertia_layout_shared_data_vi'));
+        $this->assertNull(Cache::get('home_page_data_vi'));
+
+        // Verify two-way sync in settings table
+        $this->assertSame('0107621881', settings()->group('general')->get('general_tax_code'));
+        $this->assertSame('0107621881', settings()->group('general')->get('tax_code'));
+
+        // 3. GET / via Inertia reflects new tax_code & general_logo immediately
+        $homeRes = $this->get('/', [
+            'X-Inertia' => 'true',
+            'X-Inertia-Version' => '',
+        ]);
+        $homeRes->assertStatus(200);
+        $homeData = $homeRes->json();
+
+        $this->assertSame('0107621881', $homeData['props']['configs']['tax_code']);
+        $this->assertSame('0107621881', $homeData['props']['configs']['general_tax_code']);
+        $this->assertSame('/storage/logo-tax-e2e.png', $homeData['props']['configs']['general_logo']);
+        $this->assertSame('/storage/logo-tax-e2e.png', $homeData['props']['configs']['logo']);
+        $this->assertSame('0107621881', $homeData['props']['global']['tax_code']);
+
+        // 4. Second Admin update (passing tax_code reverse key) immediately invalidates warm cache and updates GET / & /en
+        $postRes2 = $this->actingAs($admin, 'admin')->post(
+            route('admin.settings.store', ['id' => 'general']),
+            [
+                'id' => 'general',
+                'general_business_name' => 'Công ty TNHH Thành Khang E2E',
+                'tax_code' => '0319876543',
+                'general_logo' => json_encode(['path' => '/storage/logo-tax-e2e-v2.png']),
+            ]
+        );
+        $this->assertTrue(in_array($postRes2->getStatusCode(), [200, 302], true));
+        $postRes2->assertSessionHasNoErrors();
+
+        $homeRes2 = $this->get('/', [
+            'X-Inertia' => 'true',
+            'X-Inertia-Version' => '',
+        ]);
+        $homeRes2->assertStatus(200);
+        $homeData2 = $homeRes2->json();
+
+        $this->assertSame('0319876543', $homeData2['props']['configs']['tax_code']);
+        $this->assertSame('0319876543', $homeData2['props']['configs']['general_tax_code']);
+        $this->assertSame('/storage/logo-tax-e2e-v2.png', $homeData2['props']['configs']['general_logo']);
+
+        $homeEnRes = $this->get('/en', [
+            'X-Inertia' => 'true',
+            'X-Inertia-Version' => '',
+        ]);
+        $homeEnRes->assertStatus(200);
+        $this->assertSame('0319876543', $homeEnRes->json('props.configs.tax_code'));
+        $this->assertSame('0319876543', $homeEnRes->json('props.configs.general_tax_code'));
+        $this->assertSame('/storage/logo-tax-e2e-v2.png', $homeEnRes->json('props.configs.general_logo'));
+    }
+
+    public function test_home_empty_database_state_returns_http_200_with_empty_collections_and_zero_fake_data(): void
+    {
+        DB::table('sliders')->delete();
+        DB::table('product_categories')->delete();
+        DB::table('posts')->delete();
+        DB::table('policies')->delete();
+        DB::table('settings')->where('group', 'general')->delete();
+
+        $this->assertSame(0, DB::table('sliders')->count());
+        $this->assertSame(0, DB::table('product_categories')->count());
+        $this->assertSame(0, DB::table('posts')->count());
+        $this->assertSame(0, DB::table('policies')->count());
+
+        Config::clearBrandCaches();
+        Policy::clearPolicyCaches();
+        Slider::clearSliderCaches();
+
+        // 1. Inertia JSON request on VI Home (/)
+        $inertiaViRes = $this->get('/', [
+            'X-Inertia' => 'true',
+            'X-Inertia-Version' => '',
+        ]);
+        $inertiaViRes->assertStatus(200);
+        $viData = $inertiaViRes->json();
+
+        $this->assertSame('Home/Index', $viData['component']);
+        $this->assertSame([], $viData['props']['sliders']);
+        $this->assertSame([], $viData['props']['categories']);
+        $this->assertSame([], $viData['props']['featured_posts']);
+        $this->assertSame([], $viData['props']['configs']['policies']);
+        $this->assertSame([], $viData['props']['configs']['product_categories']);
+        $this->assertSame('', $viData['props']['configs']['tax_code']);
+        $this->assertSame('', $viData['props']['configs']['general_tax_code']);
+        $this->assertSame('', $viData['props']['configs']['general_logo']);
+
+        // 2. Standard HTML request on VI Home (/)
+        $htmlViRes = $this->get('/');
+        $htmlViRes->assertStatus(200);
+
+        // 3. Inertia JSON + Standard HTML request on EN Home (/en)
+        $inertiaEnRes = $this->get('/en', [
+            'X-Inertia' => 'true',
+            'X-Inertia-Version' => '',
+        ]);
+        $inertiaEnRes->assertStatus(200);
+        $enData = $inertiaEnRes->json();
+
+        $this->assertSame('Home/Index', $enData['component']);
+        $this->assertSame([], $enData['props']['sliders']);
+        $this->assertSame([], $enData['props']['categories']);
+        $this->assertSame([], $enData['props']['featured_posts']);
+        $this->assertSame([], $enData['props']['configs']['policies']);
+
+        $htmlEnRes = $this->get('/en');
+        $htmlEnRes->assertStatus(200);
     }
 }

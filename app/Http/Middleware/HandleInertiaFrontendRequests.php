@@ -196,9 +196,91 @@ class HandleInertiaFrontendRequests extends Middleware
 
 
 
+        $isEn = $locale === 'en';
+        $menus = [];
+        $menuCandidates = $isEn
+            ? [
+                $global['menus_en'] ?? null,
+                $global['header_menus_en'] ?? null,
+                $global['menus'] ?? null,
+                $global['header_menus'] ?? null,
+            ]
+            : [
+                $global['menus'] ?? null,
+                $global['header_menus'] ?? null,
+            ];
+
+        foreach ($menuCandidates as $rawMenu) {
+            $parsed = null;
+            if (is_string($rawMenu) && trim($rawMenu) !== '') {
+                $decoded = json_decode($rawMenu, true);
+                if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                    $parsed = $decoded;
+                }
+            } elseif (is_array($rawMenu)) {
+                $parsed = $rawMenu;
+            }
+
+            if (is_array($parsed) && count($parsed) > 0 && is_array(reset($parsed))) {
+                $menus = array_values($parsed);
+                break;
+            }
+        }
+
+        if (empty($menus)) {
+            $menus = [
+                [
+                    'title' => $isEn ? 'ABOUT US' : 'VỀ CHÚNG TÔI',
+                    'href' => $isEn ? '/en/about-us' : '/gioi-thieu',
+                    'route_name' => 'histories.index',
+                    'type' => 'about',
+                    'hasDropdown' => false,
+                ],
+                [
+                    'title' => $isEn ? 'PRODUCTS' : 'SẢN PHẨM',
+                    'href' => $isEn ? '/en/products' : '/san-pham',
+                    'route_name' => 'products.index',
+                    'type' => 'products',
+                    'hasDropdown' => true,
+                ],
+                [
+                    'title' => $isEn ? 'DOCUMENTS' : 'TÀI LIỆU',
+                    'href' => $isEn ? '/en/documents' : '/tai-lieu',
+                    'route_name' => 'documents.index',
+                    'type' => 'documents',
+                    'hasDropdown' => false,
+                ],
+                [
+                    'title' => $isEn ? 'NEWS' : 'TIN TỨC',
+                    'href' => $isEn ? '/en/posts' : '/tin-tuc',
+                    'route_name' => 'posts',
+                    'type' => 'posts',
+                    'hasDropdown' => false,
+                ],
+                [
+                    'title' => $isEn ? 'CONTACT' : 'LIÊN HỆ',
+                    'href' => $isEn ? '/en/contact' : '/lien-he',
+                    'route_name' => 'contact',
+                    'type' => 'contact',
+                    'hasDropdown' => false,
+                ],
+            ];
+        }
+
+        $sharedProductCategories = ($layoutData['product_categories'] ?? []) instanceof \Illuminate\Support\Collection
+            ? $layoutData['product_categories']->values()->all()
+            : ($layoutData['product_categories'] ?? []);
+        $sharedPolicies = ($layoutData['policies'] ?? []) instanceof \Illuminate\Support\Collection
+            ? $layoutData['policies']->values()->all()
+            : ($layoutData['policies'] ?? []);
+
         $share = array_merge(parent::share($request), [
             'global' => $global,
-            'configs' => $global,
+            'configs' => array_merge($global, [
+                'menus' => $menus,
+                'product_categories' => $sharedProductCategories,
+                'policies' => $sharedPolicies,
+            ]),
             'globalCtaBanner' => $layoutData['globalCtaBanner'] ?? null,
             'product_categories' => $layoutData['product_categories'] ?? [],
             'popular_keywords' => $layoutData['popular_keywords'] ?? [],
@@ -269,6 +351,17 @@ class HandleInertiaFrontendRequests extends Middleware
                     } elseif (str_contains($routeName, 'policies.show')) {
                         $policy = Policy::active()->whereSlug($slug)->first();
                         if ($policy) $metaPage = $policy->transformSeo();
+                    }
+                } elseif (str_contains((string) $routeName, 'documents.library')) {
+                    try {
+                        if (\Illuminate\Support\Facades\Schema::hasTable('meta_pages')) {
+                            $candidateUrls = current_locale() === 'en'
+                                ? ['/en/documents/library', 'en/documents/library']
+                                : ['/tai-lieu/thu-vien', 'tai-lieu/thu-vien'];
+                            $metaPage = MetaPage::whereIn('url', $candidateUrls)->first();
+                        }
+                    } catch (\Throwable $e) {
+                        $metaPage = null;
                     }
                 }
             }

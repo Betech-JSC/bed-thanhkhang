@@ -17,9 +17,49 @@ return [
             'value' => 'BANNER_ABOUT_HERO',
             'banner' => true,
         ],
+        'ABOUT_STORY_GALLERY' => [
+            'title' => 'Ảnh Câu chuyện Thành Khang (3 ảnh trang Giới thiệu)',
+            'value' => 'ABOUT_STORY_GALLERY',
+            'banner' => false,
+        ],
+        'BANNER_ABOUT_MISSION_VISION' => [
+            'title' => 'Banner nền Sứ mệnh & Tầm nhìn (Trang Giới thiệu)',
+            'value' => 'BANNER_ABOUT_MISSION_VISION',
+            'banner' => true,
+        ],
+        'ABOUT_MISSION_VISION_ITEMS' => [
+            'title' => 'Nội dung Sứ mệnh & Tầm nhìn (Trang Giới thiệu)',
+            'value' => 'ABOUT_MISSION_VISION_ITEMS',
+            'banner' => false,
+        ],
+        'ABOUT_STATS_ITEMS' => [
+            'title' => '4 Chỉ số Dấu ấn & Cam kết (Trang Giới thiệu)',
+            'value' => 'ABOUT_STATS_ITEMS',
+            'banner' => false,
+        ],
+        'ABOUT_COMPANION_CARDS' => [
+            'title' => '2 Thẻ Đồng hành cùng khách hàng (Trang Giới thiệu)',
+            'value' => 'ABOUT_COMPANION_CARDS',
+            'banner' => false,
+        ],
         'BANNER_PROCESS_HERO' => [
             'title' => 'Hero Banner trang Quy trình',
             'value' => 'BANNER_PROCESS_HERO',
+            'banner' => true,
+        ],
+        'BANNER_DOCUMENT_HERO' => [
+            'title' => 'Hero Banner trang Tài liệu',
+            'value' => 'BANNER_DOCUMENT_HERO',
+            'banner' => true,
+        ],
+        'BANNER_DOCUMENT_CTA' => [
+            'title' => 'Banner CTA hỗ trợ kỹ thuật (Trang Tài liệu)',
+            'value' => 'BANNER_DOCUMENT_CTA',
+            'banner' => true,
+        ],
+        'BANNER_PRODUCT_HERO' => [
+            'title' => 'Hero Banner trang Sản phẩm',
+            'value' => 'BANNER_PRODUCT_HERO',
             'banner' => true,
         ],
         'BANNER_GLOBAL_CTA' => [

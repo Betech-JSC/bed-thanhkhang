@@ -42,8 +42,9 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance } from 'vue'
-import { Link, usePage } from '@inertiajs/inertia-vue3'
+import { computed } from 'vue'
+import { Link } from '@inertiajs/inertia-vue3'
+import { useTranslate } from '@/composables/useTranslate.js'
 
 const props = defineProps({
     banner: {
@@ -52,11 +53,7 @@ const props = defineProps({
     },
 })
 
-const instance = getCurrentInstance()
-const i18n = {
-    tt: (text) => (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(text) : text),
-}
-const page = usePage()
+const { translate, page } = useTranslate()
 
 const ctaData = computed(() => {
     return (
@@ -67,14 +64,14 @@ const ctaData = computed(() => {
     )
 })
 
-const title = computed(() => ctaData.value?.title || i18n.tt('Tạo nên phiên bản mang dấu ấn riêng'))
+const title = computed(() => ctaData.value?.title || translate('Tạo nên phiên bản mang dấu ấn riêng'))
 const description = computed(() => {
     return (
         ctaData.value?.description ||
-        i18n.tt('Gửi thông số kỹ thuật, mã linh kiện hoặc bản vẽ công trình để đội ngũ kỹ sư Thành Khang Tecsat tư vấn phương án phụ tùng OEM, xích tải công nghiệp hoặc giải pháp tiết kiệm điện tối ưu.')
+        translate('Gửi thông số kỹ thuật, mã linh kiện hoặc bản vẽ công trình để đội ngũ kỹ sư Thành Khang Tecsat tư vấn phương án phụ tùng OEM, xích tải công nghiệp hoặc giải pháp tiết kiệm điện tối ưu.')
     )
 })
-const ctaText = computed(() => ctaData.value?.primary_cta_text || i18n.tt('Nhận tư vấn ngay'))
+const ctaText = computed(() => ctaData.value?.primary_cta_text || translate('Nhận tư vấn ngay'))
 
 const contactHref = computed(() => {
     if (ctaData.value?.primary_cta_link) return ctaData.value.primary_cta_link

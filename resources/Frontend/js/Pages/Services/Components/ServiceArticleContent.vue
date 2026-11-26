@@ -117,7 +117,7 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance } from 'vue'
+import { computed } from 'vue'
 
 const props = defineProps({
     service: {
@@ -141,11 +141,6 @@ const props = defineProps({
         default: '',
     },
 })
-
-const instance = getCurrentInstance()
-const i18n = {
-    tt: (text) => (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(text) : text),
-}
 
 const hasDynamicContent = computed(() => {
     return !!props.dynamicHtml && props.dynamicHtml.trim().length > 0

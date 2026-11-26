@@ -83,6 +83,9 @@ class Slider extends BaseModel
             \Illuminate\Support\Facades\Cache::forget('inertia_layout_shared_data_' . $locale);
             \Illuminate\Support\Facades\Cache::forget('history_index_' . $locale);
             \Illuminate\Support\Facades\Cache::forget('process_index_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('products_index_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('documents_index_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('documents_library_' . $locale);
             \Illuminate\Support\Facades\Cache::forget('galleries_index_' . $locale);
         }
     }

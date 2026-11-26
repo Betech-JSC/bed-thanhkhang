@@ -1,5 +1,7 @@
-<template lang="">
+<template>
     <button
+        type="button"
+        @click="$emit('click', $event)"
         class="flex items-center justify-center w-full h-12 duration-200 bg-orange-600 rounded-lg hover:bg-orange-500 md:h-14"
     >
         <div class="px-2 py-1 text-center text-white">
@@ -10,3 +12,9 @@
         </div>
     </button>
 </template>
+<script>
+export default {
+    name: 'ProductActionButton',
+    emits: ['click'],
+}
+</script>

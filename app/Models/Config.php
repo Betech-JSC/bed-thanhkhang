@@ -88,6 +88,7 @@ class Config extends Model
                 'description' => 'nullable|string',
                 'description_en' => 'nullable|string',
                 'general_email' => 'nullable',
+                'general_tax_code' => 'nullable|string|max:100',
                 'general_address' => 'nullable',
                 'general_address_en' => 'nullable',
                 'general_phone' => 'nullable',
@@ -107,6 +108,7 @@ class Config extends Model
                 'hotline' => 'nullable',
                 'phone' => 'nullable',
                 'email' => 'nullable',
+                'tax_code' => 'nullable|string|max:100',
                 'address' => 'nullable',
                 'address_en' => 'nullable',
                 'showroom_address' => 'nullable|string|max:500',
@@ -138,6 +140,22 @@ class Config extends Model
                 'home_contact_title_en' => 'nullable|string|max:500',
                 'home_contact_description' => 'nullable|string',
                 'home_contact_description_en' => 'nullable|string',
+                'about_story_eyebrow' => 'nullable|string|max:255',
+                'about_story_eyebrow_en' => 'nullable|string|max:255',
+                'about_story_heading' => 'nullable|string|max:500',
+                'about_story_heading_en' => 'nullable|string|max:500',
+                'about_story_paragraph_1' => 'nullable|string',
+                'about_story_paragraph_1_en' => 'nullable|string',
+                'about_story_paragraph_2' => 'nullable|string',
+                'about_story_paragraph_2_en' => 'nullable|string',
+                'about_story_paragraph_3' => 'nullable|string',
+                'about_story_paragraph_3_en' => 'nullable|string',
+                'about_story_commitment' => 'nullable|string|max:500',
+                'about_story_commitment_en' => 'nullable|string|max:500',
+                'about_companion_eyebrow' => 'nullable|string|max:255',
+                'about_companion_eyebrow_en' => 'nullable|string|max:255',
+                'about_companion_heading' => 'nullable|string|max:500',
+                'about_companion_heading_en' => 'nullable|string|max:500',
             ],
         ][$id] ?? [];
     }
@@ -184,6 +202,9 @@ class Config extends Model
             \Illuminate\Support\Facades\Cache::forget('history_index_' . $locale);
             \Illuminate\Support\Facades\Cache::forget('agencies_index_' . $locale);
             \Illuminate\Support\Facades\Cache::forget('process_index_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('products_index_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('documents_index_' . $locale);
+            \Illuminate\Support\Facades\Cache::forget('documents_library_' . $locale);
             \Illuminate\Support\Facades\Cache::forget('contact_index_' . $locale);
         }
     }
@@ -380,7 +401,10 @@ class Config extends Model
             return '';
         };
 
-        $logo = self::resolveMediaSettingUrl($raw['general_logo'] ?? $raw['logo'] ?? null);
+        $logoRaw = array_key_exists('general_logo', $raw)
+            ? $raw['general_logo']
+            : ($raw['logo'] ?? null);
+        $logo = self::resolveMediaSettingUrl($logoRaw);
 
         $viBusinessName = $pickNonEmpty([
             $raw['general_business_name_vi'] ?? null,
@@ -436,6 +460,11 @@ class Config extends Model
         $email = $pickNonEmpty([
             $raw['general_email'] ?? null,
             $raw['email'] ?? null,
+        ]);
+
+        $taxCode = $pickNonEmpty([
+            $raw['general_tax_code'] ?? null,
+            $raw['tax_code'] ?? null,
         ]);
 
         $zalo = $pickNonEmpty([
@@ -537,6 +566,8 @@ class Config extends Model
             'hotline' => $hotline,
             'general_email' => $email,
             'email' => $email,
+            'general_tax_code' => $taxCode,
+            'tax_code' => $taxCode,
             'general_zalo' => $zalo,
             'zalo' => $zalo,
             'social_zalo' => $zalo,
@@ -595,11 +626,13 @@ class Config extends Model
 
         $raw = [];
         try {
-            $settings = settings()->group('general')->all();
-            if ($settings instanceof \Illuminate\Support\Collection) {
-                $raw = $settings->toArray();
-            } elseif (is_array($settings)) {
-                $raw = $settings;
+            if (\Illuminate\Support\Facades\Schema::hasTable('settings')) {
+                $settings = settings()->group('general')->all();
+                if ($settings instanceof \Illuminate\Support\Collection) {
+                    $raw = $settings->toArray();
+                } elseif (is_array($settings)) {
+                    $raw = $settings;
+                }
             }
         } catch (\Throwable $e) {
             report($e);
@@ -640,6 +673,108 @@ class Config extends Model
 
         $raw = [];
         try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('settings')) {
+                $settings = settings()->group('general')->all();
+                if ($settings instanceof \Illuminate\Support\Collection) {
+                    $raw = $settings->toArray();
+                } elseif (is_array($settings)) {
+                    $raw = $settings;
+                }
+            }
+        } catch (\Throwable $e) {
+            report($e);
+        }
+
+        $resolve = static function (string $key) use ($raw, $isEn): string {
+            $viVal = trim((string) ($raw[$key] ?? ''));
+            $enVal = trim((string) ($raw[$key . '_en'] ?? ''));
+
+            if ($isEn) {
+                return $enVal !== '' ? $enVal : $viVal;
+            }
+
+            return $viVal;
+        };
+
+        return [
+            'title' => $resolve('home_contact_title'),
+            'description' => $resolve('home_contact_description'),
+        ];
+    }
+
+    public static function getAboutStorySettings(?string $locale = null): array
+    {
+        $locale = $locale ?: (function_exists('current_locale') ? current_locale() : app()->getLocale());
+        $isEn = $locale === 'en';
+
+        $raw = [];
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasTable('settings')) {
+                return [
+                    'eyebrow' => '',
+                    'heading' => '',
+                    'paragraph_1' => '',
+                    'paragraph_2' => '',
+                    'paragraph_3' => '',
+                    'paragraphs' => [],
+                    'commitment' => '',
+                ];
+            }
+            $settings = settings()->group('general')->all();
+            if ($settings instanceof \Illuminate\Support\Collection) {
+                $raw = $settings->toArray();
+            } elseif (is_array($settings)) {
+                $raw = $settings;
+            }
+        } catch (\Throwable $e) {
+            report($e);
+        }
+
+        $resolve = static function (string $key) use ($raw, $isEn): string {
+            $viVal = trim((string) ($raw[$key] ?? ''));
+            $enVal = trim((string) ($raw[$key . '_en'] ?? ''));
+
+            if ($isEn) {
+                return $enVal !== '' ? $enVal : $viVal;
+            }
+
+            return $viVal;
+        };
+
+        $p1 = $resolve('about_story_paragraph_1');
+        $p2 = $resolve('about_story_paragraph_2');
+        $p3 = $resolve('about_story_paragraph_3');
+
+        $paragraphs = array_values(array_filter([
+            $p1,
+            $p2,
+            $p3,
+        ], static fn(string $p): bool => $p !== ''));
+
+        return [
+            'eyebrow' => $resolve('about_story_eyebrow'),
+            'heading' => $resolve('about_story_heading'),
+            'paragraph_1' => $p1,
+            'paragraph_2' => $p2,
+            'paragraph_3' => $p3,
+            'paragraphs' => $paragraphs,
+            'commitment' => $resolve('about_story_commitment'),
+        ];
+    }
+
+    public static function getAboutCompanionSettings(?string $locale = null): array
+    {
+        $locale = $locale ?: (function_exists('current_locale') ? current_locale() : app()->getLocale());
+        $isEn = $locale === 'en';
+
+        $raw = [];
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasTable('settings')) {
+                return [
+                    'eyebrow' => '',
+                    'heading' => '',
+                ];
+            }
             $settings = settings()->group('general')->all();
             if ($settings instanceof \Illuminate\Support\Collection) {
                 $raw = $settings->toArray();
@@ -662,8 +797,8 @@ class Config extends Model
         };
 
         return [
-            'title' => $resolve('home_contact_title'),
-            'description' => $resolve('home_contact_description'),
+            'eyebrow' => $resolve('about_companion_eyebrow'),
+            'heading' => $resolve('about_companion_heading'),
         ];
     }
 

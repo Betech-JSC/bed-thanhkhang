@@ -14,4 +14,6 @@ return [
     'resources' => 'resources',
     'courses' => 'courses',
     'jobs' => 'career',
+    'documents' => 'documents',
+    'documents_library' => 'documents/library',
 ];

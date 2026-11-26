@@ -57,8 +57,9 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
-import { Head, usePage } from '@inertiajs/inertia-vue3'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { Head } from '@inertiajs/inertia-vue3'
+import { useTranslate } from '@/composables/useTranslate.js'
 
 import ServiceHero from './Components/ServiceHero.vue'
 import ServiceToc from './Components/ServiceToc.vue'
@@ -109,12 +110,7 @@ const props = defineProps({
     },
 })
 
-const instance = getCurrentInstance()
-const i18n = {
-    tt: (text) => (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(text) : text),
-}
-const page = usePage()
-const currentLocale = computed(() => page.props.value?.locale?.current || 'vi')
+const { translate, currentLocale } = useTranslate()
 
 const serviceData = computed(() => {
     return {
@@ -128,7 +124,7 @@ const serviceData = computed(() => {
 
 const pageTitle = computed(() => {
     if (props.seo?.title) return props.seo.title
-    const suffix = currentLocale.value === 'en' ? 'Thành Khang Tecsat Services' : i18n.tt('Dịch Vụ Thành Khang Tecsat')
+    const suffix = currentLocale.value === 'en' ? 'Thành Khang Tecsat Services' : translate('Dịch Vụ Thành Khang Tecsat')
     return `${serviceData.value.title} - ${suffix}`
 })
 
@@ -177,10 +173,10 @@ const tocItems = computed(() => {
             ]
         }
         return [
-            { id: 'section-01', number: '01', title: i18n.tt('Phạm vi ứng dụng & Tải trọng'), shortTitle: i18n.tt('Ứng dụng') },
-            { id: 'section-02', number: '02', title: i18n.tt('Quy trình đối chiếu chuẩn OEM'), shortTitle: i18n.tt('Quy trình') },
-            { id: 'section-03', number: '03', title: i18n.tt('Thông số kỹ thuật cần chuẩn bị'), shortTitle: i18n.tt('Thông số cần có') },
-            { id: 'section-04', number: '04', title: i18n.tt('Kiểm định CO/CQ & Bảo trì'), shortTitle: i18n.tt('Tiêu chuẩn QC') },
+            { id: 'section-01', number: '01', title: translate('Phạm vi ứng dụng & Tải trọng'), shortTitle: translate('Ứng dụng') },
+            { id: 'section-02', number: '02', title: translate('Quy trình đối chiếu chuẩn OEM'), shortTitle: translate('Quy trình') },
+            { id: 'section-03', number: '03', title: translate('Thông số kỹ thuật cần chuẩn bị'), shortTitle: translate('Thông số cần có') },
+            { id: 'section-04', number: '04', title: translate('Kiểm định CO/CQ & Bảo trì'), shortTitle: translate('Tiêu chuẩn QC') },
         ]
     }
 
@@ -194,10 +190,10 @@ const tocItems = computed(() => {
             ]
         }
         return [
-            { id: 'section-01', number: '01', title: i18n.tt('Giải pháp quạt BLDC phù hợp công trình nào?'), shortTitle: i18n.tt('Phạm vi công trình') },
-            { id: 'section-02', number: '02', title: i18n.tt('Khảo sát & Tối ưu tiết kiệm điện'), shortTitle: i18n.tt('Quy trình khảo sát') },
-            { id: 'section-03', number: '03', title: i18n.tt('Bạn chuẩn bị thông tin gì?'), shortTitle: i18n.tt('Thông tin chuẩn bị') },
-            { id: 'section-04', number: '04', title: i18n.tt('Lắp đặt & Bảo hành động cơ'), shortTitle: i18n.tt('Lắp đặt & bảo hành') },
+            { id: 'section-01', number: '01', title: translate('Giải pháp quạt BLDC phù hợp công trình nào?'), shortTitle: translate('Phạm vi công trình') },
+            { id: 'section-02', number: '02', title: translate('Khảo sát & Tối ưu tiết kiệm điện'), shortTitle: translate('Quy trình khảo sát') },
+            { id: 'section-03', number: '03', title: translate('Bạn chuẩn bị thông tin gì?'), shortTitle: translate('Thông tin chuẩn bị') },
+            { id: 'section-04', number: '04', title: translate('Lắp đặt & Bảo hành động cơ'), shortTitle: translate('Lắp đặt & bảo hành') },
         ]
     }
 
@@ -211,10 +207,10 @@ const tocItems = computed(() => {
         ]
     }
     return [
-        { id: 'section-01', number: '01', title: i18n.tt('Khi nào cần thay thế phụ tùng & nâng cấp hệ thống?'), shortTitle: i18n.tt('Phạm vi kỹ thuật') },
-        { id: 'section-02', number: '02', title: i18n.tt('Từ thông số đến cung ứng chuẩn OEM'), shortTitle: i18n.tt('Quy trình') },
-        { id: 'section-03', number: '03', title: i18n.tt('Bạn cần chuẩn bị gì?'), shortTitle: i18n.tt('Chuẩn bị gì?') },
-        { id: 'section-04', number: '04', title: i18n.tt('Nghiệm thu & Đồng hành bảo trì'), shortTitle: i18n.tt('Hoàn thiện') },
+        { id: 'section-01', number: '01', title: translate('Khi nào cần thay thế phụ tùng & nâng cấp hệ thống?'), shortTitle: translate('Phạm vi kỹ thuật') },
+        { id: 'section-02', number: '02', title: translate('Từ thông số đến cung ứng chuẩn OEM'), shortTitle: translate('Quy trình') },
+        { id: 'section-03', number: '03', title: translate('Bạn cần chuẩn bị gì?'), shortTitle: translate('Chuẩn bị gì?') },
+        { id: 'section-04', number: '04', title: translate('Nghiệm thu & Đồng hành bảo trì'), shortTitle: translate('Hoàn thiện') },
     ]
 })
 

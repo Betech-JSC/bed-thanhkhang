@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\PostController;
 use App\Http\Controllers\Backend\PostCategoryController;
+use App\Http\Controllers\Backend\DocumentController;
+use App\Http\Controllers\Backend\DocumentCategoryController;
 use App\Http\Controllers\Backend\TagController;
 use App\Http\Controllers\Backend\AgencyController;
 use App\Http\Controllers\Backend\ContactController;
@@ -25,6 +27,8 @@ Route::localized(function () {
         Route::module(ProductController::class);
         Route::module(BrandController::class);
         Route::module(PostCategoryController::class);
+        Route::module(DocumentController::class);
+        Route::module(DocumentCategoryController::class);
         Route::module(TagController::class);
         Route::module(AgencyController::class);
         Route::module(ContactController::class);

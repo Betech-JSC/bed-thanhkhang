@@ -425,7 +425,8 @@
 
 <script setup>
 import { ref, reactive, computed, getCurrentInstance } from 'vue'
-import { usePage, Head, Link, useForm } from '@inertiajs/inertia-vue3'
+import { Head, Link, useForm } from '@inertiajs/inertia-vue3'
+import { useTranslate } from '@/composables/useTranslate.js'
 import BaseModal from '@/Components/Base/BaseModal.vue'
 
 const props = defineProps({
@@ -435,9 +436,7 @@ const props = defineProps({
 })
 
 const instance = getCurrentInstance()
-const trans = (text) => (typeof instance?.proxy?.tt === 'function' ? instance.proxy.tt(text) : text)
-const page = usePage()
-const isEn = computed(() => (page.props.value?.locale?.current || 'vi') === 'en')
+const { translate: trans, isEn, page } = useTranslate()
 
 // Shared site settings (HandleInertiaFrontendRequests shares `global`)
 const site = computed(() => page.props.value?.global || {})
@@ -609,7 +608,64 @@ const toggleFaq = (index) => {
 const faqItems = computed(() => (Array.isArray(props.faqs) ? props.faqs : []).filter((item) => item?.question))
 
 // ---------- Form ----------
-const form = useForm({ name: '', company: '', email: '', phone: '', content: '' })
+function buildInitialInquiryContent() {
+    let params = null
+    if (typeof window !== 'undefined' && window.location?.search) {
+        params = new URLSearchParams(window.location.search)
+    } else {
+        const pageQuery = page.props.value?.route?.query
+        if (pageQuery && typeof pageQuery === 'object') {
+            params = new URLSearchParams(pageQuery)
+        }
+    }
+    if (!params) return ''
+
+    const product = (params.get('product') || '').trim()
+    const category = (params.get('category') || '').trim()
+    const material = (params.get('material') || '').trim()
+    const color = (params.get('color') || '').trim()
+
+    if (!product && !category) return ''
+
+    const parts = []
+    if (product) {
+        parts.push(
+            isEn.value
+                ? `Product inquiry: ${product}`
+                : `${trans('Sản phẩm quan tâm')}: ${product}`
+        )
+    }
+    if (category) {
+        parts.push(
+            isEn.value
+                ? `Category: ${category}`
+                : `${trans('Danh mục')}: ${category}`
+        )
+    }
+    if (material) {
+        parts.push(
+            isEn.value
+                ? `Material: ${material}`
+                : `${trans('Vật liệu')}: ${material}`
+        )
+    }
+    if (color) {
+        parts.push(
+            isEn.value
+                ? `Color: ${color}`
+                : `${trans('Màu sắc')}: ${color}`
+        )
+    }
+    return parts.join('\n')
+}
+
+const form = useForm({
+    name: '',
+    company: '',
+    email: '',
+    phone: '',
+    content: buildInitialInquiryContent(),
+})
 const clientErrors = reactive({ name: '', email: '', phone: '' })
 const showSuccessModal = ref(false)
 

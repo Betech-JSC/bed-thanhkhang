@@ -221,15 +221,45 @@ class ThanhKhangSettingSeeder extends Seeder
             'business_sectors' => json_encode($businessSectors, JSON_UNESCAPED_UNICODE),
         ];
 
+        $logoDefaults = [
+            'general_logo' => '/assets/images/logo/logo-thanhkhang.png',
+            'logo' => '/assets/images/logo/logo-thanhkhang.png',
+        ];
+
+        foreach ($logoDefaults as $logoKey => $defaultLogoPath) {
+            $existingLogo = DB::table('settings')
+                ->where('group', 'general')
+                ->where('name', $logoKey)
+                ->first();
+
+            if (!$existingLogo || trim((string) ($existingLogo->val ?? '')) === '') {
+                DB::table('settings')->updateOrInsert(
+                    ['group' => 'general', 'name' => $logoKey],
+                    [
+                        'val' => $defaultLogoPath,
+                        'updated_at' => $now,
+                        'created_at' => $existingLogo->created_at ?? $now,
+                    ]
+                );
+            }
+        }
+
         foreach ($generalSettings as $name => $val) {
-            DB::table('settings')->updateOrInsert(
-                ['group' => 'general', 'name' => $name],
-                [
-                    'val' => $val,
-                    'updated_at' => $now,
-                    'created_at' => $now,
-                ]
-            );
+            $existing = DB::table('settings')
+                ->where('group', 'general')
+                ->where('name', $name)
+                ->first();
+
+            if (!$existing || trim((string) ($existing->val ?? '')) === '') {
+                DB::table('settings')->updateOrInsert(
+                    ['group' => 'general', 'name' => $name],
+                    [
+                        'val' => $val,
+                        'updated_at' => $now,
+                        'created_at' => $existing->created_at ?? $now,
+                    ]
+                );
+            }
         }
 
         // Seed / Update 6 B2B Technical FAQs into posts & post_translations
@@ -304,7 +334,7 @@ class ThanhKhangSettingSeeder extends Seeder
 
         foreach ($faqs as $faqItem) {
             $position = $faqItem['position'];
-            $post = \App\Models\Post\Post::updateOrCreate(
+            $post = \App\Models\Post\Post::firstOrCreate(
                 [
                     'type' => \App\Models\Post\Post::TYPE_FAQ,
                     'position' => $position,
@@ -317,31 +347,27 @@ class ThanhKhangSettingSeeder extends Seeder
                 ]
             );
 
-            DB::table('post_translations')->updateOrInsert(
-                [
-                    'post_id' => $post->id,
-                    'locale' => 'vi',
-                ],
-                [
-                    'title' => $faqItem['vi']['question'],
-                    'slug' => \Illuminate\Support\Str::slug('faq-b2b-' . $position . '-' . $faqItem['vi']['question']),
-                    'description' => $faqItem['vi']['answer'],
-                    'content' => $faqItem['vi']['answer'],
-                ]
-            );
+            foreach (['vi', 'en'] as $faqLocale) {
+                $existingFaqTrans = DB::table('post_translations')
+                    ->where('post_id', $post->id)
+                    ->where('locale', $faqLocale)
+                    ->first();
 
-            DB::table('post_translations')->updateOrInsert(
-                [
-                    'post_id' => $post->id,
-                    'locale' => 'en',
-                ],
-                [
-                    'title' => $faqItem['en']['question'],
-                    'slug' => \Illuminate\Support\Str::slug('faq-b2b-' . $position . '-' . $faqItem['en']['question']),
-                    'description' => $faqItem['en']['answer'],
-                    'content' => $faqItem['en']['answer'],
-                ]
-            );
+                if (!$existingFaqTrans || trim((string) ($existingFaqTrans->title ?? '')) === '') {
+                    DB::table('post_translations')->updateOrInsert(
+                        [
+                            'post_id' => $post->id,
+                            'locale' => $faqLocale,
+                        ],
+                        [
+                            'title' => $faqItem[$faqLocale]['question'],
+                            'slug' => \Illuminate\Support\Str::slug('faq-b2b-' . $position . '-' . $faqItem[$faqLocale]['question']),
+                            'description' => $faqItem[$faqLocale]['answer'],
+                            'content' => $faqItem[$faqLocale]['answer'],
+                        ]
+                    );
+                }
+            }
         }
 
         Config::clearBrandCaches();

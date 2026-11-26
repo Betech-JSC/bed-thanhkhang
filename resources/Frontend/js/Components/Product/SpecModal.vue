@@ -79,7 +79,7 @@
                         <!-- NÚT HÀNH ĐỘNG -->
                         <div class="flex items-center gap-3 pt-2">
                             <a
-                                href="#contact-quote"
+                                :href="contactHref"
                                 @click="handleConsult"
                                 class="flex-1 py-2.5 px-4 rounded-lg bg-gradient-to-r from-[#2970FF] to-[#00359E] hover:opacity-95 text-white text-xs font-semibold text-center transition-opacity shadow-md"
                             >
@@ -114,6 +114,12 @@ export default {
     },
     emits: ['close', 'consult'],
     computed: {
+        isEn() {
+            return (this.$page?.props?.locale?.current || 'vi') === 'en'
+        },
+        contactHref() {
+            return this.safeRoute('contact', undefined, this.isEn ? '/en/contact' : '/lien-he')
+        },
         allSpecs() {
             if (this.customSpecs && this.customSpecs.length > 0) {
                 return this.customSpecs
@@ -152,6 +158,22 @@ export default {
         }
     },
     methods: {
+        safeRoute(name, params, fallback = '/') {
+            if (typeof this.route === 'function' && typeof this.routes === 'function') {
+                const allRoutes = this.routes() || {}
+                const localizedName =
+                    typeof this.routeLocaleName === 'function' ? this.routeLocaleName(name) : name
+                if (allRoutes[localizedName] || allRoutes[name]) {
+                    try {
+                        const url = this.route(name, params)
+                        if (url && url !== '#') return url
+                    } catch (e) {
+                        // Fall through to fallback
+                    }
+                }
+            }
+            return fallback
+        },
         close() {
             this.$emit('close')
         },
