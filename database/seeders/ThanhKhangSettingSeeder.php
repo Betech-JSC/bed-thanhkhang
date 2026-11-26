@@ -203,11 +203,11 @@ class ThanhKhangSettingSeeder extends Seeder
             'office_address' => 'NTT23, Khu Đô Thị Thống Nhất Complex, 82 Nguyễn Tuân, Phường Thanh Xuân Trung, Quận Thanh Xuân, Hà Nội',
             'office_address_en' => 'NTT23, Thong Nhat Complex, 82 Nguyen Tuan, Thanh Xuan Trung Ward, Thanh Xuan District, Hanoi',
 
-            'general_working_hours' => 'Thứ 2 - Thứ 7: 08:00 - 17:30',
-            'general_working_hours_vi' => 'Thứ 2 - Thứ 7: 08:00 - 17:30',
-            'general_working_hours_en' => 'Mon - Sat: 08:00 - 17:30',
-            'working_hours' => 'Thứ 2 - Thứ 7: 08:00 - 17:30',
-            'working_hours_en' => 'Mon - Sat: 08:00 - 17:30',
+            'general_working_hours' => '08:00 - 17:30 (T2 - T6)',
+            'general_working_hours_vi' => '08:00 - 17:30 (T2 - T6)',
+            'general_working_hours_en' => '08:00 - 17:30 (Mon - Sat)',
+            'working_hours' => '08:00 - 17:30 (T2 - T6)',
+            'working_hours_en' => '08:00 - 17:30 (Mon - Sat)',
 
             'general_facebook' => 'https://www.facebook.com/thanhkhangtecsat',
             'facebook' => 'https://www.facebook.com/thanhkhangtecsat',

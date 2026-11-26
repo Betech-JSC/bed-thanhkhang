@@ -19,19 +19,15 @@
         <!-- ======================================================== -->
         <section class="relative w-full overflow-hidden bg-dark min-h-[220px] lg:min-h-[252px] flex items-center">
             <img
-                src="/assets/images/posts/tin-tuc-hero.webp"
+                src="/assets/images/contact/lien-he-hero.webp"
                 alt=""
                 aria-hidden="true"
-                width="1440"
-                height="578"
-                class="absolute inset-0 w-full h-full object-cover object-center brightness-[0.6] pointer-events-none select-none"
+                width="1920"
+                height="336"
+                class="absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none"
                 loading="eager"
             />
-            <div class="absolute inset-0 bg-[#01101E]/30 pointer-events-none" aria-hidden="true" />
-            <div
-                class="absolute inset-y-0 left-0 w-full lg:w-[72%] bg-gradient-to-r from-[#01101E]/95 via-[#01101E]/80 to-transparent pointer-events-none"
-                aria-hidden="true"
-            />
+            <div class="hero-scrim absolute inset-0 pointer-events-none" aria-hidden="true" />
             <div class="app-container relative z-10 py-10 lg:py-0">
                 <div class="flex flex-col gap-5 max-w-[580px]">
                     <nav :aria-label="tt('Breadcrumb')" class="flex items-center gap-2 text-[14px]">
@@ -370,40 +366,40 @@
         <!-- ======================================================== -->
         <!-- DIRECT SUPPORT CTA (Figma 940:2862)                       -->
         <!-- ======================================================== -->
-        <section class="pb-10 lg:pb-20">
-            <div class="relative w-full overflow-hidden bg-dark min-h-[300px] lg:h-[362px] flex items-center justify-center">
-                <div class="cta-texture cta-texture--left" aria-hidden="true">
+        <section class="bg-surface pb-10 lg:pb-20">
+            <div
+                class="relative w-full overflow-hidden bg-dark py-12 md:py-16 lg:min-h-[362px] flex items-center justify-center"
+            >
+                <div class="cta-texture cta-texture--left pointer-events-none select-none" aria-hidden="true">
                     <div class="cta-texture__inner cta-texture__inner--left">
-                        <img src="/assets/figma/lien-he/cta-texture.webp" alt="" width="1584" height="672" />
+                        <img src="/assets/images/posts/cta-chain.webp" alt="" width="1584" height="672" loading="lazy" />
                     </div>
                 </div>
-                <div class="cta-texture cta-texture--right" aria-hidden="true">
+                <div class="cta-texture cta-texture--right pointer-events-none select-none" aria-hidden="true">
                     <div class="cta-texture__inner cta-texture__inner--right">
-                        <img src="/assets/figma/lien-he/cta-texture.webp" alt="" width="1584" height="672" />
+                        <img src="/assets/images/posts/cta-chain.webp" alt="" width="1584" height="672" loading="lazy" />
                     </div>
                 </div>
 
-                <div class="relative z-10 w-full max-w-[563px] px-4 py-10 flex flex-col items-center gap-8 text-center">
+                <div
+                    class="relative z-10 max-w-[600px] w-full mx-auto px-4 text-center flex flex-col items-center gap-6 lg:gap-8"
+                >
                     <div class="flex flex-col items-center">
-                        <h2 class="!text-h2-mobile lg:!text-pc-h5 font-bold text-surface">{{ tt('CẦN HỖ TRỢ KỸ THUẬT KHẨN CẤP?') }}</h2>
-                        <p class="text-body-md font-medium text-gray-modern-400">
+                        <h2
+                            class="text-[22px] lg:text-[28px] font-bold leading-[1.6] text-surface uppercase lg:whitespace-nowrap"
+                        >
+                            {{ tt('CẦN HỖ TRỢ KỸ THUẬT KHẨN CẤP?') }}
+                        </h2>
+                        <p class="text-[14px] lg:text-[16px] font-medium leading-[1.6] text-gray-modern-400">
                             {{ tt('Hỗ trợ kỹ thuật 24/7, vật tư công nghiệp chính hãng tại Thành Khang') }}
                         </p>
                     </div>
-                    <div class="w-full flex flex-col sm:flex-row gap-3 sm:gap-4">
-                        <a
-                            :href="'tel:' + cleanPhone"
-                            class="flex-1 inline-flex items-center justify-center min-h-[44px] rounded-cta bg-primary hover:bg-primary-hover text-surface text-body-md font-medium px-6 py-[10px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
-                        >
-                            {{ tt('Gọi hotline') }}
-                        </a>
-                        <Link
-                            :href="productsHref"
-                            class="flex-1 inline-flex items-center justify-center min-h-[44px] rounded-cta bg-secondary hover:bg-secondary-hover text-primary-active text-body-md font-medium px-6 py-[10px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
-                        >
-                            {{ tt('Xem danh mục sản phẩm') }}
-                        </Link>
-                    </div>
+                    <a
+                        :href="'tel:' + cleanPhone"
+                        class="bg-surface hover:bg-white text-primary text-[16px] lg:text-[18px] font-medium h-[49px] w-full max-w-[531px] px-6 py-2.5 rounded-[4px] inline-flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+                    >
+                        {{ tt('Gọi Hotline') }}: {{ displayPhone }}
+                    </a>
                 </div>
             </div>
         </section>
@@ -721,6 +717,17 @@ const submitContact = () => {
 </script>
 
 <style scoped>
+
+.hero-scrim {
+    background: linear-gradient(
+        90deg,
+        rgba(1, 16, 30, 0.94) 0%,
+        rgba(1, 16, 30, 0.88) 13%,
+        rgba(1, 16, 30, 0.72) 27%,
+        rgba(1, 16, 30, 0.35) 39%,
+        rgba(1, 16, 30, 0) 53%
+    );
+}
 .faq-accordion-grid {
     display: grid;
     grid-template-rows: 0fr;
