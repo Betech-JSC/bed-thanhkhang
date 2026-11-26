@@ -899,11 +899,13 @@ module.exports = {
                 ink: {
                     DEFAULT: '#00284B',
                     heading: '#00284B',
+                    dark: '#202939',
                     body: '#4B5565',
                     subtle: '#697586',
                     muted: '#9AA4B2',
                     light: '#FCFCFC',
                 },
+                'badge-border': '#D9D9D9',
                 // Figma form-field neutrals (Gray/300, Gray/500, Gray/700 — Liên hệ 939:2577)
                 field: {
                     border: '#D6D6D6',
@@ -1018,10 +1020,11 @@ module.exports = {
             },
 
             fontSize: {
-                // Thành Khang Figma Typography Scale (595:15360 & 882:2212)
+                // Thành Khang Figma Typography Scale (595:15360, 882:2212 & Tin tức - chi tiết 967:28751)
                 h1: ['3rem', { lineHeight: '1.4', fontWeight: '700' }],           // 48px / 1.4 / 700 (Desktop)
                 'h1-mobile': ['2rem', { lineHeight: '1.3', fontWeight: '700' }], // 32px / 1.3 / 700 (Mobile)
                 'h1-page': ['2.25rem', { lineHeight: '1.4', fontWeight: '700' }], // 36px / 1.4 / 700 (Figma PC/Heading/H3/bold)
+                'h1-article': ['2.25rem', { lineHeight: '1.35', fontWeight: '700' }], // 36px / 1.35 / 700 (Figma Tin tức - chi tiết 967:28751)
                 'h1-page-mobile': ['1.75rem', { lineHeight: '1.3', fontWeight: '700' }], // 28px / 1.3 / 700 (Mobile)
                 h2: ['1.75rem', { lineHeight: '1.6', fontWeight: '700' }],       // 28px / 1.6 / 700 (Desktop)
                 'h2-mobile': ['1.5rem', { lineHeight: '1.4', fontWeight: '700' }], // 24px / 1.4 / 700 (Mobile)

@@ -198,6 +198,7 @@ class HandleInertiaFrontendRequests extends Middleware
 
         $share = array_merge(parent::share($request), [
             'global' => $global,
+            'configs' => $global,
             'globalCtaBanner' => $layoutData['globalCtaBanner'] ?? null,
             'product_categories' => $layoutData['product_categories'] ?? [],
             'popular_keywords' => $layoutData['popular_keywords'] ?? [],
