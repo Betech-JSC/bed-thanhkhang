@@ -10,7 +10,7 @@
         >
             <div
                 v-if="isOpen"
-                class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-[2px] px-4 md:px-8 py-6 md:py-8 overflow-y-auto"
+                class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-[2px] px-4 md:px-8 py-6 md:py-8 overflow-y-auto overscroll-contain"
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="quote-popup-title"
@@ -21,39 +21,73 @@
                     @click.self="handleClose"
                 >
                     <div
-                        class="bg-dark rounded-cta overflow-hidden relative w-full p-5 sm:p-6 lg:p-10 flex flex-col lg:flex-row gap-4 md:gap-6 items-stretch lg:items-center shadow-2xl"
+                        class="max-h-[90dvh] lg:max-h-none flex flex-col overflow-hidden relative w-full bg-dark rounded-cta shadow-2xl"
                     >
-                    <!-- Decorative Chain Mask: Top-Right -->
-                    <div
-                        class="quote-chain-mask quote-chain-mask--top-right pointer-events-none select-none"
-                        aria-hidden="true"
-                    >
-                        <img
-                            src="/assets/figma/quote-popup/chain-texture.png"
-                            alt=""
-                            class="w-full h-full object-cover"
-                            loading="lazy"
-                            decoding="async"
-                        />
-                    </div>
+                        <!-- Mobile Close Button (Top-Right of Popup Card) -->
+                        <button
+                            type="button"
+                            class="lg:hidden absolute top-3.5 right-3.5 z-30 w-9 h-9 rounded-btn text-white/90 hover:text-white hover:bg-white/10 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white/80 transition-colors"
+                            :aria-label="translate('Đóng')"
+                            @click="handleClose"
+                        >
+                            <svg
+                                class="w-5 h-5"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.75"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                aria-hidden="true"
+                            >
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        </button>
 
-                    <!-- Decorative Chain Mask: Bottom-Left -->
-                    <div
-                        class="quote-chain-mask quote-chain-mask--bottom-left pointer-events-none select-none"
-                        aria-hidden="true"
-                    >
-                        <img
-                            src="/assets/figma/quote-popup/chain-texture.png"
-                            alt=""
-                            class="w-full h-full object-cover"
-                            loading="lazy"
-                            decoding="async"
-                        />
-                    </div>
+                        <!-- Decorative Chain Mask: Top-Right (Exact Figma 1264:49743) -->
+                        <div
+                            class="quote-chain-wrap quote-chain-wrap--top-right pointer-events-none select-none"
+                            aria-hidden="true"
+                        >
+                            <div class="quote-chain-rot quote-chain-rot--top-right">
+                                <div class="quote-chain-img quote-chain-img--top-right">
+                                    <img
+                                        src="/assets/figma/quote-popup/chain-texture.png"
+                                        alt=""
+                                        class="w-full h-full object-cover max-w-none"
+                                        loading="lazy"
+                                        decoding="async"
+                                    />
+                                </div>
+                            </div>
+                        </div>
 
-                    <!-- Left Column: Brand Value Proposition & 4 Assurances -->
-                    <div class="relative z-10 min-w-0 flex flex-col gap-5 md:gap-6 lg:gap-12 lg:w-[372px] shrink-0">
-                        <div class="flex flex-col gap-3">
+                        <!-- Decorative Chain Mask: Bottom-Left (Exact Figma 1264:49746) -->
+                        <div
+                            class="quote-chain-wrap quote-chain-wrap--bottom-left pointer-events-none select-none"
+                            aria-hidden="true"
+                        >
+                            <div class="quote-chain-rot quote-chain-rot--bottom-left">
+                                <div class="quote-chain-img quote-chain-img--bottom-left">
+                                    <img
+                                        src="/assets/figma/quote-popup/chain-texture.png"
+                                        alt=""
+                                        class="w-full h-full object-cover max-w-none"
+                                        loading="lazy"
+                                        decoding="async"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scrollable Body Container (Mobile) / Flex Row (Desktop) -->
+                        <div
+                            class="relative z-10 flex-1 min-h-0 overflow-y-auto lg:overflow-visible overscroll-contain pt-12 px-5 pb-5 sm:pt-12 sm:px-6 sm:pb-6 lg:p-10 flex flex-col lg:flex-row gap-4 md:gap-6 items-stretch lg:items-center"
+                        >
+                            <!-- Left Column: Brand Value Proposition & 4 Assurances -->
+                            <div class="relative z-10 min-w-0 flex flex-col lg:justify-start gap-5 md:gap-6 lg:gap-12 lg:w-[372px] lg:h-[508px] shrink-0">
+                                <div class="flex flex-col gap-3">
                             <h2
                                 id="quote-popup-title"
                                 class="text-h2-mobile md:text-pc-h5 font-bold leading-[1.6] text-surface uppercase break-words"
@@ -125,7 +159,7 @@
                         </div>
 
                         <!-- Form View -->
-                        <form v-else class="flex flex-col gap-4 md:gap-5" novalidate @submit.prevent="handleSubmit">
+                        <form id="quote-popup-form" v-else class="flex flex-col gap-4 md:gap-5" novalidate @submit.prevent="handleSubmit">
                             <div class="flex flex-col gap-3 md:gap-4">
                                 <!-- Row 1: Full Name & Company -->
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -248,11 +282,11 @@
                                 {{ serverError }}
                             </div>
 
-                            <!-- Submit CTA -->
+                            <!-- Submit CTA (Desktop In-Form) -->
                             <button
                                 type="submit"
                                 :disabled="isLoading"
-                                class="w-full bg-primary hover:bg-primary-hover active:bg-primary-active disabled:opacity-60 disabled:cursor-not-allowed text-surface font-medium text-body-md leading-[1.6] px-6 py-2.5 rounded-cta transition-colors flex items-center justify-center gap-2"
+                                class="hidden lg:flex w-full bg-primary hover:bg-primary-hover active:bg-primary-active disabled:opacity-60 disabled:cursor-not-allowed text-surface font-medium text-body-md leading-[1.6] px-6 py-2.5 rounded-cta transition-colors items-center justify-center gap-2"
                             >
                                 <span
                                     v-if="isLoading"
@@ -263,12 +297,33 @@
                             </button>
                         </form>
                     </div>
+                        </div>
+
+                        <!-- Sticky Mobile Footer CTA Bar -->
+                        <div
+                            v-if="!isSubmitted"
+                            class="lg:hidden relative z-20 shrink-0 bg-surface-200 px-5 sm:px-6 py-4 shadow-[0_-4px_12px_rgba(0,0,0,0.12)]"
+                        >
+                            <button
+                                type="submit"
+                                form="quote-popup-form"
+                                :disabled="isLoading"
+                                class="w-full bg-primary hover:bg-primary-hover active:bg-primary-active disabled:opacity-60 disabled:cursor-not-allowed text-surface font-medium text-body-md leading-[1.6] px-6 py-2.5 rounded-cta transition-colors flex items-center justify-center gap-2"
+                            >
+                                <span
+                                    v-if="isLoading"
+                                    class="inline-block w-4 h-4 border-2 border-surface/30 border-t-surface rounded-full animate-spin"
+                                    aria-hidden="true"
+                                ></span>
+                                <span>{{ isLoading ? translate('Đang gửi yêu cầu...') : translate('Nhận tư vấn ngay') }}</span>
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- Close Button (Centered Below Modal) -->
+                    <!-- Close Button (Centered Below Modal - Desktop Only) -->
                     <button
                         type="button"
-                        class="w-11 h-11 rounded-full border border-white/80 bg-black/25 hover:bg-white/15 active:bg-white/25 text-white flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white/80 transition-colors shrink-0"
+                        class="hidden lg:flex w-11 h-11 rounded-full border border-white/90 bg-dark/90 hover:bg-dark active:bg-primary shadow-lg text-white items-center justify-center focus:outline-none focus:ring-2 focus:ring-white/80 transition-colors shrink-0"
                         :aria-label="translate('Đóng')"
                         @click="handleClose"
                     >
@@ -284,7 +339,7 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, onBeforeUnmount, reactive, ref, watch } from 'vue'
+import { computed, getCurrentInstance, nextTick, onBeforeUnmount, reactive, ref, watch } from 'vue'
 import { usePage } from '@inertiajs/inertia-vue3'
 import { useQuoteModal } from '@/composables/useQuoteModal'
 
@@ -504,7 +559,15 @@ const validateForm = () => {
 
 const handleSubmit = async () => {
     if (isLoading.value) return
-    if (!validateForm()) return
+    if (!validateForm()) {
+        await nextTick()
+        if (typeof document !== 'undefined') {
+            document
+                .querySelector('[aria-invalid="true"]')
+                ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+        return
+    }
 
     isLoading.value = true
     serverError.value = ''
@@ -581,7 +644,9 @@ const handleKeydown = (event) => {
 
 const syncBodyScrollLock = (locked) => {
     if (typeof document === 'undefined') return
-    document.body.classList.toggle('overflow-hidden', Boolean(locked))
+    const shouldLock = Boolean(locked)
+    document.documentElement.classList.toggle('overflow-hidden', shouldLock)
+    document.body.classList.toggle('overflow-hidden', shouldLock)
 }
 
 watch(isOpen, (open) => {
@@ -607,36 +672,103 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.quote-chain-mask {
+.quote-chain-wrap {
     position: absolute;
-    width: 640px;
-    height: 152px;
-    opacity: 0.14;
+    display: none;
+    align-items: center;
+    justify-content: center;
     z-index: 0;
+    opacity: 1;
+}
+
+.quote-chain-rot {
+    flex: none;
+}
+
+.quote-chain-img {
+    position: relative;
     mask-image: url('/assets/figma/quote-popup/chain-mask.svg');
     -webkit-mask-image: url('/assets/figma/quote-popup/chain-mask.svg');
-    mask-size: 100% 100%;
-    -webkit-mask-size: 100% 100%;
     mask-repeat: no-repeat;
     -webkit-mask-repeat: no-repeat;
 }
 
-.quote-chain-mask--top-right {
-    top: -32px;
-    right: -120px;
-    transform: rotate(-18deg);
+/* Mobile: smaller & tucked to edges so they don't cross heading/text */
+.quote-chain-wrap--top-right {
+    width: 340px;
+    height: 202px;
+    right: -135px;
+    top: -102px;
+    opacity: 0.45;
+}
+.quote-chain-rot--top-right {
+    transform: rotate(161.81deg);
+}
+.quote-chain-img--top-right {
+    width: 321px;
+    height: 107px;
+    mask-position: -142px 60px;
+    -webkit-mask-position: -142px 60px;
+    mask-size: 531px 126px;
+    -webkit-mask-size: 531px 126px;
 }
 
-.quote-chain-mask--bottom-left {
-    bottom: -36px;
-    left: -140px;
-    transform: rotate(-18deg);
+.quote-chain-wrap--bottom-left {
+    width: 420px;
+    height: 252px;
+    left: -90px;
+    bottom: -120px;
+    opacity: 0.65;
+}
+.quote-chain-rot--bottom-left {
+    transform: rotate(161.64deg);
+}
+.quote-chain-img--bottom-left {
+    width: 399px;
+    height: 133px;
+    mask-position: -130px 41px;
+    -webkit-mask-position: -130px 41px;
+    mask-size: 542px 185px;
+    -webkit-mask-size: 542px 185px;
 }
 
+/* Desktop (>=1024px): Exact Figma 1264:49742 geometry & full opacity */
 @media (min-width: 1024px) {
-    .quote-chain-mask {
-        width: 820px;
-        height: 196px;
+    .quote-chain-wrap {
+        display: flex;
+        opacity: 1;
+    }
+
+    .quote-chain-wrap--top-right {
+        width: 676.876px;
+        height: 403.822px;
+        left: 697px;
+        right: auto;
+        top: -168px;
+    }
+    .quote-chain-img--top-right {
+        width: 642.146px;
+        height: 214.049px;
+        mask-position: -284.999px 121px;
+        -webkit-mask-position: -284.999px 121px;
+        mask-size: 1062px 253px;
+        -webkit-mask-size: 1062px 253px;
+    }
+
+    .quote-chain-wrap--bottom-left {
+        width: 841.165px;
+        height: 503.795px;
+        left: 104.64px;
+        top: 240.78px;
+        bottom: auto;
+    }
+    .quote-chain-img--bottom-left {
+        width: 798px;
+        height: 266px;
+        mask-position: -259.644px 81.216px;
+        -webkit-mask-position: -259.644px 81.216px;
+        mask-size: 1083.714px 370.818px;
+        -webkit-mask-size: 1083.714px 370.818px;
     }
 }
 </style>
