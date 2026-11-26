@@ -24,14 +24,10 @@
                 aria-hidden="true"
                 width="1920"
                 height="336"
-                class="absolute inset-0 w-full h-full object-cover object-center brightness-[0.6] pointer-events-none select-none"
+                class="absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none"
                 loading="eager"
             />
-            <div class="absolute inset-0 bg-[#01101E]/30 pointer-events-none" aria-hidden="true" />
-            <div
-                class="absolute inset-y-0 left-0 w-full lg:w-[72%] bg-gradient-to-r from-[#01101E]/95 via-[#01101E]/80 to-transparent pointer-events-none"
-                aria-hidden="true"
-            />
+            <div class="hero-scrim absolute inset-0 pointer-events-none" aria-hidden="true" />
             <div class="app-container relative z-10 py-10 lg:py-0">
                 <div class="flex flex-col gap-5 max-w-[580px]">
                     <nav :aria-label="tt('Breadcrumb')" class="flex items-center gap-2 text-[14px]">
@@ -721,6 +717,17 @@ const submitContact = () => {
 </script>
 
 <style scoped>
+
+.hero-scrim {
+    background: linear-gradient(
+        90deg,
+        rgba(1, 16, 30, 0.94) 0%,
+        rgba(1, 16, 30, 0.88) 13%,
+        rgba(1, 16, 30, 0.72) 27%,
+        rgba(1, 16, 30, 0.35) 39%,
+        rgba(1, 16, 30, 0) 53%
+    );
+}
 .faq-accordion-grid {
     display: grid;
     grid-template-rows: 0fr;
