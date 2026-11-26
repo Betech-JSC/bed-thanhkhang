@@ -3,7 +3,7 @@
 @import 'tailwindcss/utilities';
 
 :root {
-    /* Brand Color Palette (Figma Homepage Option 6 - 595:15360) */
+    /* Brand Color Palette (Figma Homepage Option 6 - 595:15360 & Tin tức - chi tiết - 967:28751) */
     --color-primary: #005EA4;
     --color-primary-hover: #004D86;
     --color-primary-active: #003967;
@@ -21,20 +21,25 @@
     --color-surface-100: #EEF2F6;
     --color-surface-gray-light: #F1F1F1;
 
+    --color-gray-800: #202939;
     --color-gray-600: #4B5565;
     --color-gray-500: #697586;
     --color-gray-400: #9AA4B2;
-    --color-gray-300: #D6D6D6;
+    --color-gray-300: #CDD5DF;
     --color-gray-200: #E3E8EF;
+    --color-badge-border: #D9D9D9;
     --color-btn-slide: rgba(57, 76, 107, 0.8);
 
     /* Shadow */
     --shadow-xs: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+    --shadow-card-featured: 0px 8px 24px -4px rgba(18, 26, 38, 0.06);
 
     /* Typography */
     --font-sans: 'Open Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --text-h1: 3rem;          /* 48px */
     --text-h1-mobile: 2rem;   /* 32px */
+    --text-h1-page: 2.25rem;  /* 36px */
+    --text-h1-page-mobile: 1.75rem; /* 28px */
     --text-h2: 1.75rem;       /* 28px */
     --text-h2-mobile: 1.5rem; /* 24px */
     --text-h3: 1.5rem;        /* 24px */
@@ -91,17 +96,17 @@
         font-weight: 700;
         @screen md {
             font-size: var(--text-h2);
-            line-height: 1.5;
+            line-height: 1.6;
         }
     }
 
     h3 {
         font-size: var(--text-h3-mobile);
-        line-height: 1.5;
+        line-height: 1.4;
         font-weight: 700;
         @screen md {
             font-size: var(--text-h3);
-            line-height: 1.6;
+            line-height: 1.4;
         }
     }
 

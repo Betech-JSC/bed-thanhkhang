@@ -17,25 +17,24 @@
         <!-- ======================================================== -->
         <!-- HERO BANNER — Liên hệ (Figma 939:2604, 1440×252)          -->
         <!-- ======================================================== -->
-        <section class="relative w-full overflow-hidden bg-dark min-h-[260px] lg:min-h-[252px] flex items-center">
+        <section class="relative w-full overflow-hidden bg-dark min-h-[220px] lg:min-h-[252px] flex items-center">
             <img
-                src="/assets/figma/lien-he/hero-bg.webp"
+                src="/assets/images/posts/tin-tuc-hero.webp"
                 alt=""
                 aria-hidden="true"
                 width="1440"
                 height="578"
-                class="absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none"
+                class="absolute inset-0 w-full h-full object-cover object-center brightness-[0.6] pointer-events-none select-none"
                 loading="eager"
             />
+            <div class="absolute inset-0 bg-[#01101E]/30 pointer-events-none" aria-hidden="true" />
             <div
-                class="absolute inset-y-0 left-0 w-full lg:w-[62%] bg-gradient-to-l from-[rgba(1,16,30,0)] to-[rgba(1,16,30,0.8)] pointer-events-none"
+                class="absolute inset-y-0 left-0 w-full lg:w-[72%] bg-gradient-to-r from-[#01101E]/95 via-[#01101E]/80 to-transparent pointer-events-none"
                 aria-hidden="true"
             />
-            <!-- Mobile-only contrast scrim (no mobile frame in Figma; keeps WCAG contrast over the photo) -->
-            <div class="absolute inset-0 bg-[rgba(1,16,30,0.45)] lg:hidden pointer-events-none" aria-hidden="true" />
-            <div class="app-container-narrow relative z-10 py-10 lg:py-0">
-                <div class="flex flex-col gap-6 max-w-[580px]">
-                    <nav :aria-label="tt('Breadcrumb')" class="flex items-center gap-2 text-body-sm">
+            <div class="app-container relative z-10 py-10 lg:py-0">
+                <div class="flex flex-col gap-5 max-w-[580px]">
+                    <nav :aria-label="tt('Breadcrumb')" class="flex items-center gap-2 text-[14px]">
                         <Link :href="homeHref" class="text-gray-modern-300 hover:text-white transition-colors">
                             {{ tt('Trang chủ') }}
                         </Link>
@@ -43,10 +42,10 @@
                         <span class="font-medium text-surface" aria-current="page">{{ tt('Liên hệ') }}</span>
                     </nav>
                     <div class="flex flex-col gap-2">
-                        <h1 class="!text-[28px] !leading-[1.4] lg:!text-pc-h3 font-bold text-surface uppercase">
+                        <h1 class="text-h1-page-mobile lg:text-h1-page font-bold text-surface uppercase">
                             {{ tt('LIÊN HỆ VỚI CHÚNG TÔI') }}
                         </h1>
-                        <p class="text-body-sm text-gray-modern-200 max-w-[470px]">
+                        <p class="text-[14px] leading-[1.6] text-white max-w-[400px] drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
                             {{ tt('Đội ngũ tư vấn viên của Thành Khang Tecsat luôn sẵn sàng hỗ trợ báo giá, tư vấn kỹ thuật và cung ứng vật tư chính hãng trên toàn quốc') }}
                         </p>
                     </div>

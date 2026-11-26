@@ -67,12 +67,47 @@ class PostController extends Controller
 
             $post->increment('view_count');
 
-            $data = Cache::remember('post_show_' . $slug . '_' . app()->getLocale(), 3600, function () use ($post) {
-                $relatedPosts = $post->related();
+            $locale = current_locale();
+
+            $data = Cache::remember('post_show_' . $slug . '_' . $locale, 3600, function () use ($post) {
+                $relatedPosts = collect($post->related(['limit' => 3]))->values();
+
+                if ($relatedPosts->count() < 3) {
+                    $excludeIds = $relatedPosts
+                        ->pluck('id')
+                        ->push($post->id)
+                        ->filter()
+                        ->unique()
+                        ->values()
+                        ->all();
+
+                    $topUpPosts = Post::query()
+                        ->active()
+                        ->wherePosts()
+                        ->whereNotIn('id', $excludeIds)
+                        ->orderByDesc('id')
+                        ->take(3 - $relatedPosts->count())
+                        ->get()
+                        ->map(fn($item) => $item->transform());
+
+                    $relatedPosts = $relatedPosts->concat($topUpPosts)->values();
+                }
+
+                $popularPosts = Post::query()
+                    ->active()
+                    ->wherePosts()
+                    ->where('id', '<>', $post->id)
+                    ->orderByDesc('view_count')
+                    ->orderByDesc('id')
+                    ->take(3)
+                    ->get()
+                    ->map(fn($item) => $item->transform())
+                    ->values();
 
                 return [
                     'post' => $post->transformDetails(),
                     'related_posts' => $relatedPosts,
+                    'popular_posts' => $popularPosts,
                     'seo' => $post->transformSeo()
                 ];
             });

@@ -777,6 +777,16 @@ class Post extends BaseModel
             $url = static_url($path);
         }
 
+        if (
+            (str_starts_with($url, '/assets/') || str_starts_with($url, '/images/')) &&
+            preg_match('/\.(png|jpe?g)$/i', $url)
+        ) {
+            $webpPath = preg_replace('/\.(png|jpe?g)$/i', '.webp', $url);
+            if ($webpPath && file_exists(public_path(ltrim($webpPath, '/')))) {
+                $url = $webpPath;
+            }
+        }
+
         return [
             'url' => $url,
             'alt' => $image['alt'] ?? $this->title,

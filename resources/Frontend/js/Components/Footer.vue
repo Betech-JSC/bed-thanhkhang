@@ -21,7 +21,7 @@
                         />
                     </Link>
 
-                    <div v-if="companyName || companyDescription" class="space-y-2.5">
+                    <div v-if="companyName || companyDescription || taxCode" class="space-y-2.5">
                         <h3 v-if="companyName" class="text-[18px] lg:text-[20px] font-bold leading-[1.4] text-dark">
                             {{ companyName }}
                         </h3>
@@ -42,7 +42,7 @@
                     <!-- Column 1: Danh mục sản phẩm (Figma 217:3867 — CMS product_categories; falls back to site nav) -->
                     <div class="lg:col-span-3 space-y-4">
                         <h4 class="text-[16px] font-bold leading-[1.4] text-dark">
-                            {{ footerCategoryLinks.length ? tt('Danh mục sản phẩm') : tt('Trang chủ') }}
+                            {{ tt('Danh mục sản phẩm') }}
                         </h4>
                         <ul class="space-y-3 text-[14px] font-medium leading-[1.6]">
                             <li v-for="(item, index) in (footerCategoryLinks.length ? footerCategoryLinks : navLinks)" :key="index">
@@ -92,7 +92,7 @@
                                     height="24"
                                     class="w-6 h-6 shrink-0 mt-0.5"
                                 />
-                                <span class="break-words">{{ displayHotline }}</span>
+                                <span class="break-words">{{ tt('Hotline') }}: {{ displayHotline }}</span>
                             </a>
 
                             <a
@@ -108,17 +108,17 @@
                                     height="24"
                                     class="w-6 h-6 shrink-0 mt-0.5"
                                 />
-                                <span class="break-all sm:break-words">{{ displayEmail }}</span>
+                                <span class="break-all sm:break-words">{{ tt('Email') }}: {{ displayEmail }}</span>
                             </a>
 
-                            <div v-for="row in addressRows" :key="row.label" class="flex items-start gap-2">
+                            <div v-for="row in addressRows" :key="row.label" class="flex items-start gap-3">
                                 <img
                                     src="/assets/svg/icons/footer-pin.svg"
                                     alt=""
                                     aria-hidden="true"
                                     width="24"
                                     height="24"
-                                    class="w-6 h-6 shrink-0"
+                                    class="w-6 h-6 shrink-0 mt-0.5"
                                 />
                                 <p class="break-words min-w-0">{{ row.label }}: {{ row.value }}</p>
                             </div>
@@ -138,7 +138,7 @@
                     &copy; Copyright {{ currentYear }} {{ companyName }}
                 </p>
 
-                <div v-if="facebookHref || linkedinHref" class="flex items-center gap-4">
+                <div v-if="facebookHref || linkedinHref" class="flex items-center gap-6">
                     <a
                         v-if="facebookHref"
                         :href="facebookHref"
@@ -183,7 +183,7 @@
 <script>
 import { Link } from '@inertiajs/inertia-vue3'
 
-const DEFAULT_LOGO_URL = '/assets/images/logo/logo-thanhkhang.png'
+const DEFAULT_LOGO_URL = '/assets/images/logo/logo-thanhkhang.webp'
 
 export default {
     name: 'Footer',
@@ -249,7 +249,7 @@ export default {
             )
         },
         taxCode() {
-            return this.siteConfig.general_tax_code || this.siteConfig.tax_code || ''
+            return this.siteConfig.tax_code || this.siteConfig.general_tax_code || this.siteConfig.mst || ''
         },
         footerCategoryLinks() {
             const raw = this.$page?.props?.product_categories || this.$page?.props?.data?.product_categories || []
