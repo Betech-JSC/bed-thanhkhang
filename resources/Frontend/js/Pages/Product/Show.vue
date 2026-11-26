@@ -294,6 +294,7 @@ import VariantSelector from '@/Components/Product/VariantSelector.vue'
 import SpecTable from '@/Components/Product/SpecTable.vue'
 import RelatedProducts from '@/Components/Product/RelatedProducts.vue'
 import ProductCtaBanner from './Components/ProductCtaBanner.vue'
+import { openQuoteModal } from '@/composables/useQuoteModal'
 
 export default {
     name: 'ProductShow',
@@ -675,19 +676,13 @@ export default {
             this.activeTab = tabKey
         },
         handleRequestQuote() {
-            const contactUrl = this.route('contact')
-            if (this.$inertia) {
-                this.$inertia.visit(contactUrl, {
-                    data: {
-                        product: this.currentTitle,
-                        category: this.currentCategory,
-                        material: this.productMaterial,
-                        color: this.productColor,
-                    },
-                })
-            } else if (typeof window !== 'undefined') {
-                window.location.href = contactUrl
-            }
+            openQuoteModal({
+                source: 'product_detail',
+                product: this.currentTitle,
+                category: this.currentCategory,
+                material: this.productMaterial,
+                color: this.productColor,
+            })
         },
     },
 }
