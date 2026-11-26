@@ -16,18 +16,17 @@
                 src="/assets/images/posts/tin-tuc-hero.webp"
                 alt=""
                 aria-hidden="true"
-                width="1440"
-                height="578"
-                class="absolute inset-0 w-full h-full object-cover object-center brightness-[0.6] pointer-events-none select-none"
+                width="1024"
+                height="701"
+                class="absolute inset-0 w-full h-full object-cover object-[50%_44%] pointer-events-none select-none"
                 loading="eager"
             />
-            <div class="absolute inset-0 bg-[#01101E]/30 pointer-events-none" aria-hidden="true" />
             <div
-                class="absolute inset-y-0 left-0 w-full lg:w-[72%] bg-gradient-to-r from-[#01101E]/95 via-[#01101E]/80 to-transparent pointer-events-none"
+                class="absolute inset-y-0 left-0 w-full lg:w-[898px] bg-gradient-to-r from-[#01101E]/80 to-transparent pointer-events-none"
                 aria-hidden="true"
             />
             <div class="app-container relative z-10 py-10 lg:py-0">
-                <div class="flex flex-col gap-5 max-w-[580px]">
+                <div class="flex flex-col gap-6 max-w-[580px]">
                     <nav :aria-label="tt('Breadcrumb')" class="flex items-center gap-2 text-[14px]">
                         <Link :href="homeHref" class="text-gray-modern-300 hover:text-white transition-colors">
                             {{ tt('Trang chủ') }}
@@ -41,7 +40,7 @@
                         <h1 class="text-h1-page-mobile lg:text-h1-page font-bold text-surface uppercase">
                             {{ tt('TIN TỨC & KIẾN THỨC') }}
                         </h1>
-                        <p class="text-[14px] leading-[1.6] text-white max-w-[400px] drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
+                        <p class="text-[14px] leading-[1.6] text-gray-modern-200 max-w-[400px]">
                             {{
                                 tt(
                                     'Cập nhật kiến thức truyền động công nghiệp, hướng dẫn bảo trì xích tải – thang cuốn và chia sẻ kinh nghiệm thực tế từ đội ngũ kỹ sư Thành Khang Tecsat.'
@@ -86,7 +85,7 @@
                     </Link>
 
                     <div class="p-5 sm:p-8 lg:p-10 flex flex-col justify-between gap-6">
-                        <div class="flex flex-col gap-3">
+                        <div class="flex flex-col gap-[14px]">
                             <time
                                 v-if="formatDate(featuredPost.published_at)"
                                 :datetime="featuredPost.published_at"
@@ -123,80 +122,82 @@
         <!-- ======================================================== -->
         <section ref="listingSectionRef" class="w-full bg-surface pt-8 pb-12 md:pt-10 md:pb-20">
             <div class="app-container-narrow flex flex-col gap-6 md:gap-8">
-                <!-- Heading Row -->
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                    <div class="flex items-center gap-2.5">
-                        <span class="block w-3 h-3 rounded-[2px] bg-primary shrink-0" aria-hidden="true" />
-                        <h2 class="text-[18px] font-bold leading-[1.6] text-primary">
-                            {{ tt('Tất cả bài viết') }}
-                        </h2>
-                    </div>
-                    <p class="text-[14px] text-ink-subtle">
-                        <template v-if="filteredResources.length > 0">
-                            {{ tt('Hiển thị') }} {{ rangeStart }}–{{ rangeEnd }} {{ tt('trên') }}
-                            {{ filteredResources.length }} {{ tt('bài viết') }}
-                        </template>
-                        <template v-else> 0 {{ tt('bài viết') }} </template>
-                    </p>
-                </div>
-
-                <!-- Filter & Search Bar -->
-                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                    <div
-                        class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 lg:pb-0 lg:flex-wrap"
-                        role="tablist"
-                        :aria-label="tt('Danh mục bài viết')"
-                    >
-                        <button
-                            type="button"
-                            role="tab"
-                            :aria-selected="selectedFilter === 'all'"
-                            class="px-4 py-[9px] rounded-[6px] text-[14px] font-medium whitespace-nowrap cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                            :class="
-                                selectedFilter === 'all'
-                                    ? 'bg-primary border border-primary text-surface'
-                                    : 'bg-white border border-gray-modern-200 text-dark-slate hover:border-primary hover:text-primary'
-                            "
-                            @click="applyFilter('all')"
-                        >
-                            {{ tt('Tất cả') }} ({{ safePosts.length }})
-                        </button>
-                        <button
-                            v-for="cat in uniqueCategories"
-                            :key="cat.slug || cat.id"
-                            type="button"
-                            role="tab"
-                            :aria-selected="selectedFilter === cat.slug"
-                            class="px-4 py-[9px] rounded-[6px] text-[14px] font-medium whitespace-nowrap cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                            :class="
-                                selectedFilter === cat.slug
-                                    ? 'bg-primary border border-primary text-surface'
-                                    : 'bg-white border border-gray-modern-200 text-dark-slate hover:border-primary hover:text-primary'
-                            "
-                            @click="applyFilter(cat.slug)"
-                        >
-                            {{ cat.title }}
-                        </button>
+                <div class="flex flex-col gap-5">
+                    <!-- Heading Row -->
+                    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+                        <div class="flex items-center gap-2.5">
+                            <span class="block w-3 h-3 rounded-[2px] bg-primary shrink-0" aria-hidden="true" />
+                            <h2 class="text-[18px] font-bold leading-[1.6] text-primary">
+                                {{ tt('Tất cả bài viết') }}
+                            </h2>
+                        </div>
+                        <p class="text-[14px] text-ink-subtle">
+                            <template v-if="filteredResources.length > 0">
+                                {{ tt('Hiển thị') }} {{ rangeStart }}–{{ rangeEnd }} {{ tt('trên') }}
+                                {{ filteredResources.length }} {{ tt('bài viết') }}
+                            </template>
+                            <template v-else> 0 {{ tt('bài viết') }} </template>
+                        </p>
                     </div>
 
-                    <div
-                        class="bg-white border border-gray-modern-300 focus-within:border-primary rounded-[6px] h-[42px] px-[14px] flex items-center gap-2.5 w-full lg:w-[296px] shrink-0 transition-colors"
-                    >
-                        <img
-                            src="/assets/svg/icons/posts-search.svg"
-                            alt=""
-                            aria-hidden="true"
-                            width="18"
-                            height="18"
-                            class="w-[18px] h-[18px] shrink-0"
-                        />
-                        <input
-                            v-model.trim="searchText"
-                            type="search"
-                            :aria-label="tt('Tìm kiếm bài viết...')"
-                            :placeholder="tt('Tìm kiếm bài viết...')"
-                            class="w-full bg-transparent text-[14px] text-dark placeholder:text-gray-modern-400 outline-none"
-                        />
+                    <!-- Filter & Search Bar -->
+                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                        <div
+                            class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 lg:pb-0 lg:flex-wrap"
+                            role="tablist"
+                            :aria-label="tt('Danh mục bài viết')"
+                        >
+                            <button
+                                type="button"
+                                role="tab"
+                                :aria-selected="selectedFilter === 'all'"
+                                class="px-4 py-[9px] rounded-[6px] text-[14px] whitespace-nowrap cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                                :class="
+                                    selectedFilter === 'all'
+                                        ? 'bg-primary border border-primary text-surface font-bold'
+                                        : 'bg-white border border-gray-modern-200 text-dark-slate font-medium hover:border-primary hover:text-primary'
+                                "
+                                @click="applyFilter('all')"
+                            >
+                                {{ tt('Tất cả') }} ({{ safePosts.length }})
+                            </button>
+                            <button
+                                v-for="cat in uniqueCategories"
+                                :key="cat.slug || cat.id"
+                                type="button"
+                                role="tab"
+                                :aria-selected="selectedFilter === cat.slug"
+                                class="px-4 py-[9px] rounded-[6px] text-[14px] whitespace-nowrap cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                                :class="
+                                    selectedFilter === cat.slug
+                                        ? 'bg-primary border border-primary text-surface font-bold'
+                                        : 'bg-white border border-gray-modern-200 text-dark-slate font-medium hover:border-primary hover:text-primary'
+                                "
+                                @click="applyFilter(cat.slug)"
+                            >
+                                {{ cat.title }}
+                            </button>
+                        </div>
+
+                        <div
+                            class="bg-white border border-gray-modern-300 focus-within:border-primary rounded-[6px] h-[42px] px-[14px] flex items-center gap-2.5 w-full lg:w-[296px] shrink-0 transition-colors"
+                        >
+                            <img
+                                src="/assets/svg/icons/posts-search.svg"
+                                alt=""
+                                aria-hidden="true"
+                                width="18"
+                                height="18"
+                                class="w-[18px] h-[18px] shrink-0"
+                            />
+                            <input
+                                v-model.trim="searchText"
+                                type="search"
+                                :aria-label="tt('Tìm kiếm bài viết...')"
+                                :placeholder="tt('Tìm kiếm bài viết...')"
+                                class="w-full bg-transparent text-[14px] text-dark placeholder:text-gray-modern-400 outline-none"
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -282,22 +283,12 @@
                 <nav
                     v-if="totalPages > 1"
                     :aria-label="tt('Phân trang')"
-                    class="flex items-center justify-center flex-wrap gap-2 pt-2"
+                    class="flex items-center justify-center flex-wrap gap-2 pt-3"
                 >
-                    <button
-                        type="button"
-                        :disabled="currentPage <= 1"
-                        :aria-label="tt('Trang trước')"
-                        class="w-10 h-10 rounded-[4px] border border-gray-modern-200 bg-white text-dark-slate hover:border-primary hover:text-primary disabled:opacity-40 disabled:pointer-events-none text-[16px] font-medium flex items-center justify-center transition-colors cursor-pointer"
-                        @click="changePage(currentPage - 1)"
-                    >
-                        &lsaquo;
-                    </button>
-
                     <template v-for="(item, idx) in paginationItems" :key="'pg-' + idx + '-' + item">
                         <span
                             v-if="item === '...'"
-                            class="w-10 h-10 flex items-center justify-center text-[16px] font-medium text-ink-subtle select-none"
+                            class="w-10 h-10 rounded-[4px] border border-gray-modern-200 bg-white flex items-center justify-center text-[16px] font-medium text-dark-slate select-none"
                             aria-hidden="true"
                         >
                             &hellip;
@@ -317,16 +308,6 @@
                             {{ item }}
                         </button>
                     </template>
-
-                    <button
-                        type="button"
-                        :disabled="currentPage >= totalPages"
-                        :aria-label="tt('Trang sau')"
-                        class="w-10 h-10 rounded-[4px] border border-gray-modern-200 bg-white text-dark-slate hover:border-primary hover:text-primary disabled:opacity-40 disabled:pointer-events-none text-[16px] font-medium flex items-center justify-center transition-colors cursor-pointer"
-                        @click="changePage(currentPage + 1)"
-                    >
-                        &rsaquo;
-                    </button>
                 </nav>
             </div>
         </section>
@@ -338,22 +319,24 @@
             <div
                 class="relative w-full overflow-hidden bg-dark py-12 md:py-16 lg:min-h-[362px] flex items-center justify-center"
             >
-                <div class="cta-texture cta-texture--left opacity-25 pointer-events-none select-none" aria-hidden="true">
+                <div class="cta-texture cta-texture--left pointer-events-none select-none" aria-hidden="true">
                     <div class="cta-texture__inner cta-texture__inner--left">
                         <img src="/assets/images/posts/cta-chain.webp" alt="" width="1584" height="672" loading="lazy" />
                     </div>
                 </div>
-                <div class="cta-texture cta-texture--right opacity-25 pointer-events-none select-none" aria-hidden="true">
+                <div class="cta-texture cta-texture--right pointer-events-none select-none" aria-hidden="true">
                     <div class="cta-texture__inner cta-texture__inner--right">
                         <img src="/assets/images/posts/cta-chain.webp" alt="" width="1584" height="672" loading="lazy" />
                     </div>
                 </div>
 
                 <div
-                    class="relative z-10 max-w-[560px] w-full mx-auto px-4 text-center flex flex-col items-center gap-6 lg:gap-8"
+                    class="relative z-10 max-w-[600px] w-full mx-auto px-4 text-center flex flex-col items-center gap-6 lg:gap-8"
                 >
-                    <div class="flex flex-col items-center gap-2">
-                        <h2 class="text-[22px] lg:text-[28px] font-bold leading-[1.6] text-surface uppercase">
+                    <div class="flex flex-col items-center">
+                        <h2
+                            class="text-[22px] lg:text-[28px] font-bold leading-[1.6] text-surface uppercase lg:whitespace-nowrap"
+                        >
                             {{ tt('CẦN TƯ VẤN HOẶC BÁO GIÁ NHANH ?') }}
                         </h2>
                         <p class="text-[14px] lg:text-[16px] font-medium leading-[1.6] text-gray-modern-400">
@@ -362,19 +345,19 @@
                     </div>
 
                     <div
-                        class="grid grid-cols-1 gap-3 sm:gap-4 w-full"
+                        class="grid grid-cols-1 gap-3 sm:gap-4 w-full max-w-[531px]"
                         :class="contactPhone ? 'sm:grid-cols-2' : 'sm:max-w-[280px]'"
                     >
                         <Link
                             :href="contactHref"
-                            class="bg-primary hover:bg-primary-hover text-surface text-[16px] font-medium px-6 py-2.5 rounded-[4px] inline-flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+                            class="bg-surface hover:bg-white text-primary text-[16px] lg:text-[18px] font-medium h-[49px] px-6 py-2.5 rounded-[4px] inline-flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
                         >
                             {{ tt('Yêu cầu báo giá') }}
                         </Link>
                         <a
                             v-if="contactPhone"
                             :href="'tel:' + cleanPhone"
-                            class="bg-secondary hover:bg-secondary-hover text-primary-active text-[16px] font-medium px-6 py-2.5 rounded-[4px] inline-flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+                            class="bg-transparent hover:bg-surface/10 border border-surface text-surface text-[16px] lg:text-[18px] font-medium h-[49px] px-6 py-2.5 rounded-[4px] inline-flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
                         >
                             {{ tt('Gọi Hotline') }}
                         </a>

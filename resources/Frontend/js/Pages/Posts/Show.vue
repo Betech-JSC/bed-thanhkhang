@@ -327,22 +327,24 @@
             <div
                 class="relative w-full overflow-hidden bg-dark py-12 md:py-16 lg:min-h-[362px] flex items-center justify-center"
             >
-                <div class="cta-texture cta-texture--left opacity-25 pointer-events-none select-none" aria-hidden="true">
+                <div class="cta-texture cta-texture--left pointer-events-none select-none" aria-hidden="true">
                     <div class="cta-texture__inner cta-texture__inner--left">
                         <img src="/assets/images/posts/cta-chain.webp" alt="" width="1584" height="672" loading="lazy" />
                     </div>
                 </div>
-                <div class="cta-texture cta-texture--right opacity-25 pointer-events-none select-none" aria-hidden="true">
+                <div class="cta-texture cta-texture--right pointer-events-none select-none" aria-hidden="true">
                     <div class="cta-texture__inner cta-texture__inner--right">
                         <img src="/assets/images/posts/cta-chain.webp" alt="" width="1584" height="672" loading="lazy" />
                     </div>
                 </div>
 
                 <div
-                    class="relative z-10 max-w-[560px] w-full mx-auto px-4 text-center flex flex-col items-center gap-6 lg:gap-8"
+                    class="relative z-10 max-w-[600px] w-full mx-auto px-4 text-center flex flex-col items-center gap-6 lg:gap-8"
                 >
-                    <div class="flex flex-col items-center gap-2">
-                        <h2 class="text-[22px] lg:text-[28px] font-bold leading-[1.6] text-surface uppercase">
+                    <div class="flex flex-col items-center">
+                        <h2
+                            class="text-[22px] lg:text-[28px] font-bold leading-[1.6] text-surface uppercase lg:whitespace-nowrap"
+                        >
                             {{ tt('CẦN TƯ VẤN HOẶC BÁO GIÁ NHANH ?') }}
                         </h2>
                         <p class="text-[14px] lg:text-[16px] font-medium leading-[1.6] text-gray-modern-400">
@@ -351,19 +353,19 @@
                     </div>
 
                     <div
-                        class="grid grid-cols-1 gap-3 sm:gap-4 w-full"
+                        class="grid grid-cols-1 gap-3 sm:gap-4 w-full max-w-[531px]"
                         :class="contactPhone ? 'sm:grid-cols-2' : 'sm:max-w-[280px]'"
                     >
                         <Link
                             :href="contactHref"
-                            class="bg-primary hover:bg-primary-hover text-surface text-[16px] font-medium px-6 py-2.5 rounded-[4px] inline-flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+                            class="bg-surface hover:bg-white text-primary text-[16px] lg:text-[18px] font-medium h-[49px] px-6 py-2.5 rounded-[4px] inline-flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
                         >
                             {{ tt('Yêu cầu báo giá') }}
                         </Link>
                         <a
                             v-if="contactPhone"
                             :href="'tel:' + cleanPhone"
-                            class="bg-secondary hover:bg-secondary-hover text-primary-active text-[16px] font-medium px-6 py-2.5 rounded-[4px] inline-flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+                            class="bg-transparent hover:bg-surface/10 border border-surface text-surface text-[16px] lg:text-[18px] font-medium h-[49px] px-6 py-2.5 rounded-[4px] inline-flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
                         >
                             {{ tt('Gọi Hotline') }}
                         </a>
