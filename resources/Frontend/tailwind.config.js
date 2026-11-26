@@ -1014,16 +1014,19 @@ module.exports = {
                 'panel-dark': '0 8px 32px rgba(0, 0, 0, 0.6)',
                 'glow-cyan': '0 0 20px rgba(0, 240, 255, 0.35)',
                 'glow-primary-subtle': '0 0 16px rgba(0, 94, 164, 0.25)',
+                'card-featured': '0px 8px 24px -4px rgba(18, 26, 38, 0.06)',
             },
 
             fontSize: {
-                // Thành Khang Figma Typography Scale (595:15360)
+                // Thành Khang Figma Typography Scale (595:15360 & 882:2212)
                 h1: ['3rem', { lineHeight: '1.4', fontWeight: '700' }],           // 48px / 1.4 / 700 (Desktop)
                 'h1-mobile': ['2rem', { lineHeight: '1.3', fontWeight: '700' }], // 32px / 1.3 / 700 (Mobile)
-                h2: ['1.75rem', { lineHeight: '1.5', fontWeight: '700' }],       // 28px / 1.5 / 700 (Desktop)
+                'h1-page': ['2.25rem', { lineHeight: '1.4', fontWeight: '700' }], // 36px / 1.4 / 700 (Figma PC/Heading/H3/bold)
+                'h1-page-mobile': ['1.75rem', { lineHeight: '1.3', fontWeight: '700' }], // 28px / 1.3 / 700 (Mobile)
+                h2: ['1.75rem', { lineHeight: '1.6', fontWeight: '700' }],       // 28px / 1.6 / 700 (Desktop)
                 'h2-mobile': ['1.5rem', { lineHeight: '1.4', fontWeight: '700' }], // 24px / 1.4 / 700 (Mobile)
-                h3: ['1.5rem', { lineHeight: '1.6', fontWeight: '700' }],        // 24px / 1.6 / 700 (Desktop)
-                'h3-mobile': ['1.25rem', { lineHeight: '1.5', fontWeight: '700' }], // 20px / 1.5 / 700 (Mobile)
+                h3: ['1.5rem', { lineHeight: '1.4', fontWeight: '700' }],        // 24px / 1.4 / 700 (Desktop)
+                'h3-mobile': ['1.25rem', { lineHeight: '1.4', fontWeight: '700' }], // 20px / 1.4 / 700 (Mobile)
                 h4: ['1.25rem', { lineHeight: '1.6', fontWeight: '700' }],       // 20px / 1.6 / 700 (Desktop)
                 'h4-mobile': ['1.125rem', { lineHeight: '1.5', fontWeight: '700' }], // 18px / 1.5 / 700 (Mobile)
 
@@ -1093,6 +1096,7 @@ module.exports = {
             fontFamily: {
 
                 sans: ['"Open Sans"', 'Inter', 'system-ui', 'sans-serif'],
+                inter: ['Inter', '"Open Sans"', 'system-ui', 'sans-serif'],
                 display: ['"Open Sans"', 'Inter', 'system-ui', 'sans-serif'],
                 body: ['"Open Sans"', 'Inter', 'system-ui', 'sans-serif'],
                 mono: ['VCR_OSD_MONO', 'monospace'],

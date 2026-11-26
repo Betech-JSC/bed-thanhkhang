@@ -1,11 +1,11 @@
 <template>
-    <!-- Desktop Top Info Bar (Figma 595:15540 — 46px, #00284B) -->
-    <div v-if="companyName || contactEmail || contactPhone" class="hidden lg:block w-full h-[46px] bg-dark text-ink-light antialiased">
-        <div class="app-container h-full flex items-center justify-between gap-6">
-            <p v-if="companyName" class="text-[14px] font-normal leading-[1.4] text-ink-light truncate">
+    <!-- Desktop Top Info Bar (Figma 979:29919 — min-h 40px, #00284B) -->
+    <div v-if="companyName || contactEmail || contactPhone" class="hidden lg:block w-full min-h-[40px] py-1 bg-dark text-ink-light antialiased">
+        <div class="app-container min-h-[32px] flex items-center justify-between gap-6">
+            <p v-if="companyName" class="text-[14px] font-normal leading-[1.6] text-ink-light truncate">
                 {{ companyName }}
             </p>
-            <div class="flex items-center gap-6 shrink-0 text-[14px] font-normal leading-[1.4] text-ink-light">
+            <div class="flex items-center gap-8 shrink-0 text-[14px] font-normal leading-[1.6] text-ink-light">
                 <a
                     v-if="contactEmail"
                     :href="'mailto:' + contactEmail"
@@ -40,11 +40,11 @@
         </div>
     </div>
 
-    <!-- Main Sticky Header Bar (Figma 595:15540 — 72px Desktop / 64px Mobile, #FAFAFA) -->
+    <!-- Main Sticky Header Bar (Figma 979:29929 — 72px Desktop / 64px Mobile, #FFFFFF) -->
     <header
         ref="headerRoot"
-        class="sticky top-0 z-[1000] w-full bg-surface border-b antialiased transition-all duration-200"
-        :class="isScrolled ? 'border-gray-200 shadow-xs bg-surface/95 backdrop-blur-md' : 'border-gray-200/60'"
+        class="sticky top-0 z-[1000] w-full bg-white border-b antialiased transition-all duration-200"
+        :class="isScrolled ? 'border-gray-200 shadow-xs bg-white/95 backdrop-blur-md' : 'border-gray-200/60'"
         @mouseleave="closeDesktopDropdown"
     >
         <div class="app-container h-[64px] lg:h-[72px] flex items-center justify-between gap-4 lg:gap-6">
@@ -81,18 +81,18 @@
                         class="relative flex items-center self-stretch"
                         @mouseenter="menu.hasDropdown ? openDesktopDropdown(menu.type) : closeDesktopDropdown()"
                     >
-                        <!-- Figma 979:30014 — 72px item, inactive Gray modern/500, active Main blue/600 + 3px underline -->
+                        <!-- Figma 979:29936 — 72px item, inactive Gray modern/500 (#697586), active #004D86 + 3px bottom bar -->
                         <div
-                            class="inline-flex items-center gap-1 h-full border-b-[3px] transition-colors"
-                            :class="isMenuActive(menu) ? 'border-primary-600' : 'border-transparent'"
+                            class="h-[72px] inline-flex items-center gap-1 border-b-[3px] transition-colors"
+                            :class="isMenuActive(menu) ? 'border-primary-hover' : 'border-transparent'"
                         >
                             <Link
                                 :href="menu.href"
                                 class="py-2 text-[14px] font-bold uppercase leading-[1.6] tracking-normal whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-cta"
                                 :class="
                                     isMenuActive(menu)
-                                        ? 'text-primary-600'
-                                        : 'text-ink-subtle hover:text-primary'
+                                        ? 'text-primary-hover'
+                                        : 'text-ink-subtle hover:text-primary-hover'
                                 "
                                 @click="closeDesktopDropdown"
                             >
@@ -111,9 +111,9 @@
                                     src="/assets/svg/icons/header-chevron-down.svg"
                                     alt=""
                                     aria-hidden="true"
-                                    width="24"
-                                    height="24"
-                                    class="w-6 h-6 transition-transform duration-200"
+                                    width="20"
+                                    height="20"
+                                    class="w-5 h-5 transition-transform duration-200"
                                     :class="activeDropdown === menu.type ? 'rotate-180' : ''"
                                 />
                             </button>
@@ -209,14 +209,14 @@
                 <div class="flex items-center gap-3 shrink-0">
                     <Link
                         :href="safeRoute('contact', undefined, '/lien-he')"
-                        class="inline-flex items-center justify-center whitespace-nowrap rounded-cta bg-primary hover:bg-primary-hover active:bg-primary-active text-surface text-[14px] font-medium leading-[1.4] px-4 xl:px-5 py-2 shadow-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                        class="inline-flex items-center justify-center whitespace-nowrap rounded-cta bg-primary hover:bg-primary-hover active:bg-primary-active text-surface text-[14px] font-medium leading-[1.4] px-5 py-2 shadow-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                     >
                         {{ tt('Nhận báo giá') }}
                     </Link>
                     <a
                         v-if="contactPhone"
                         :href="'tel:' + cleanPhone"
-                        class="inline-flex items-center justify-center whitespace-nowrap rounded-cta bg-secondary hover:bg-secondary-hover text-primary-active text-[14px] font-medium leading-[1.4] px-4 xl:px-5 py-2 shadow-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                        class="inline-flex items-center justify-center whitespace-nowrap rounded-cta bg-secondary hover:bg-secondary-hover text-primary-active text-[14px] font-medium leading-[1.4] px-5 py-2 shadow-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                     >
                         {{ tt('Gọi hotline') }}
                     </a>
@@ -826,7 +826,7 @@ export default {
         },
         handleScroll() {
             if (typeof window === 'undefined') return
-            this.isScrolled = window.scrollY > 46
+            this.isScrolled = window.scrollY > 40
         },
         handleClickOutside(e) {
             if (!this.activeDropdown) return
