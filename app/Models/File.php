@@ -277,16 +277,41 @@ class File
         return VideoStreamer::streamFile($this->getFullPath());
     }
 
+    public const ALLOWED_IMAGE_FORMATS = ['webp', 'jpg', 'jpeg', 'png', 'gif'];
+    public const MIN_IMAGE_WIDTH = 16;
+    public const MAX_IMAGE_WIDTH = 2560;
+
+    public static function sanitizeImageOptions($options): array
+    {
+        $options = is_array($options) ? $options : [];
+
+        $rawFormat = isset($options['fm']) && is_scalar($options['fm'])
+            ? strtolower(trim((string) $options['fm']))
+            : 'webp';
+        $format = in_array($rawFormat, self::ALLOWED_IMAGE_FORMATS, true) ? $rawFormat : 'webp';
+
+        $sanitized = ['fm' => $format];
+
+        if (isset($options['w']) && is_scalar($options['w']) && is_numeric($options['w'])) {
+            $width = (int) $options['w'];
+            $sanitized['w'] = max(self::MIN_IMAGE_WIDTH, min(self::MAX_IMAGE_WIDTH, $width));
+        }
+
+        return $sanitized;
+    }
+
     protected function responseImage($options)
     {
         $pathinfo = pathinfo($this->path);
-        $options = array_merge(['fm' => 'webp'], $options);
+        $options = static::sanitizeImageOptions($options);
 
         $newFilename = implode('_', $options);
 
         $cacheFolder = 'cache/' . $pathinfo['dirname'] . '/' . str_replace('.', '_', $pathinfo['basename']);
         $cacheFilename = $pathinfo['filename'] . '_' . $newFilename . '.' . $options['fm'];
         $cacheFullPath = $cacheFolder . '/' . $cacheFilename;
+
+        $contentType = 'image/' . ($options['fm'] === 'jpg' ? 'jpeg' : $options['fm']);
 
         if (!$this->publicStorage->exists($cacheFullPath)) {
             // Create cache folder if it doesn't exist
@@ -328,7 +353,7 @@ class File
 
             // Set caching headers
             $headers = [
-                'Content-Type' => 'image/' . $options['fm'],
+                'Content-Type' => $contentType,
                 'Cache-Control' => 'max-age=86400',
                 'Last-Modified' => gmdate('D, d M Y H:i:s', $lastModified) . ' GMT',
                 'ETag' => $etag,
@@ -336,7 +361,7 @@ class File
         } else {
             // Set caching headers
             $headers = [
-                'Content-Type' => 'image/' . $options['fm'],
+                'Content-Type' => $contentType,
                 'Cache-Control' => 'max-age=86400',
             ];
         }
@@ -405,7 +430,20 @@ class File
 
     private function fileValidation($file)
     {
-        $mimeType = $file->getMimeType();
+        $blockedExtensions = [
+            'php', 'phtml', 'phar', 'php3', 'php4', 'php5', 'php7', 'php8', 'pht',
+            'shtml', 'htaccess', 'sh', 'bash', 'exe', 'bat', 'cmd', 'jsp', 'asp', 'aspx',
+        ];
+        $extension = strtolower((string) $file->getClientOriginalExtension());
+        if ($extension !== '' && in_array($extension, $blockedExtensions, true)) {
+            return false;
+        }
+
+        $mimeType = strtolower((string) $file->getMimeType());
+        if (str_contains($mimeType, 'php') || str_contains($mimeType, 'x-executable') || str_contains($mimeType, 'x-sh')) {
+            return false;
+        }
+
         $maxSize = self::MAX_SIZE_LIST['others'];
         foreach (self::MAX_SIZE_LIST as $key => $size) {
             if (str_contains($mimeType, $key)) {
