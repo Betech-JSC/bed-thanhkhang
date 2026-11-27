@@ -156,6 +156,18 @@ class Config extends Model
                 'about_companion_eyebrow_en' => 'nullable|string|max:255',
                 'about_companion_heading' => 'nullable|string|max:500',
                 'about_companion_heading_en' => 'nullable|string|max:500',
+                'product_detail_brand' => 'nullable|string|max:255',
+                'product_detail_brand_en' => 'nullable|string|max:255',
+                'product_detail_origin' => 'nullable|string|max:255',
+                'product_detail_origin_en' => 'nullable|string|max:255',
+                'product_detail_warranty' => 'nullable|string|max:255',
+                'product_detail_warranty_en' => 'nullable|string|max:255',
+                'product_detail_condition' => 'nullable|string|max:255',
+                'product_detail_condition_en' => 'nullable|string|max:255',
+                'product_detail_stock_status' => 'nullable|string|max:255',
+                'product_detail_stock_status_en' => 'nullable|string|max:255',
+                'product_detail_support' => 'nullable|string|max:255',
+                'product_detail_support_en' => 'nullable|string|max:255',
             ],
         ][$id] ?? [];
     }
@@ -799,6 +811,47 @@ class Config extends Model
         return [
             'eyebrow' => $resolve('about_companion_eyebrow'),
             'heading' => $resolve('about_companion_heading'),
+        ];
+    }
+
+    public static function getProductDetailDefaults(?string $locale = null): array
+    {
+        $locale = $locale ?: (function_exists('current_locale') ? current_locale() : app()->getLocale());
+        $isEn = $locale === 'en';
+
+        $raw = [];
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('settings')) {
+                $settings = settings()->group('general')->all();
+                if ($settings instanceof \Illuminate\Support\Collection) {
+                    $raw = $settings->toArray();
+                } elseif (is_array($settings)) {
+                    $raw = $settings;
+                }
+            }
+        } catch (\Throwable $e) {
+            report($e);
+        }
+
+        $resolve = static function (string $key) use ($raw, $isEn): ?string {
+            $viVal = trim((string) ($raw[$key] ?? ''));
+            $enVal = trim((string) ($raw[$key . '_en'] ?? ''));
+
+            if ($isEn) {
+                $resolved = $enVal !== '' ? $enVal : $viVal;
+                return $resolved !== '' ? $resolved : null;
+            }
+
+            return $viVal !== '' ? $viVal : null;
+        };
+
+        return [
+            'brand' => $resolve('product_detail_brand'),
+            'origin' => $resolve('product_detail_origin'),
+            'warranty' => $resolve('product_detail_warranty'),
+            'condition' => $resolve('product_detail_condition'),
+            'stock_status' => $resolve('product_detail_stock_status'),
+            'technical_support' => $resolve('product_detail_support'),
         ];
     }
 

@@ -3,26 +3,41 @@
 </template>
 
 <script>
-import ProductShow from '../Product/Show.vue'
+import MainLayout from '@/Layouts/MainLayout.vue'
 
 export default {
     name: 'ProductsShow',
-    components: {
-        ProductShow,
-    },
-    props: {
-        product: {
-            type: Object,
-            default: () => ({}),
-        },
-        related_products: {
-            type: Array,
-            default: () => [],
-        },
-        seo: {
-            type: Object,
-            default: () => ({}),
-        },
-    },
+    layout: MainLayout,
 }
+</script>
+
+<script setup>
+import ProductShow from '../Product/Show.vue'
+
+defineProps({
+    product: {
+        type: Object,
+        default: () => ({}),
+    },
+    related_products: {
+        type: Array,
+        default: () => [],
+    },
+    faqs: {
+        type: Array,
+        default: () => [],
+    },
+    ctaBanner: {
+        type: [Object, Array],
+        default: null,
+    },
+    pdpDefaults: {
+        type: Object,
+        default: () => ({}),
+    },
+    seo: {
+        type: Object,
+        default: null,
+    },
+})
 </script>

@@ -94,7 +94,7 @@
         "
         @mouseleave="closeDesktopDropdown"
     >
-        <div class="app-container-narrow relative h-[61px] lg:h-[72px] flex items-center justify-between gap-3 lg:gap-6">
+        <div class="app-container-narrow relative h-[61px] lg:h-[72px] flex items-center justify-between gap-3 lg:gap-4 xl:gap-6">
             <!-- Brand Logo (Desktop 120x40, Mobile 96x32, CMS general_logo) -->
             <Link
                 :href="safeRoute('home', undefined, currentLocale === 'en' ? '/en' : '/')"
@@ -121,7 +121,7 @@
             <!-- Desktop Navigation (Dynamic items from $page.props.configs.menus — Figma 979:32785) -->
             <nav
                 v-if="menus.length > 0"
-                class="hidden lg:flex items-stretch self-stretch gap-5 xl:gap-8"
+                class="hidden lg:flex items-stretch self-stretch lg:gap-4 xl:gap-8"
                 :aria-label="tt('Điều hướng chính')"
             >
                 <template v-for="(menu, index) in menus" :key="index">
@@ -178,12 +178,125 @@
                                 />
                             </button>
                         </div>
+
+                        <!-- Desktop Products 2-Region Mega-Menu (Figma 856:24212, anchored left-0 to PRODUCTS nav item) -->
+                        <transition name="dropdown-fade">
+                            <div
+                                v-if="menu.hasDropdown && menu.type === 'products' && hasProductsMenu"
+                                v-show="activeDropdown === menu.type"
+                                data-testid="desktop-mega-menu"
+                                class="hidden lg:block absolute top-full left-0 pt-2 z-[1010] max-w-[calc(100vw-48px)]"
+                            >
+                                <div
+                                    class="bg-surface rounded-cta shadow-dropdown border border-gray-200/80 min-h-[396px] flex overflow-hidden max-w-full"
+                                >
+                                    <!-- Left Column: Root Categories (240px/300px #EEF2F6 + Bottom CTA) -->
+                                    <div
+                                        class="w-[240px] xl:w-[300px] shrink-0 bg-surface-100 p-4 xl:p-5 flex flex-col justify-between gap-6"
+                                    >
+                                        <div class="flex flex-col gap-3">
+                                            <Link
+                                                v-for="(cat, idx) in productCategories"
+                                                :key="cat.id || cat.slug || idx"
+                                                :href="cat.url"
+                                                class="min-h-[44px] xl:min-h-[46px] px-3.5 xl:px-4 py-2.5 xl:py-3 rounded-cta text-[14px] leading-[20px] xl:leading-[22px] font-bold text-dark flex items-center justify-between gap-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                                                :class="
+                                                    activeRootCategoryIndex === idx
+                                                        ? 'bg-surface-300'
+                                                        : 'bg-surface-100 hover:bg-surface-200'
+                                                "
+                                                @mouseenter="activeRootCategoryIndex = idx"
+                                                @focus="activeRootCategoryIndex = idx"
+                                                @click="closeDesktopDropdown"
+                                            >
+                                                <span class="line-clamp-2 text-left">{{ cat.title }}</span>
+                                                <img
+                                                    src="/assets/svg/icons/header-chevron-right.svg"
+                                                    alt=""
+                                                    aria-hidden="true"
+                                                    width="20"
+                                                    height="20"
+                                                    class="w-5 h-5 shrink-0"
+                                                />
+                                            </Link>
+                                        </div>
+
+                                        <Link
+                                            :href="allProductsHref"
+                                            class="h-[38px] w-full rounded-cta bg-primary hover:bg-primary-hover active:bg-primary-active text-surface text-[14px] leading-[22px] font-medium inline-flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                                            @click="closeDesktopDropdown"
+                                        >
+                                            {{ tt('Xem tất cả sản phẩm') }}
+                                        </Link>
+                                    </div>
+
+                                    <!-- Right Region: Level 2 Groups & Level 3 Leaf Categories (#FAFAFA) -->
+                                    <div
+                                        v-if="activeRootCategory"
+                                        class="bg-surface p-4 xl:p-5 min-w-0 overflow-y-auto max-h-[70vh]"
+                                        :class="
+                                            activeLevel2Groups.length >= 2
+                                                ? 'w-[400px] xl:w-[500px]'
+                                                : 'w-[280px] xl:w-[320px]'
+                                        "
+                                    >
+                                        <div
+                                            v-if="activeLevel2Groups.length > 0"
+                                            :class="
+                                                activeLevel2Groups.length >= 2
+                                                    ? 'grid grid-cols-2 gap-x-3 xl:gap-x-4 gap-y-6 items-start content-start'
+                                                    : 'flex flex-col gap-5'
+                                            "
+                                        >
+                                            <div
+                                                v-for="sub in activeLevel2Groups"
+                                                :key="sub.id || sub.slug"
+                                                class="min-w-0 flex flex-col gap-2"
+                                            >
+                                                <Link
+                                                    :href="sub.url"
+                                                    class="px-3 xl:px-4 py-0.5 text-[14px] leading-[22px] font-bold text-primary hover:text-primary-sub-hover transition-colors block rounded-cta focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                                                    @click="closeDesktopDropdown"
+                                                >
+                                                    {{ sub.title }}
+                                                </Link>
+
+                                                <div
+                                                    v-if="sub.children && sub.children.length > 0"
+                                                    class="flex flex-col"
+                                                >
+                                                    <Link
+                                                        v-for="leaf in sub.children"
+                                                        :key="leaf.id || leaf.slug"
+                                                        :href="leaf.url"
+                                                        class="min-h-[42px] xl:min-h-[46px] px-3 xl:px-4 py-2 xl:py-2.5 rounded-cta text-[14px] leading-[22px] font-medium text-ink-subtle bg-surface hover:bg-surface-100 hover:text-dark active:bg-surface-200 flex items-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                                                        @click="closeDesktopDropdown"
+                                                    >
+                                                        <span class="line-clamp-2">{{ leaf.title }}</span>
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div v-else class="flex flex-col gap-3 px-3 xl:px-4 py-2">
+                                            <Link
+                                                :href="activeRootCategory.url"
+                                                class="text-[14px] leading-[22px] font-bold text-primary hover:text-primary-sub-hover transition-colors"
+                                                @click="closeDesktopDropdown"
+                                            >
+                                                {{ activeRootCategory.title }}
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </transition>
                     </div>
                 </template>
             </nav>
 
-            <!-- Desktop Right Actions: Search + 2 CTAs (Figma 979:32791) -->
-            <div class="hidden lg:flex items-center gap-5 xl:gap-8 shrink-0">
+            <!-- Desktop Right Actions: Search + Language Switcher + 2 CTAs (Figma 979:32791) -->
+            <div class="hidden lg:flex items-center lg:gap-2.5 xl:gap-4 shrink-0">
                 <button
                     type="button"
                     @click="isSearchOpen = true"
@@ -201,25 +314,49 @@
                     />
                 </button>
 
-                <div class="flex items-center gap-3 shrink-0">
+                <!-- Language Switcher (VI | EN) -->
+                <div
+                    class="inline-flex items-center h-[36px] p-0.5 rounded-[4px] bg-surface-100 border border-gray-200 shrink-0"
+                    role="group"
+                    :aria-label="tt('Ngôn ngữ')"
+                >
+                    <Link
+                        v-for="loc in ['vi', 'en']"
+                        :key="loc"
+                        :href="getLocaleUrl(loc)"
+                        :data-testid="`lang-switch-${loc}`"
+                        :aria-current="currentLocale === loc ? 'page' : undefined"
+                        :title="loc === 'vi' ? 'Tiếng Việt' : 'English'"
+                        class="h-full px-2 xl:px-2.5 inline-flex items-center justify-center rounded-[3px] text-[12px] font-bold uppercase leading-none transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                        :class="
+                            currentLocale === loc
+                                ? 'bg-primary text-surface shadow-xs'
+                                : 'text-ink-body hover:text-dark'
+                        "
+                    >
+                        {{ loc.toUpperCase() }}
+                    </Link>
+                </div>
+
+                <div class="flex items-center gap-2 xl:gap-3 shrink-0">
                     <button
                         type="button"
                         @click="handleOpenQuoteModal"
-                        class="h-[38px] px-5 inline-flex items-center justify-center whitespace-nowrap rounded-cta bg-primary hover:bg-primary-hover active:bg-primary-active text-surface text-[14px] font-medium leading-[22px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 cursor-pointer"
+                        class="h-[38px] lg:px-3.5 xl:px-5 inline-flex items-center justify-center whitespace-nowrap rounded-cta bg-primary hover:bg-primary-hover active:bg-primary-active text-surface text-[14px] font-medium leading-[22px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 cursor-pointer"
                     >
                         {{ tt('Nhận báo giá') }}
                     </button>
                     <a
                         v-if="contactPhone"
                         :href="'tel:' + cleanPhone"
-                        class="h-[38px] px-5 inline-flex items-center justify-center whitespace-nowrap rounded-cta bg-secondary hover:bg-secondary-hover text-primary-active text-[14px] font-medium leading-[22px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                        class="h-[38px] lg:px-3.5 xl:px-5 inline-flex items-center justify-center whitespace-nowrap rounded-cta bg-secondary hover:bg-secondary-hover text-primary-active text-[14px] font-medium leading-[22px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                     >
                         {{ tt('Gọi hotline') }}
                     </a>
                 </div>
             </div>
 
-            <!-- Mobile Main Nav Controls (< lg, Figma 1190:6348: Search 36x36 + CTA 100x33 + Hamburger 36x36) -->
+            <!-- Mobile Main Nav Controls (< lg, Figma 1314:51998: Search 36x36 + Hamburger 36x36 = 80x36) -->
             <div class="flex items-center gap-2 lg:hidden shrink-0">
                 <button
                     type="button"
@@ -237,13 +374,6 @@
                         class="w-5 h-5 object-contain"
                     />
                 </button>
-
-                <Link
-                    :href="contactHref"
-                    class="h-[33px] px-3 inline-flex items-center justify-center whitespace-nowrap rounded-cta bg-primary hover:bg-primary-hover active:bg-primary-active text-surface text-[12px] font-medium leading-[17px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary shrink-0"
-                >
-                    {{ tt('Nhận báo giá') }}
-                </Link>
 
                 <button
                     type="button"
@@ -264,119 +394,6 @@
                     />
                 </button>
             </div>
-
-            <!-- Desktop Products 2-Region Mega-Menu (Figma 856:24212, viewport-clamped zero horizontal overflow) -->
-            <transition name="dropdown-fade">
-                <div
-                    v-if="hasProductsMenu"
-                    v-show="activeDropdown === 'products'"
-                    data-testid="desktop-mega-menu"
-                    class="hidden lg:block absolute top-full left-8 xl:left-[180px] pt-2 z-[1010] max-w-[calc(100vw-64px)]"
-                >
-                    <div
-                        class="bg-surface rounded-cta shadow-dropdown border border-gray-200/80 min-h-[396px] flex overflow-hidden max-w-full"
-                    >
-                        <!-- Left Column: Root Categories (340px #EEF2F6 + Bottom CTA) -->
-                        <div
-                            class="w-[280px] xl:w-[340px] shrink-0 bg-surface-100 p-5 flex flex-col justify-between gap-6"
-                        >
-                            <div class="flex flex-col gap-3">
-                                <Link
-                                    v-for="(cat, idx) in productCategories"
-                                    :key="cat.id || cat.slug || idx"
-                                    :href="cat.url"
-                                    class="min-h-[46px] px-5 xl:px-6 py-3 rounded-cta text-[14px] leading-[22px] font-bold text-dark flex items-center justify-between gap-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                                    :class="
-                                        activeRootCategoryIndex === idx
-                                            ? 'bg-surface-300'
-                                            : 'bg-surface-100 hover:bg-surface-200'
-                                    "
-                                    @mouseenter="activeRootCategoryIndex = idx"
-                                    @focus="activeRootCategoryIndex = idx"
-                                    @click="closeDesktopDropdown"
-                                >
-                                    <span class="truncate">{{ cat.title }}</span>
-                                    <img
-                                        src="/assets/svg/icons/header-chevron-right.svg"
-                                        alt=""
-                                        aria-hidden="true"
-                                        width="20"
-                                        height="20"
-                                        class="w-5 h-5 shrink-0"
-                                    />
-                                </Link>
-                            </div>
-
-                            <Link
-                                :href="allProductsHref"
-                                class="h-[38px] w-full rounded-cta bg-primary hover:bg-primary-hover active:bg-primary-active text-surface text-[14px] leading-[22px] font-medium inline-flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                                @click="closeDesktopDropdown"
-                            >
-                                {{ tt('Xem tất cả sản phẩm') }}
-                            </Link>
-                        </div>
-
-                        <!-- Right Region: Level 2 Groups & Level 3 Leaf Categories (#FAFAFA) -->
-                        <div
-                            v-if="activeRootCategory"
-                            class="bg-surface p-5 xl:pl-10 xl:pr-5 xl:py-5 min-w-0 overflow-y-auto max-h-[70vh]"
-                            :class="
-                                activeLevel2Groups.length >= 2
-                                    ? 'w-[540px] xl:w-[632px]'
-                                    : 'w-[300px] xl:w-[338px]'
-                            "
-                        >
-                            <div
-                                v-if="activeLevel2Groups.length > 0"
-                                :class="
-                                    activeLevel2Groups.length >= 2
-                                        ? 'grid grid-cols-2 gap-x-3 xl:gap-x-4 gap-y-6 items-start content-start'
-                                        : 'flex flex-col gap-5'
-                                "
-                            >
-                                <div
-                                    v-for="sub in activeLevel2Groups"
-                                    :key="sub.id || sub.slug"
-                                    class="min-w-0 flex flex-col gap-2"
-                                >
-                                    <Link
-                                        :href="sub.url"
-                                        class="px-4 xl:px-6 py-0.5 text-[14px] leading-[22px] font-bold text-primary hover:text-primary-sub-hover transition-colors block rounded-cta focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                                        @click="closeDesktopDropdown"
-                                    >
-                                        {{ sub.title }}
-                                    </Link>
-
-                                    <div
-                                        v-if="sub.children && sub.children.length > 0"
-                                        class="flex flex-col"
-                                    >
-                                        <Link
-                                            v-for="leaf in sub.children"
-                                            :key="leaf.id || leaf.slug"
-                                            :href="leaf.url"
-                                            class="min-h-[42px] xl:min-h-[46px] px-4 xl:px-6 py-2.5 rounded-cta text-[14px] leading-[22px] font-medium text-ink-subtle bg-surface hover:bg-surface-100 hover:text-dark active:bg-surface-200 flex items-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                                            @click="closeDesktopDropdown"
-                                        >
-                                            <span class="line-clamp-2">{{ leaf.title }}</span>
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div v-else class="flex flex-col gap-3 px-4 xl:px-6 py-2">
-                                <Link
-                                    :href="activeRootCategory.url"
-                                    class="text-[14px] leading-[22px] font-bold text-primary hover:text-primary-sub-hover transition-colors"
-                                    @click="closeDesktopDropdown"
-                                >
-                                    {{ activeRootCategory.title }}
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </transition>
         </div>
     </header>
 
@@ -618,8 +635,37 @@
                     </nav>
                 </div>
 
-                <!-- Drawer Bottom: CTAs + Contact Info from CMS -->
+                <!-- Drawer Bottom: Language Switcher + CTAs + Contact Info from CMS -->
                 <div class="p-5 pt-4 border-t border-gray-200 bg-surface-50 space-y-4">
+                    <div class="space-y-1.5">
+                        <span class="block text-[11px] font-semibold uppercase tracking-wider text-ink-subtle">
+                            {{ tt('Ngôn ngữ') }}
+                        </span>
+                        <div
+                            class="grid grid-cols-2 gap-1 p-0.5 rounded-[4px] bg-surface-100 border border-gray-200"
+                            role="group"
+                            :aria-label="tt('Ngôn ngữ')"
+                        >
+                            <Link
+                                v-for="loc in ['vi', 'en']"
+                                :key="loc"
+                                :href="getLocaleUrl(loc)"
+                                :data-testid="`mobile-lang-switch-${loc}`"
+                                :aria-current="currentLocale === loc ? 'page' : undefined"
+                                :title="loc === 'vi' ? 'Tiếng Việt' : 'English'"
+                                @click="closeDrawer"
+                                class="min-h-[40px] inline-flex items-center justify-center rounded-[3px] text-[12px] font-bold uppercase transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                                :class="
+                                    currentLocale === loc
+                                        ? 'bg-primary text-surface shadow-xs'
+                                        : 'text-ink-body hover:text-dark'
+                                "
+                            >
+                                {{ loc.toUpperCase() }}
+                            </Link>
+                        </div>
+                    </div>
+
                     <div class="flex flex-col gap-2.5">
                         <button
                             type="button"
@@ -716,7 +762,14 @@ export default {
     },
     computed: {
         currentLocale() {
-            return this.$inertia?.page?.props?.locale?.current || this.$page?.props?.locale?.current || 'vi'
+            const pageUrl = String(this.$page?.url || '').split('?')[0].split('#')[0]
+            const urlLocale = pageUrl === '/en' || pageUrl.startsWith('/en/') ? 'en' : ''
+            const raw =
+                this.$page?.props?.locale?.current ||
+                urlLocale ||
+                this.$inertia?.page?.props?.locale?.current ||
+                'vi'
+            return String(raw).toLowerCase()
         },
         siteConfig() {
             return {
@@ -886,6 +939,14 @@ export default {
         },
     },
     watch: {
+        currentLocale: {
+            immediate: true,
+            handler(nextLocale) {
+                if (typeof document !== 'undefined' && nextLocale) {
+                    document.documentElement.setAttribute('lang', nextLocale)
+                }
+            },
+        },
         cmsLogoUrl() {
             this.logoFallbackStage = 0
         },
@@ -915,6 +976,118 @@ export default {
                 }
             }
             return fallback
+        },
+        getLocaleUrl(targetLocale) {
+            const normalizedTarget = String(targetLocale || 'vi').toLowerCase()
+            const rawUrl =
+                this.$page?.url ||
+                (typeof window !== 'undefined'
+                    ? `${window.location.pathname}${window.location.search}`
+                    : '/')
+            const strippedCurrent =
+                typeof rawUrl === 'string'
+                    ? rawUrl.replace(/^https?:\/\/[^/]+/, '')
+                    : '/'
+            const currentUrl = strippedCurrent
+                ? strippedCurrent.startsWith('/')
+                    ? strippedCurrent
+                    : `/${strippedCurrent}`
+                : '/'
+
+            if (normalizedTarget === this.currentLocale) {
+                return currentUrl
+            }
+
+            const queryIndex = currentUrl.indexOf('?')
+            const rawPath = queryIndex >= 0 ? currentUrl.slice(0, queryIndex) : currentUrl
+            const querySuffix =
+                queryIndex >= 0 ? currentUrl.slice(queryIndex).split('#')[0] : ''
+            const cleanPath = rawPath.split('#')[0].replace(/\/+$/, '') || '/'
+
+            const rawRouteName = String(this.$page?.props?.route?.name || '').trim()
+            const baseRouteName = rawRouteName.replace(/^(vi|en)\./, '')
+            const rawParams = this.$page?.props?.route?.params
+            const rawQuery = this.$page?.props?.route?.query
+            const routeParams =
+                rawParams && typeof rawParams === 'object' && !Array.isArray(rawParams)
+                    ? rawParams
+                    : {}
+            const routeQuery =
+                rawQuery && typeof rawQuery === 'object' && !Array.isArray(rawQuery)
+                    ? rawQuery
+                    : {}
+            const allRoutes = typeof this.routes === 'function' ? this.routes() || {} : {}
+
+            if (
+                baseRouteName &&
+                typeof this.route === 'function' &&
+                allRoutes[`${normalizedTarget}.${baseRouteName}`]
+            ) {
+                try {
+                    const url = this.route(
+                        `${normalizedTarget}.${baseRouteName}`,
+                        { ...routeParams, ...routeQuery },
+                        false
+                    )
+                    if (url && url !== '#') {
+                        let relativeUrl =
+                            String(url).replace(/^https?:\/\/[^/]+/, '').split('#')[0] || '/'
+                        if (!relativeUrl.startsWith('/')) {
+                            relativeUrl = `/${relativeUrl}`
+                        }
+                        if (querySuffix && !relativeUrl.includes('?')) {
+                            return `${relativeUrl}${querySuffix}`
+                        }
+                        return relativeUrl
+                    }
+                } catch (e) {
+                    // Fall through to path-mapping fallback
+                }
+            }
+
+            const pathPairs = [
+                ['/tai-lieu/thu-vien', '/en/documents/library'],
+                ['/san-pham', '/en/products'],
+                ['/gioi-thieu', '/en/about-us'],
+                ['/cot-moc-phat-trien', '/en/histories'],
+                ['/dich-vu', '/en/services'],
+                ['/tin-tuc', '/en/posts'],
+                ['/lien-he', '/en/contact'],
+                ['/quy-trinh', '/en/process'],
+                ['/tai-lieu', '/en/documents'],
+                ['/chinh-sach', '/en/policies'],
+                ['/tim-kiem', '/en/search'],
+            ]
+
+            for (const [viPrefix, enPrefix] of pathPairs) {
+                if (normalizedTarget === 'en') {
+                    if (cleanPath === viPrefix || cleanPath.startsWith(`${viPrefix}/`)) {
+                        const suffix = cleanPath.slice(viPrefix.length)
+                        return `${enPrefix}${suffix}${querySuffix}`
+                    }
+                } else if (cleanPath === enPrefix || cleanPath.startsWith(`${enPrefix}/`)) {
+                    const suffix = cleanPath.slice(enPrefix.length)
+                    return `${viPrefix}${suffix}${querySuffix}`
+                }
+            }
+
+            if (normalizedTarget === 'en') {
+                if (cleanPath === '/' || cleanPath === '') {
+                    return `/en${querySuffix}`
+                }
+                if (cleanPath === '/en' || cleanPath.startsWith('/en/')) {
+                    return `${cleanPath}${querySuffix}`
+                }
+                return `/en${cleanPath}${querySuffix}`
+            }
+
+            if (cleanPath === '/en') {
+                return `/${querySuffix}`
+            }
+            if (cleanPath.startsWith('/en/')) {
+                return `${cleanPath.slice(3)}${querySuffix}`
+            }
+            return `${cleanPath}${querySuffix}`
         },
         onLogoError() {
             this.logoFallbackStage = 1

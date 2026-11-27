@@ -2,7 +2,7 @@
     <section
         v-if="hasContent"
         id="process-section"
-        class="relative w-full bg-[#FAFAFA] overflow-x-clip"
+        class="relative w-full bg-[#FAFAFA] overflow-x-clip pt-10 lg:pt-0"
     >
         <!-- Right-Side Decorative Wave Background Layer (Desktop lg+, Figma 595:15444) -->
         <div
@@ -23,7 +23,7 @@
         <div class="relative z-10 w-full flex flex-col lg:flex-row lg:items-stretch lg:min-h-[954px]">
             <!-- Left Column: Full-Bleed Sprocket Photo Banner + Intro Copy -->
             <div
-                class="relative w-full lg:w-[51.32%] lg:shrink-0 bg-[#00284B] lg:rounded-tr-[8px] lg:rounded-br-[8px] aspect-[390/240] sm:aspect-[16/9] lg:aspect-auto lg:min-h-[954px]"
+                class="relative w-full lg:w-[51.32%] lg:shrink-0 bg-[#00284B] lg:rounded-tr-[8px] lg:rounded-br-[8px] aspect-[390/500] sm:aspect-[16/9] lg:aspect-auto lg:min-h-[954px] flex flex-col"
             >
                 <!-- Clipped Background Image & Scrim Layer (preserves lg:sticky on foreground text) -->
                 <div class="absolute inset-0 overflow-hidden lg:rounded-tr-[8px] lg:rounded-br-[8px] pointer-events-none select-none">
@@ -50,7 +50,7 @@
 
                 <!-- Intro Text Container aligned to .app-container-narrow left margin (1152px inner width -> 144px margin at 1440px) -->
                 <div
-                    class="relative z-10 w-full h-full flex flex-col justify-center lg:justify-start px-4 py-6 md:px-8 md:py-10 lg:py-[80px] lg:pl-[max(2rem,calc((100vw-1152px)/2))] lg:pr-10"
+                    class="relative z-10 w-full flex-1 h-full flex flex-col justify-end pb-8 pt-6 sm:justify-center sm:py-6 md:px-8 md:py-10 px-4 lg:justify-start lg:py-[80px] lg:pl-[max(2rem,calc((100vw-1152px)/2))] lg:pr-10"
                 >
                     <div class="w-full max-w-[488px] lg:sticky lg:top-[104px] flex flex-col gap-2 lg:gap-0">
                         <h2
@@ -71,11 +71,11 @@
 
             <!-- Right Column: Stacked Process Step Cards (493x166 Desktop Figma 1171:41617, 358x120 Mobile Figma 1191:6453) -->
             <div
-                class="w-full lg:flex-1 bg-[#F8FAFC] lg:bg-transparent flex flex-col justify-center pt-6 pb-9 px-4 md:px-8 md:py-12 lg:py-[22px] lg:pl-[64px] lg:pr-[max(2rem,calc((100vw-1152px)/2))]"
+                class="w-full lg:flex-1 bg-[#F8FAFC] lg:bg-transparent flex flex-col justify-center lg:justify-start pt-6 pb-9 px-4 md:px-8 md:py-12 lg:pt-[80px] lg:pb-[90px] lg:pl-[64px] lg:pr-[max(2rem,calc((100vw-1152px)/2))]"
             >
                 <ol
                     v-if="displaySteps.length > 0"
-                    class="w-full flex flex-col gap-3 md:gap-5 lg:gap-[20px]"
+                    class="w-full flex flex-col gap-3 md:gap-5 lg:gap-[40px]"
                 >
                     <li
                         v-for="(step, idx) in displaySteps"
@@ -86,7 +86,7 @@
                         ]"
                     >
                         <span
-                            class="font-bold text-[44px] lg:text-[64px] leading-[48px] lg:leading-[1.6] text-[#C9E0FF] shrink-0 w-[32px] lg:w-[42px] text-center select-none"
+                            class="font-bold text-[44px] lg:text-[64px] leading-[48px] lg:leading-[1.6] text-[#C9E0FF] shrink-0 w-[32px] lg:w-[37px] text-center select-none"
                         >
                             {{ step.number || String(idx + 1) }}
                         </span>

@@ -1,7 +1,7 @@
 <template>
     <section
         id="product-categories-section"
-        class="bg-[#FAFAFA] py-9 lg:py-[40px]"
+        class="bg-[#FAFAFA] py-10"
     >
         <div class="app-container-narrow flex flex-col gap-5 lg:gap-8">
             <!-- Section Header (Figma 1171:41530 / 1190:6393) -->
@@ -221,13 +221,16 @@ const emptyPrimaryActionText = computed(() =>
     isEn.value ? 'Send SKU for Quote' : 'Gửi mã phụ tùng nhận báo giá'
 )
 
-const validCategories = computed(() => {
-    if (!Array.isArray(props.categories)) return []
-    return props.categories.filter((cat) => cat && typeof cat === 'object' && (cat.title || cat.name))
-})
-
 const hasCtaBanner = computed(() => {
     return Boolean(props.ctaBanner && typeof props.ctaBanner === 'object' && (props.ctaBanner.title || props.ctaBanner.image?.url))
+})
+
+const validCategories = computed(() => {
+    if (!Array.isArray(props.categories)) return []
+    const maxCategories = hasCtaBanner.value ? 5 : 6
+    return props.categories
+        .filter((cat) => cat && typeof cat === 'object' && (cat.title || cat.name))
+        .slice(0, maxCategories)
 })
 
 const sectionHeading = computed(() => {

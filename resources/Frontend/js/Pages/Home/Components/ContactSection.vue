@@ -192,11 +192,11 @@
                     <form
                         @submit.prevent="submitForm"
                         novalidate
-                        class="flex flex-col justify-between h-full gap-5 lg:gap-[32px]"
+                        class="flex flex-col justify-between h-full gap-5 lg:gap-[31px]"
                     >
-                        <div class="flex flex-col gap-3 lg:gap-[16px]">
+                        <div class="flex flex-col gap-[14px] lg:gap-[16px]">
                             <!-- Row 1: Full Name* + Company / Organization (Figma 1171:41704) -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-[14px] sm:gap-3">
                                 <div>
                                     <label
                                         for="home-contact-name"
@@ -248,7 +248,7 @@
                             </div>
 
                             <!-- Row 2: Email* + Phone* (Figma 1171:41707) -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-[14px] sm:gap-3">
                                 <div>
                                     <label
                                         for="home-contact-email"
@@ -370,11 +370,11 @@
                             {{ submitError }}
                         </div>
 
-                        <!-- Full-Width Primary Submit Button (Figma 1171:41711 547x46 & Figma 1193:6554 326x42) -->
+                        <!-- Full-Width Primary Submit Button (Figma 1171:41711 547x49 & Figma 1193:6554 326x49) -->
                         <button
                             type="submit"
                             :disabled="isSubmitting"
-                            class="w-full h-[42px] lg:h-[46px] bg-[#005EA4] hover:bg-[#004c86] active:bg-[#003d6d] text-[#FAFAFA] font-medium text-[14px] lg:text-[16px] leading-[1.6] px-[24px] rounded-[4px] inline-flex items-center justify-center gap-2 transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
+                            class="w-full h-[49px] bg-[#005EA4] hover:bg-[#004c86] active:bg-[#003d6d] text-[#FAFAFA] font-medium text-[14px] lg:text-[16px] leading-[1.6] px-[24px] rounded-[4px] inline-flex items-center justify-center gap-2 transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
                         >
                             <span>
                                 {{

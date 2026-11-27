@@ -136,12 +136,18 @@
                             <div
                                 class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center"
                             >
-                                <img
-                                    src="/assets/figma/quote-popup/icon-check-circle.svg"
-                                    alt=""
-                                    class="w-7 h-7 object-contain"
+                                <svg
+                                    class="w-7 h-7 text-primary"
+                                    viewBox="0 0 20 20"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
                                     aria-hidden="true"
-                                />
+                                >
+                                    <path d="M6.25 10L8.75 12.5L13.75 7.5M18.3333 10C18.3333 14.6024 14.6024 18.3333 10 18.3333C5.39763 18.3333 1.66667 14.6024 1.66667 10C1.66667 5.39763 5.39763 1.66667 10 1.66667C14.6024 1.66667 18.3333 5.39763 18.3333 10Z" />
+                                </svg>
                             </div>
                             <h3 class="text-h3-mobile md:text-h3 font-bold text-ink-heading">
                                 {{ translate('Gửi yêu cầu báo giá thành công') }}
@@ -600,12 +606,23 @@ const handleSubmit = async () => {
                 },
             })
         } else {
+            const csrfToken =
+                typeof document !== 'undefined'
+                    ? document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    : ''
+            const xsrfMatch =
+                typeof document !== 'undefined'
+                    ? document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]+)/)
+                    : null
+            const xsrfToken = xsrfMatch ? decodeURIComponent(xsrfMatch[1]) : ''
             const response = await fetch(endpoint, {
                 method: 'POST',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
                     'X-Requested-With': 'XMLHttpRequest',
+                    ...(csrfToken ? { 'X-CSRF-TOKEN': csrfToken } : xsrfToken ? { 'X-XSRF-TOKEN': xsrfToken } : {}),
                 },
                 body: JSON.stringify(payload),
             })
@@ -695,6 +712,7 @@ onBeforeUnmount(() => {
 
 /* Mobile: smaller & tucked to edges so they don't cross heading/text */
 .quote-chain-wrap--top-right {
+    display: flex;
     width: 340px;
     height: 202px;
     right: -135px;
@@ -714,6 +732,7 @@ onBeforeUnmount(() => {
 }
 
 .quote-chain-wrap--bottom-left {
+    display: flex;
     width: 420px;
     height: 252px;
     left: -90px;
@@ -742,8 +761,8 @@ onBeforeUnmount(() => {
     .quote-chain-wrap--top-right {
         width: 676.876px;
         height: 403.822px;
-        left: 697px;
-        right: auto;
+        right: -373.876px;
+        left: auto;
         top: -168px;
     }
     .quote-chain-img--top-right {

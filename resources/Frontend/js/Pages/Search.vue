@@ -61,15 +61,13 @@
         </section>
 
         <section v-if="isEmptySearch">
-            <div
-                class="container xl:pt-[24px] md:pt-[17px] pt-[12px] xl:pb-[48px] md:pb-[34px] pb-[24px] grid grid-cols-12 xl:gap-x-[32px] md:gap-x-[22px] xl:gap-y-[8px] md:gap-y-[6px] gap-y-[4px]"
-            >
-                <div class="md:col-span-8 col-span-full md:col-start-3 lg:col-span-6 lg:col-start-4">
-                    <JPicture
-                        loading="eager"
-                        :alt="tt('tim kiem rong')"
-                        class="picture-contain"
-                        :src="tt('/assets/images/filter-empty.webp')"
+            <div class="container xl:pt-[24px] md:pt-[17px] pt-[12px] xl:pb-[48px] md:pb-[34px] pb-[24px]">
+                <div class="max-w-2xl mx-auto">
+                    <EmptyState
+                        :title="keyword ? `${tt('Không tìm thấy sản phẩm nào khớp với từ khóa')} “${keyword}”` : tt('Không tìm thấy sản phẩm phù hợp')"
+                        :description="tt('Vui lòng thử từ khóa khác hoặc duyệt bộ sưu tập.')"
+                        :primary-action-text="tt('Xem tất cả sản phẩm')"
+                        :primary-action-href="productsHref"
                     />
                 </div>
             </div>
@@ -79,7 +77,9 @@
 <script>
 import axios from 'axios'
 import { scrollToSection } from '@/lib/scroll'
+import EmptyState from '@/Components/EmptyState.vue'
 export default {
+    components: { EmptyState },
     data() {
         return {
             breadcrumbs: [{ title: this.tt('Kết quả tìm kiếm') }],
@@ -99,6 +99,15 @@ export default {
     computed: {
         isEmptySearch() {
             return !this.isLoading && !this.products.length
+        },
+        productsHref() {
+            try {
+                const url = this.route('products.index')
+                if (url && url !== '#') return url
+            } catch (e) {
+                // fall through
+            }
+            return (this.$page?.props?.locale?.current || 'vi') === 'en' ? '/en/products' : '/san-pham'
         },
     },
     watch: {

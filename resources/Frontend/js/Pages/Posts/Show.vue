@@ -131,14 +131,24 @@
                                 class="bg-white border border-gray-modern-200 hover:border-primary rounded-[6px] px-4 py-[9px] inline-flex items-center gap-2 text-[14px] font-medium text-dark-slate transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                                 @click="handleShare"
                             >
-                                <img
-                                    src="/assets/svg/icons/article-share.svg"
-                                    alt=""
-                                    aria-hidden="true"
+                                <svg
                                     width="18"
                                     height="18"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
                                     class="w-[18px] h-[18px] shrink-0"
-                                />
+                                    aria-hidden="true"
+                                >
+                                    <circle cx="18" cy="5" r="3" />
+                                    <circle cx="6" cy="12" r="3" />
+                                    <circle cx="18" cy="19" r="3" />
+                                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                                </svg>
                                 <span>{{ shareCopied ? tt('Đã sao chép liên kết') : tt('Chia sẻ') }}</span>
                             </button>
                         </div>
@@ -413,7 +423,7 @@ const safeRoute = (name, params, fallback) => {
 }
 
 const homeHref = computed(() => safeRoute('home', undefined, isEn.value ? '/en' : '/'))
-const postsIndexHref = computed(() => safeRoute('posts.index', undefined, isEn.value ? '/en/posts' : '/tin-tuc'))
+const postsIndexHref = computed(() => safeRoute('posts', undefined, isEn.value ? '/en/posts' : '/tin-tuc'))
 const contactHref = computed(() => safeRoute('contact', undefined, isEn.value ? '/en/contact' : '/lien-he'))
 
 const contactPhone = computed(

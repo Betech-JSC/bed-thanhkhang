@@ -2,7 +2,7 @@
     <section
         v-if="displayPosts.length > 0"
         id="blog-section"
-        class="bg-[#FAFAFA] py-9 md:py-12 lg:py-0"
+        class="bg-[#FAFAFA] py-10 md:py-12 lg:py-0"
     >
         <div class="app-container-narrow flex flex-col gap-5 lg:gap-6">
             <!-- Section Header (Figma 1171:41650 / 1191:6475) -->
@@ -91,7 +91,7 @@
                 <div class="flex justify-center">
                     <Link
                         :href="postsIndexUrl"
-                        class="w-full md:w-auto h-[42px] md:h-[46px] inline-flex items-center justify-center gap-2 bg-[#005EA4] hover:bg-[#004D86] text-[#FAFAFA] font-medium text-[14px] md:text-[16px] leading-[22px] md:leading-[1.6] px-[24px] rounded-[4px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]/40"
+                        class="w-full md:w-auto h-[49px] md:min-w-[203px] inline-flex items-center justify-center gap-2 bg-[#005EA4] hover:bg-[#004D86] text-[#FAFAFA] font-medium text-[14px] md:text-[16px] leading-[22px] md:leading-[1.6] px-[24px] rounded-[4px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]/40"
                     >
                         {{ ctaLabel }}
                     </Link>
@@ -166,6 +166,12 @@ function formatPostDate(post) {
     const normalized = raw.includes(' ') && !raw.includes('T') ? raw.replace(' ', 'T') : raw
     const parsed = new Date(normalized)
     if (Number.isNaN(parsed.getTime())) return ''
+    if (!isEn.value) {
+        const day = String(parsed.getDate()).padStart(2, '0')
+        const month = parsed.getMonth() + 1
+        const year = parsed.getFullYear()
+        return `${day} Th${month}, ${year}`
+    }
     return new Intl.DateTimeFormat('en-US', {
         month: 'short',
         day: 'numeric',

@@ -44,10 +44,10 @@
                         v-if="footerCategoryLinks && footerCategoryLinks.length"
                         class="col-span-1 space-y-3 lg:space-y-6 min-w-0"
                     >
-                        <h4 class="font-inter text-[14px] leading-[20px] lg:text-[16px] lg:leading-[22px] font-bold text-dark">
+                        <h4 class="text-[14px] leading-[20px] lg:text-[16px] lg:leading-[22px] font-bold text-dark">
                             {{ tt('Danh mục sản phẩm') }}
                         </h4>
-                        <ul class="space-y-2.5 lg:space-y-4 font-inter text-[13px] leading-[20px] lg:text-[14px] lg:leading-[20px] font-normal lg:font-medium">
+                        <ul class="space-y-2.5 lg:space-y-4 text-[13px] leading-[20px] lg:text-[14px] lg:leading-[20px] font-normal lg:font-medium">
                             <li
                                 v-for="(item, index) in footerCategoryLinks"
                                 :key="index"
@@ -64,10 +64,10 @@
 
                     <!-- Column 2: Chính sách (Figma 217:3875 & 1193:6576 — 100% Dynamic from CMS policies) -->
                     <div v-if="policyLinks.length > 0" class="col-span-1 space-y-3 lg:space-y-6 min-w-0">
-                        <h4 class="font-inter text-[14px] leading-[20px] lg:text-[16px] lg:leading-[22px] font-bold text-dark">
+                        <h4 class="text-[14px] leading-[20px] lg:text-[16px] lg:leading-[22px] font-bold text-dark">
                             {{ tt('Chính sách') }}
                         </h4>
-                        <ul class="space-y-2.5 lg:space-y-4 font-inter text-[13px] leading-[20px] lg:text-[14px] lg:leading-[20px] font-normal lg:font-medium">
+                        <ul class="space-y-2.5 lg:space-y-4 text-[13px] leading-[20px] lg:text-[14px] lg:leading-[20px] font-normal lg:font-medium">
                             <li v-for="(item, index) in policyLinks" :key="index">
                                 <Link
                                     :href="item.url"
@@ -236,7 +236,14 @@ export default {
     },
     computed: {
         currentLocale() {
-            return this.$inertia?.page?.props?.locale?.current || this.$page?.props?.locale?.current || 'vi'
+            const pageUrl = String(this.$page?.url || '').split('?')[0].split('#')[0]
+            const urlLocale = pageUrl === '/en' || pageUrl.startsWith('/en/') ? 'en' : ''
+            const raw =
+                this.$page?.props?.locale?.current ||
+                urlLocale ||
+                this.$inertia?.page?.props?.locale?.current ||
+                'vi'
+            return String(raw).toLowerCase()
         },
         siteConfig() {
             return {

@@ -2,10 +2,10 @@
     <div class="bg-[#FAFAFA] text-[#364152] min-h-screen overflow-x-clip selection:bg-primary selection:text-white">
         <!-- SEO Head -->
         <Head>
-            <title>{{ pageTitle }}</title>
-            <meta name="description" :content="pageDescription" />
-            <meta property="og:title" :content="pageTitle" />
-            <meta property="og:description" :content="pageDescription" />
+            <title v-if="pageTitle">{{ pageTitle }}</title>
+            <meta v-if="pageDescription" name="description" :content="pageDescription" />
+            <meta v-if="pageTitle" property="og:title" :content="pageTitle" />
+            <meta v-if="pageDescription" property="og:description" :content="pageDescription" />
             <meta property="og:type" content="website" />
         </Head>
 
@@ -350,7 +350,7 @@ const props = defineProps({
 })
 
 const instance = getCurrentInstance()
-const { translate, currentLocale, isEn, page } = useTranslate()
+const { translate, currentLocale, isEn, page, pageProps } = useTranslate()
 
 function safeRoute(name, params, fallback) {
     const proxy = instance?.proxy
@@ -381,21 +381,38 @@ const contactHref = computed(() =>
     safeRoute('contact', undefined, isEn.value ? '/en/contact' : '/lien-he')
 )
 
-const pageTitle = computed(() => {
-    const seoTitle = props.seo?.seo_meta_title || props.seo?.title
-    if (seoTitle) return seoTitle
-    return isEn.value
-        ? 'Industrial Equipment & Escalator Parts Catalog - Thành Khang Tecsat'
-        : translate('Danh mục Sản phẩm & Phụ tùng Công nghiệp - Thành Khang Tecsat')
-})
+function pickNonEmpty(...values) {
+    for (const val of values) {
+        if (typeof val === 'string' && val.trim() !== '') {
+            return val.trim()
+        }
+    }
+    return ''
+}
 
-const pageDescription = computed(() => {
-    const seoDesc = props.seo?.seo_meta_description || props.seo?.description
-    if (seoDesc) return seoDesc
-    return isEn.value
-        ? 'Explore industrial chains, escalator spare parts, car parking elevator chains, and baggage conveyor systems by Thành Khang Tecsat.'
-        : translate('Khám phá danh mục linh kiện thang cuốn, thang nâng ô tô, xích tải công nghiệp Universal Chains và hệ thống băng tải từ Thành Khang Tecsat.')
-})
+const globalConfig = computed(() => ({
+    ...(pageProps.value?.global || {}),
+    ...(pageProps.value?.configs || {}),
+}))
+
+const pageTitle = computed(() =>
+    pickNonEmpty(
+        props.seo?.seo_meta_title,
+        props.seo?.title,
+        globalConfig.value.seo_meta_title,
+        globalConfig.value.general_site_name,
+        globalConfig.value.general_business_name
+    )
+)
+
+const pageDescription = computed(() =>
+    pickNonEmpty(
+        props.seo?.seo_meta_description,
+        props.seo?.description,
+        globalConfig.value.seo_meta_description,
+        globalConfig.value.general_description
+    )
+)
 
 // ---------------------------------------------------------------------------
 // 3-Tier Category Tree Indexer (L0 -> L1 -> L2 from props.categories)

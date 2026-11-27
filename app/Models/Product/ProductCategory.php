@@ -79,12 +79,33 @@ class ProductCategory extends BaseModel
         'image_mobile' => 'array'
     ];
 
-    public function rules()
+    public function rules(): array
     {
+        $id = request()->route('id') ?? request()->input('id');
+        $locale = function_exists('current_locale') ? current_locale() : app()->getLocale();
+
         return [
-            'title' => 'required|string|max:255',
-            'seo_slug' => 'nullable|unique:product_translations,slug|max:255',
-            'seo_slug' => 'nullable|unique:product_translations,seo_slug|max:255',
+            'store' => [
+                'title' => 'required|string|max:255',
+                'slug' => [
+                    'nullable',
+                    'string',
+                    'max:255',
+                    \Illuminate\Validation\Rule::unique('product_category_translations', 'slug')
+                        ->where(fn($query) => $query->where('locale', $locale))
+                        ->ignore($id, 'product_category_id'),
+                ],
+                'seo_slug' => [
+                    'nullable',
+                    'string',
+                    'max:255',
+                    \Illuminate\Validation\Rule::unique('product_category_translations', 'seo_slug')
+                        ->where(fn($query) => $query->where('locale', $locale))
+                        ->ignore($id, 'product_category_id'),
+                ],
+                'position' => 'nullable|integer|min:0',
+                'status' => 'nullable|string|in:ACTIVE,INACTIVE',
+            ],
         ];
     }
 
@@ -122,6 +143,10 @@ class ProductCategory extends BaseModel
 
     public function saveProducts($model)
     {
+        if (!request()->has('products')) {
+            return;
+        }
+
         $products = array_column(request()->input('products', []), 'id');
         $model->products()->sync($products, 'id');
 
@@ -341,13 +366,16 @@ class ProductCategory extends BaseModel
         return [];
     }
 
-    public static function flatAncestors($model): array
+    public static function flatAncestors($model, array $visited = []): array
     {
-        if (!$model) return [];
+        if (!$model || in_array($model->id, $visited, true)) {
+            return [];
+        }
 
-        $result[] = $model;
+        $visited[] = $model->id;
+        $result = [$model];
         if (!empty($model->parent)) {
-            $result = array_merge($result, self::flatAncestors($model->parent));
+            $result = array_merge($result, self::flatAncestors($model->parent, $visited));
         }
 
         return $result;
@@ -447,7 +475,7 @@ class ProductCategory extends BaseModel
                         ->map(fn($grandChild) => [
                             'id' => $grandChild->id,
                             'parent_id' => (int) ($grandChild->parent_id ?? $child->id),
-                            'slug' => $grandChild->seo_slug ?? $grandChild->slug,
+                            'slug' => $grandChild->seo_slug ?: $grandChild->slug,
                             'title' => $grandChild->title,
                             'name' => $grandChild->title,
                             'description' => $grandChild->description,
@@ -463,7 +491,7 @@ class ProductCategory extends BaseModel
                     return [
                         'id' => $child->id,
                         'parent_id' => (int) ($child->parent_id ?? $this->id),
-                        'slug' => $child->seo_slug ?? $child->slug,
+                        'slug' => $child->seo_slug ?: $child->slug,
                         'title' => $child->title,
                         'name' => $child->title,
                         'description' => $child->description,
@@ -481,7 +509,7 @@ class ProductCategory extends BaseModel
         return [
             'id' => $this->id,
             'parent_id' => $parentId,
-            'slug' => $this->seo_slug ?? $this->slug,
+            'slug' => $this->seo_slug ?: $this->slug,
             'title' => $this->title,
             'name' => $this->title,
             'description' => $this->description,
@@ -699,7 +727,11 @@ class ProductCategory extends BaseModel
         $urls = [];
 
         if ($this->status == self::STATUS_ACTIVE) {
-            foreach ($this->translations as $translation) {
+            $translations = $this->relationLoaded('translations')
+                ? $this->translations
+                : $this->translations()->get();
+
+            foreach ($translations as $translation) {
                 $categorySlug = trim((string) ($translation->seo_slug ?: $translation->slug ?: ''));
                 $routeName = "$translation->locale.products.index";
                 if (\Illuminate\Support\Facades\Route::has($routeName)) {
@@ -708,8 +740,33 @@ class ProductCategory extends BaseModel
                         : route($routeName);
                 }
             }
+
+            if (config('app.use_default_locale', true)) {
+                $defaultLocale = config('app.fallback_locale', config('app.locale_default_frontend', config('app.locale', 'vi')));
+                $defaultTrans = $translations->firstWhere('locale', $defaultLocale);
+                if ($defaultTrans) {
+                    $defaultSlug = trim((string) ($defaultTrans->seo_slug ?: $defaultTrans->slug ?: ''));
+                    foreach (config('app.locales', ['vi', 'en']) as $loc) {
+                        $upperLoc = strtoupper($loc);
+                        $routeName = "$loc.products.index";
+                        if (empty($urls[$upperLoc]) && \Illuminate\Support\Facades\Route::has($routeName)) {
+                            $urls[$upperLoc] = $defaultSlug !== ''
+                                ? route($routeName, ['category' => $defaultSlug])
+                                : route($routeName);
+                        }
+                    }
+                }
+            }
         }
         return $urls;
+    }
+
+    public function getCurrentUrlAttribute()
+    {
+        $locale = function_exists('current_locale') ? current_locale() : app()->getLocale();
+        $urls = $this->url;
+
+        return $urls[strtoupper($locale)] ?? null;
     }
 
     public function getImageUrlAttribute()

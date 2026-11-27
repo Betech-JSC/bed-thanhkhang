@@ -3,17 +3,17 @@
   "short_name": "Thành Khang Tecsat",
   "icons": [
     {
-      "src": "/android-chrome-192x192.png?v=20261109",
+      "src": "/android-chrome-192x192.png?v=20261127",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/android-chrome-512x512.png?v=20261109",
+      "src": "/android-chrome-512x512.png?v=20261127",
       "sizes": "512x512",
       "type": "image/png"
     }
   ],
-  "theme_color": "#111322",
-  "background_color": "#111322",
+  "theme_color": "#00284B",
+  "background_color": "#FAFAFA",
   "display": "standalone"
 }

@@ -41,6 +41,7 @@ class DatabaseSeederAutomationTest extends TestCase
         'ABOUT_COMPANION_CARDS' => 2,
         'BANNER_DOCUMENT_HERO' => 1,
         'BANNER_DOCUMENT_CTA' => 1,
+        'BANNER_GLOBAL_CTA' => 1,
     ];
 
     protected function assertStrictSqliteInMemoryGuard(): void
@@ -161,6 +162,7 @@ class DatabaseSeederAutomationTest extends TestCase
             'posts_total' => Post::count(),
             'posts_post' => Post::where('type', Post::TYPE_POST)->count(),
             'posts_faq' => Post::where('type', Post::TYPE_FAQ)->count(),
+            'posts_document' => Post::where('type', Post::TYPE_DOCUMENT)->count(),
         ];
     }
 
@@ -180,15 +182,16 @@ class DatabaseSeederAutomationTest extends TestCase
         $this->assertSame(2, $firstCounts['users'], 'Expected 2 users');
         $this->assertSame(2, $firstCounts['roles'], 'Expected 2 roles (Super Admin, Editor)');
         $this->assertGreaterThan(0, $firstCounts['permissions'], 'Expected admin permissions to be populated');
-        $this->assertSame(84, $firstCounts['settings'], 'Expected 84 settings rows');
+        $this->assertSame(96, $firstCounts['settings'], 'Expected 96 settings rows');
         $this->assertSame(6, $firstCounts['policies'], 'Expected 6 policies rows');
         $this->assertSame(26, $firstCounts['product_categories'], 'Expected 26 product_categories rows');
         $this->assertSame(103, $firstCounts['products'], 'Expected 103 products rows');
-        $this->assertSame(34, $firstCounts['sliders'], 'Expected 34 sliders rows from DatabaseSeeder');
-        $this->assertSame(16, $firstCounts['slider_positions'], 'Expected 16 slider position_display keys from DatabaseSeeder');
-        $this->assertSame(9, $firstCounts['posts_total'], 'Expected 9 total posts (3 POST + 6 FAQ)');
+        $this->assertSame(35, $firstCounts['sliders'], 'Expected 35 sliders rows from DatabaseSeeder');
+        $this->assertSame(17, $firstCounts['slider_positions'], 'Expected 17 slider position_display keys from DatabaseSeeder');
+        $this->assertSame(42, $firstCounts['posts_total'], 'Expected 42 total posts (3 POST + 6 FAQ + 33 DOCUMENT)');
         $this->assertSame(3, $firstCounts['posts_post'], 'Expected 3 POST articles');
         $this->assertSame(6, $firstCounts['posts_faq'], 'Expected 6 FAQ posts');
+        $this->assertSame(33, $firstCounts['posts_document'], 'Expected 33 DOCUMENT posts');
 
         $actualPositions = Slider::query()
             ->select('position_display', DB::raw('COUNT(*) as total'))
@@ -223,15 +226,16 @@ class DatabaseSeederAutomationTest extends TestCase
         $this->assertSame(2, $firstCounts['users']);
         $this->assertSame(2, $firstCounts['roles']);
         $this->assertGreaterThan(0, $firstCounts['permissions']);
-        $this->assertSame(84, $firstCounts['settings']);
+        $this->assertSame(96, $firstCounts['settings']);
         $this->assertSame(6, $firstCounts['policies']);
         $this->assertSame(26, $firstCounts['product_categories']);
         $this->assertSame(103, $firstCounts['products']);
-        $this->assertSame(9, $firstCounts['posts_total']);
+        $this->assertSame(42, $firstCounts['posts_total']);
         $this->assertSame(3, $firstCounts['posts_post']);
         $this->assertSame(6, $firstCounts['posts_faq']);
+        $this->assertSame(33, $firstCounts['posts_document']);
 
-        // Verify all 16 position_display groups (total 34 sliders) remain idempotent across migration + DatabaseSeeder
+        // Verify all 17 position_display groups (total 35 sliders) remain idempotent across migration + DatabaseSeeder
         $actualPositions = Slider::query()
             ->select('position_display', DB::raw('COUNT(*) as total'))
             ->groupBy('position_display')
@@ -243,8 +247,8 @@ class DatabaseSeederAutomationTest extends TestCase
         $expectedPositions = self::EXPECTED_DATABASE_SEEDER_SLIDERS;
         ksort($expectedPositions);
         $this->assertSame($expectedPositions, $actualPositions);
-        $this->assertSame(34, $firstCounts['sliders']);
-        $this->assertSame(16, $firstCounts['slider_positions']);
+        $this->assertSame(35, $firstCounts['sliders']);
+        $this->assertSame(17, $firstCounts['slider_positions']);
 
         // 2nd run of DatabaseSeeder on top of fresh migration + 1st run (Idempotency check)
         $this->seed(DatabaseSeeder::class);

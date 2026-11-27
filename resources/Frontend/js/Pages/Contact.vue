@@ -96,9 +96,24 @@
                         </p>
                     </div>
                     <ul class="flex flex-col gap-5">
-                        <li v-for="item in assurances" :key="item.icon" class="flex items-start gap-4">
+                        <li v-for="item in assurances" :key="item.key" class="flex items-start gap-4">
                             <span class="w-10 h-10 rounded-[8px] bg-gray-modern-100 inline-flex items-center justify-center shrink-0">
-                                <img :src="item.icon" alt="" aria-hidden="true" width="20" height="20" class="w-5 h-5" />
+                                <svg
+                                    v-if="item.kind === 'tool'"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    width="20"
+                                    height="20"
+                                    class="w-5 h-5 text-[#697586]"
+                                    aria-hidden="true"
+                                >
+                                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                                </svg>
+                                <img v-else :src="item.icon" alt="" aria-hidden="true" width="20" height="20" class="w-5 h-5" />
                             </span>
                             <span class="flex flex-col gap-1 min-w-0">
                                 <span class="text-body-md font-bold text-dark">{{ item.title }}</span>
@@ -284,15 +299,15 @@
                                 <span class="text-body-lg font-bold text-dark">{{ office.title }}</span>
                                 <span class="flex flex-col gap-[10px] text-body-sm text-ink-body">
                                     <span v-if="office.location" class="flex items-start gap-2">
-                                        <img src="/assets/figma/lien-he/office-pin.svg" alt="" aria-hidden="true" width="18" height="18" class="w-[18px] h-[18px] mt-[2px] shrink-0" />
+                                        <img src="/assets/svg/icons/footer-pin.svg" alt="" aria-hidden="true" width="18" height="18" class="w-[18px] h-[18px] mt-[2px] shrink-0" />
                                         <span>{{ office.location }}</span>
                                     </span>
                                     <span v-if="office.phone" class="flex items-start gap-2">
-                                        <img src="/assets/figma/lien-he/office-phone.svg" alt="" aria-hidden="true" width="18" height="18" class="w-[18px] h-[18px] mt-[2px] shrink-0" />
+                                        <img src="/assets/svg/icons/footer-phone.svg" alt="" aria-hidden="true" width="18" height="18" class="w-[18px] h-[18px] mt-[2px] shrink-0" />
                                         <span>{{ tt('Hotline') }}: {{ office.phone }}</span>
                                     </span>
                                     <span v-if="office.hours" class="flex items-start gap-2">
-                                        <img src="/assets/figma/lien-he/office-clock.svg" alt="" aria-hidden="true" width="18" height="18" class="w-[18px] h-[18px] mt-[2px] shrink-0" />
+                                        <img src="/assets/svg/clock.svg" alt="" aria-hidden="true" width="18" height="18" class="w-[18px] h-[18px] mt-[2px] shrink-0" />
                                         <span>{{ office.hours }}</span>
                                     </span>
                                 </span>
@@ -335,14 +350,22 @@
                                 {{ faq.question }}
                             </span>
                             <span class="w-8 h-8 rounded-[6px] inline-flex items-center justify-center shrink-0">
-                                <img
-                                    :src="activeFaq === index ? '/assets/figma/lien-he/minus.svg' : '/assets/figma/lien-he/plus.svg'"
-                                    alt=""
-                                    aria-hidden="true"
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
                                     width="18"
                                     height="18"
                                     class="w-[18px] h-[18px]"
-                                />
+                                    :class="activeFaq === index ? 'text-primary' : 'text-ink-body'"
+                                    aria-hidden="true"
+                                >
+                                    <path d="M5 12h14" />
+                                    <path v-if="activeFaq !== index" d="M12 5v14" />
+                                </svg>
                             </span>
                         </button>
                         <div
@@ -486,28 +509,28 @@ const displayTaxCode = computed(() => site.value.general_tax_code || site.value.
 const contactCards = computed(() => [
     {
         key: 'phone',
-        icon: '/assets/figma/lien-he/card-phone.svg',
+        icon: '/assets/svg/icons/footer-phone.svg',
         label: trans('Hotline tư vấn & kỹ thuật'),
         value: displayPhone.value,
         href: 'tel:' + cleanPhone.value,
     },
     {
         key: 'email',
-        icon: '/assets/figma/lien-he/card-mail.svg',
+        icon: '/assets/svg/icons/footer-mail.svg',
         label: trans('Email tiếp nhận báo giá'),
         value: displayEmail.value,
         href: 'mailto:' + displayEmail.value,
     },
     {
         key: 'hours',
-        icon: '/assets/figma/lien-he/card-clock.svg',
+        icon: '/assets/svg/clock.svg',
         label: trans('Thời gian làm việc'),
         value: displayHours.value,
         href: '',
     },
     {
         key: 'tax',
-        icon: '/assets/figma/lien-he/card-building.svg',
+        icon: '/assets/svg/icons/footer-building.svg',
         label: trans('Thông tin pháp nhân'),
         value: 'MST: ' + displayTaxCode.value,
         href: '',
@@ -516,17 +539,20 @@ const contactCards = computed(() => [
 
 const assurances = computed(() => [
     {
-        icon: '/assets/figma/lien-he/assure-check.svg',
+        key: 'check',
+        icon: '/assets/figma/quote-popup/icon-check-circle.svg',
         title: trans('Sản phẩm chính hãng – Đầy đủ CO/CQ'),
         description: trans('Cam kết đúng nguồn gốc, đúng thông số kỹ thuật và chính sách bảo hành minh bạch từ nhà sản xuất.'),
     },
     {
-        icon: '/assets/figma/lien-he/assure-tool.svg',
+        key: 'tool',
+        kind: 'tool',
         title: trans('Kỹ sư tư vấn trực tiếp theo ứng dụng'),
         description: trans('Hỗ trợ đọc bản vẽ, đo thông số xích con lăn, linh kiện thang cuốn, thang nâng ô tô & dây chuyền công nghiệp.'),
     },
     {
-        icon: '/assets/figma/lien-he/assure-truck.svg',
+        key: 'truck',
+        icon: '/assets/figma/quote-popup/icon-truck.svg',
         title: trans('Kho hàng sẵn – Giao nhanh toàn quốc 24/7'),
         description: trans('Đáp ứng kịp thời tiến độ công trình và nhu cầu thay thế khẩn cấp, hạn chế tối đa thời gian dừng máy.'),
     },

@@ -252,6 +252,56 @@
                         }"
                     />
 
+                    <!-- [UI-04] Badges đầu trang PDP (pdp_metadata.badges) -->
+                    <div class="pt-4 mt-2 border-t border-slate-100 space-y-3">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                                <h4 class="text-sm font-semibold text-slate-800">
+                                    Nhãn nổi bật đầu trang sản phẩm (Badges)
+                                </h4>
+                                <p class="text-xs text-slate-500">
+                                    Hiển thị ngay dưới tên sản phẩm trên trang chi tiết (VD: Chuẩn OEM / ISO, Cung ứng theo thông số). Để trống để ẩn.
+                                </p>
+                            </div>
+                            <button
+                                type="button"
+                                @click="addBadgeRow(form)"
+                                class="px-3 py-1.5 text-xs font-medium rounded bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                            >
+                                + Thêm nhãn
+                            </button>
+                        </div>
+
+                        <div
+                            v-if="Array.isArray(form.pdp_metadata?.badges) && form.pdp_metadata.badges.length > 0"
+                            class="space-y-2"
+                        >
+                            <div
+                                v-for="(badge, bIdx) in form.pdp_metadata.badges"
+                                :key="bIdx"
+                                class="flex items-center gap-2 bg-slate-50 p-2.5 rounded border border-slate-200"
+                            >
+                                <input
+                                    v-model="form.pdp_metadata.badges[bIdx]"
+                                    type="text"
+                                    class="flex-1 rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-blue-500 focus:outline-none"
+                                    placeholder="VD: Chuẩn OEM / ISO"
+                                />
+                                <button
+                                    type="button"
+                                    @click="removeBadgeRow(form, bIdx)"
+                                    class="px-2.5 py-1.5 text-xs font-medium rounded text-red-600 hover:bg-red-50 border border-red-200 transition-colors shrink-0"
+                                    title="Xóa nhãn"
+                                >
+                                    Xóa
+                                </button>
+                            </div>
+                        </div>
+                        <p v-else class="text-xs italic text-slate-400">
+                            Chưa có nhãn nổi bật nào (khối badges trên PDP sẽ tự ẩn).
+                        </p>
+                    </div>
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
                         <Field
                             v-model="form.pdp_metadata.story_title"
@@ -324,6 +374,316 @@
                             label: 'Bài viết chi tiết sản phẩm (Bổ sung)',
                         }"
                     />
+
+                    <!-- Thông số PDP tùy chọn (ghi đè Settings mặc định) -->
+                    <div class="pt-4 mt-2 border-t border-slate-200 space-y-3">
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-800">
+                                Thông số PDP tùy chọn (PDP Metadata)
+                            </h4>
+                            <p class="text-xs text-slate-500">
+                                Tùy chọn ghi đè cho hộp 6 thông số nhanh trên Trang Chi tiết Sản phẩm. Để trống để dùng mặc định từ Cài đặt chung.
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <Field
+                                v-model="form.pdp_metadata.brand_name"
+                                :field="{
+                                    type: 'text',
+                                    name: 'pdp_brand_name',
+                                    label: 'Thương hiệu riêng',
+                                    placeholder: 'Để trống dùng mặc định Settings',
+                                }"
+                            />
+                            <Field
+                                v-model="form.pdp_metadata.origin"
+                                :field="{
+                                    type: 'text',
+                                    name: 'pdp_origin',
+                                    label: 'Xuất xứ',
+                                    placeholder: 'Để trống dùng mặc định Settings',
+                                }"
+                            />
+                            <Field
+                                v-model="form.pdp_metadata.warranty"
+                                :field="{
+                                    type: 'text',
+                                    name: 'pdp_warranty',
+                                    label: 'Bảo hành',
+                                    placeholder: 'Để trống dùng mặc định Settings',
+                                }"
+                            />
+                            <Field
+                                v-model="form.pdp_metadata.condition"
+                                :field="{
+                                    type: 'text',
+                                    name: 'pdp_condition',
+                                    label: 'Tình trạng',
+                                    placeholder: 'Để trống dùng mặc định Settings',
+                                }"
+                            />
+                            <Field
+                                v-model="form.pdp_metadata.stock_status"
+                                :field="{
+                                    type: 'text',
+                                    name: 'pdp_stock_status',
+                                    label: 'Trạng thái kho',
+                                    placeholder: 'Để trống dùng mặc định Settings',
+                                }"
+                            />
+                            <Field
+                                v-model="form.pdp_metadata.technical_support"
+                                :field="{
+                                    type: 'text',
+                                    name: 'pdp_technical_support',
+                                    label: 'Hỗ trợ kỹ thuật',
+                                    placeholder: 'Để trống dùng mặc định Settings',
+                                }"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- [UI-01] Tab 2: Thông số kỹ thuật mở rộng (pdp_metadata.specs_*) -->
+                    <div class="pt-4 mt-2 border-t border-slate-200 space-y-4">
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-800">
+                                Tab 2: Thông số kỹ thuật mở rộng (PDP)
+                            </h4>
+                            <p class="text-xs text-slate-500">
+                                Nội dung hiển thị trong Tab &quot;Thông số kỹ thuật&quot; trên trang chi tiết sản phẩm. Tab tự động ẩn nếu toàn bộ các trường đều trống.
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.pdp_metadata.specs_title"
+                                :field="{
+                                    type: 'text',
+                                    name: 'pdp_specs_title',
+                                    label: 'Tiêu đề Tab Thông số kỹ thuật',
+                                    placeholder: 'VD: Tiêu chuẩn kỹ thuật & Kiểm định cơ khí',
+                                }"
+                            />
+                            <Field
+                                v-model="form.pdp_metadata.specs_desc"
+                                :field="{
+                                    type: 'textarea',
+                                    name: 'pdp_specs_desc',
+                                    label: 'Mô tả ngắn Tab Thông số kỹ thuật',
+                                    rows: 2,
+                                    placeholder: 'Mô tả quy chuẩn kiểm định, dung sai và độ bền vận hành...',
+                                }"
+                            />
+                        </div>
+
+                        <Field
+                            v-model="form.pdp_metadata.specs_content"
+                            :field="{
+                                type: 'richtext',
+                                name: 'pdp_specs_content',
+                                size: 'sm',
+                                label: 'Nội dung chi tiết Tab Thông số kỹ thuật',
+                            }"
+                        />
+
+                        <!-- Repeater specs_cards -->
+                        <div class="space-y-3 pt-2">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <div>
+                                    <h5 class="text-xs font-semibold uppercase tracking-wide text-slate-700">
+                                        Thẻ thông số nổi bật (Specs Cards)
+                                    </h5>
+                                    <p class="text-xs text-slate-500">
+                                        Hiển thị dạng lưới thẻ 3 cột trong Tab Thông số kỹ thuật (Nhãn, Giá trị, Mô tả).
+                                    </p>
+                                </div>
+                                <button
+                                    type="button"
+                                    @click="addSpecsCardRow(form)"
+                                    class="px-3 py-1.5 text-xs font-medium rounded bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                                >
+                                    + Thêm thẻ thông số
+                                </button>
+                            </div>
+
+                            <div
+                                v-if="Array.isArray(form.pdp_metadata?.specs_cards) && form.pdp_metadata.specs_cards.length > 0"
+                                class="space-y-2"
+                            >
+                                <div
+                                    v-for="(card, cIdx) in form.pdp_metadata.specs_cards"
+                                    :key="cIdx"
+                                    class="bg-slate-50 p-3 rounded border border-slate-200 space-y-2"
+                                >
+                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center">
+                                        <div class="md:col-span-5">
+                                            <input
+                                                v-model="card.label"
+                                                type="text"
+                                                class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-blue-500 focus:outline-none"
+                                                placeholder="Nhãn (VD: Độ chính xác)"
+                                            />
+                                        </div>
+                                        <div class="md:col-span-6">
+                                            <input
+                                                v-model="card.value"
+                                                type="text"
+                                                class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-blue-500 focus:outline-none"
+                                                placeholder="Giá trị (VD: ±0.05 mm)"
+                                            />
+                                        </div>
+                                        <div class="md:col-span-1 flex justify-end">
+                                            <button
+                                                type="button"
+                                                @click="removeSpecsCardRow(form, cIdx)"
+                                                class="px-2.5 py-1.5 text-xs font-medium rounded text-red-600 hover:bg-red-50 border border-red-200 transition-colors"
+                                                title="Xóa thẻ"
+                                            >
+                                                Xóa
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <textarea
+                                            v-model="card.description"
+                                            rows="2"
+                                            class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-blue-500 focus:outline-none"
+                                            placeholder="Mô tả chi tiết thẻ thông số..."
+                                        ></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <p v-else class="text-xs italic text-slate-400">
+                                Chưa có thẻ thông số nào.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- [UI-01] Tab 3: Gia công theo bản vẽ / Tùy chỉnh (pdp_metadata.custom_*) -->
+                    <div class="pt-4 mt-2 border-t border-slate-200 space-y-4">
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-800">
+                                Tab 3: Gia công theo bản vẽ / Tùy chỉnh (PDP)
+                            </h4>
+                            <p class="text-xs text-slate-500">
+                                Nội dung hiển thị trong Tab &quot;Gia công theo bản vẽ&quot; trên trang chi tiết sản phẩm. Tab tự động ẩn nếu toàn bộ các trường đều trống.
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.pdp_metadata.custom_title"
+                                :field="{
+                                    type: 'text',
+                                    name: 'pdp_custom_title',
+                                    label: 'Tiêu đề Tab Gia công theo bản vẽ',
+                                    placeholder: 'VD: Quy trình gia công & cung ứng theo bản vẽ OEM',
+                                }"
+                            />
+                            <Field
+                                v-model="form.pdp_metadata.custom_desc"
+                                :field="{
+                                    type: 'textarea',
+                                    name: 'pdp_custom_desc',
+                                    label: 'Mô tả ngắn Tab Gia công theo bản vẽ',
+                                    rows: 2,
+                                    placeholder: 'Mô tả khả năng tùy chỉnh bước xích, vật liệu, xử lý bề mặt...',
+                                }"
+                            />
+                        </div>
+
+                        <Field
+                            v-model="form.pdp_metadata.custom_content"
+                            :field="{
+                                type: 'richtext',
+                                name: 'pdp_custom_content',
+                                size: 'sm',
+                                label: 'Nội dung chi tiết Tab Gia công theo bản vẽ',
+                            }"
+                        />
+
+                        <Field
+                            v-model="form.pdp_metadata.custom_cta_text"
+                            :field="{
+                                type: 'text',
+                                name: 'pdp_custom_cta_text',
+                                label: 'Chữ nút CTA Tab Gia công theo bản vẽ',
+                                placeholder: 'VD: Trao đổi yêu cầu tùy chỉnh với kỹ sư',
+                            }"
+                        />
+
+                        <!-- Repeater custom_steps -->
+                        <div class="space-y-3 pt-2">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <div>
+                                    <h5 class="text-xs font-semibold uppercase tracking-wide text-slate-700">
+                                        Các bước gia công / tùy chỉnh (Custom Steps)
+                                    </h5>
+                                    <p class="text-xs text-slate-500">
+                                        Hiển thị dạng lưới 3 cột trong Tab Gia công theo bản vẽ (Số bước, Tiêu đề, Mô tả).
+                                    </p>
+                                </div>
+                                <button
+                                    type="button"
+                                    @click="addCustomStepRow(form)"
+                                    class="px-3 py-1.5 text-xs font-medium rounded bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                                >
+                                    + Thêm bước gia công
+                                </button>
+                            </div>
+
+                            <div
+                                v-if="Array.isArray(form.pdp_metadata?.custom_steps) && form.pdp_metadata.custom_steps.length > 0"
+                                class="space-y-2"
+                            >
+                                <div
+                                    v-for="(step, csIdx) in form.pdp_metadata.custom_steps"
+                                    :key="csIdx"
+                                    class="bg-slate-50 p-3 rounded border border-slate-200 space-y-2"
+                                >
+                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center">
+                                        <div class="md:col-span-3">
+                                            <input
+                                                v-model="step.step"
+                                                type="text"
+                                                class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-blue-500 focus:outline-none"
+                                                placeholder="Số bước (VD: Bước 01)"
+                                            />
+                                        </div>
+                                        <div class="md:col-span-8">
+                                            <input
+                                                v-model="step.title"
+                                                type="text"
+                                                class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-blue-500 focus:outline-none"
+                                                placeholder="Tiêu đề bước (VD: Gửi bản vẽ & thông số)"
+                                            />
+                                        </div>
+                                        <div class="md:col-span-1 flex justify-end">
+                                            <button
+                                                type="button"
+                                                @click="removeCustomStepRow(form, csIdx)"
+                                                class="px-2.5 py-1.5 text-xs font-medium rounded text-red-600 hover:bg-red-50 border border-red-200 transition-colors"
+                                                title="Xóa bước"
+                                            >
+                                                Xóa
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <textarea
+                                            v-model="step.description"
+                                            rows="2"
+                                            class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-blue-500 focus:outline-none"
+                                            placeholder="Mô tả chi tiết bước gia công..."
+                                        ></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <p v-else class="text-xs italic text-slate-400">
+                                Chưa có bước gia công nào.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -339,6 +699,15 @@
                             name: 'status',
                             label: 'Trạng thái',
                             options: schema.columns.status.list,
+                        }"
+                    />
+                    <Field
+                        v-model="form.position"
+                        :field="{
+                            type: 'number',
+                            name: 'position',
+                            label: 'Thứ tự hiển thị (Position)',
+                            placeholder: 'VD: 1 (số nhỏ hiển thị trước)',
                         }"
                     />
                     <Field
@@ -447,6 +816,11 @@ export default {
     },
 
     methods: {
+        ensurePdpMetadata(form) {
+            if (!form.pdp_metadata || typeof form.pdp_metadata !== 'object') {
+                form.pdp_metadata = {}
+            }
+        },
         addSpecificationRow(form) {
             if (!Array.isArray(form.specifications)) {
                 form.specifications = []
@@ -456,6 +830,42 @@ export default {
         removeSpecificationRow(form, index) {
             if (Array.isArray(form.specifications)) {
                 form.specifications.splice(index, 1)
+            }
+        },
+        addBadgeRow(form) {
+            this.ensurePdpMetadata(form)
+            if (!Array.isArray(form.pdp_metadata.badges)) {
+                form.pdp_metadata.badges = []
+            }
+            form.pdp_metadata.badges.push('')
+        },
+        removeBadgeRow(form, index) {
+            if (Array.isArray(form.pdp_metadata?.badges)) {
+                form.pdp_metadata.badges.splice(index, 1)
+            }
+        },
+        addSpecsCardRow(form) {
+            this.ensurePdpMetadata(form)
+            if (!Array.isArray(form.pdp_metadata.specs_cards)) {
+                form.pdp_metadata.specs_cards = []
+            }
+            form.pdp_metadata.specs_cards.push({ label: '', value: '', description: '' })
+        },
+        removeSpecsCardRow(form, index) {
+            if (Array.isArray(form.pdp_metadata?.specs_cards)) {
+                form.pdp_metadata.specs_cards.splice(index, 1)
+            }
+        },
+        addCustomStepRow(form) {
+            this.ensurePdpMetadata(form)
+            if (!Array.isArray(form.pdp_metadata.custom_steps)) {
+                form.pdp_metadata.custom_steps = []
+            }
+            form.pdp_metadata.custom_steps.push({ step: '', title: '', description: '' })
+        },
+        removeCustomStepRow(form, index) {
+            if (Array.isArray(form.pdp_metadata?.custom_steps)) {
+                form.pdp_metadata.custom_steps.splice(index, 1)
             }
         },
         buildFormData(item = {}) {
@@ -470,6 +880,102 @@ export default {
                 safeItem.pdp_metadata && typeof safeItem.pdp_metadata === 'object'
                     ? safeItem.pdp_metadata
                     : {}
+
+            const rawSpecsCards =
+                Array.isArray(meta.specs_cards) && meta.specs_cards.length > 0
+                    ? meta.specs_cards
+                    : Array.isArray(meta.specsCards) && meta.specsCards.length > 0
+                      ? meta.specsCards
+                      : Array.isArray(meta.manufacturing_info)
+                        ? meta.manufacturing_info
+                        : []
+
+            const normalizedSpecsCards = rawSpecsCards
+                .filter((c) => c && typeof c === 'object')
+                .map((c) => ({
+                    label: String(c.label ?? c.title ?? ''),
+                    value: String(c.value ?? c.heading ?? ''),
+                    description: String(c.description ?? c.desc ?? ''),
+                }))
+
+            const rawCustomSteps =
+                Array.isArray(meta.custom_steps) && meta.custom_steps.length > 0
+                    ? meta.custom_steps
+                    : Array.isArray(meta.customSteps) && meta.customSteps.length > 0
+                      ? meta.customSteps
+                      : Array.isArray(meta.care_instructions)
+                        ? meta.care_instructions
+                        : []
+
+            const normalizedCustomSteps = rawCustomSteps
+                .filter((s) => s && typeof s === 'object')
+                .map((s) => ({
+                    step: String(s.step ?? s.number ?? ''),
+                    title: String(s.title ?? s.name ?? ''),
+                    description: String(s.description ?? s.desc ?? ''),
+                }))
+
+            const normalizedBadges =
+                Array.isArray(meta.badges) && meta.badges.length > 0
+                    ? meta.badges
+                          .map((b) => {
+                              if (typeof b === 'string') return b
+                              if (b && typeof b === 'object') {
+                                  return String(b.label ?? b.text ?? b.title ?? b.name ?? '')
+                              }
+                              return ''
+                          })
+                          .filter((b) => typeof b === 'string' && b.trim() !== '')
+                    : [meta.badge_1, meta.badge_2]
+                          .filter((b) => typeof b === 'string' && b.trim() !== '')
+                          .map((b) => b.trim())
+
+            const normalizedMeta = {
+                ...meta,
+                brand_name: meta.brand_name ?? meta.brand ?? '',
+                origin: meta.origin ?? '',
+                warranty: meta.warranty ?? '',
+                condition: meta.condition ?? '',
+                stock_status: meta.stock_status ?? '',
+                technical_support: meta.technical_support ?? '',
+                story_title: meta.story_title ?? meta.storyTitle ?? '',
+                story_intro: meta.story_intro ?? meta.storyIntro ?? '',
+                feature1_title: meta.feature1_title ?? meta.feature1Title ?? '',
+                feature1_desc: meta.feature1_desc ?? meta.feature1Desc ?? '',
+                feature2_title: meta.feature2_title ?? meta.feature2Title ?? '',
+                feature2_desc: meta.feature2_desc ?? meta.feature2Desc ?? '',
+                specs_title: meta.specs_title ?? meta.specsTitle ?? '',
+                specs_desc: meta.specs_desc ?? meta.specsDesc ?? meta.specs_description ?? '',
+                specs_content: meta.specs_content ?? meta.specsContent ?? '',
+                specs_cards: normalizedSpecsCards,
+                custom_title: meta.custom_title ?? meta.customTitle ?? '',
+                custom_desc: meta.custom_desc ?? meta.customDesc ?? meta.custom_description ?? '',
+                custom_content: meta.custom_content ?? meta.customContent ?? '',
+                custom_steps: normalizedCustomSteps,
+                custom_cta_text: meta.custom_cta_text ?? meta.customCtaText ?? '',
+                badges: normalizedBadges,
+            }
+
+            const redundantAliases = [
+                'specsTitle',
+                'specsDesc',
+                'specs_description',
+                'specsContent',
+                'specsCards',
+                'manufacturing_info',
+                'customTitle',
+                'customDesc',
+                'custom_description',
+                'customContent',
+                'customSteps',
+                'care_instructions',
+                'customCtaText',
+                'badge_1',
+                'badge_2',
+            ]
+            redundantAliases.forEach((alias) => {
+                delete normalizedMeta[alias]
+            })
 
             return {
                 ...safeItem,
@@ -489,17 +995,10 @@ export default {
                 customization_label:
                     safeItem.customization_label ?? meta.customization_label ?? '',
                 specifications: specs,
-                pdp_metadata: {
-                    ...meta,
-                    story_title: meta.story_title ?? '',
-                    story_intro: meta.story_intro ?? '',
-                    feature1_title: meta.feature1_title ?? '',
-                    feature1_desc: meta.feature1_desc ?? '',
-                    feature2_title: meta.feature2_title ?? '',
-                    feature2_desc: meta.feature2_desc ?? '',
-                },
+                pdp_metadata: normalizedMeta,
                 images: safeItem.images ?? [],
                 status: safeItem.status ?? 'ACTIVE',
+                position: safeItem.position ?? null,
                 view_count: safeItem.view_count ?? 0,
             }
         },

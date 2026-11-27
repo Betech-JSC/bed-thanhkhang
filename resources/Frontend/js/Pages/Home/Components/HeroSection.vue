@@ -23,16 +23,16 @@
         </div>
 
         <!-- Aspect-Ratio Locked Hero Viewport (Mobile 390/460 — Figma 1190:6357, Desktop 1440/582 — Figma 1171:41716) -->
-        <div v-else class="relative w-full aspect-[390/460] md:aspect-[1440/582] overflow-hidden">
+        <div v-else class="relative w-full aspect-[390/460] min-h-[460px] md:aspect-auto md:min-h-[480px] lg:aspect-[1440/582] lg:min-h-[460px] overflow-hidden">
             <!-- Horizontal Slide Track (translate-x, zero opacity blank flash) -->
             <div
-                class="flex h-full w-full transition-transform duration-500 ease-out will-change-transform"
+                class="flex h-full min-h-[460px] md:min-h-[480px] lg:min-h-[460px] w-full transition-transform duration-500 ease-out will-change-transform"
                 :style="{ transform: `translateX(-${activeIndex * 100}%)` }"
             >
                 <div
                     v-for="(slide, index) in normalizedSlides"
                     :key="slide.id || index"
-                    class="relative w-full h-full shrink-0 basis-full"
+                    class="relative w-full h-full min-h-[460px] md:min-h-[480px] lg:min-h-[460px] shrink-0 basis-full"
                     role="group"
                     aria-roledescription="slide"
                     :aria-label="`${index + 1} / ${normalizedSlides.length}`"
@@ -73,9 +73,9 @@
                         aria-hidden="true"
                     />
 
-                    <!-- Slide Content Container (1280px inner content width via .app-container-wide, px-4 / md:px-8) -->
+                    <!-- Slide Content Container (1152px inner content width via .app-container-narrow, px-4 / md:px-8) -->
                     <div
-                        class="relative z-10 h-full app-container-wide flex items-start md:items-end justify-between pt-[44px] pb-6 md:pb-10 md:pt-12 lg:pt-16"
+                        class="relative z-10 h-full min-h-[460px] md:min-h-[480px] lg:min-h-[460px] app-container-narrow flex items-start md:items-end justify-between pt-7 pb-6 md:pb-10 md:pt-10 lg:pt-12 xl:pt-16"
                     >
                         <div class="w-full max-w-[542px] flex flex-col items-start">
                             <!-- Eyebrow (Figma 1190:6364 / 1171:41749) -->
@@ -90,7 +90,7 @@
                             <component
                                 :is="index === 0 ? 'h1' : 'p'"
                                 v-if="slide.title"
-                                class="mt-0.5 md:mt-0 font-bold text-[28px] md:text-[38px] lg:text-[48px] leading-[36px] md:leading-[1.4] text-white uppercase tracking-normal"
+                                class="mt-0 font-bold text-[28px] md:text-[38px] lg:text-[48px] leading-[36px] md:leading-[1.4] text-white uppercase tracking-normal"
                             >
                                 {{ slide.title }}
                             </component>
@@ -103,16 +103,16 @@
                                 {{ slide.description }}
                             </p>
 
-                            <!-- 2 CTA Buttons (Mobile 2-col 173x42 — Figma 1190:6367; Desktop h-[49px] — Figma 1171:41752) -->
+                            <!-- 2 CTA Buttons (Mobile stacked 358x49 — Figma 1314:52013..52015; Desktop h-[49px] — Figma 1171:41752) -->
                             <div
                                 v-if="(slide.primary_cta_text && slide.primary_cta_link) || (slide.secondary_cta_text && slide.secondary_cta_link)"
-                                class="mt-6 md:mt-8 xl:mt-12 w-full md:w-auto grid grid-cols-2 md:flex md:flex-wrap gap-3 md:gap-4 items-center"
+                                class="mt-4 md:mt-6 xl:mt-12 w-full md:w-auto flex flex-col md:flex-row md:flex-wrap gap-3 md:gap-4 items-stretch md:items-center"
                             >
                                 <Link
                                     v-if="slide.primary_cta_text && slide.primary_cta_link && isInertiaLink(slide.primary_cta_link)"
                                     :href="slide.primary_cta_link"
                                     :tabindex="index === activeIndex ? undefined : -1"
-                                    class="h-[42px] lg:h-[49px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[20px] md:leading-[1.6] px-2.5 md:px-6 rounded-[4px] transition-colors inline-flex items-center justify-center text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
+                                    class="w-full md:w-auto h-[49px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[20px] md:leading-[1.6] px-2.5 md:px-6 rounded-[4px] transition-colors inline-flex items-center justify-center text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
                                 >
                                     {{ slide.primary_cta_text }}
                                 </Link>
@@ -120,7 +120,7 @@
                                     v-else-if="slide.primary_cta_text && slide.primary_cta_link"
                                     :href="slide.primary_cta_link"
                                     :tabindex="index === activeIndex ? undefined : -1"
-                                    class="h-[42px] lg:h-[49px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[20px] md:leading-[1.6] px-2.5 md:px-6 rounded-[4px] transition-colors inline-flex items-center justify-center text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
+                                    class="w-full md:w-auto h-[49px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[20px] md:leading-[1.6] px-2.5 md:px-6 rounded-[4px] transition-colors inline-flex items-center justify-center text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
                                 >
                                     {{ slide.primary_cta_text }}
                                 </a>
@@ -129,7 +129,7 @@
                                     v-if="slide.secondary_cta_text && slide.secondary_cta_link && isInertiaLink(slide.secondary_cta_link)"
                                     :href="slide.secondary_cta_link"
                                     :tabindex="index === activeIndex ? undefined : -1"
-                                    class="h-[42px] lg:h-[49px] bg-[#C9E0FF] hover:bg-[#81BDFF] text-[#003967] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[20px] md:leading-[1.6] px-2.5 md:px-6 rounded-[4px] transition-colors inline-flex items-center justify-center text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
+                                    class="w-full md:w-auto h-[49px] bg-[#C9E0FF] hover:bg-[#81BDFF] text-[#003967] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[20px] md:leading-[1.6] px-2.5 md:px-6 rounded-[4px] transition-colors inline-flex items-center justify-center text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
                                 >
                                     {{ slide.secondary_cta_text }}
                                 </Link>
@@ -137,7 +137,7 @@
                                     v-else-if="slide.secondary_cta_text && slide.secondary_cta_link"
                                     :href="slide.secondary_cta_link"
                                     :tabindex="index === activeIndex ? undefined : -1"
-                                    class="h-[42px] lg:h-[49px] bg-[#C9E0FF] hover:bg-[#81BDFF] text-[#003967] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[20px] md:leading-[1.6] px-2.5 md:px-6 rounded-[4px] transition-colors inline-flex items-center justify-center text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
+                                    class="w-full md:w-auto h-[49px] bg-[#C9E0FF] hover:bg-[#81BDFF] text-[#003967] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[20px] md:leading-[1.6] px-2.5 md:px-6 rounded-[4px] transition-colors inline-flex items-center justify-center text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
                                 >
                                     {{ slide.secondary_cta_text }}
                                 </a>
@@ -146,7 +146,7 @@
                             <!-- Reserve vertical space on desktop for fixed bottom slider controls (80px gap + 10px dots) -->
                             <div
                                 v-if="normalizedSlides.length > 1"
-                                class="hidden md:block md:mt-10 lg:mt-14 xl:mt-20 md:h-[10px]"
+                                class="hidden md:block md:mt-8 lg:mt-10 xl:mt-20 md:h-[10px]"
                                 aria-hidden="true"
                             />
                         </div>
@@ -159,8 +159,8 @@
                 v-if="normalizedSlides.length > 1"
                 class="absolute inset-x-0 bottom-0 z-20 pointer-events-none"
             >
-                <div class="app-container-wide pb-6 md:pb-10 flex items-center md:items-end justify-between gap-4">
-                    <!-- Pagination Squares (8x8 Mobile Figma 1190:6381, 10x10 Desktop Figma 1171:41755) -->
+                <div class="app-container-narrow pb-6 md:pb-10 flex items-center md:items-end justify-between gap-4">
+                    <!-- Pagination Squares (10x10 Mobile & Desktop — Figma 1314:52018..52020 / 1171:41755) -->
                     <div
                         class="flex items-center gap-3 md:gap-6 pointer-events-auto"
                         role="tablist"
@@ -173,7 +173,7 @@
                             role="tab"
                             :aria-selected="idx === activeIndex"
                             :aria-label="`${tt('Slide')} ${idx + 1}`"
-                            class="w-2 h-2 md:w-[10px] md:h-[10px] rounded-[2px] transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
+                            class="w-[10px] h-[10px] rounded-[2px] transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
                             :class="
                                 idx === activeIndex
                                     ? 'bg-[#FAFAFA]'

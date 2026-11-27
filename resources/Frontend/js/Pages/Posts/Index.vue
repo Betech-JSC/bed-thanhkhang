@@ -180,7 +180,7 @@
                             class="bg-white border border-gray-modern-300 focus-within:border-primary rounded-[6px] h-[42px] px-[14px] flex items-center gap-2.5 w-full lg:w-[296px] shrink-0 transition-colors"
                         >
                             <img
-                                src="/assets/svg/icons/posts-search.svg"
+                                src="/assets/svg/icons/header-search.svg"
                                 alt=""
                                 aria-hidden="true"
                                 width="18"

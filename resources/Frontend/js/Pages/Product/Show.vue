@@ -1,10 +1,5 @@
 <template>
-    <div
-        :class="[
-            currentTitle ? 'bg-[#111322] text-[#FAFAFA]' : 'bg-[#FAFAFA] text-[#364152]',
-            'min-h-screen font-sans antialiased selection:bg-[#2970FF] selection:text-white',
-        ]"
-    >
+    <div class="bg-[#FAFAFA] text-[#364152] overflow-x-clip selection:bg-primary selection:text-white">
         <!-- SEO HEAD -->
         <Head>
             <title v-if="headTitle">{{ headTitle }}</title>
@@ -28,7 +23,7 @@
         </Head>
 
         <!-- EMPTY STATE KHI KHÔNG CÓ DỮ LIỆU SẢN PHẨM -->
-        <section v-if="!currentTitle" class="bg-[#FAFAFA] py-12 md:py-20">
+        <section v-if="!currentTitle" class="bg-[#FAFAFA] py-8 md:py-16">
             <div class="app-container-narrow">
                 <EmptyState
                     variant="light"
@@ -44,887 +39,702 @@
         </section>
 
         <template v-else>
-            <!-- 1. BREADCRUMBS & SECTION TỔNG QUAN SẢN PHẨM (FIGMA 2358:2979: 1440x713 px, padding 24px 144px 40px) -->
-            <div class="app-container pt-6 pb-10">
-                <!-- ĐƯỜNG DẪN BREADCRUMB (FIGMA 2358:2980) -->
-                <nav
-                    class="flex items-center gap-2.5 text-sm leading-[17px] text-[#B9C0D4] mb-6 overflow-x-auto scrollbar-none whitespace-nowrap"
-                    :aria-label="tt('Breadcrumb')"
-                >
-                    <Link :href="homeUrl" class="hover:text-white transition-colors leading-[17px]">
-                        {{ tt('Trang chủ') }}
-                    </Link>
-                    <img src="/images/pdp/chevron_right.svg" alt="" aria-hidden="true" class="w-3.5 h-3.5 opacity-60" />
-                    <Link :href="productsIndexUrl" class="hover:text-white transition-colors leading-[17px]">
-                        {{ tt('Sản phẩm') }}
-                    </Link>
-                    <template v-if="currentCategory">
-                        <img src="/images/pdp/chevron_right.svg" alt="" aria-hidden="true" class="w-3.5 h-3.5 opacity-60" />
-                        <Link :href="categoryUrl" class="hover:text-white transition-colors leading-[17px]">
-                            {{ currentCategory }}
+            <!-- SECTION 1: TỔNG QUAN SẢN PHẨM (Figma Node 1264:49294) -->
+            <section class="bg-[#FAFAFA] pt-6 pb-8 md:pt-10 md:pb-12">
+                <div class="app-container-narrow flex flex-col gap-6">
+                    <!-- Breadcrumb -->
+                    <nav
+                        class="text-[14px] leading-[1.6] flex flex-wrap items-center gap-2 text-[#697586]"
+                        :aria-label="tt('Breadcrumb')"
+                    >
+                        <Link
+                            :href="homeUrl"
+                            class="text-[#697586] hover:text-[#005EA4] transition-colors"
+                        >
+                            {{ tt('Trang chủ') }}
                         </Link>
-                    </template>
-                    <img src="/images/pdp/chevron_right.svg" alt="" aria-hidden="true" class="w-3.5 h-3.5 opacity-60" />
-                    <span class="text-[#FAFAFA] font-normal leading-[17px] truncate max-w-[200px] sm:max-w-none" aria-current="page">
-                        {{ currentTitle }}
-                    </span>
-                </nav>
-
-                <!-- HÌNH ẢNH VÀ THÔNG TIN (FIGMA 2358:2986: 1152x600 px, gap 48px) -->
-                <div class="flex flex-col lg:flex-row gap-8 lg:gap-[48px] items-start justify-between">
-                    <!-- KHỐI GALLERY HÌNH ẢNH BÊN TRÁI (FIGMA 2390:5336: 624x600 px) -->
-                    <div class="w-full lg:w-[624px] shrink-0">
-                        <ProductGallery
-                            :images="productImages"
-                            :product-title="currentTitle"
-                        />
-                    </div>
-
-                    <!-- KHỐI THÔNG TIN SẢN PHẨM BÊN PHẢI (FIGMA 2358:3003: 480x473 px, NẰM TRỰC TIẾP TRÊN NỀN, KHÔNG ĐÓNG KHUNG CARD) -->
-                    <div class="w-full lg:w-[480px] shrink-0 flex flex-col justify-between gap-6">
-                        <!-- TÊN VÀ GIỚI THIỆU (FIGMA 2358:3004: gap 12px) -->
-                        <div class="flex flex-col gap-3">
-                            <!-- TÊN SẢN PHẨM (FIGMA 2358:3006: 38px Bold, color #FAFAFA, leading-[46px]) -->
-                            <h1 class="text-2xl sm:text-3xl lg:text-[38px] font-bold text-[#FAFAFA] tracking-tight leading-tight lg:leading-[46px]">
-                                {{ currentTitle }}
-                            </h1>
-
-                            <!-- PHÂN LOẠI BADGES (FIGMA 2358:3007: gap 8px) -->
-                            <div class="flex items-center gap-2">
-                                <span class="inline-flex items-center justify-center h-[33px] px-3 py-2 rounded-[4px] text-xs font-normal leading-[17px] border border-[#5D6B98] text-[#84ADFF]">
-                                    {{ tt('Chuẩn OEM / ISO') }}
-                                </span>
-                                <span class="inline-flex items-center justify-center h-[33px] px-3 py-2 rounded-[4px] text-xs font-normal leading-[17px] border border-[#5D6B98] text-[#84ADFF]">
-                                    {{ tt('Cung ứng theo thông số') }}
-                                </span>
-                            </div>
-
-                            <!-- GIỚI THIỆU NGẮN (FIGMA 2358:3012: 16px, color #B9C0D4, leading-[22px]) -->
-                            <p v-if="currentDescription" class="text-base text-[#B9C0D4] leading-[22px]">
-                                {{ currentDescription }}
-                            </p>
-                        </div>
-
-                        <!-- LỰA CHỌN THAM KHẢO (FIGMA 2358:3013: border-t border-[#404968], py-5) -->
-                        <VariantSelector
-                            :material="productMaterial"
-                            :color="productColor"
-                            :customization="productCustomization"
-                        />
-
-                        <!-- YÊU CẦU TƯ VẤN (FIGMA 2358:3025) -->
-                        <div class="flex flex-col gap-3">
-                            <!-- NÚT DUY NHẤT THEO FIGMA: NHẬN TƯ VẤN SẢN PHẨM (FIGMA 2358:3027) -->
-                            <button
-                                type="button"
-                                @click="handleRequestQuote"
-                                class="w-full h-12 rounded-lg text-[#FAFAFA] font-medium text-base transition-colors duration-200 active:scale-[0.98] flex items-center justify-center cursor-pointer shadow-lg shadow-blue-900/30 hover:opacity-95"
-                                style="background: linear-gradient(90deg, #2970FF 0%, #00359E 89%);"
-                            >
-                                {{ tt('Nhận tư vấn sản phẩm') }}
-                            </button>
-
-                            <!-- LƯU Ý TƯ VẤN -->
-                            <p class="text-xs text-[#B9C0D4] leading-[19px]">
-                                {{ tt('Chia sẻ mã linh kiện, bước xích và số lượng cần cung ứng. Thành Khang Tecsat sẽ tư vấn phương án kỹ thuật và báo giá B2B phù hợp.') }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 2. CHI TIẾT VÀ THÔNG SỐ (FIGMA 2358:3035: 1440x604 px, padding 0px 144px 64px) -->
-            <section v-if="tabs.length > 0" v-scroll-reveal class="app-container pt-0 pb-16">
-                <!-- ĐIỀU HƯỚNG NỘI DUNG TABS (FIGMA 2358:3036: height 55px, border-b 1px solid #404968, gap 40px) -->
-                <div class="flex items-center gap-10 border-b border-[#404968] overflow-x-auto scrollbar-none pb-0 mb-10 h-[55px]">
-                    <button
-                        v-for="tab in tabs"
-                        :key="tab.id"
-                        type="button"
-                        @click="selectTab(tab.key || tab.id)"
-                        :class="[
-                            'h-[55px] text-base leading-[19px] transition-colors duration-200 active:scale-[0.98] relative whitespace-nowrap focus:outline-none flex items-center',
-                            activeTab === tab.id
-                                ? 'font-semibold text-[#FAFAFA]'
-                                : 'font-normal text-[#B9C0D4] hover:text-white',
-                        ]"
-                    >
-                        {{ tab.name }}
-                        <span
-                            v-if="activeTab === tab.id"
-                            class="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2970FF]"
-                        ></span>
-                    </button>
-                </div>
-
-                <!-- NỘI DUNG CHI TIẾT TABS (FIGMA 2358:3043: 1152x445 px, gap 48px, Simultaneous 1x1 Track Slide) -->
-                <div :class="['relative overflow-x-clip', hasSpecs ? 'min-h-[445px]' : '']">
-                    <Transition
-                        enter-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform"
-                        :enter-from-class="tabSlideDirection === 'next' ? 'translate-x-full' : '-translate-x-full'"
-                        enter-to-class="translate-x-0"
-                        leave-active-class="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform absolute inset-0 pointer-events-none"
-                        leave-from-class="translate-x-0"
-                        :leave-to-class="tabSlideDirection === 'next' ? '-translate-x-full' : 'translate-x-full'"
-                    >
-                        <!-- TAB 1: TỔNG QUAN (CÂU CHUYỆN SẢN PHẨM + BẢNG THÔNG SỐ KỸ THUẬT) -->
-                        <div
-                            v-if="activeTab === 'overview'"
-                            key="overview"
-                            :class="[
-                                'w-full flex flex-col lg:flex-row gap-8 lg:gap-[48px] items-start justify-between',
-                                hasSpecs ? 'min-h-[445px]' : '',
-                            ]"
+                        <span class="select-none" aria-hidden="true">/</span>
+                        <Link
+                            :href="productsIndexUrl"
+                            class="text-[#697586] hover:text-[#005EA4] transition-colors"
                         >
-                            <!-- CÂU CHUYỆN SẢN PHẨM (FIGMA 2358:3044: 624x299 px, gap 24px) -->
-                            <div
-                                v-if="hasOverviewLeft"
-                                :class="[
-                                    'w-full flex flex-col gap-6',
-                                    hasSpecs ? 'lg:w-[624px] shrink-0' : '',
-                                ]"
+                            {{ tt('Sản phẩm') }}
+                        </Link>
+                        <template v-for="(crumb, idx) in breadcrumbCategories" :key="crumb.key || idx">
+                            <span class="select-none" aria-hidden="true">/</span>
+                            <Link
+                                :href="crumb.href"
+                                class="text-[#697586] hover:text-[#005EA4] transition-colors"
                             >
-                                <!-- GIỚI THIỆU (FIGMA 2358:3045) -->
-                                <div v-if="storyTitle || storyIntro" class="flex flex-col gap-4">
-                                    <h2 v-if="storyTitle" class="text-2xl font-bold text-[#FAFAFA] leading-[29px]">
-                                        {{ storyTitle }}
-                                    </h2>
-                                    <p v-if="storyIntro" class="text-base text-[#B9C0D4] leading-[22px]">
-                                        {{ storyIntro }}
-                                    </p>
-                                </div>
+                                {{ crumb.title }}
+                            </Link>
+                        </template>
+                        <span class="select-none" aria-hidden="true">/</span>
+                        <span class="text-[#4B5565] font-medium break-words" aria-current="page">
+                            {{ currentTitle }}
+                        </span>
+                    </nav>
 
-                                <!-- CÁC ĐẶC ĐIỂM SẢN PHẨM -->
-                                <div
-                                    v-if="feature1Title || feature1Desc || feature2Title || feature2Desc"
-                                    class="flex flex-col gap-6"
+                    <!-- Layout 2 cột: Gallery bên trái & Thông tin đặt hàng bên phải -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-[32px] items-start">
+                        <!-- Cột trái: Thư viện ảnh giữ nguyên hàng thumbnail preview ngang ở dưới -->
+                        <div class="w-full min-w-0">
+                            <ProductGallery
+                                :images="galleryImages"
+                                :product-title="currentTitle"
+                            />
+                        </div>
+
+                        <!-- Cột phải: Tiêu đề + Mô tả ngắn + Hộp thông số nhanh + CTA Báo giá -->
+                        <div class="w-full min-w-0 flex flex-col gap-5 md:gap-6">
+                            <div>
+                                <h1 class="text-[20px] md:text-[24px] font-bold leading-[1.5] md:leading-[1.6] text-[#001932] break-words">
+                                    {{ currentTitle }}
+                                </h1>
+                                <p
+                                    v-if="currentDescription"
+                                    class="text-[14px] md:text-[16px] font-medium leading-[1.6] text-[#001932] mt-1 break-words"
                                 >
-                                    <!-- ĐẶC ĐIỂM 1 -->
-                                    <div v-if="feature1Title || feature1Desc" class="flex flex-col gap-1">
-                                        <h3 v-if="feature1Title" class="text-base font-semibold text-[#FAFAFA] leading-[22px]">
-                                            {{ feature1Title }}
-                                        </h3>
-                                        <p v-if="feature1Desc" class="text-sm text-[#B9C0D4] leading-5">
-                                            {{ feature1Desc }}
-                                        </p>
-                                    </div>
-
-                                    <!-- ĐẶC ĐIỂM 2 -->
-                                    <div v-if="feature2Title || feature2Desc" class="flex flex-col gap-1">
-                                        <h3 v-if="feature2Title" class="text-base font-semibold text-[#FAFAFA] leading-[22px]">
-                                            {{ feature2Title }}
-                                        </h3>
-                                        <p v-if="feature2Desc" class="text-sm text-[#B9C0D4] leading-5">
-                                            {{ feature2Desc }}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <!-- BÀI VIẾT CHI TIẾT RICHTEXT TỪ CMS -->
-                                <div
-                                    v-if="hasDistinctContent"
-                                    class="prose prose-invert max-w-none text-sm sm:text-base text-[#D0D5DD] leading-relaxed space-y-3"
-                                    v-html="product.content"
-                                ></div>
-                            </div>
-
-                            <!-- BẢNG THÔNG SỐ KỸ THUẬT EMBEDDED BÊN PHẢI (FIGMA 2358:3066: 480x445 px) -->
-                            <div v-if="hasSpecs" class="w-full lg:w-[480px] shrink-0">
-                                <SpecTable :specs="productSpecifications" />
-                            </div>
-                        </div>
-
-                        <!-- TAB 2: THÔNG SỐ KỸ THUẬT MỞ RỘNG -->
-                        <div
-                            v-else-if="activeTab === 'specs'"
-                            key="specs"
-                            :class="[
-                                'w-full flex flex-col lg:flex-row gap-8 lg:gap-[48px] items-start justify-between',
-                                hasSpecs ? 'min-h-[445px]' : '',
-                            ]"
-                        >
-                            <div
-                                v-if="hasSpecsTabLeft"
-                                :class="[
-                                    'w-full space-y-6',
-                                    hasSpecs ? 'lg:w-[624px] shrink-0' : '',
-                                ]"
-                            >
-                                <div v-if="specsTabTitle || specsTabDesc" class="space-y-3">
-                                    <h2 v-if="specsTabTitle" class="text-2xl font-bold text-[#FAFAFA]">{{ specsTabTitle }}</h2>
-                                    <p v-if="specsTabDesc" class="text-base text-[#B9C0D4] leading-relaxed">
-                                        {{ specsTabDesc }}
-                                    </p>
-                                </div>
-
-                                <div
-                                    v-if="specsTabContent"
-                                    class="prose prose-invert max-w-none text-sm sm:text-base text-[#B9C0D4] leading-relaxed"
-                                    v-html="specsTabContent"
-                                ></div>
-
-                                <div v-if="specsTabCards.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-                                    <div
-                                        v-for="(card, cIdx) in specsTabCards"
-                                        :key="cIdx"
-                                        class="p-5 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2"
-                                    >
-                                        <span v-if="card.label" class="text-xs font-semibold text-[#84ADFF] uppercase">{{ card.label }}</span>
-                                        <h4 v-if="card.value" class="text-lg font-bold text-white">{{ card.value }}</h4>
-                                        <p v-if="card.description" class="text-xs sm:text-sm text-[#B9C0D4] leading-relaxed">{{ card.description }}</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div v-if="hasSpecs" class="w-full lg:w-[480px] shrink-0">
-                                <SpecTable :specs="productSpecifications" />
-                            </div>
-                        </div>
-
-                        <!-- TAB 3: TUỲ CHỈNH SẢN PHẨM THEO YÊU CẦU -->
-                        <div
-                            v-else-if="activeTab === 'custom'"
-                            key="custom"
-                            class="w-full space-y-6"
-                        >
-                            <div v-if="customTabTitle || customTabDesc" class="max-w-3xl space-y-3">
-                                <h2 v-if="customTabTitle" class="text-2xl font-bold text-[#FAFAFA]">{{ customTabTitle }}</h2>
-                                <p v-if="customTabDesc" class="text-base text-[#B9C0D4] leading-relaxed">
-                                    {{ customTabDesc }}
+                                    {{ currentDescription }}
                                 </p>
                             </div>
 
-                            <div
-                                v-if="customTabContent"
-                                class="prose prose-invert max-w-none text-sm sm:text-base text-[#B9C0D4] leading-relaxed"
-                                v-html="customTabContent"
-                            ></div>
+                            <!-- Hộp thông số nhanh -->
+                            <div class="bg-[#EEF2F6] rounded-[4px] p-4 md:p-6 flex flex-col gap-4 md:gap-5 text-[14px] leading-[1.6]">
+                                <!-- Nhóm trên: 2 thông số kỹ thuật ưu tiên + Mã sản phẩm -->
+                                <div class="flex flex-col gap-2">
+                                    <div
+                                        v-for="(spec, idx) in highlightSpecs"
+                                        :key="`highlight-spec-${idx}`"
+                                        class="grid grid-cols-2 gap-4 md:gap-[40px] items-center"
+                                    >
+                                        <span class="text-[#4B5565] font-normal break-words">
+                                            {{ translateLabel(spec.label) }}
+                                        </span>
+                                        <span class="text-[#005EA4] font-bold break-words">
+                                            {{ translateValue(spec.value) }}
+                                        </span>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4 md:gap-[40px] items-center">
+                                        <span class="text-[#4B5565] font-normal">
+                                            {{ tt('Mã sản phẩm') }}
+                                        </span>
+                                        <span class="text-[#005EA4] font-bold break-words">
+                                            {{ resolvedSku }}
+                                        </span>
+                                    </div>
+                                </div>
 
-                            <div v-if="customTabSteps.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-                                <div
-                                    v-for="(step, sIdx) in customTabSteps"
-                                    :key="sIdx"
-                                    class="p-6 rounded-xl bg-[#141C2E] border border-[#30374F] space-y-2"
-                                >
-                                    <span v-if="step.step" class="text-xs font-semibold text-[#84ADFF]">{{ step.step }}</span>
-                                    <h4 v-if="step.title" class="text-lg font-bold text-white">{{ step.title }}</h4>
-                                    <p v-if="step.description" class="text-sm text-[#B9C0D4]">{{ step.description }}</p>
+                                <!-- Nhóm dưới: 6 thông số mặc định/riêng của sản phẩm -->
+                                <div class="border-t border-[#CDD5DF] pt-4 md:pt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-x-[40px] md:gap-y-2 text-[#4B5565]">
+                                    <div class="space-y-2">
+                                        <p class="break-words">
+                                            {{ tt('Thương hiệu:') }} <strong class="font-bold">{{ resolvedBrand }}</strong>
+                                        </p>
+                                        <p class="break-words">
+                                            {{ tt('Xuất xứ:') }} <strong class="font-bold">{{ resolvedOrigin }}</strong>
+                                        </p>
+                                        <p class="break-words">
+                                            {{ tt('Bảo hành:') }} <strong class="font-bold">{{ resolvedWarranty }}</strong>
+                                        </p>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <p class="break-words">
+                                            {{ tt('Tình trạng:') }} <strong class="font-bold">{{ resolvedCondition }}</strong>
+                                        </p>
+                                        <p class="break-words">
+                                            {{ tt('Trạng thái:') }} <strong class="font-bold">{{ resolvedStockStatus }}</strong>
+                                        </p>
+                                        <p class="break-words">
+                                            {{ tt('Hỗ trợ kỹ thuật:') }} <strong class="font-bold">{{ resolvedTechnicalSupport }}</strong>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div v-if="customTabCtaText" class="pt-2">
-                                <button
-                                    type="button"
-                                    @click="handleRequestQuote"
-                                    class="px-6 py-3 rounded-lg text-white font-medium text-sm flex items-center gap-2 transition-transform duration-150 hover:opacity-95 active:scale-[0.98]"
-                                    style="background: linear-gradient(90deg, #2970FF 0%, #00359E 89%);"
-                                >
-                                    {{ customTabCtaText }}
-                                </button>
-                            </div>
+                            <!-- Nút CTA Yêu cầu báo giá -->
+                            <button
+                                type="button"
+                                @click="handleRequestQuote"
+                                class="w-full min-h-[46px] px-6 py-[10px] rounded-[4px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] text-[16px] font-medium leading-[1.6] transition-colors flex items-center justify-center cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
+                            >
+                                {{ tt('Yêu cầu báo giá') }}
+                            </button>
                         </div>
-                    </Transition>
+                    </div>
                 </div>
             </section>
 
-            <!-- 3. SẢN PHẨM LIÊN QUAN (FIGMA 2358:3094) -->
-            <div class="app-container">
-                <RelatedProducts :products="related_products" />
-            </div>
+            <!-- SECTION 2: TRUST STRIP 4 CAM KẾT (Figma Node 1264:49352) -->
+            <ProductTrustStrip />
 
-            <!-- 4. KẾT NỐI DỰ ÁN - LỜI MỜI SÁNG TẠO (FIGMA 2352:9972) -->
-            <ProductCtaBanner />
+            <!-- SECTION 3: 3 TABS CHI TIẾT SẢN PHẨM (Figma Nodes 1264:49358 / 49506 / 49681) -->
+            <ProductDetailTabs :product="product" />
+
+            <!-- SECTION 4: CÂU HỎI THƯỜNG GẶP (Figma Nodes 1264:49371 / 1264:49693) -->
+            <ProductFaqSection :faqs="resolvedFaqs" />
+
+            <!-- SECTION 5: SẢN PHẨM LIÊN QUAN (Figma Nodes 1264:49387 / 1264:49709) -->
+            <RelatedProducts :products="relatedProducts" />
+
+            <!-- SECTION 6: CTA TƯ VẤN KỸ THUẬT (Figma Node 1264:49400 — BANNER_GLOBAL_CTA) -->
+            <ProductCtaBanner :cta-banner="ctaBanner" />
         </template>
     </div>
 </template>
 
 <script>
-import { Link } from '@inertiajs/inertia-vue3'
-import ProductGallery from '@/Components/Product/ProductGallery.vue'
-import VariantSelector from '@/Components/Product/VariantSelector.vue'
-import SpecTable from '@/Components/Product/SpecTable.vue'
-import RelatedProducts from '@/Components/Product/RelatedProducts.vue'
-import EmptyState from '@/Components/EmptyState.vue'
-import ProductCtaBanner from './Components/ProductCtaBanner.vue'
-import { openQuoteModal } from '@/composables/useQuoteModal'
+import MainLayout from '@/Layouts/MainLayout.vue'
 
 export default {
     name: 'ProductShow',
-    components: {
-        Link,
-        ProductGallery,
-        VariantSelector,
-        SpecTable,
-        RelatedProducts,
-        EmptyState,
-        ProductCtaBanner,
-    },
-    props: {
-        product: {
-            type: Object,
-            default: () => ({}),
-        },
-        related_products: {
-            type: Array,
-            default: () => [],
-        },
-        seo: {
-            type: Object,
-            default: () => ({}),
-        },
-    },
-    data() {
-        return {
-            activeTab: 'overview',
-            tabSlideDirection: 'next',
-        }
-    },
-    computed: {
-        currentLocale() {
-            return this.$page?.props?.locale?.current || 'vi'
-        },
-        isEn() {
-            return this.currentLocale === 'en'
-        },
-        globalConfig() {
-            return this.$page?.props?.global || this.$page?.props?.configs || {}
-        },
-        brandName() {
-            const g = this.globalConfig
-            const raw =
-                g.general_business_name ||
-                g.general_site_name ||
-                g.company_name ||
-                g.site_name ||
-                ''
-            return typeof raw === 'string' ? raw.trim() : ''
-        },
-        siteOrigin() {
-            if (typeof window !== 'undefined' && window.location?.origin) {
-                return window.location.origin
-            }
-            const routeUrl = this.$page?.props?.route?.url
-            if (typeof routeUrl === 'string' && /^https?:\/\//i.test(routeUrl)) {
-                try {
-                    return new URL(routeUrl).origin
-                } catch (e) {
-                    // Ignore invalid URL
-                }
-            }
-            return ''
-        },
-        homeUrl() {
-            return this.safeRoute('home', undefined, this.isEn ? '/en' : '/')
-        },
-        productsIndexUrl() {
-            return this.safeRoute('products.index', undefined, this.isEn ? '/en/products' : '/san-pham')
-        },
-        contactUrl() {
-            return this.safeRoute('contact', undefined, this.isEn ? '/en/contact' : '/lien-he')
-        },
-        currentTitle() {
-            const raw = this.product?.title || this.product?.name || ''
-            return typeof raw === 'string' ? raw.trim() : ''
-        },
-        headTitle() {
-            if (this.currentTitle) {
-                return this.brandName
-                    ? `${this.currentTitle} - ${this.brandName}`
-                    : this.currentTitle
-            }
-            const seoTitle = this.seo?.seo_meta_title || this.seo?.title || ''
-            return typeof seoTitle === 'string' ? seoTitle.trim() : ''
-        },
-        currentCategoryObj() {
-            if (this.product?.category && typeof this.product.category === 'object') {
-                return this.product.category
-            }
-            if (Array.isArray(this.product?.categories) && this.product.categories.length > 0) {
-                return this.product.categories[0]
-            }
-            return null
-        },
-        currentCategory() {
-            const rawCat =
-                this.currentCategoryObj?.title ||
-                this.currentCategoryObj?.name ||
-                this.product?.category_name ||
-                ''
-            return typeof rawCat === 'string' ? rawCat.trim() : ''
-        },
-        currentCategorySlug() {
-            const slug =
-                this.currentCategoryObj?.seo_slug ||
-                this.currentCategoryObj?.slug ||
-                this.product?.category_slug ||
-                ''
-            return typeof slug === 'string' ? slug.trim() : ''
-        },
-        categoryUrl() {
-            if (this.currentCategorySlug) {
-                return this.safeRoute(
-                    'products.index',
-                    { category: this.currentCategorySlug },
-                    `${this.productsIndexUrl}?category=${encodeURIComponent(this.currentCategorySlug)}`
-                )
-            }
-            return this.productsIndexUrl
-        },
-        currentDescription() {
-            const raw = this.product?.description || this.product?.short_description || ''
-            return typeof raw === 'string' ? raw.trim() : ''
-        },
-        pdpMetadata() {
-            return this.product?.pdp_metadata || {}
-        },
-        productSpecifications() {
-            const specs = this.product?.specifications || this.pdpMetadata?.specifications
-            if (Array.isArray(specs) && specs.length > 0) {
-                return specs
-            }
-            return []
-        },
-        hasSpecs() {
-            return this.productSpecifications.length > 0
-        },
-        productMaterial() {
-            const metaLabel = this.pdpMetadata?.material_label || this.pdpMetadata?.materialLabel
-            if (typeof metaLabel === 'string' && metaLabel.trim()) {
-                return metaLabel.trim()
-            }
-            if (typeof this.product?.material === 'string' && this.product.material.trim()) {
-                const mat = this.product.material.trim()
-                const tech = this.product.print_technology || this.pdpMetadata?.print_technology
-                if (
-                    typeof tech === 'string' &&
-                    tech.trim() &&
-                    !mat.toLowerCase().includes(tech.trim().toLowerCase()) &&
-                    !mat.includes('·')
-                ) {
-                    return `${mat} · ${tech.trim()}`
-                }
-                return mat
-            }
-            return ''
-        },
-        productColor() {
-            return this.pickText(
-                this.product?.image_color_label,
-                this.product?.color,
-                this.pdpMetadata?.image_color_label,
-                this.pdpMetadata?.imageColorLabel,
-                this.pdpMetadata?.color
-            )
-        },
-        productCustomization() {
-            return this.pickText(
-                this.product?.customization_label,
-                this.product?.customization,
-                this.pdpMetadata?.customization_label,
-                this.pdpMetadata?.customizationLabel,
-                this.pdpMetadata?.customization
-            )
-        },
-        productImages() {
-            const extractValid = (list) =>
-                list.filter((item) => {
-                    if (typeof item === 'string') return item.trim() !== ''
-                    if (item && typeof item === 'object') {
-                        const u = item.url || item.path || ''
-                        return typeof u === 'string' && u.trim() !== ''
-                    }
-                    return false
-                })
-
-            if (Array.isArray(this.product?.images) && this.product.images.length > 0) {
-                const validImages = extractValid(this.product.images)
-                if (validImages.length > 0) return validImages
-            }
-            if (this.product?.image) {
-                const validMain = extractValid([this.product.image])
-                if (validMain.length > 0) return validMain
-            }
-            return []
-        },
-        ogImageUrl() {
-            const first = this.productImages[0]
-            if (!first) return ''
-            if (typeof first === 'string') return first.trim()
-            return String(first.url || first.path || '').trim()
-        },
-        storyTitle() {
-            return this.pickText(
-                this.product?.story_title,
-                this.pdpMetadata?.story_title,
-                this.pdpMetadata?.storyTitle
-            )
-        },
-        storyIntro() {
-            return this.pickText(
-                this.product?.story_intro,
-                this.pdpMetadata?.story_intro,
-                this.pdpMetadata?.storyIntro,
-                this.currentDescription
-            )
-        },
-        feature1Title() {
-            return this.pickText(
-                this.product?.feature1_title,
-                this.pdpMetadata?.feature1_title,
-                this.pdpMetadata?.feature1Title
-            )
-        },
-        feature1Desc() {
-            return this.pickText(
-                this.product?.feature1_desc,
-                this.pdpMetadata?.feature1_desc,
-                this.pdpMetadata?.feature1Desc
-            )
-        },
-        feature2Title() {
-            return this.pickText(
-                this.product?.feature2_title,
-                this.pdpMetadata?.feature2_title,
-                this.pdpMetadata?.feature2Title
-            )
-        },
-        feature2Desc() {
-            return this.pickText(
-                this.product?.feature2_desc,
-                this.pdpMetadata?.feature2_desc,
-                this.pdpMetadata?.feature2Desc
-            )
-        },
-        hasDistinctContent() {
-            const rawHtml = this.product?.content
-            if (!rawHtml || typeof rawHtml !== 'string') return false
-            const plain = rawHtml.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()
-            if (!plain) return false
-            const introPlain = (this.storyIntro || '').replace(/\s+/g, ' ').trim()
-            const descPlain = (this.currentDescription || '').replace(/\s+/g, ' ').trim()
-            return plain !== introPlain && plain !== descPlain
-        },
-        hasOverviewLeft() {
-            return Boolean(
-                this.storyTitle ||
-                    this.storyIntro ||
-                    this.feature1Title ||
-                    this.feature1Desc ||
-                    this.feature2Title ||
-                    this.feature2Desc ||
-                    this.hasDistinctContent
-            )
-        },
-        hasOverviewTab() {
-            return this.hasOverviewLeft || this.hasSpecs
-        },
-        specsTabTitle() {
-            return this.pickText(
-                this.product?.specs_title,
-                this.pdpMetadata?.specs_title,
-                this.pdpMetadata?.specsTitle
-            )
-        },
-        specsTabDesc() {
-            return this.pickText(
-                this.product?.specs_desc,
-                this.pdpMetadata?.specs_desc,
-                this.pdpMetadata?.specsDesc,
-                this.pdpMetadata?.specs_description
-            )
-        },
-        specsTabContent() {
-            return this.pickText(
-                this.product?.specs_content,
-                this.pdpMetadata?.specs_content,
-                this.pdpMetadata?.specsContent
-            )
-        },
-        specsTabCards() {
-            const customCards =
-                this.product?.specs_cards ||
-                this.pdpMetadata?.specs_cards ||
-                this.pdpMetadata?.specsCards ||
-                this.pdpMetadata?.manufacturing_info
-            if (Array.isArray(customCards) && customCards.length > 0) {
-                return customCards
-                    .map((c) => {
-                        if (!c || typeof c !== 'object') return null
-                        return {
-                            label: String(c.label || c.title || '').trim(),
-                            value: String(c.value || c.heading || '').trim(),
-                            description: String(c.description || c.desc || '').trim(),
-                        }
-                    })
-                    .filter((c) => c && (c.label || c.value || c.description))
-            }
-            return []
-        },
-        hasSpecsTabLeft() {
-            return Boolean(
-                this.specsTabTitle ||
-                    this.specsTabDesc ||
-                    this.specsTabContent ||
-                    this.specsTabCards.length > 0
-            )
-        },
-        hasSpecsTab() {
-            return this.hasSpecsTabLeft
-        },
-        customTabTitle() {
-            return this.pickText(
-                this.product?.custom_title,
-                this.pdpMetadata?.custom_title,
-                this.pdpMetadata?.customTitle
-            )
-        },
-        customTabDesc() {
-            return this.pickText(
-                this.product?.custom_desc,
-                this.pdpMetadata?.custom_desc,
-                this.pdpMetadata?.customDesc,
-                this.pdpMetadata?.custom_description
-            )
-        },
-        customTabContent() {
-            return this.pickText(
-                this.product?.custom_content,
-                this.pdpMetadata?.custom_content,
-                this.pdpMetadata?.customContent
-            )
-        },
-        customTabSteps() {
-            const customSteps =
-                this.product?.custom_steps ||
-                this.pdpMetadata?.custom_steps ||
-                this.pdpMetadata?.customSteps ||
-                this.pdpMetadata?.care_instructions
-            if (Array.isArray(customSteps) && customSteps.length > 0) {
-                return customSteps
-                    .map((s, idx) => {
-                        if (!s || typeof s !== 'object') return null
-                        return {
-                            step: String(s.step || s.number || `${this.tt('Bước')} 0${idx + 1}`).trim(),
-                            title: String(s.title || s.name || '').trim(),
-                            description: String(s.description || s.desc || '').trim(),
-                        }
-                    })
-                    .filter((s) => s && (s.title || s.description))
-            }
-            return []
-        },
-        customTabCtaText() {
-            return this.pickText(
-                this.product?.custom_cta_text,
-                this.pdpMetadata?.custom_cta_text,
-                this.pdpMetadata?.customCtaText
-            )
-        },
-        hasCustomTab() {
-            return Boolean(
-                this.customTabTitle ||
-                    this.customTabDesc ||
-                    this.customTabContent ||
-                    this.customTabSteps.length > 0 ||
-                    this.customTabCtaText
-            )
-        },
-        tabs() {
-            const list = []
-            if (this.hasOverviewTab) {
-                list.push({ id: 'overview', key: 'overview', name: this.tt('Tổng quan') })
-            }
-            if (this.hasSpecsTab) {
-                list.push({ id: 'specs', key: 'specs', name: this.tt('Thông số kỹ thuật') })
-            }
-            if (this.hasCustomTab) {
-                list.push({ id: 'custom', key: 'custom', name: this.tt('Gia công theo bản vẽ') })
-            }
-            return list
-        },
-        productJsonLd() {
-            if (!this.currentTitle) return null
-
-            const images = Array.isArray(this.productImages)
-                ? this.productImages
-                      .map((img) => (typeof img === 'string' ? img : img?.url || img?.path || ''))
-                      .filter(Boolean)
-                : []
-
-            const schema = {
-                '@context': 'https://schema.org',
-                '@type': 'Product',
-                name: this.currentTitle,
-                description: this.currentDescription,
-            }
-
-            if (images.length > 0) {
-                schema.image = images
-            }
-
-            const sku =
-                typeof this.product?.sku === 'string' && this.product.sku.trim()
-                    ? this.product.sku.trim()
-                    : ''
-            if (sku) {
-                schema.sku = sku
-            }
-
-            if (this.brandName) {
-                schema.brand = {
-                    '@type': 'Brand',
-                    name: this.brandName,
-                }
-            }
-
-            const rawPrice = this.product?.price
-            const hasPrice =
-                rawPrice !== null &&
-                rawPrice !== undefined &&
-                rawPrice !== '' &&
-                !Number.isNaN(Number(rawPrice)) &&
-                Number(rawPrice) > 0
-
-            if (hasPrice) {
-                const currentUrl =
-                    typeof window !== 'undefined'
-                        ? window.location.href
-                        : this.$page?.props?.route?.url || ''
-                const offer = {
-                    '@type': 'Offer',
-                    priceCurrency: 'VND',
-                    price: String(Number(rawPrice)),
-                    itemCondition: 'https://schema.org/NewCondition',
-                    availability: 'https://schema.org/InStock',
-                }
-                if (currentUrl) {
-                    offer.url = currentUrl
-                }
-                if (this.brandName) {
-                    offer.seller = {
-                        '@type': 'Organization',
-                        name: this.brandName,
-                    }
-                }
-                schema.offers = offer
-            }
-
-            return schema
-        },
-        breadcrumbJsonLd() {
-            if (!this.currentTitle) return null
-
-            const toAbsolute = (path) => {
-                if (!path) return ''
-                if (/^https?:\/\//i.test(path)) return path
-                return this.siteOrigin
-                    ? `${this.siteOrigin}${path.startsWith('/') ? path : `/${path}`}`
-                    : path
-            }
-
-            const homeItem = toAbsolute(this.homeUrl)
-            const productsItem = toAbsolute(this.productsIndexUrl)
-            const currentUrl =
-                typeof window !== 'undefined'
-                    ? window.location.href
-                    : this.$page?.props?.route?.url ||
-                      toAbsolute(
-                          this.product?.slug
-                              ? `${this.productsIndexUrl}/${this.product.slug}`
-                              : this.productsIndexUrl
-                      )
-
-            return {
-                '@context': 'https://schema.org',
-                '@type': 'BreadcrumbList',
-                itemListElement: [
-                    {
-                        '@type': 'ListItem',
-                        position: 1,
-                        name: this.isEn ? 'Home' : 'Trang chủ',
-                        item: homeItem,
-                    },
-                    {
-                        '@type': 'ListItem',
-                        position: 2,
-                        name: this.isEn ? 'Products' : 'Sản phẩm',
-                        item: productsItem,
-                    },
-                    {
-                        '@type': 'ListItem',
-                        position: 3,
-                        name: this.currentTitle,
-                        item: currentUrl,
-                    },
-                ],
-            }
-        },
-    },
-    watch: {
-        tabs: {
-            immediate: true,
-            handler(nextTabs) {
-                if (!Array.isArray(nextTabs) || nextTabs.length === 0) {
-                    this.activeTab = ''
-                    return
-                }
-                if (!nextTabs.some((t) => t.id === this.activeTab)) {
-                    this.activeTab = nextTabs[0].id
-                }
-            },
-        },
-    },
-    methods: {
-        pickText(...values) {
-            for (const val of values) {
-                if (typeof val === 'string' && val.trim()) {
-                    return val.trim()
-                }
-            }
-            return ''
-        },
-        safeRoute(name, params, fallback = '/') {
-            if (typeof this.route === 'function' && typeof this.routes === 'function') {
-                const allRoutes = this.routes() || {}
-                const localizedName =
-                    typeof this.routeLocaleName === 'function' ? this.routeLocaleName(name) : name
-                if (allRoutes[localizedName] || allRoutes[name]) {
-                    try {
-                        const url = this.route(name, params)
-                        if (url && url !== '#') return url
-                    } catch (e) {
-                        // Fall through to fallback
-                    }
-                }
-            }
-            return fallback
-        },
-        selectTab(tabKey) {
-            const tabOrder = this.tabs.map((t) => t.id)
-            const oldIndex = tabOrder.indexOf(this.activeTab)
-            const newIndex = tabOrder.indexOf(tabKey)
-            this.tabSlideDirection = newIndex >= oldIndex ? 'next' : 'prev'
-            this.activeTab = tabKey
-        },
-        handleRequestQuote() {
-            openQuoteModal({
-                source: 'product_detail',
-                product: this.currentTitle,
-                category: this.currentCategory,
-                material: this.productMaterial,
-                color: this.productColor,
-            })
-        },
-    },
+    layout: MainLayout,
 }
 </script>
 
-<style scoped>
-.scrollbar-none::-webkit-scrollbar {
-    display: none;
+<script setup>
+import { computed, getCurrentInstance } from 'vue'
+import { Head, Link } from '@inertiajs/inertia-vue3'
+import ProductGallery from '@/Components/Product/ProductGallery.vue'
+import ProductTrustStrip from './Components/ProductTrustStrip.vue'
+import ProductDetailTabs from './Components/ProductDetailTabs.vue'
+import ProductFaqSection from './Components/ProductFaqSection.vue'
+import RelatedProducts from '@/Components/Product/RelatedProducts.vue'
+import ProductCtaBanner from './Components/ProductCtaBanner.vue'
+import EmptyState from '@/Components/EmptyState.vue'
+import { openQuoteModal } from '@/composables/useQuoteModal'
+import {
+    hasVietnameseDiacritics,
+    translateSpecLabel,
+    translateSpecValue,
+    useTranslate,
+} from '@/composables/useTranslate.js'
+
+const props = defineProps({
+    product: {
+        type: Object,
+        default: () => ({}),
+    },
+    related_products: {
+        type: Array,
+        default: () => [],
+    },
+    faqs: {
+        type: Array,
+        default: () => [],
+    },
+    ctaBanner: {
+        type: [Object, Array],
+        default: null,
+    },
+    pdpDefaults: {
+        type: Object,
+        default: () => ({}),
+    },
+    seo: {
+        type: Object,
+        default: null,
+    },
+})
+
+const instance = getCurrentInstance()
+const { translate, isEn, page, pageProps } = useTranslate()
+
+function translateLabel(raw) {
+    return translateSpecLabel(raw, translate)
 }
-.scrollbar-none {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+
+function translateValue(raw) {
+    return translateSpecValue(raw, translate, isEn.value)
 }
-</style>
+
+function safeRoute(name, params, fallback = '/') {
+    const proxy = instance?.proxy
+    if (proxy && typeof proxy.route === 'function') {
+        if (typeof proxy.routes === 'function') {
+            const allRoutes = proxy.routes() || {}
+            const localizedName =
+                typeof proxy.routeLocaleName === 'function' ? proxy.routeLocaleName(name) : name
+            if (!allRoutes[localizedName] && !allRoutes[name]) {
+                return fallback
+            }
+        }
+        try {
+            const url = proxy.route(name, params)
+            if (url && url !== '#') return url
+        } catch (e) {
+            // Fall through to localized fallback
+        }
+    }
+    return fallback
+}
+
+function pickNonEmpty(...values) {
+    for (const val of values) {
+        if (typeof val === 'string' && val.trim() !== '') {
+            return val.trim()
+        }
+        if (typeof val === 'number' && !Number.isNaN(val)) {
+            return String(val)
+        }
+    }
+    return ''
+}
+
+function toRelativeHref(rawUrl) {
+    if (typeof rawUrl !== 'string' || rawUrl.trim() === '') return ''
+    const trimmed = rawUrl.trim()
+    if (trimmed.startsWith('/')) return trimmed
+    if (/^https?:\/\//i.test(trimmed)) {
+        try {
+            const parsed = new URL(trimmed)
+            return `${parsed.pathname}${parsed.search}${parsed.hash}`
+        } catch (e) {
+            return trimmed
+        }
+    }
+    return trimmed
+}
+
+const globalConfig = computed(() => ({
+    ...(pageProps.value?.global || {}),
+    ...(pageProps.value?.configs || {}),
+}))
+
+const brandName = computed(() =>
+    pickNonEmpty(
+        globalConfig.value.general_business_name,
+        globalConfig.value.general_site_name,
+        globalConfig.value.company_name,
+        globalConfig.value.site_name
+    )
+)
+
+const siteOrigin = computed(() => {
+    if (typeof window !== 'undefined' && window.location?.origin) {
+        return window.location.origin
+    }
+    const routeUrl = pageProps.value?.route?.url
+    if (typeof routeUrl === 'string' && /^https?:\/\//i.test(routeUrl)) {
+        try {
+            return new URL(routeUrl).origin
+        } catch (e) {
+            // Ignore invalid URL
+        }
+    }
+    return ''
+})
+
+const homeUrl = computed(() => safeRoute('home', undefined, isEn.value ? '/en' : '/'))
+
+const productsIndexUrl = computed(() =>
+    safeRoute('products.index', undefined, isEn.value ? '/en/products' : '/san-pham')
+)
+
+const contactUrl = computed(() =>
+    safeRoute('contact', undefined, isEn.value ? '/en/contact' : '/lien-he')
+)
+
+const currentTitle = computed(() =>
+    pickNonEmpty(props.product?.title, props.product?.name)
+)
+
+const currentDescription = computed(() =>
+    pickNonEmpty(props.product?.description, props.product?.short_description)
+)
+
+const headTitle = computed(() => {
+    const seoTitle = pickNonEmpty(props.seo?.seo_meta_title, props.seo?.title)
+    if (seoTitle) return seoTitle
+    if (currentTitle.value) {
+        return brandName.value ? `${currentTitle.value} - ${brandName.value}` : currentTitle.value
+    }
+    return ''
+})
+
+const currentCategoryObj = computed(() => {
+    if (props.product?.category && typeof props.product.category === 'object') {
+        return props.product.category
+    }
+    if (Array.isArray(props.product?.categories) && props.product.categories.length > 0) {
+        return props.product.categories[0]
+    }
+    return null
+})
+
+const currentCategory = computed(() =>
+    pickNonEmpty(
+        currentCategoryObj.value?.title,
+        currentCategoryObj.value?.name,
+        props.product?.category_name
+    )
+)
+
+const currentCategorySlug = computed(() =>
+    pickNonEmpty(
+        currentCategoryObj.value?.seo_slug,
+        currentCategoryObj.value?.slug,
+        props.product?.category_slug
+    )
+)
+
+const categoryUrl = computed(() => {
+    if (currentCategorySlug.value) {
+        return `${productsIndexUrl.value}?category=${encodeURIComponent(currentCategorySlug.value)}`
+    }
+    if (currentCategoryObj.value?.id) {
+        return `${productsIndexUrl.value}?categories=${encodeURIComponent(currentCategoryObj.value.id)}`
+    }
+    return productsIndexUrl.value
+})
+
+const breadcrumbCategories = computed(() => {
+    const rawCrumbs = Array.isArray(props.product?.breadcrumbs) ? props.product.breadcrumbs : []
+    if (rawCrumbs.length > 0) {
+        const rootSlug = pickNonEmpty(rawCrumbs[0]?.slug)
+        return rawCrumbs
+            .map((crumb, idx) => {
+                if (!crumb || typeof crumb !== 'object') return null
+                const title = pickNonEmpty(crumb.title, crumb.name)
+                if (!title) return null
+
+                const slug = pickNonEmpty(crumb.seo_slug, crumb.slug)
+                let href = toRelativeHref(pickNonEmpty(crumb.url))
+                if (!href) {
+                    if (idx > 0 && rootSlug && slug) {
+                        href = `${productsIndexUrl.value}?category=${encodeURIComponent(rootSlug)}&subcategory=${encodeURIComponent(slug)}`
+                    } else if (slug) {
+                        href = `${productsIndexUrl.value}?category=${encodeURIComponent(slug)}`
+                    } else if (crumb.id) {
+                        href = `${productsIndexUrl.value}?categories=${encodeURIComponent(crumb.id)}`
+                    } else {
+                        href = productsIndexUrl.value
+                    }
+                }
+
+                return {
+                    key: crumb.id || slug || idx,
+                    title,
+                    href,
+                }
+            })
+            .filter(Boolean)
+    }
+
+    if (currentCategory.value) {
+        return [
+            {
+                key: currentCategoryObj.value?.id || currentCategorySlug.value || 'category',
+                title: currentCategory.value,
+                href: categoryUrl.value,
+            },
+        ]
+    }
+
+    return []
+})
+
+const galleryImages = computed(() => {
+    const sanitizeItemForLocale = (item) => {
+        if (typeof item === 'string') {
+            return item.trim() !== '' ? item : null
+        }
+        if (item && typeof item === 'object') {
+            const u = item.url || item.path || ''
+            if (typeof u !== 'string' || u.trim() === '') return null
+            if (!isEn.value) return item
+
+            const alt = typeof item.alt === 'string' ? item.alt.trim() : ''
+            const title = typeof item.title === 'string' ? item.title.trim() : ''
+            const needsCleanAlt = alt && (hasVietnameseDiacritics(alt) || (currentTitle.value && alt !== currentTitle.value))
+            const needsCleanTitle = title && hasVietnameseDiacritics(title)
+            if (!needsCleanAlt && !needsCleanTitle) return item
+
+            return {
+                ...item,
+                alt: needsCleanAlt ? '' : item.alt,
+                title: needsCleanTitle ? '' : item.title,
+            }
+        }
+        return null
+    }
+
+    if (Array.isArray(props.product?.images) && props.product.images.length > 0) {
+        const validImages = props.product.images.map(sanitizeItemForLocale).filter(Boolean)
+        if (validImages.length > 0) return validImages
+    }
+    if (props.product?.image) {
+        const validMain = [props.product.image].map(sanitizeItemForLocale).filter(Boolean)
+        if (validMain.length > 0) return validMain
+    }
+    return []
+})
+
+const ogImageUrl = computed(() => {
+    const first = galleryImages.value[0]
+    if (!first) return ''
+    if (typeof first === 'string') return first.trim()
+    return String(first.url || first.path || '').trim()
+})
+
+const pdpMetadata = computed(() => props.product?.pdp_metadata || {})
+
+const productSpecifications = computed(() => {
+    const candidates = [props.product?.specifications, pdpMetadata.value?.specifications]
+    for (const list of candidates) {
+        if (Array.isArray(list) && list.length > 0) {
+            return list
+                .map((row) => {
+                    if (!row || typeof row !== 'object') return null
+                    const label = pickNonEmpty(row.label, row.name, row.title)
+                    const value = pickNonEmpty(row.value, row.val, row.content)
+                    if (!label || !value) return null
+                    return { label, value }
+                })
+                .filter(Boolean)
+        }
+    }
+    return []
+})
+
+const highlightSpecs = computed(() => {
+    const filtered = productSpecifications.value.filter(
+        (spec) => !/(mã sản phẩm|\bsku\b|part number)/i.test(spec.label)
+    )
+    if (filtered.length === 0) return []
+
+    const picked = []
+    const usedIndices = new Set()
+
+    const pitchIndex = filtered.findIndex((spec) => /bước xích|pitch/i.test(spec.label))
+    if (pitchIndex !== -1) {
+        picked.push(filtered[pitchIndex])
+        usedIndices.add(pitchIndex)
+    }
+
+    const tensileIndex = filtered.findIndex(
+        (spec, idx) => !usedIndices.has(idx) && /độ bền kéo|lực kéo đứt|q\s*min/i.test(spec.label)
+    )
+    if (tensileIndex !== -1) {
+        picked.push(filtered[tensileIndex])
+        usedIndices.add(tensileIndex)
+    }
+
+    for (let i = 0; i < filtered.length && picked.length < 2; i += 1) {
+        if (!usedIndices.has(i)) {
+            picked.push(filtered[i])
+            usedIndices.add(i)
+        }
+    }
+
+    return picked.slice(0, 2)
+})
+
+const resolvedSku = computed(() => pickNonEmpty(props.product?.sku) || '—')
+
+const resolvedBrand = computed(
+    () =>
+        pickNonEmpty(
+            props.product?.brand_name,
+            props.product?.brand?.title,
+            props.product?.brand?.name,
+            pdpMetadata.value?.brand_name,
+            props.pdpDefaults?.brand
+        ) || '—'
+)
+
+const resolvedOrigin = computed(
+    () =>
+        pickNonEmpty(
+            props.product?.origin,
+            pdpMetadata.value?.origin,
+            props.pdpDefaults?.origin
+        ) || '—'
+)
+
+const resolvedWarranty = computed(
+    () =>
+        pickNonEmpty(
+            props.product?.warranty,
+            pdpMetadata.value?.warranty,
+            props.pdpDefaults?.warranty
+        ) || '—'
+)
+
+const resolvedCondition = computed(
+    () =>
+        pickNonEmpty(
+            props.product?.condition,
+            pdpMetadata.value?.condition,
+            props.pdpDefaults?.condition
+        ) || '—'
+)
+
+const resolvedStockStatus = computed(
+    () =>
+        pickNonEmpty(
+            props.product?.stock_status,
+            pdpMetadata.value?.stock_status,
+            props.pdpDefaults?.stock_status
+        ) || '—'
+)
+
+const resolvedTechnicalSupport = computed(
+    () =>
+        pickNonEmpty(
+            props.product?.technical_support,
+            pdpMetadata.value?.technical_support,
+            props.pdpDefaults?.technical_support
+        ) || '—'
+)
+
+const resolvedFaqs = computed(() => {
+    if (Array.isArray(props.faqs) && props.faqs.length > 0) {
+        return props.faqs
+    }
+    const pageFaqs = pageProps.value?.data?.faqs
+    return Array.isArray(pageFaqs) ? pageFaqs : []
+})
+
+const relatedProducts = computed(() => {
+    if (Array.isArray(props.related_products) && props.related_products.length > 0) {
+        return props.related_products
+    }
+    const pageRelated = pageProps.value?.data?.related_products
+    return Array.isArray(pageRelated) ? pageRelated : []
+})
+
+const productJsonLd = computed(() => {
+    if (!currentTitle.value) return null
+
+    const images = galleryImages.value
+        .map((img) => (typeof img === 'string' ? img : img?.url || img?.path || ''))
+        .filter(Boolean)
+
+    const schema = {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: currentTitle.value,
+        description: currentDescription.value,
+    }
+
+    if (images.length > 0) {
+        schema.image = images
+    }
+
+    const sku = pickNonEmpty(props.product?.sku)
+    if (sku) {
+        schema.sku = sku
+    }
+
+    const resolvedJsonBrand = resolvedBrand.value !== '—' ? resolvedBrand.value : brandName.value
+    if (resolvedJsonBrand) {
+        schema.brand = {
+            '@type': 'Brand',
+            name: resolvedJsonBrand,
+        }
+    }
+
+    const rawPrice = props.product?.price
+    const hasPrice =
+        rawPrice !== null &&
+        rawPrice !== undefined &&
+        rawPrice !== '' &&
+        !Number.isNaN(Number(rawPrice)) &&
+        Number(rawPrice) > 0
+
+    if (hasPrice) {
+        const currentUrl =
+            typeof window !== 'undefined'
+                ? window.location.href
+                : pageProps.value?.route?.url || ''
+        const offer = {
+            '@type': 'Offer',
+            priceCurrency: 'VND',
+            price: String(Number(rawPrice)),
+            itemCondition: 'https://schema.org/NewCondition',
+            availability: 'https://schema.org/InStock',
+        }
+        if (currentUrl) {
+            offer.url = currentUrl
+        }
+        if (brandName.value) {
+            offer.seller = {
+                '@type': 'Organization',
+                name: brandName.value,
+            }
+        }
+        schema.offers = offer
+    }
+
+    return schema
+})
+
+const breadcrumbJsonLd = computed(() => {
+    if (!currentTitle.value) return null
+
+    const toAbsolute = (path) => {
+        if (!path) return ''
+        if (/^https?:\/\//i.test(path)) return path
+        return siteOrigin.value
+            ? `${siteOrigin.value}${path.startsWith('/') ? path : `/${path}`}`
+            : path
+    }
+
+    const currentUrl =
+        typeof window !== 'undefined'
+            ? window.location.href
+            : pageProps.value?.route?.url ||
+              toAbsolute(
+                  props.product?.slug
+                      ? `${productsIndexUrl.value}/${props.product.slug}`
+                      : productsIndexUrl.value
+              )
+
+    const elements = [
+        {
+            '@type': 'ListItem',
+            position: 1,
+            name: isEn.value ? 'Home' : 'Trang chủ',
+            item: toAbsolute(homeUrl.value),
+        },
+        {
+            '@type': 'ListItem',
+            position: 2,
+            name: isEn.value ? 'Products' : 'Sản phẩm',
+            item: toAbsolute(productsIndexUrl.value),
+        },
+    ]
+
+    breadcrumbCategories.value.forEach((crumb) => {
+        elements.push({
+            '@type': 'ListItem',
+            position: elements.length + 1,
+            name: crumb.title,
+            item: toAbsolute(crumb.href),
+        })
+    })
+
+    elements.push({
+        '@type': 'ListItem',
+        position: elements.length + 1,
+        name: currentTitle.value,
+        item: currentUrl,
+    })
+
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: elements,
+    }
+})
+
+function handleRequestQuote() {
+    openQuoteModal({
+        source: 'product_detail',
+        product: currentTitle.value,
+        sku: pickNonEmpty(props.product?.sku),
+        category: currentCategory.value,
+    })
+}
+</script>

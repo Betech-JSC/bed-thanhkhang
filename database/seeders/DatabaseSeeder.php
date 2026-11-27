@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             ThanhKhangSettingSeeder::class,
+            ThanhKhangProductDetailSettingsSeeder::class,
             ThanhKhangPolicySeeder::class,
             ThanhKhangProductCatalogSeeder::class,
             ThanhKhangProductHeroSeeder::class,
@@ -42,6 +43,7 @@ class DatabaseSeeder extends Seeder
             ThanhKhangAboutStatsSeeder::class,
             ThanhKhangAboutCompanionSeeder::class,
             ThanhKhangDocumentBannerSeeder::class,
+            ThanhKhangGlobalCtaBannerSeeder::class,
             ThanhKhangDocumentLibrarySeeder::class,
         ]);
 

@@ -79,9 +79,11 @@ class Brand extends BaseModel
 
     public function transform()
     {
+        $slug = trim((string) ($this->seo_slug ?: $this->slug ?: '')) ?: null;
+
         return [
             'id' => $this->id,
-            'slug' => $this->seo_slug ?? $this->slug,
+            'slug' => $slug,
             'url' => $this->url,
             'title' => $this->title,
             'image' => $this->getImageDetail()
@@ -90,9 +92,11 @@ class Brand extends BaseModel
 
     public function transformDetails()
     {
+        $slug = trim((string) ($this->seo_slug ?: $this->slug ?: '')) ?: null;
+
         return [
             'id' => $this->id,
-            'slug' => $this->seo_slug ?? $this->slug,
+            'slug' => $slug,
             'url' => $this->url,
             'title' => $this->title,
             'summary' => $this->summary,
@@ -126,9 +130,14 @@ class Brand extends BaseModel
 
         if ($this->status == self::STATUS_ACTIVE) {
             foreach ($this->translations as $translation) {
-                $urls[strtoupper($translation->locale)] = route("$translation->locale.products.show", [
-                    'slug' => $translation->seo_slug ?? $translation->slug,
-                ]);
+                $slug = trim((string) ($translation->seo_slug ?: $translation->slug ?: ''));
+                $routeName = "$translation->locale.brands.show";
+
+                if (filled($slug) && \Illuminate\Support\Facades\Route::has($routeName)) {
+                    $urls[strtoupper($translation->locale)] = route($routeName, [
+                        'slug' => $slug,
+                    ]);
+                }
             }
         }
         return $urls;
