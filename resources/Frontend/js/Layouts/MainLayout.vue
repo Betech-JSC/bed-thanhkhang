@@ -1,7 +1,7 @@
 <template>
     <div
         class="min-h-screen flex flex-col bg-surface text-ink-body font-sans antialiased selection:bg-primary selection:text-white"
-        style="--header-height-desktop: 118px; --header-height-mobile: 92px;"
+        style="--header-height-desktop: 118px; --header-height-mobile: 94px;"
     >
         <Header />
         <main id="main-content" class="flex-grow">

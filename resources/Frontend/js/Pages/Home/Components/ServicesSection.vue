@@ -4,20 +4,20 @@
         id="why-choose-us-section"
         class="bg-[#FAFAFA] pt-3 pb-0 md:pt-12 lg:pt-0 lg:pb-5"
     >
-        <!-- Top Title Row (Figma 1171:41561 / 1191:6400 — 1152px narrow container) -->
+        <!-- Top Title Row (Figma 1171:41561 / 1314:52051 — 1152px narrow container) -->
         <div v-if="trust?.heading" class="app-container-narrow mb-4 md:mb-6 lg:mb-8">
-            <div class="flex items-center gap-2 lg:gap-[10px]">
-                <span class="w-[10px] h-[10px] lg:w-3 lg:h-3 rounded-[2px] bg-[#005EA4] shrink-0" aria-hidden="true" />
+            <div class="flex items-start gap-2 lg:gap-[10px]">
+                <span class="mt-[7px] lg:mt-[9px] w-[10px] h-[10px] lg:w-3 lg:h-3 rounded-[2px] bg-[#005EA4] shrink-0" aria-hidden="true" />
                 <h2 class="font-bold text-[16px] lg:text-[18px] leading-[24px] lg:leading-[1.6] text-[#005EA4]">
                     {{ trust.heading }}
                 </h2>
             </div>
         </div>
 
-        <!-- Full-Bleed Trust Banner (Figma 1264:48080 — locked 578px Desktop; Figma 1191:6403 — 390x588 Mobile) -->
+        <!-- Full-Bleed Trust Banner (Figma 1264:48080 — locked 578px Desktop; Figma 1314:52054 — min-h 611px Mobile) -->
         <div
             v-if="trustItems.length > 0"
-            class="relative w-full overflow-hidden bg-[#00284B] lg:h-[578px] flex items-center"
+            class="relative w-full overflow-hidden bg-[#00284B] min-h-[611px] lg:min-h-0 lg:h-[578px] flex items-center"
         >
             <!-- Background Photo -->
             <picture v-if="bannerUrl" class="absolute inset-0 block w-full h-full pointer-events-none select-none">
@@ -38,11 +38,11 @@
             <!-- Dark Contrast Overlay (Figma 595:15400) -->
             <div class="absolute inset-0 bg-[#011229]/50 pointer-events-none" aria-hidden="true" />
 
-            <!-- Desktop 5-Node Wave Diagram (lg+, when <= 5 pillars) -->
-            <div
-                v-if="useWaveLayout"
-                class="hidden lg:flex items-center justify-center relative z-10 w-full"
-            >
+            <template v-if="useWaveLayout">
+                <!-- Desktop 5-Node Wave Diagram (lg+, when <= 5 pillars) -->
+                <div
+                    class="hidden lg:flex items-center justify-center relative z-10 w-full"
+                >
                 <div class="relative w-[1152px] h-[260px] shrink-0 lg:scale-[0.84] xl:scale-100 origin-center">
                     <!-- 4 Concave Metaball Bridges -->
                     <div
@@ -158,9 +158,80 @@
                 </div>
             </div>
 
-            <!-- Mobile, Tablet, or Desktop Extended Grid (Figma 1191:6404 — py-7 px-4 gap-3 min-h-[92px] on Mobile) -->
+                <!-- Mobile / Tablet Vertical 5-Node Metaball Wave Timeline (lg:hidden, when <= 5 pillars — Figma 1314:52054) -->
+                <div
+                    class="lg:hidden relative z-10 w-full py-9 md:py-10"
+                >
+                    <div class="app-container-narrow">
+                        <div class="flex flex-col">
+                            <article
+                                v-for="(item, idx) in trustItems"
+                                :key="item.id || idx"
+                                class="flex items-stretch gap-4"
+                            >
+                                <!-- Left Timeline Spine: #C9E0FF Circle + Concave Metaball Bridge -->
+                                <div class="w-[70px] shrink-0 flex flex-col items-center">
+                                    <div
+                                        class="relative z-10 w-[70px] h-[70px] rounded-full bg-[#C9E0FF] flex items-center justify-center shrink-0"
+                                    >
+                                        <div
+                                            class="w-[56px] h-[56px] rounded-full bg-[#00284B] flex items-center justify-center overflow-hidden"
+                                        >
+                                            <img
+                                                v-if="item.icon?.url"
+                                                :src="item.icon.url"
+                                                :alt="item.icon.alt || item.title || ''"
+                                                width="28"
+                                                height="28"
+                                                class="w-7 h-7 object-contain"
+                                                loading="lazy"
+                                                decoding="async"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <!-- Concave Vertical Metaball Bridge (guarantees >= 28px gap + 18px circle overlap) -->
+                                    <div
+                                        v-if="idx < trustItems.length - 1"
+                                        class="relative z-0 flex-1 w-[58px] min-h-[28px] pointer-events-none select-none"
+                                        aria-hidden="true"
+                                    >
+                                        <svg
+                                            viewBox="0 0 58 100"
+                                            preserveAspectRatio="none"
+                                            class="absolute inset-x-0 -top-[18px] w-full h-[calc(100%+36px)] block"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                d="M6 0L52 0C52 14 36 27 36 50C36 73 52 86 52 100L6 100C6 86 22 73 22 50C22 27 6 14 6 0Z"
+                                                fill="#C9E0FF"
+                                            />
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <!-- Right Borderless Content on Dark Banner -->
+                                <div
+                                    class="min-w-0 flex-1 pt-1"
+                                    :class="idx < trustItems.length - 1 ? 'pb-9' : 'pb-0'"
+                                >
+                                    <h3 class="font-bold text-[16px] leading-[1.4] text-[#FAFAFA]">
+                                        {{ item.title }}
+                                    </h3>
+                                    <p v-if="item.description" class="mt-1 font-normal text-[13px] leading-[20px] text-[#E3E8EF]">
+                                        {{ item.description }}
+                                    </p>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Fallback Extended Grid (only when CMS items > 5) -->
             <div
-                :class="useWaveLayout ? 'lg:hidden' : ''"
+                v-else
                 class="relative z-10 w-full py-7 md:py-10"
             >
                 <div class="app-container-narrow">

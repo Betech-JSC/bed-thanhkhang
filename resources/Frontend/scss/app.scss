@@ -99,13 +99,13 @@
     --gutter-mobile: 1rem;                /* 16px (px-4) */
     --gutter-desktop: 2rem;               /* 32px (px-8) */
 
-    /* Header Metrics (Desktop 979:32411 = 118px; Mobile 1190:6336 = 92px) */
+    /* Header Metrics (Desktop 979:32411 = 118px; Mobile Figma 2:9 1314:51988 = 94px) */
     --header-topbar-height-desktop: 46px;
     --header-mainbar-height-desktop: 72px;
     --header-height-desktop: 118px;
-    --header-topbar-height-mobile: 31px;
+    --header-topbar-height-mobile: 33px;
     --header-mainbar-height-mobile: 61px;
-    --header-height-mobile: 92px;
+    --header-height-mobile: 94px;
 }
 
 @layer base {

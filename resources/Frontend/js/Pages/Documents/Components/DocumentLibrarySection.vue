@@ -89,7 +89,7 @@
                                         v-model="searchQuery"
                                         type="search"
                                         :placeholder="tt('Tìm kiếm tài liệu, mã xích,...')"
-                                        class="search-input-clean w-full min-w-0 bg-transparent text-[14px] leading-[22px] text-[#00284B] placeholder:text-[#9AA4B2] focus:outline-none"
+                                        class="search-input-clean w-full min-w-0 bg-transparent text-base lg:text-[14px] leading-[22px] text-[#00284B] placeholder:text-[#9AA4B2] focus:outline-none"
                                         @input="handleSearchInput"
                                     />
 
@@ -97,7 +97,7 @@
                                         v-if="searchQuery.length > 0"
                                         type="button"
                                         :aria-label="tt('Xóa từ khóa')"
-                                        class="w-7 h-7 rounded-[4px] inline-flex items-center justify-center text-[#697586] hover:text-[#00284B] hover:bg-[#EEF2F6] transition-colors shrink-0 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]"
+                                        class="w-11 h-11 -mr-2 rounded-[4px] inline-flex items-center justify-center text-[#697586] hover:text-[#00284B] hover:bg-[#EEF2F6] transition-colors shrink-0 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]"
                                         @click="clearSearch"
                                     >
                                         <svg

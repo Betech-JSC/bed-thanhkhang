@@ -44,10 +44,10 @@
         </div>
     </div>
 
-    <!-- Mobile Top Info Bar (Figma 1190:6337 — 31px, #00284B, px-4) -->
+    <!-- Mobile Top Info Bar (Figma 1314:51989 — 33px, #00284B, px-4) -->
     <div
         v-if="contactPhone || contactEmail"
-        class="lg:hidden w-full h-[31px] bg-dark text-surface-light px-4 flex items-center justify-between gap-3 antialiased"
+        class="lg:hidden w-full h-[33px] bg-dark text-surface-light px-4 flex items-center justify-between gap-3 antialiased"
     >
         <a
             v-if="contactPhone"
@@ -341,42 +341,46 @@
                 </div>
             </div>
 
-            <!-- Mobile Main Nav Controls (< lg, Figma 1314:51998: Search 36x36 + Hamburger 36x36 = 80x36) -->
-            <div class="flex items-center gap-2 lg:hidden shrink-0">
+            <!-- Mobile Main Nav Controls (< lg, Figma 1314:51998: >=44x44 touch targets wrapping 36x36 visual boxes) -->
+            <div class="flex items-center gap-0 lg:hidden shrink-0">
                 <button
                     type="button"
                     @click="isSearchOpen = true"
-                    class="w-9 h-9 inline-flex items-center justify-center rounded-cta bg-white hover:bg-surface-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors cursor-pointer shrink-0"
+                    class="group w-11 h-11 inline-flex items-center justify-center rounded-cta focus:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer shrink-0"
                     :title="tt('Tìm kiếm')"
                     :aria-label="tt('Tìm kiếm')"
                 >
-                    <img
-                        src="/assets/svg/icons/header-search.svg"
-                        alt=""
-                        aria-hidden="true"
-                        width="20"
-                        height="20"
-                        class="w-5 h-5 object-contain"
-                    />
+                    <span class="w-9 h-9 inline-flex items-center justify-center rounded-cta bg-white group-hover:bg-surface-100 transition-colors">
+                        <img
+                            src="/assets/svg/icons/header-search.svg"
+                            alt=""
+                            aria-hidden="true"
+                            width="20"
+                            height="20"
+                            class="w-5 h-5 object-contain"
+                        />
+                    </span>
                 </button>
 
                 <button
                     type="button"
                     data-testid="mobile-menu-toggle"
                     @click="openDrawer"
-                    class="w-9 h-9 inline-flex items-center justify-center rounded-cta bg-surface-100 hover:bg-surface-200 text-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors cursor-pointer shrink-0"
+                    class="group w-11 h-11 -mr-1 inline-flex items-center justify-center rounded-cta focus:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer shrink-0"
                     :aria-label="tt('Mở danh mục điều hướng')"
                     :aria-expanded="isDrawerOpen"
                     aria-controls="mobile-drawer"
                 >
-                    <img
-                        src="/assets/svg/icons/header-menu.svg"
-                        alt=""
-                        aria-hidden="true"
-                        width="22"
-                        height="22"
-                        class="w-[22px] h-[22px] object-contain"
-                    />
+                    <span class="w-9 h-9 inline-flex items-center justify-center rounded-cta bg-surface-100 group-hover:bg-surface-200 text-dark transition-colors">
+                        <img
+                            src="/assets/svg/icons/header-menu.svg"
+                            alt=""
+                            aria-hidden="true"
+                            width="22"
+                            height="22"
+                            class="w-[22px] h-[22px] object-contain"
+                        />
+                    </span>
                 </button>
             </div>
         </div>
@@ -456,7 +460,7 @@
                                     <Link
                                         :href="menu.href"
                                         @click="closeDrawer"
-                                        class="flex-1 px-3 py-2.5 text-[14px] font-bold uppercase leading-[1.4]"
+                                        class="flex-1 min-h-[44px] px-3 py-2.5 flex items-center text-[14px] font-bold uppercase leading-[1.4]"
                                     >
                                         {{ menu.title }}
                                     </Link>
@@ -498,15 +502,15 @@
                                                 <Link
                                                     :href="cat.url"
                                                     @click="closeDrawer"
-                                                    class="flex-1 px-3 py-2 text-[14px] font-semibold text-dark hover:text-primary truncate"
+                                                    class="flex-1 min-w-0 min-h-[44px] px-3 py-2 flex items-center text-[14px] font-semibold text-dark hover:text-primary"
                                                 >
-                                                    {{ cat.title }}
+                                                    <span class="truncate">{{ cat.title }}</span>
                                                 </Link>
                                                 <button
                                                     v-if="cat.children && cat.children.length > 0"
                                                     type="button"
                                                     @click.stop="toggleMobileCategory('cat-' + (cat.id || cat.slug))"
-                                                    class="w-10 h-10 inline-flex items-center justify-center rounded-[6px] hover:bg-surface-200 shrink-0 cursor-pointer"
+                                                    class="w-11 h-11 inline-flex items-center justify-center rounded-[6px] hover:bg-surface-200 shrink-0 cursor-pointer"
                                                     :aria-label="tt('Mở rộng danh mục con')"
                                                     :aria-expanded="isMobileCategoryExpanded('cat-' + (cat.id || cat.slug))"
                                                 >
@@ -533,19 +537,19 @@
                                                         :key="child.id || child.slug"
                                                         class="space-y-0.5"
                                                     >
-                                                        <div class="flex items-center justify-between min-h-[40px] rounded-[6px] hover:bg-surface-100">
+                                                        <div class="flex items-center justify-between min-h-[44px] rounded-[6px] hover:bg-surface-100">
                                                             <Link
                                                                 :href="child.url"
                                                                 @click="closeDrawer"
-                                                                class="flex-1 px-3 py-2 text-[13px] font-bold text-primary hover:text-primary-sub-hover truncate"
+                                                                class="flex-1 min-w-0 min-h-[44px] px-3 py-2 flex items-center text-[13px] font-bold text-primary hover:text-primary-sub-hover"
                                                             >
-                                                                {{ child.title }}
+                                                                <span class="truncate">{{ child.title }}</span>
                                                             </Link>
                                                             <button
                                                                 v-if="child.children && child.children.length > 0"
                                                                 type="button"
                                                                 @click.stop="toggleMobileCategory('sub-' + (child.id || child.slug))"
-                                                                class="w-9 h-9 inline-flex items-center justify-center rounded-[6px] hover:bg-surface-200 shrink-0 cursor-pointer"
+                                                                class="w-11 h-11 inline-flex items-center justify-center rounded-[6px] hover:bg-surface-200 shrink-0 cursor-pointer"
                                                                 :aria-label="tt('Mở rộng danh mục con')"
                                                                 :aria-expanded="isMobileCategoryExpanded('sub-' + (child.id || child.slug))"
                                                             >
@@ -574,7 +578,7 @@
                                                                 :key="leaf.id || leaf.slug"
                                                                 :href="leaf.url"
                                                                 @click="closeDrawer"
-                                                                class="min-h-[38px] px-3 py-1.5 rounded-[6px] flex items-center text-[13px] font-medium text-ink-subtle hover:text-dark hover:bg-surface-100"
+                                                                class="min-h-[44px] px-3 py-2 rounded-[6px] flex items-center text-[13px] font-medium text-ink-subtle hover:text-dark hover:bg-surface-100"
                                                             >
                                                                 <span class="truncate">{{ leaf.title }}</span>
                                                             </Link>
@@ -621,7 +625,7 @@
                 </div>
 
                 <!-- Drawer Bottom: CTAs + Contact Info from CMS -->
-                <div class="p-5 pt-4 border-t border-gray-200 bg-surface-50 space-y-4">
+                <div class="p-5 pt-4 pb-[calc(1.25rem+env(safe-area-inset-bottom))] border-t border-gray-200 bg-surface-50 space-y-4">
                     <div class="flex flex-col gap-2.5">
                         <button
                             type="button"
@@ -1188,7 +1192,7 @@ export default {
         },
         handleScroll() {
             if (typeof window === 'undefined') return
-            const threshold = window.innerWidth >= 1024 ? 46 : 31
+            const threshold = window.innerWidth >= 1024 ? 46 : 33
             this.isScrolled = window.scrollY > threshold
         },
         handleClickOutside(e) {
@@ -1236,7 +1240,7 @@ body {
     --header-height-md: 61px;
     --header-height-lg: 72px;
     --header-height-xl: 72px;
-    --header-total-sm: 92px;
+    --header-total-sm: 94px;
     --header-total-lg: 118px;
 }
 </style>

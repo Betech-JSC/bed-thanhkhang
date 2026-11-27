@@ -18,7 +18,7 @@
                 </div>
 
                 <!-- Text Header Content (Figma Node 2701:5764: 599x224px, left: 64px, bottom: 64px, gap: 16px) -->
-                <div class="relative z-10 w-full max-w-[599px] flex flex-col gap-4">
+                <div class="relative z-10 w-full max-w-[599px] sm:pr-[132px] lg:pr-0 flex flex-col gap-4">
                     <!-- Category (Figma Node 2701:5765: 16px / 22px / Regular / #D1E0FF) -->
                     <p class="text-[#D1E0FF] text-sm sm:text-[16px] font-normal leading-[22px] uppercase select-none tracking-wide">
                         {{ tt(categoryText) }}
@@ -33,31 +33,34 @@
                     <p class="text-[#D1E0FF] text-sm sm:text-[16px] leading-relaxed lg:leading-[26px] font-normal max-w-[599px]">
                         {{ tt(descriptionText) }}
                     </p>
+                </div>
 
+                <!-- Bottom Action Row on < sm (Mobile CTA + Rotating Badge cleanly separated), restoring sm:absolute for >= 640px -->
+                <div class="relative z-10 mt-6 flex flex-wrap items-end justify-between gap-4 sm:static sm:mt-0 sm:block">
                     <!-- Mobile Quick CTA Button -->
-                    <div class="pt-2 sm:hidden">
+                    <div class="sm:hidden">
                         <button
                             type="button"
                             @click="handleCtaClick"
-                            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-sm font-medium transition-colors shadow-glow-primary-subtle"
+                            class="inline-flex items-center justify-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-sm font-medium transition-colors shadow-glow-primary-subtle cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
                         >
                             <span>{{ tt(ctaText) }}</span>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                             </svg>
                         </button>
                     </div>
-                </div>
 
-                <!-- Rotating Badge 360° & Scroll CTA (Figma Node 2701:5768 Frame 237, 114x114px, right: 64px, bottom: 64px) -->
-                <div class="relative z-10 self-end sm:self-auto sm:absolute sm:right-8 sm:bottom-8 lg:right-16 lg:bottom-16 mt-6 sm:mt-0">
-                    <CircularBadge
-                        tag="button"
-                        type="button"
-                        :title="tt('Cuộn xuống xem 5 bước quy trình')"
-                        :aria-label="tt('Cuộn xuống xem 5 bước quy trình')"
-                        @click="scrollToSteps"
-                    />
+                    <!-- Rotating Badge 360° & Scroll CTA (Figma Node 2701:5768 Frame 237, 114x114px, right: 64px, bottom: 64px) -->
+                    <div class="ml-auto sm:ml-0 sm:absolute sm:right-8 sm:bottom-8 lg:right-16 lg:bottom-16 sm:z-10">
+                        <CircularBadge
+                            tag="button"
+                            type="button"
+                            :title="tt('Cuộn xuống xem 5 bước quy trình')"
+                            :aria-label="tt('Cuộn xuống xem 5 bước quy trình')"
+                            @click="scrollToSteps"
+                        />
+                    </div>
                 </div>
             </div>
         </div>

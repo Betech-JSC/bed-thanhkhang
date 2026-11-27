@@ -512,4 +512,5 @@ METICULOUS IN EVERY PRODUCT',
     'Danh mục' => 'Category',
     'Màu sắc' => 'Color',
     'Đội ngũ kỹ thuật sẽ liên hệ quý khách trong thời gian sớm nhất' => 'Our technical team will contact you as soon as possible',
+    'BÁO GIÁ CÁC SẢN PHẨM TẠI THÀNH KHANG' => 'QUOTATION FOR PRODUCTS AT THANH KHANG',
 ];

@@ -10,7 +10,7 @@
         >
             <div
                 v-if="isOpen"
-                class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-[2px] px-4 md:px-8 py-6 overflow-hidden overscroll-none"
+                class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-[2px] px-4 md:px-8 py-4 lg:py-6 overflow-hidden overscroll-none"
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="quote-popup-title"
@@ -21,29 +21,31 @@
                     @click.self="handleClose"
                 >
                     <div
-                        class="max-h-[calc(100dvh-112px)] flex flex-col overflow-hidden relative w-full bg-dark rounded-cta shadow-2xl"
+                        class="max-h-[calc(100dvh-32px)] lg:max-h-[calc(100dvh-112px)] flex flex-col overflow-hidden relative w-full bg-dark rounded-cta shadow-2xl"
                     >
-                        <!-- Mobile Close Button (Top-Right of Popup Card) -->
-                        <button
-                            type="button"
-                            class="lg:hidden absolute top-3.5 right-3.5 z-30 w-9 h-9 rounded-btn text-white/90 hover:text-white hover:bg-white/10 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white/80 transition-colors"
-                            :aria-label="translate('Đóng')"
-                            @click="handleClose"
-                        >
-                            <svg
-                                class="w-5 h-5"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="1.75"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                aria-hidden="true"
+                        <!-- Mobile Close Row (Dedicated non-scrolling top bar above scrollable body, Figma 1329:52835) -->
+                        <div class="lg:hidden shrink-0 flex items-center justify-end px-3 pt-2.5 pb-1 bg-dark z-20">
+                            <button
+                                type="button"
+                                class="w-11 h-11 rounded-btn text-white/90 hover:text-white hover:bg-white/10 inline-flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white/80 transition-colors cursor-pointer"
+                                :aria-label="translate('Đóng')"
+                                @click="handleClose"
                             >
-                                <line x1="18" y1="6" x2="6" y2="18" />
-                                <line x1="6" y1="6" x2="18" y2="18" />
-                            </svg>
-                        </button>
+                                <svg
+                                    class="w-5 h-5"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.75"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    aria-hidden="true"
+                                >
+                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                </svg>
+                            </button>
+                        </div>
 
                         <!-- Decorative Chain Mask: Top-Right (Exact Figma 1264:49743) -->
                         <div
@@ -83,7 +85,7 @@
 
                         <!-- Scrollable Body Container (Mobile & Low-Height Viewports) / Flex Row (Desktop) -->
                         <div
-                            class="relative z-10 flex-1 min-h-0 overflow-y-auto overscroll-contain pt-12 px-5 pb-5 sm:pt-12 sm:px-6 sm:pb-6 lg:p-8 flex flex-col lg:flex-row gap-4 md:gap-6 items-stretch lg:items-center"
+                            class="relative z-10 flex-1 min-h-0 overflow-y-auto overscroll-contain pt-1 px-5 pb-5 sm:pt-1 sm:px-6 sm:pb-6 lg:p-8 flex flex-col lg:flex-row gap-4 md:gap-6 items-stretch lg:items-center"
                         >
                             <!-- Left Column: Brand Value Proposition & 4 Assurances -->
                             <div class="relative z-10 min-w-0 flex flex-col lg:justify-start gap-5 md:gap-6 lg:gap-8 lg:w-[372px] lg:h-auto shrink-0">
@@ -420,7 +422,7 @@ const displayTitle = computed(() => {
     return (
         props.quoteContent?.title ||
         getLocalizedConfig('quote_popup_title') ||
-        translate('NHẬN BÁO GIÁ CÁC SẢN PHẨM TẠI THÀNH KHANG')
+        translate('BÁO GIÁ CÁC SẢN PHẨM TẠI THÀNH KHANG')
     )
 })
 
@@ -713,48 +715,7 @@ onBeforeUnmount(() => {
     -webkit-mask-repeat: no-repeat;
 }
 
-/* Mobile: smaller & tucked to edges so they don't cross heading/text */
-.quote-chain-wrap--top-right {
-    display: flex;
-    width: 340px;
-    height: 202px;
-    right: -135px;
-    top: -102px;
-    opacity: 0.45;
-}
-.quote-chain-rot--top-right {
-    transform: rotate(161.81deg);
-}
-.quote-chain-img--top-right {
-    width: 321px;
-    height: 107px;
-    mask-position: -142px 60px;
-    -webkit-mask-position: -142px 60px;
-    mask-size: 531px 126px;
-    -webkit-mask-size: 531px 126px;
-}
-
-.quote-chain-wrap--bottom-left {
-    display: flex;
-    width: 420px;
-    height: 252px;
-    left: -90px;
-    bottom: -120px;
-    opacity: 0.65;
-}
-.quote-chain-rot--bottom-left {
-    transform: rotate(161.64deg);
-}
-.quote-chain-img--bottom-left {
-    width: 399px;
-    height: 133px;
-    mask-position: -130px 41px;
-    -webkit-mask-position: -130px 41px;
-    mask-size: 542px 185px;
-    -webkit-mask-size: 542px 185px;
-}
-
-/* Desktop (>=1024px): Exact Figma 1264:49742 geometry & full opacity */
+/* Desktop (>=1024px): Exact Figma 1264:49742 geometry & full opacity (hidden on <1024px per Figma 1329:52835) */
 @media (min-width: 1024px) {
     .quote-chain-wrap {
         display: flex;
@@ -767,6 +728,9 @@ onBeforeUnmount(() => {
         right: -373.876px;
         left: auto;
         top: -168px;
+    }
+    .quote-chain-rot--top-right {
+        transform: rotate(161.81deg);
     }
     .quote-chain-img--top-right {
         width: 642.146px;
@@ -783,6 +747,9 @@ onBeforeUnmount(() => {
         left: 104.64px;
         top: 240.78px;
         bottom: auto;
+    }
+    .quote-chain-rot--bottom-left {
+        transform: rotate(161.64deg);
     }
     .quote-chain-img--bottom-left {
         width: 798px;

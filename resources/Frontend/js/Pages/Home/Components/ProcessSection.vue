@@ -43,7 +43,7 @@
         <div class="relative z-10 w-full lg:max-w-[1216px] lg:mx-auto lg:px-8 lg:min-h-[954px] flex flex-col lg:flex-row lg:items-stretch lg:justify-between lg:gap-10">
             <!-- Left Column: Vertically Centered Intro Copy (Mobile carries full-bleed sprocket banner; Desktop overlays left visual panel) -->
             <div
-                class="relative w-full lg:w-[420px] xl:w-[488px] lg:shrink-0 bg-[#00284B] lg:bg-transparent aspect-[739/954] max-h-[480px] sm:aspect-[4/3] sm:max-h-[440px] lg:aspect-auto lg:max-h-none flex flex-col justify-center px-4 py-8 md:px-8 lg:px-0 lg:py-[80px]"
+                class="relative w-full lg:w-[420px] xl:w-[488px] lg:shrink-0 bg-[#00284B] lg:bg-transparent min-h-[500px] aspect-[390/500] sm:aspect-auto sm:min-h-[420px] lg:aspect-auto lg:min-h-0 flex flex-col justify-start pt-8 pb-8 px-4 md:px-8 lg:justify-center lg:px-0 lg:py-[80px]"
             >
                 <!-- Mobile/Tablet Background Image & Scrim Layer -->
                 <div class="lg:hidden absolute inset-0 overflow-hidden pointer-events-none select-none">
@@ -78,7 +78,7 @@
                     </h2>
                     <p
                         v-if="process?.description"
-                        class="font-normal lg:font-medium text-[13px] sm:text-[14px] lg:text-[16px] leading-[1.6] text-[#E3E8EF] line-clamp-4 lg:line-clamp-none break-words"
+                        class="font-normal lg:font-medium text-[13px] sm:text-[14px] lg:text-[16px] leading-[1.6] text-[#E3E8EF] break-words"
                     >
                         {{ process.description }}
                     </p>
@@ -87,17 +87,32 @@
 
             <!-- Right Column: Sticky Stacking Process Step Cards (493x166 Desktop Figma 1264:48134..48158, 358x120 Mobile Figma 1191:6453) -->
             <div
-                class="w-full lg:w-[460px] xl:w-[493px] lg:shrink-0 bg-[#F8FAFC] lg:bg-transparent flex flex-col justify-center lg:justify-start pt-6 pb-9 px-4 md:px-8 md:py-12 lg:px-0 lg:pt-[80px] lg:pb-[90px]"
+                class="relative overflow-hidden lg:overflow-visible w-full lg:w-[460px] xl:w-[493px] lg:shrink-0 bg-[#F8FAFC] lg:bg-transparent flex flex-col justify-center lg:justify-start pt-6 pb-9 px-4 md:px-8 md:py-12 lg:px-0 lg:pt-[80px] lg:pb-[90px]"
             >
+                <!-- Mobile Decorative Wave Background Layer (Figma 1314:52102) -->
+                <div
+                    class="lg:hidden pointer-events-none select-none absolute inset-0 z-0 opacity-85"
+                    aria-hidden="true"
+                    style="mask-image: url('/assets/svg/homepage/process-wave-mask.svg'); -webkit-mask-image: url('/assets/svg/homepage/process-wave-mask.svg'); mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-position: center; -webkit-mask-position: center;"
+                >
+                    <img
+                        src="/assets/images/homepage/process-wave-bg.png"
+                        alt=""
+                        class="w-full h-full object-fill"
+                        loading="lazy"
+                        decoding="async"
+                    />
+                </div>
+
                 <ol
                     v-if="displaySteps.length > 0"
-                    class="w-full flex flex-col gap-3 md:gap-5 lg:gap-[40px]"
+                    class="relative z-10 w-full flex flex-col gap-3 md:gap-5 lg:gap-[40px]"
                 >
                     <li
                         v-for="(step, idx) in displaySteps"
                         :key="step.id || idx"
                         :class="[
-                            'w-full lg:sticky rounded-[10px] lg:rounded-[12px] [filter:drop-shadow(2px_2px_3px_rgba(0,0,0,0.25))] py-[17px] pl-5 pr-[18px] lg:pl-[40px] lg:pr-[24px] lg:py-[24px] min-h-[120px] lg:min-h-[166px] flex items-center lg:items-start gap-4 lg:gap-[32px] text-[#C9E0FF] transition-transform duration-300',
+                            'w-full lg:sticky rounded-[8px] lg:rounded-[12px] [filter:drop-shadow(2px_2px_3px_rgba(0,0,0,0.25))] py-[17px] pl-5 pr-[18px] lg:pl-[40px] lg:pr-[24px] lg:py-[24px] min-h-[120px] lg:min-h-[166px] flex items-center lg:items-start gap-4 lg:gap-[32px] text-[#C9E0FF] transition-transform duration-300',
                             STEP_BG_CLASSES[Math.min(idx, STEP_BG_CLASSES.length - 1)],
                             STEP_STICKY_CLASSES[Math.min(idx, STEP_STICKY_CLASSES.length - 1)],
                         ]"
@@ -113,7 +128,7 @@
                             </h3>
                             <p
                                 v-if="step.description"
-                                class="font-normal text-[13px] lg:text-[16px] leading-[1.6] text-[#E3E8EF] lg:text-[#C9E0FF] line-clamp-3 lg:line-clamp-none break-words"
+                                class="font-normal text-[13px] lg:text-[16px] leading-[1.6] text-[#E3E8EF] lg:text-[#C9E0FF] break-words"
                             >
                                 {{ step.description }}
                             </p>

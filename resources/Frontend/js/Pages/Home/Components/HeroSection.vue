@@ -22,8 +22,8 @@
             />
         </div>
 
-        <!-- Height-Locked Hero Viewport (Mobile 390/460 — Figma 1190:6357, Desktop exact 582px — Figma 1264:48232) -->
-        <div v-else class="relative w-full aspect-[390/460] min-h-[460px] md:aspect-auto md:min-h-[480px] lg:aspect-auto lg:h-[582px] lg:min-h-[582px] overflow-hidden">
+        <!-- Height-Locked Hero Viewport (Mobile min-h 460px — Figma 1314:52003, Desktop exact 582px — Figma 1264:48232) -->
+        <div v-else class="relative w-full min-h-[460px] md:min-h-[480px] lg:h-[582px] lg:min-h-[582px] overflow-hidden">
             <!-- Horizontal Slide Track (translate-x, zero opacity blank flash) -->
             <div
                 class="flex h-full min-h-[460px] md:min-h-[480px] lg:h-[582px] lg:min-h-[582px] w-full transition-transform duration-500 ease-out will-change-transform"
@@ -61,9 +61,9 @@
                         />
                     </picture>
 
-                    <!-- Mobile Vertical Scrim (Figma 1190:6359) + Desktop Left Scrim (Figma 1171:41718) -->
+                    <!-- Mobile Left Scrim (Figma 1314:52005) + Desktop Left Scrim (Figma 1171:41718) -->
                     <div
-                        class="absolute inset-y-0 left-0 w-full md:w-[51.67%] md:min-w-[744px] bg-[linear-gradient(180deg,rgba(1,16,30,0.48)_0%,rgba(1,16,30,0.72)_55%,rgba(1,16,30,0.88)_100%)] md:bg-[linear-gradient(to_right,rgba(1,16,30,0.6)_0%,rgba(1,16,30,0)_100%)] pointer-events-none"
+                        class="absolute inset-y-0 left-0 w-full md:w-[51.67%] md:min-w-[744px] bg-[linear-gradient(90deg,#01101E_0%,rgba(1,16,30,0)_100%)] md:bg-[linear-gradient(to_right,rgba(1,16,30,0.6)_0%,rgba(1,16,30,0)_100%)] pointer-events-none"
                         aria-hidden="true"
                     />
 
@@ -81,7 +81,7 @@
                             <!-- Eyebrow (Figma 1264:48265 — exact 40.037% gradient stop) -->
                             <p
                                 v-if="slide.subtitle"
-                                class="w-full bg-[linear-gradient(90deg,#009FFF_0%,#C9E0FF_40.037%)] bg-clip-text text-transparent font-normal text-[12px] md:text-[24px] lg:text-[28px] leading-[1.6]"
+                                class="w-full bg-[linear-gradient(90deg,#009FFF_0%,#C9E0FF_40.037%)] bg-clip-text text-transparent font-normal text-[18px] md:text-[24px] lg:text-[28px] leading-[1.6]"
                             >
                                 {{ slide.subtitle }}
                             </p>
@@ -95,10 +95,10 @@
                                 {{ slide.title }}
                             </component>
 
-                            <!-- Description (Figma 1264:48267 18px/1.6 Desktop) -->
+                            <!-- Description (Figma 1264:48267 18px/1.6 Desktop, full text on Mobile) -->
                             <p
                                 v-if="slide.description"
-                                class="mt-2 font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[1.6] text-[#C9E0FF] line-clamp-4 md:line-clamp-none"
+                                class="mt-2 font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[1.6] text-[#C9E0FF]"
                             >
                                 {{ slide.description }}
                             </p>
@@ -112,7 +112,7 @@
                                     v-if="slide.primary_cta_text && slide.primary_cta_link && isInertiaLink(slide.primary_cta_link)"
                                     :href="slide.primary_cta_link"
                                     :tabindex="index === activeIndex ? undefined : -1"
-                                    class="w-full md:flex-1 h-[49px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[1.6] px-4 md:px-[24px] py-[10px] rounded-[4px] transition-colors inline-flex items-center justify-center text-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
+                                    class="w-full md:flex-1 h-[49px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[18px] leading-[1.6] px-4 md:px-[24px] py-[10px] rounded-[4px] transition-colors inline-flex items-center justify-center text-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
                                 >
                                     {{ slide.primary_cta_text }}
                                 </Link>
@@ -120,7 +120,7 @@
                                     v-else-if="slide.primary_cta_text && slide.primary_cta_link"
                                     :href="slide.primary_cta_link"
                                     :tabindex="index === activeIndex ? undefined : -1"
-                                    class="w-full md:flex-1 h-[49px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[1.6] px-4 md:px-[24px] py-[10px] rounded-[4px] transition-colors inline-flex items-center justify-center text-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
+                                    class="w-full md:flex-1 h-[49px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[18px] leading-[1.6] px-4 md:px-[24px] py-[10px] rounded-[4px] transition-colors inline-flex items-center justify-center text-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
                                 >
                                     {{ slide.primary_cta_text }}
                                 </a>
@@ -129,7 +129,7 @@
                                     v-if="slide.secondary_cta_text && slide.secondary_cta_link && isInertiaLink(slide.secondary_cta_link)"
                                     :href="slide.secondary_cta_link"
                                     :tabindex="index === activeIndex ? undefined : -1"
-                                    class="w-full md:flex-1 h-[49px] bg-[#C9E0FF] hover:bg-[#81BDFF] text-[#003967] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[1.6] px-4 md:px-[24px] py-[10px] rounded-[4px] transition-colors inline-flex items-center justify-center text-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
+                                    class="w-full md:flex-1 h-[49px] bg-[#C9E0FF] hover:bg-[#81BDFF] text-[#003967] font-medium text-[18px] leading-[1.6] px-4 md:px-[24px] py-[10px] rounded-[4px] transition-colors inline-flex items-center justify-center text-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
                                 >
                                     {{ slide.secondary_cta_text }}
                                 </Link>
@@ -137,16 +137,16 @@
                                     v-else-if="slide.secondary_cta_text && slide.secondary_cta_link"
                                     :href="slide.secondary_cta_link"
                                     :tabindex="index === activeIndex ? undefined : -1"
-                                    class="w-full md:flex-1 h-[49px] bg-[#C9E0FF] hover:bg-[#81BDFF] text-[#003967] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[1.6] px-4 md:px-[24px] py-[10px] rounded-[4px] transition-colors inline-flex items-center justify-center text-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
+                                    class="w-full md:flex-1 h-[49px] bg-[#C9E0FF] hover:bg-[#81BDFF] text-[#003967] font-medium text-[18px] leading-[1.6] px-4 md:px-[24px] py-[10px] rounded-[4px] transition-colors inline-flex items-center justify-center text-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
                                 >
                                     {{ slide.secondary_cta_text }}
                                 </a>
                             </div>
 
-                            <!-- Reserve vertical space on desktop for fixed bottom slider controls (80px gap + 10px dots) -->
+                            <!-- Reserve vertical space for fixed bottom slider controls so longer copy never overlaps controls -->
                             <div
                                 v-if="normalizedSlides.length > 1"
-                                class="hidden md:block md:mt-8 lg:mt-10 xl:mt-20 md:h-[10px]"
+                                class="mt-4 h-[44px] md:mt-8 lg:mt-10 xl:mt-20 md:h-[10px]"
                                 aria-hidden="true"
                             />
                         </div>
@@ -160,9 +160,9 @@
                 class="absolute inset-x-0 bottom-0 z-20 pointer-events-none"
             >
                 <div class="app-container-narrow pb-6 md:pb-10 flex items-center md:items-end justify-between gap-4">
-                    <!-- Pagination Squares (10x10 Mobile & Desktop — Figma 1314:52018..52020 / 1171:41755) -->
+                    <!-- Pagination Squares (10x10 visual; 44x44 touch wrapper on Mobile — Figma 1314:52018..52020 / 1171:41755) -->
                     <div
-                        class="flex items-center gap-3 md:gap-6 pointer-events-auto"
+                        class="flex items-center gap-0 md:gap-6 -ml-4 md:ml-0 pointer-events-auto"
                         role="tablist"
                         :aria-label="tt('Chọn slide')"
                     >
@@ -173,21 +173,26 @@
                             role="tab"
                             :aria-selected="idx === activeIndex"
                             :aria-label="`${tt('Slide')} ${idx + 1}`"
-                            class="w-[10px] h-[10px] rounded-[2px] transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
-                            :class="
-                                idx === activeIndex
-                                    ? 'bg-[#FAFAFA]'
-                                    : 'border border-[#FAFAFA] bg-transparent hover:bg-white/40'
-                            "
+                            class="group min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-[10px] md:h-[10px] inline-flex items-center justify-center rounded-[4px] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
                             @click="goToSlide(idx)"
-                        />
+                        >
+                            <span
+                                class="block w-[10px] h-[10px] rounded-[2px] transition-colors"
+                                :class="
+                                    idx === activeIndex
+                                        ? 'bg-[#FAFAFA]'
+                                        : 'border border-[#FAFAFA] bg-transparent group-hover:bg-white/40'
+                                "
+                                aria-hidden="true"
+                            />
+                        </button>
                     </div>
 
-                    <!-- Right Prev / Next Arrow Controls (36x36 gap-2 Mobile Figma 1190:6385, 40x40 gap-3 bg-[#697586] Desktop Figma 1171:41760) -->
+                    <!-- Right Prev / Next Arrow Controls (44x44 touch target Mobile, 40x40 gap-3 bg-[#697586] Desktop Figma 1171:41760) -->
                     <div class="flex items-center gap-2 lg:gap-3 pointer-events-auto">
                         <button
                             type="button"
-                            class="w-9 h-9 lg:w-10 lg:h-10 rounded-[4px] bg-[#697586] hover:bg-[#4B5565] flex items-center justify-center transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                            class="w-11 h-11 lg:w-10 lg:h-10 rounded-[4px] bg-[#697586] hover:bg-[#4B5565] flex items-center justify-center transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
                             :aria-label="tt('Slide trước')"
                             @click="prevSlide"
                         >
@@ -202,7 +207,7 @@
                         </button>
                         <button
                             type="button"
-                            class="w-9 h-9 lg:w-10 lg:h-10 rounded-[4px] bg-[#697586] hover:bg-[#4B5565] flex items-center justify-center transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                            class="w-11 h-11 lg:w-10 lg:h-10 rounded-[4px] bg-[#697586] hover:bg-[#4B5565] flex items-center justify-center transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
                             :aria-label="tt('Slide tiếp theo')"
                             @click="nextSlide"
                         >

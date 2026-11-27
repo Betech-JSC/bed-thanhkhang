@@ -1,14 +1,14 @@
 <template>
     <Head title="Hướng dẫn sử dụng CMS - Thành Khang" />
 
-    <div class="px-6 py-8 bg-[#FAFAFA] min-h-screen text-slate-800">
+    <div class="px-4 py-5 sm:px-6 sm:py-8 bg-[#FAFAFA] min-h-screen text-slate-800">
         <!-- Top Navigation / Breadcrumb -->
-        <div class="flex items-center justify-between gap-4 mb-6">
-            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+        <div class="flex flex-wrap items-center justify-between gap-3 sm:gap-4 mb-5 sm:mb-6">
+            <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold text-slate-500 min-w-0">
                 <Link
                     v-if="can('admin.dashboard.index')"
                     :href="route('admin.dashboard.index')"
-                    class="hover:text-[#005EA4] transition-colors flex items-center gap-1"
+                    class="hover:text-[#005EA4] transition-colors flex items-center gap-1 shrink-0"
                 >
                     <i class="pi pi-home text-[11px]"></i>
                     <span>Bảng điều khiển</span>
@@ -24,34 +24,34 @@
         </div>
 
         <!-- Page Header -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-8 shadow-sm mb-8 relative overflow-hidden">
-            <div class="absolute -right-12 -top-12 w-64 h-64 bg-[#EDF6FF]/70 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-8 shadow-sm mb-6 sm:mb-8 relative overflow-hidden isolate">
+            <div class="absolute -right-12 -top-12 w-64 h-64 bg-[#EDF6FF]/70 rounded-full blur-2xl pointer-events-none z-0"></div>
 
-            <div class="max-w-4xl relative z-10">
-                <div class="inline-flex items-center gap-2 px-3 py-1 bg-[#EDF6FF] text-[#005EA4] rounded-full text-xs font-bold uppercase tracking-wider mb-3">
-                    <i class="pi pi-book text-xs"></i>
+            <div class="max-w-4xl relative z-[1]">
+                <div class="inline-flex items-center gap-2 px-3 py-1 bg-[#EDF6FF] text-[#005EA4] rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-3 max-w-full">
+                    <i class="pi pi-book text-xs shrink-0"></i>
                     <span>Tài liệu nội bộ &amp; Quy chuẩn vận hành</span>
                 </div>
-                <h1 class="text-2xl sm:text-3xl font-extrabold text-[#00284B] tracking-tight flex items-center gap-3">
-                    <span class="w-2.5 h-7 bg-[#005EA4] rounded-full inline-block"></span>
-                    Hướng dẫn sử dụng Hệ thống Admin CMS
+                <h1 class="text-xl sm:text-3xl font-extrabold text-[#00284B] tracking-tight flex items-start sm:items-center gap-2.5 sm:gap-3">
+                    <span class="w-2 sm:w-2.5 h-6 sm:h-7 bg-[#005EA4] rounded-full inline-block shrink-0 mt-1 sm:mt-0"></span>
+                    <span>Hướng dẫn sử dụng Hệ thống Admin CMS</span>
                 </h1>
                 <p class="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed">
                     Cẩm nang tra cứu quy trình quản trị catalog linh kiện thang cuốn, xích công nghiệp, hệ thống xử lý yêu cầu báo giá kỹ thuật (RFQ) &amp; tệp bản vẽ CAD, biên tập nội dung song ngữ VI/EN, quản trị hình ảnh và phân quyền hệ thống Thành Khang.
                 </p>
 
                 <!-- 3 Quick Info Badges -->
-                <div class="flex flex-wrap items-center gap-3 sm:gap-6 mt-5 pt-5 border-t border-slate-100 text-xs font-semibold text-slate-600">
+                <div class="flex flex-wrap items-center gap-x-4 gap-y-2.5 sm:gap-6 mt-5 pt-5 border-t border-slate-100 text-xs font-semibold text-slate-600">
                     <div class="flex items-center gap-2">
-                        <div class="w-6 h-6 rounded-md bg-[#EDF6FF] text-[#005EA4] flex items-center justify-center font-bold text-[11px]">16</div>
+                        <div class="w-6 h-6 rounded-md bg-[#EDF6FF] text-[#005EA4] flex items-center justify-center font-bold text-[11px] shrink-0">16</div>
                         <span>Module Quản trị Thực tế</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <div class="w-6 h-6 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-[11px]">4</div>
+                        <div class="w-6 h-6 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-[11px] shrink-0">4</div>
                         <span>Trạng thái Xử lý Báo giá &amp; CAD</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <div class="w-6 h-6 rounded-md bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-[11px]">2</div>
+                        <div class="w-6 h-6 rounded-md bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-[11px] shrink-0">2</div>
                         <span>Ngôn ngữ Dữ liệu (VI / EN)</span>
                     </div>
                 </div>
@@ -59,21 +59,22 @@
         </div>
 
         <!-- Search Bar & Instant Filter Section -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-sm mb-8 space-y-4">
-            <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+        <div class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-sm mb-6 sm:mb-8 space-y-4">
+            <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 md:gap-4">
                 <!-- Search Input -->
-                <div class="relative flex-1">
+                <div class="relative flex-1 min-w-0">
                     <i class="pi pi-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none"></i>
                     <input
                         v-model="searchQuery"
                         type="text"
-                        placeholder="Tìm kiếm hướng dẫn (ví dụ: CAD, .STL, Báo giá, Sản phẩm, Flip Announcement, Hotline, Xóa Cache, SEO...)"
-                        class="w-full pl-11 pr-10 py-3 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-all text-slate-800 placeholder-slate-400 font-medium"
+                        placeholder="Tìm kiếm hướng dẫn (CAD, Báo giá, Sản phẩm, Hotline, SEO...)"
+                        class="w-full pl-11 pr-11 py-2.5 sm:py-3 text-base sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-all text-slate-800 placeholder-slate-400 font-medium"
                     />
                     <button
                         v-if="searchQuery"
+                        type="button"
                         @click="searchQuery = ''"
-                        class="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-600 flex items-center justify-center transition-colors text-xs"
+                        class="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-600 flex items-center justify-center transition-colors text-xs"
                         title="Xóa tìm kiếm"
                     >
                         <i class="pi pi-times text-[10px]"></i>
@@ -91,18 +92,19 @@
                 <button
                     v-for="tab in tabs"
                     :key="tab.id"
+                    type="button"
                     @click="activeTab = tab.id"
-                    class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2"
+                    class="px-3 sm:px-3.5 py-2 rounded-xl text-xs font-bold transition-all inline-flex items-center gap-1.5 sm:gap-2 max-w-full"
                     :class="
                         activeTab === tab.id
                             ? 'bg-[#005EA4] text-white shadow-sm ring-2 ring-[#005EA4]/20'
                             : 'bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200/80'
                     "
                 >
-                    <i :class="tab.icon" class="text-xs"></i>
+                    <i :class="tab.icon" class="text-xs shrink-0"></i>
                     <span>{{ tab.label }}</span>
                     <span
-                        class="px-1.5 py-0.5 rounded-full text-[10px] font-extrabold"
+                        class="px-1.5 py-0.5 rounded-full text-[10px] font-extrabold shrink-0"
                         :class="
                             activeTab === tab.id
                                 ? 'bg-[#003967]/70 text-white'
@@ -118,15 +120,15 @@
         <!-- Quick Workflow Diagram: Quy trình 4 Trạng thái Xử lý Báo giá & Tệp CAD -->
         <div
             v-if="activeTab === 'ALL' || activeTab === 'FACTORY'"
-            class="bg-gradient-to-br from-white to-[#EDF6FF]/50 rounded-2xl border border-[#C9E0FF] shadow-sm p-6 sm:p-7 mb-8"
+            class="bg-gradient-to-br from-white to-[#EDF6FF]/50 rounded-2xl border border-[#C9E0FF] shadow-sm p-4 sm:p-7 mb-6 sm:mb-8"
         >
-            <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+            <div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center justify-between gap-2 sm:gap-3 mb-4 sm:mb-5">
                 <div>
                     <div class="flex items-center gap-2 text-xs font-extrabold text-[#005EA4] uppercase tracking-wider">
-                        <i class="pi pi-compass"></i>
+                        <i class="pi pi-compass shrink-0"></i>
                         <span>QUY TRÌNH VẬN HÀNH CỐT LÕI</span>
                     </div>
-                    <h2 class="text-lg font-bold text-slate-900 mt-1">
+                    <h2 class="text-base sm:text-lg font-bold text-slate-900 mt-1">
                         Sơ đồ Xử lý Yêu cầu Báo giá (RFQ) &amp; Hồ sơ Kỹ thuật
                     </h2>
                 </div>
@@ -136,14 +138,14 @@
             </div>
 
             <!-- 4 Main Steps Flow -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-5">
                 <!-- Step 1: NEW -->
-                <div class="bg-white p-4 rounded-xl border border-slate-200/90 shadow-sm flex flex-col relative group hover:border-[#81BDFF] transition-colors">
-                    <div class="flex items-center justify-between mb-2">
+                <div class="bg-white p-4 rounded-xl border border-slate-200/90 shadow-sm flex flex-col relative group hover:border-[#81BDFF] transition-colors min-w-0">
+                    <div class="flex items-start justify-between gap-2 mb-2">
                         <span class="px-2.5 py-1 rounded-md text-[11px] font-extrabold bg-[#EDF6FF] text-[#005EA4] border border-[#C9E0FF] uppercase tracking-wide">
                             1. NEW (Mới)
                         </span>
-                        <span class="w-6 h-6 rounded-full bg-[#EDF6FF] text-[#005EA4] flex items-center justify-center font-bold text-xs">
+                        <span class="w-6 h-6 rounded-full bg-[#EDF6FF] text-[#005EA4] flex items-center justify-center font-bold text-xs shrink-0">
                             <i class="pi pi-inbox text-xs"></i>
                         </span>
                     </div>
@@ -154,12 +156,12 @@
                 </div>
 
                 <!-- Step 2: RESPONSE -->
-                <div class="bg-white p-4 rounded-xl border border-slate-200/90 shadow-sm flex flex-col relative group hover:border-amber-300 transition-colors">
-                    <div class="flex items-center justify-between mb-2">
+                <div class="bg-white p-4 rounded-xl border border-slate-200/90 shadow-sm flex flex-col relative group hover:border-amber-300 transition-colors min-w-0">
+                    <div class="flex items-start justify-between gap-2 mb-2">
                         <span class="px-2.5 py-1 rounded-md text-[11px] font-extrabold bg-amber-100 text-amber-800 border border-amber-200 uppercase tracking-wide">
                             2. RESPONSE (Đã phản hồi)
                         </span>
-                        <span class="w-6 h-6 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-xs">
+                        <span class="w-6 h-6 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-xs shrink-0">
                             <i class="pi pi-comments text-xs"></i>
                         </span>
                     </div>
@@ -170,12 +172,12 @@
                 </div>
 
                 <!-- Step 3: CONFIRMED -->
-                <div class="bg-white p-4 rounded-xl border border-slate-200/90 shadow-sm flex flex-col relative group hover:border-indigo-300 transition-colors">
-                    <div class="flex items-center justify-between mb-2">
+                <div class="bg-white p-4 rounded-xl border border-slate-200/90 shadow-sm flex flex-col relative group hover:border-indigo-300 transition-colors min-w-0">
+                    <div class="flex items-start justify-between gap-2 mb-2">
                         <span class="px-2.5 py-1 rounded-md text-[11px] font-extrabold bg-indigo-100 text-indigo-800 border border-indigo-200 uppercase tracking-wide">
                             3. CONFIRMED (Đã xác nhận)
                         </span>
-                        <span class="w-6 h-6 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-xs">
+                        <span class="w-6 h-6 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-xs shrink-0">
                             <i class="pi pi-check-circle text-xs"></i>
                         </span>
                     </div>
@@ -186,12 +188,12 @@
                 </div>
 
                 <!-- Step 4: PROCESSED -->
-                <div class="bg-white p-4 rounded-xl border border-slate-200/90 shadow-sm flex flex-col relative group hover:border-emerald-300 transition-colors">
-                    <div class="flex items-center justify-between mb-2">
+                <div class="bg-white p-4 rounded-xl border border-slate-200/90 shadow-sm flex flex-col relative group hover:border-emerald-300 transition-colors min-w-0">
+                    <div class="flex items-start justify-between gap-2 mb-2">
                         <span class="px-2.5 py-1 rounded-md text-[11px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-200 uppercase tracking-wide">
                             4. PROCESSED (Đã xử lý)
                         </span>
-                        <span class="w-6 h-6 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xs">
+                        <span class="w-6 h-6 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xs shrink-0">
                             <i class="pi pi-box text-xs"></i>
                         </span>
                     </div>
@@ -203,20 +205,20 @@
             </div>
 
             <!-- Auxiliary States -->
-            <div class="bg-white/80 rounded-xl p-3.5 border border-slate-200 text-xs flex flex-wrap items-center justify-between gap-3 text-slate-600">
-                <div class="flex items-center gap-2">
-                    <i class="pi pi-info-circle text-[#005EA4]"></i>
+            <div class="bg-white/80 rounded-xl p-3.5 border border-slate-200 text-xs flex flex-col lg:flex-row lg:items-center justify-between gap-3 text-slate-600">
+                <div class="flex items-center gap-2 shrink-0">
+                    <i class="pi pi-info-circle text-[#005EA4] shrink-0"></i>
                     <span><strong>Hai trạng thái phụ kết thúc / lọc đơn:</strong></span>
                 </div>
-                <div class="flex flex-wrap items-center gap-4">
-                    <span class="inline-flex items-center gap-1.5">
-                        <span class="px-2 py-0.5 rounded bg-slate-200 text-slate-700 font-bold text-[10px]">CLOSE (Đóng)</span>
+                <div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2.5 sm:gap-4">
+                    <div class="flex items-start gap-2">
+                        <span class="px-2 py-0.5 rounded bg-slate-200 text-slate-700 font-bold text-[10px] shrink-0 whitespace-nowrap mt-0.5">CLOSE (Đóng)</span>
                         <span>Dùng khi khách hủy yêu cầu hoặc không phản hồi sau 3 ngày liên lạc.</span>
-                    </span>
-                    <span class="inline-flex items-center gap-1.5">
-                        <span class="px-2 py-0.5 rounded bg-rose-100 text-rose-700 font-bold text-[10px]">IS_SPAM (Spam)</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <span class="px-2 py-0.5 rounded bg-rose-100 text-rose-700 font-bold text-[10px] shrink-0 whitespace-nowrap mt-0.5">IS_SPAM (Spam)</span>
                         <span>Đánh dấu form rác/bot để loại bỏ khỏi thống kê hiệu suất KPI.</span>
-                    </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -224,7 +226,7 @@
         <!-- Empty State When No Search Match -->
         <div
             v-if="!filteredModules.length"
-            class="bg-white rounded-2xl border border-slate-200 p-12 text-center shadow-sm mb-8"
+            class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-12 text-center shadow-sm mb-6 sm:mb-8"
         >
             <div class="w-16 h-16 rounded-full bg-slate-100 text-slate-400 mx-auto flex items-center justify-center text-2xl mb-4">
                 <i class="pi pi-search"></i>
@@ -234,6 +236,7 @@
                 Không có module hoặc từ khóa nào khớp với <span class="font-bold text-slate-700">"{{ searchQuery }}"</span> trong tab đang chọn. Vui lòng thử từ khóa khác hoặc xóa bộ lọc.
             </p>
             <button
+                type="button"
                 @click="resetSearch"
                 class="inline-flex items-center gap-2 px-4 py-2.5 bg-[#005EA4] hover:bg-[#004D86] text-white font-semibold text-xs rounded-xl shadow-sm transition-all"
             >
@@ -243,22 +246,22 @@
         </div>
 
         <!-- Module Cards Grid -->
-        <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+        <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-8 sm:mb-12">
             <div
                 v-for="item in filteredModules"
                 :key="item.id"
-                class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-7 flex flex-col hover:border-slate-300 hover:shadow-md transition-all relative overflow-hidden"
+                class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-7 flex flex-col hover:border-slate-300 hover:shadow-md transition-all relative overflow-hidden min-w-0"
             >
                 <!-- Card Header -->
-                <div class="flex items-start justify-between gap-4 mb-4">
-                    <div class="flex items-center gap-3">
+                <div class="flex items-start justify-between gap-3 mb-3.5 sm:mb-4">
+                    <div class="flex items-start sm:items-center gap-3 min-w-0">
                         <div
-                            class="w-11 h-11 rounded-xl flex items-center justify-center text-lg font-bold shadow-sm"
+                            class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center text-base sm:text-lg font-bold shadow-sm shrink-0"
                             :class="item.iconBg"
                         >
                             <i :class="item.icon"></i>
                         </div>
-                        <div>
+                        <div class="min-w-0">
                             <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md inline-block mb-1" :class="item.categoryBadge">
                                 {{ item.categoryName }}
                             </span>
@@ -275,9 +278,9 @@
                 </p>
 
                 <!-- Step-by-Step Instructions -->
-                <div class="bg-slate-50/80 rounded-xl p-4 border border-slate-100 mb-4 flex-1">
+                <div class="bg-slate-50/80 rounded-xl p-3.5 sm:p-4 border border-slate-100 mb-4 flex-1">
                     <div class="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-                        <i class="pi pi-list-check text-xs text-[#005EA4]"></i>
+                        <i class="pi pi-list-check text-xs text-[#005EA4] shrink-0"></i>
                         <span>Quy trình thao tác từng bước:</span>
                     </div>
                     <ol class="space-y-2 text-xs text-slate-700">
@@ -289,40 +292,40 @@
                             <span class="w-4 h-4 rounded-full bg-[#EDF6FF] text-[#005EA4] font-extrabold text-[10px] flex items-center justify-center shrink-0 mt-0.5">
                                 {{ sIndex + 1 }}
                             </span>
-                            <span>{{ step }}</span>
+                            <span class="min-w-0 break-words">{{ step }}</span>
                         </li>
                     </ol>
                 </div>
 
                 <!-- Callout Note / Warning -->
-                <div class="bg-amber-50/70 border border-amber-200/80 rounded-xl p-3 text-xs text-amber-900 flex items-start gap-2 mb-5">
+                <div class="bg-amber-50/70 border border-amber-200/80 rounded-xl p-3 text-xs text-amber-900 flex items-start gap-2 mb-4 sm:mb-5">
                     <i class="pi pi-exclamation-triangle text-amber-600 text-xs shrink-0 mt-0.5"></i>
-                    <div class="leading-relaxed">
+                    <div class="leading-relaxed min-w-0 break-words">
                         <strong class="font-bold">Lưu ý:</strong> {{ item.tips }}
                     </div>
                 </div>
 
                 <!-- Card Footer Action -->
-                <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-4 mt-auto">
-                    <span class="text-[11px] font-medium text-slate-400">
-                        Route: <code class="text-slate-600 font-mono text-[10px] bg-slate-100 px-1.5 py-0.5 rounded">{{ item.routeName }}</code>
+                <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-auto">
+                    <span class="text-[11px] font-medium text-slate-400 min-w-0 break-words">
+                        Route: <code class="text-slate-600 font-mono text-[10px] bg-slate-100 px-1.5 py-0.5 rounded break-all">{{ item.routeName }}</code>
                     </span>
 
                     <Link
                         v-if="canAccess(item)"
                         :href="getRouteUrl(item)"
-                        class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#005EA4] hover:bg-[#004D86] text-white font-semibold text-xs rounded-xl shadow-sm hover:shadow transition-all group"
+                        class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 sm:py-2 bg-[#005EA4] hover:bg-[#004D86] text-white font-semibold text-xs rounded-xl shadow-sm hover:shadow transition-all group whitespace-nowrap shrink-0 w-full sm:w-auto"
                     >
                         <span>Mở trang quản lý</span>
-                        <i class="pi pi-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform"></i>
+                        <i class="pi pi-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform shrink-0"></i>
                     </Link>
 
                     <div
                         v-else
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-400 font-medium text-xs rounded-lg select-none"
+                        class="inline-flex items-center justify-center gap-1.5 px-3 py-2 sm:py-1.5 bg-slate-100 text-slate-400 font-medium text-xs rounded-lg select-none whitespace-nowrap shrink-0 w-full sm:w-auto"
                         title="Tài khoản hiện tại chưa được cấp quyền quản lý module này"
                     >
-                        <i class="pi pi-lock text-[10px]"></i>
+                        <i class="pi pi-lock text-[10px] shrink-0"></i>
                         <span>Yêu cầu quyền truy cập</span>
                     </div>
                 </div>
@@ -330,13 +333,13 @@
         </div>
 
         <!-- Reference Section: Bảng Quy chuẩn Media, Tệp CAD & Checklist Đa ngôn ngữ VI/EN -->
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 mb-8 space-y-8">
-            <div class="border-b border-slate-100 pb-5">
-                <div class="inline-flex items-center gap-2 px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
-                    <i class="pi pi-sliders-h text-xs"></i>
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-8 mb-6 sm:mb-8 space-y-6 sm:space-y-8 min-w-0">
+            <div class="border-b border-slate-100 pb-4 sm:pb-5">
+                <div class="inline-flex items-center gap-2 px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-2 max-w-full">
+                    <i class="pi pi-sliders-h text-xs shrink-0"></i>
                     <span>Tài liệu tham chiếu kỹ thuật</span>
                 </div>
-                <h2 class="text-xl font-bold text-slate-900 tracking-tight">
+                <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
                     Quy chuẩn Hình ảnh, Bản vẽ CAD &amp; Checklist Xuất bản
                 </h2>
                 <p class="text-slate-500 text-xs sm:text-sm mt-1">
@@ -345,70 +348,74 @@
             </div>
 
             <!-- Table 1: Media Standards -->
-            <div>
-                <h3 class="text-sm font-extrabold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <span class="w-2 h-4 bg-[#005EA4] rounded-full inline-block"></span>
-                    1. Bảng Quy chuẩn Kích thước Hình ảnh Website
+            <div class="min-w-0">
+                <h3 class="text-xs sm:text-sm font-extrabold text-slate-800 uppercase tracking-wider mb-2 sm:mb-3 flex items-start sm:items-center gap-2">
+                    <span class="w-2 h-4 bg-[#005EA4] rounded-full inline-block shrink-0 mt-0.5 sm:mt-0"></span>
+                    <span>1. Bảng Quy chuẩn Kích thước Hình ảnh Website</span>
                 </h3>
-                <div class="overflow-x-auto rounded-xl border border-slate-200">
-                    <table class="w-full text-left text-xs border-collapse">
+                <p class="sm:hidden text-[11px] text-slate-400 mb-2 flex items-center gap-1.5">
+                    <i class="pi pi-arrows-h text-[11px]"></i>
+                    <span>Vuốt ngang để xem đầy đủ bảng thông số</span>
+                </p>
+                <div class="overflow-x-auto rounded-xl border border-slate-200 max-w-full">
+                    <table class="w-full min-w-[680px] text-left text-xs border-collapse">
                         <thead>
                             <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[11px]">
-                                <th class="py-3 px-4">Vị trí hiển thị</th>
-                                <th class="py-3 px-4">Kích thước chuẩn</th>
-                                <th class="py-3 px-4">Tỉ lệ</th>
-                                <th class="py-3 px-4">Dung lượng tối đa</th>
-                                <th class="py-3 px-4">Định dạng ưu tiên</th>
-                                <th class="py-3 px-4">Ghi chú thiết kế</th>
+                                <th class="py-3 px-4 whitespace-nowrap">Vị trí hiển thị</th>
+                                <th class="py-3 px-4 whitespace-nowrap">Kích thước chuẩn</th>
+                                <th class="py-3 px-4 whitespace-nowrap">Tỉ lệ</th>
+                                <th class="py-3 px-4 whitespace-nowrap">Dung lượng tối đa</th>
+                                <th class="py-3 px-4 whitespace-nowrap">Định dạng ưu tiên</th>
+                                <th class="py-3 px-4 whitespace-nowrap">Ghi chú thiết kế</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 text-slate-700 font-medium">
                             <tr class="hover:bg-slate-50/50">
-                                <td class="py-3 px-4 font-bold text-slate-900">Hero Banner (Desktop)</td>
-                                <td class="py-3 px-4 font-mono text-[#005EA4] font-bold">1920 × 800 px</td>
-                                <td class="py-3 px-4">2.4 : 1</td>
-                                <td class="py-3 px-4">&lt; 350 KB</td>
-                                <td class="py-3 px-4 font-bold">WebP, PNG</td>
+                                <td class="py-3 px-4 font-bold text-slate-900 whitespace-nowrap">Hero Banner (Desktop)</td>
+                                <td class="py-3 px-4 font-mono text-[#005EA4] font-bold whitespace-nowrap">1920 × 800 px</td>
+                                <td class="py-3 px-4 whitespace-nowrap">2.4 : 1</td>
+                                <td class="py-3 px-4 whitespace-nowrap">&lt; 350 KB</td>
+                                <td class="py-3 px-4 font-bold whitespace-nowrap">WebP, PNG</td>
                                 <td class="py-3 px-4 text-slate-500">Đặt nội dung/chữ chính trong vùng an toàn giữa 1200px</td>
                             </tr>
                             <tr class="hover:bg-slate-50/50">
-                                <td class="py-3 px-4 font-bold text-slate-900">Hero Banner (Mobile)</td>
-                                <td class="py-3 px-4 font-mono text-[#005EA4] font-bold">768 × 600 px</td>
-                                <td class="py-3 px-4">1.28 : 1</td>
-                                <td class="py-3 px-4">&lt; 200 KB</td>
-                                <td class="py-3 px-4 font-bold">WebP, JPG</td>
+                                <td class="py-3 px-4 font-bold text-slate-900 whitespace-nowrap">Hero Banner (Mobile)</td>
+                                <td class="py-3 px-4 font-mono text-[#005EA4] font-bold whitespace-nowrap">768 × 600 px</td>
+                                <td class="py-3 px-4 whitespace-nowrap">1.28 : 1</td>
+                                <td class="py-3 px-4 whitespace-nowrap">&lt; 200 KB</td>
+                                <td class="py-3 px-4 font-bold whitespace-nowrap">WebP, JPG</td>
                                 <td class="py-3 px-4 text-slate-500">Hiển thị sắc nét trên điện thoại, tránh chữ nhỏ sát mép</td>
                             </tr>
                             <tr class="hover:bg-slate-50/50">
-                                <td class="py-3 px-4 font-bold text-slate-900">Ảnh Sản phẩm &amp; Thiết bị</td>
-                                <td class="py-3 px-4 font-mono text-[#005EA4] font-bold">800 × 800 px</td>
-                                <td class="py-3 px-4">1 : 1 (Vuông)</td>
-                                <td class="py-3 px-4">&lt; 250 KB</td>
-                                <td class="py-3 px-4 font-bold">WebP, PNG</td>
+                                <td class="py-3 px-4 font-bold text-slate-900 whitespace-nowrap">Ảnh Sản phẩm &amp; Thiết bị</td>
+                                <td class="py-3 px-4 font-mono text-[#005EA4] font-bold whitespace-nowrap">800 × 800 px</td>
+                                <td class="py-3 px-4 whitespace-nowrap">1 : 1 (Vuông)</td>
+                                <td class="py-3 px-4 whitespace-nowrap">&lt; 250 KB</td>
+                                <td class="py-3 px-4 font-bold whitespace-nowrap">WebP, PNG</td>
                                 <td class="py-3 px-4 text-slate-500">Nền trắng hoặc ảnh thực tế sạch, chụp rõ mã linh kiện và bản vẽ kỹ thuật</td>
                             </tr>
                             <tr class="hover:bg-slate-50/50">
-                                <td class="py-3 px-4 font-bold text-slate-900">Ảnh Dịch vụ &amp; Quy trình</td>
-                                <td class="py-3 px-4 font-mono text-[#005EA4] font-bold">1200 × 800 px</td>
-                                <td class="py-3 px-4">3 : 2</td>
-                                <td class="py-3 px-4">&lt; 300 KB</td>
-                                <td class="py-3 px-4 font-bold">WebP, JPG</td>
+                                <td class="py-3 px-4 font-bold text-slate-900 whitespace-nowrap">Ảnh Dịch vụ &amp; Quy trình</td>
+                                <td class="py-3 px-4 font-mono text-[#005EA4] font-bold whitespace-nowrap">1200 × 800 px</td>
+                                <td class="py-3 px-4 whitespace-nowrap">3 : 2</td>
+                                <td class="py-3 px-4 whitespace-nowrap">&lt; 300 KB</td>
+                                <td class="py-3 px-4 font-bold whitespace-nowrap">WebP, JPG</td>
                                 <td class="py-3 px-4 text-slate-500">Chụp thực tế hệ thống thang cuốn, dây chuyền băng tải, quạt BLDC tại công trình</td>
                             </tr>
                             <tr class="hover:bg-slate-50/50">
-                                <td class="py-3 px-4 font-bold text-slate-900">Ảnh Bài viết &amp; Tin tức</td>
-                                <td class="py-3 px-4 font-mono text-[#005EA4] font-bold">1200 × 675 px</td>
-                                <td class="py-3 px-4">16 : 9</td>
-                                <td class="py-3 px-4">&lt; 300 KB</td>
-                                <td class="py-3 px-4 font-bold">WebP, JPG</td>
-                                <td class="py-3 px-4 text-slate-500">Ảnh bìa bài viết chuẩn chuẩn hiển thị feed mạng xã hội</td>
+                                <td class="py-3 px-4 font-bold text-slate-900 whitespace-nowrap">Ảnh Bài viết &amp; Tin tức</td>
+                                <td class="py-3 px-4 font-mono text-[#005EA4] font-bold whitespace-nowrap">1200 × 675 px</td>
+                                <td class="py-3 px-4 whitespace-nowrap">16 : 9</td>
+                                <td class="py-3 px-4 whitespace-nowrap">&lt; 300 KB</td>
+                                <td class="py-3 px-4 font-bold whitespace-nowrap">WebP, JPG</td>
+                                <td class="py-3 px-4 text-slate-500">Ảnh bìa bài viết chuẩn hiển thị feed mạng xã hội</td>
                             </tr>
                             <tr class="hover:bg-slate-50/50">
-                                <td class="py-3 px-4 font-bold text-slate-900">Ảnh Chia sẻ Mạng Xã hội (OG Image)</td>
-                                <td class="py-3 px-4 font-mono text-[#005EA4] font-bold">1200 × 630 px</td>
-                                <td class="py-3 px-4">1.91 : 1</td>
-                                <td class="py-3 px-4">&lt; 300 KB</td>
-                                <td class="py-3 px-4 font-bold">WebP, JPG</td>
+                                <td class="py-3 px-4 font-bold text-slate-900 whitespace-nowrap">Ảnh Chia sẻ Mạng Xã hội (OG Image)</td>
+                                <td class="py-3 px-4 font-mono text-[#005EA4] font-bold whitespace-nowrap">1200 × 630 px</td>
+                                <td class="py-3 px-4 whitespace-nowrap">1.91 : 1</td>
+                                <td class="py-3 px-4 whitespace-nowrap">&lt; 300 KB</td>
+                                <td class="py-3 px-4 font-bold whitespace-nowrap">WebP, JPG</td>
                                 <td class="py-3 px-4 text-slate-500">Hiển thị khi gửi link website qua Zalo, Facebook, LinkedIn</td>
                             </tr>
                         </tbody>
@@ -417,15 +424,15 @@
             </div>
 
             <!-- Table 2: Technical Drawing Standards -->
-            <div>
-                <h3 class="text-sm font-extrabold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <span class="w-2 h-4 bg-emerald-600 rounded-full inline-block"></span>
-                    2. Định dạng Bản vẽ CAD &amp; Hồ sơ Kỹ thuật Hợp Lệ
+            <div class="min-w-0">
+                <h3 class="text-xs sm:text-sm font-extrabold text-slate-800 uppercase tracking-wider mb-3 flex items-start sm:items-center gap-2">
+                    <span class="w-2 h-4 bg-emerald-600 rounded-full inline-block shrink-0 mt-0.5 sm:mt-0"></span>
+                    <span>2. Định dạng Bản vẽ CAD &amp; Hồ sơ Kỹ thuật Hợp Lệ</span>
                 </h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="px-2 py-0.5 rounded bg-[#EDF6FF] text-[#005EA4] font-mono font-bold text-xs">.DWG / .DXF</span>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                    <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 min-w-0">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <span class="px-2 py-0.5 rounded bg-[#EDF6FF] text-[#005EA4] font-mono font-bold text-xs shrink-0">.DWG / .DXF</span>
                             <span class="text-[11px] font-bold text-slate-400">Phổ biến nhất</span>
                         </div>
                         <h4 class="text-xs font-bold text-slate-800 mb-1">AutoCAD Drawing Exchange</h4>
@@ -434,9 +441,9 @@
                         </p>
                     </div>
 
-                    <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-mono font-bold text-xs">.STEP / .STP</span>
+                    <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 min-w-0">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-mono font-bold text-xs shrink-0">.STEP / .STP</span>
                             <span class="text-[11px] font-bold text-slate-400">Chuẩn kỹ thuật</span>
                         </div>
                         <h4 class="text-xs font-bold text-slate-800 mb-1">Standard for Product Model Data</h4>
@@ -445,9 +452,9 @@
                         </p>
                     </div>
 
-                    <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="px-2 py-0.5 rounded bg-purple-100 text-purple-800 font-mono font-bold text-xs">.OBJ</span>
+                    <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 min-w-0">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <span class="px-2 py-0.5 rounded bg-purple-100 text-purple-800 font-mono font-bold text-xs shrink-0">.OBJ</span>
                             <span class="text-[11px] font-bold text-slate-400">Mô hình &amp; Màu</span>
                         </div>
                         <h4 class="text-xs font-bold text-slate-800 mb-1">Wavefront 3D Object</h4>
@@ -456,9 +463,9 @@
                         </p>
                     </div>
 
-                    <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-mono font-bold text-xs">.IGES / .IGS</span>
+                    <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 min-w-0">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-mono font-bold text-xs shrink-0">.IGES / .IGS</span>
                             <span class="text-[11px] font-bold text-slate-400">Cơ khí chính xác</span>
                         </div>
                         <h4 class="text-xs font-bold text-slate-800 mb-1">Initial Graphics Exchange</h4>
@@ -467,9 +474,9 @@
                         </p>
                     </div>
 
-                    <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 sm:col-span-2">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="px-2 py-0.5 rounded bg-slate-200 text-slate-800 font-mono font-bold text-xs">.ZIP / .RAR</span>
+                    <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 sm:col-span-2 min-w-0">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <span class="px-2 py-0.5 rounded bg-slate-200 text-slate-800 font-mono font-bold text-xs shrink-0">.ZIP / .RAR</span>
                             <span class="text-[11px] font-bold text-slate-400">Nén nhiều tệp</span>
                         </div>
                         <h4 class="text-xs font-bold text-slate-800 mb-1">Tệp nén cụm chi tiết lắp ráp</h4>
@@ -481,13 +488,13 @@
             </div>
 
             <!-- Table 3: 5-Step Publishing Checklist -->
-            <div>
-                <h3 class="text-sm font-extrabold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <span class="w-2 h-4 bg-indigo-600 rounded-full inline-block"></span>
-                    3. Checklist 5 Bước Trước Khi Xuất Bản Dữ Liệu Song Ngữ &amp; SEO
+            <div class="min-w-0">
+                <h3 class="text-xs sm:text-sm font-extrabold text-slate-800 uppercase tracking-wider mb-3 flex items-start sm:items-center gap-2">
+                    <span class="w-2 h-4 bg-indigo-600 rounded-full inline-block shrink-0 mt-0.5 sm:mt-0"></span>
+                    <span>3. Checklist 5 Bước Trước Khi Xuất Bản Dữ Liệu Song Ngữ &amp; SEO</span>
                 </h3>
-                <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
-                    <div class="p-3.5 rounded-xl border border-slate-200 bg-white flex flex-col justify-between">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                    <div class="p-3.5 rounded-xl border border-slate-200 bg-white flex flex-col justify-between min-w-0">
                         <div>
                             <span class="w-6 h-6 rounded-md bg-[#EDF6FF] text-[#005EA4] font-extrabold text-xs flex items-center justify-center mb-2">1</span>
                             <h4 class="text-xs font-bold text-slate-800 mb-1">Đủ 2 ngôn ngữ</h4>
@@ -496,11 +503,11 @@
                             </p>
                         </div>
                         <div class="text-[10px] font-bold text-emerald-600 mt-2 flex items-center gap-1">
-                            <i class="pi pi-check text-[10px]"></i> Đa ngôn ngữ
+                            <i class="pi pi-check text-[10px] shrink-0"></i> Đa ngôn ngữ
                         </div>
                     </div>
 
-                    <div class="p-3.5 rounded-xl border border-slate-200 bg-white flex flex-col justify-between">
+                    <div class="p-3.5 rounded-xl border border-slate-200 bg-white flex flex-col justify-between min-w-0">
                         <div>
                             <span class="w-6 h-6 rounded-md bg-[#EDF6FF] text-[#005EA4] font-extrabold text-xs flex items-center justify-center mb-2">2</span>
                             <h4 class="text-xs font-bold text-slate-800 mb-1">Tối ưu thẻ SEO</h4>
@@ -509,11 +516,11 @@
                             </p>
                         </div>
                         <div class="text-[10px] font-bold text-emerald-600 mt-2 flex items-center gap-1">
-                            <i class="pi pi-check text-[10px]"></i> Chuẩn Onpage
+                            <i class="pi pi-check text-[10px] shrink-0"></i> Chuẩn Onpage
                         </div>
                     </div>
 
-                    <div class="p-3.5 rounded-xl border border-slate-200 bg-white flex flex-col justify-between">
+                    <div class="p-3.5 rounded-xl border border-slate-200 bg-white flex flex-col justify-between min-w-0">
                         <div>
                             <span class="w-6 h-6 rounded-md bg-[#EDF6FF] text-[#005EA4] font-extrabold text-xs flex items-center justify-center mb-2">3</span>
                             <h4 class="text-xs font-bold text-slate-800 mb-1">Kiểm tra Slug</h4>
@@ -522,11 +529,11 @@
                             </p>
                         </div>
                         <div class="text-[10px] font-bold text-emerald-600 mt-2 flex items-center gap-1">
-                            <i class="pi pi-check text-[10px]"></i> Đường dẫn sạch
+                            <i class="pi pi-check text-[10px] shrink-0"></i> Đường dẫn sạch
                         </div>
                     </div>
 
-                    <div class="p-3.5 rounded-xl border border-slate-200 bg-white flex flex-col justify-between">
+                    <div class="p-3.5 rounded-xl border border-slate-200 bg-white flex flex-col justify-between min-w-0">
                         <div>
                             <span class="w-6 h-6 rounded-md bg-[#EDF6FF] text-[#005EA4] font-extrabold text-xs flex items-center justify-center mb-2">4</span>
                             <h4 class="text-xs font-bold text-slate-800 mb-1">Nén ảnh &amp; Alt</h4>
@@ -535,11 +542,11 @@
                             </p>
                         </div>
                         <div class="text-[10px] font-bold text-emerald-600 mt-2 flex items-center gap-1">
-                            <i class="pi pi-check text-[10px]"></i> Tốc độ cao
+                            <i class="pi pi-check text-[10px] shrink-0"></i> Tốc độ cao
                         </div>
                     </div>
 
-                    <div class="p-3.5 rounded-xl border border-slate-200 bg-white flex flex-col justify-between">
+                    <div class="p-3.5 rounded-xl border border-slate-200 bg-white flex flex-col justify-between min-w-0 sm:col-span-2 lg:col-span-1">
                         <div>
                             <span class="w-6 h-6 rounded-md bg-[#EDF6FF] text-[#005EA4] font-extrabold text-xs flex items-center justify-center mb-2">5</span>
                             <h4 class="text-xs font-bold text-slate-800 mb-1">Xóa Cache</h4>
@@ -548,7 +555,7 @@
                             </p>
                         </div>
                         <div class="text-[10px] font-bold text-emerald-600 mt-2 flex items-center gap-1">
-                            <i class="pi pi-check text-[10px]"></i> Đồng bộ ngay
+                            <i class="pi pi-check text-[10px] shrink-0"></i> Đồng bộ ngay
                         </div>
                     </div>
                 </div>
@@ -556,7 +563,7 @@
         </div>
 
         <!-- Support Footer -->
-        <div class="text-center text-xs text-slate-400 py-4">
+        <div class="text-center text-xs text-slate-400 py-4 px-2 leading-relaxed">
             Thành Khang CMS • Hotline Hỗ trợ Kỹ thuật &amp; Báo giá: <span class="font-semibold text-slate-600">0967.732.665 (Xem Cài đặt chung)</span>
         </div>
     </div>

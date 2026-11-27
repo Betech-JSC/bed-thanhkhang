@@ -36,8 +36,8 @@
                         </p>
                     </div>
 
-                    <!-- Footer Primary CTA -->
-                    <div class="pt-1 flex flex-wrap items-center gap-[12px]">
+                    <!-- Footer Primary CTA (Desktop >= lg only, hidden on Mobile per Figma 1314:52197) -->
+                    <div class="pt-1 hidden lg:flex flex-wrap items-center gap-[12px]">
                         <button
                             type="button"
                             @click="handleOpenQuoteModal"
@@ -56,7 +56,7 @@
                 </div>
 
                 <!-- Right 3 Columns (732px on 1440px: 212px + 20px + 212px + 20px + 268px; total 360 + 60 + 732 = 1152px — Inter on headings & Col 1-2 links) -->
-                <div class="w-full lg:flex-1 grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-[212px_212px_268px] gap-x-4 gap-y-6 lg:gap-6 xl:gap-x-[20px]">
+                <div class="w-full lg:flex-1 grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-[212px_212px_268px] gap-[20px] lg:gap-6 xl:gap-x-[20px]">
                     <!-- Column 1: Danh mục sản phẩm (Inter 700 16px/1.4 heading, Inter 500 14px/20px links) -->
                     <div
                         v-if="footerCategoryLinks && footerCategoryLinks.length"
@@ -97,15 +97,8 @@
                         </ul>
                     </div>
 
-                    <!-- Mobile Horizontal Divider (Figma 1193:6585 — 1px #E3E8EF) -->
-                    <div
-                        v-if="(footerCategoryLinks && footerCategoryLinks.length) || policyLinks.length > 0"
-                        class="col-span-2 h-px bg-[#E3E8EF] lg:hidden"
-                        aria-hidden="true"
-                    />
-
                     <!-- Column 3: Thông tin liên hệ (Inter 700 16px/1.4 heading; Open Sans 500 14px/1.6 items) -->
-                    <div class="col-span-2 lg:col-span-1 space-y-3 lg:space-y-[24px] min-w-0">
+                    <div class="col-span-1 space-y-3 lg:space-y-[24px] min-w-0">
                         <h4 class="font-inter text-[14px] leading-[1.4] lg:text-[16px] lg:leading-[1.4] font-bold text-[#00284B]">
                             {{ tt('Thông tin liên hệ') }}
                         </h4>
@@ -182,13 +175,13 @@
                 </p>
                 <span v-else />
 
-                <div v-if="facebookHref || linkedinHref" class="flex items-center gap-4 lg:gap-[24px] shrink-0">
+                <div v-if="facebookHref || linkedinHref" class="flex items-center gap-1 lg:gap-[24px] shrink-0">
                     <a
                         v-if="facebookHref"
                         :href="facebookHref"
                         :target="isExternalUrl(facebookHref) ? '_blank' : undefined"
                         :rel="isExternalUrl(facebookHref) ? 'noopener noreferrer' : undefined"
-                        class="w-5 h-5 inline-flex items-center justify-center rounded-cta hover:opacity-80 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9E0FF] focus-visible:ring-offset-2 focus-visible:ring-offset-[#00284B]"
+                        class="min-w-[44px] min-h-[44px] -my-3 lg:min-w-0 lg:min-h-0 lg:my-0 lg:w-5 lg:h-5 inline-flex items-center justify-center rounded-cta hover:opacity-80 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9E0FF] focus-visible:ring-offset-2 focus-visible:ring-offset-[#00284B]"
                         aria-label="Facebook"
                     >
                         <img
@@ -206,7 +199,7 @@
                         :href="linkedinHref"
                         :target="isExternalUrl(linkedinHref) ? '_blank' : undefined"
                         :rel="isExternalUrl(linkedinHref) ? 'noopener noreferrer' : undefined"
-                        class="w-5 h-5 inline-flex items-center justify-center rounded-cta hover:opacity-80 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9E0FF] focus-visible:ring-offset-2 focus-visible:ring-offset-[#00284B]"
+                        class="min-w-[44px] min-h-[44px] -my-3 lg:min-w-0 lg:min-h-0 lg:my-0 lg:w-5 lg:h-5 inline-flex items-center justify-center rounded-cta hover:opacity-80 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9E0FF] focus-visible:ring-offset-2 focus-visible:ring-offset-[#00284B]"
                         aria-label="LinkedIn"
                     >
                         <img
