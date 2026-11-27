@@ -192,9 +192,10 @@
                                 <p class="text-[14px] leading-[1.6] text-secondary">
                                     {{
                                         tt(
-                                            'Đội ngũ kỹ sư Thành Khang sẵn sàng hỗ trợ tra cứu thông số kỹ thuật, chọn đúng dòng xích tải và báo giá nhanh trong 2 giờ làm việc.'
+                                            'Gửi bước xích, tải trọng hoặc ảnh mẫu cho chúng tôi, đội ngũ kỹ sư Thành Khang phản hồi tư vấn & báo giá trong 2 giờ làm việc'
                                         )
                                     }}
+                                    
                                 </p>
                             </div>
                             <Link

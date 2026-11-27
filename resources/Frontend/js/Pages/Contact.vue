@@ -42,7 +42,7 @@
                             {{ tt('LIÊN HỆ VỚI CHÚNG TÔI') }}
                         </h1>
                         <p class="text-[14px] leading-[1.6] text-white max-w-[400px] drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
-                            {{ tt('Đội ngũ tư vấn viên của Thành Khang luôn sẵn sàng hỗ trợ báo giá, tư vấn kỹ thuật và cung ứng vật tư chính hãng trên toàn quốc') }}
+                            {{ tt('Đội ngũ tư vấn viên của Thành Khang Tecsat luôn sẵn sàng hỗ trợ báo giá, tư vấn kỹ thuật và cung ứng vật tư chính hãng trên toàn quốc') }}
                         </p>
                     </div>
                 </div>
