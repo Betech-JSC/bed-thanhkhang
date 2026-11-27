@@ -43,6 +43,7 @@ class Admin extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'google2fa_secret',
     ];
 
     protected $casts = [
@@ -104,6 +105,9 @@ class Admin extends Authenticatable
             if (request()->route()?->getName() !== 'admin.admins.store') return;
 
             $role = Role::find(request()->input('role_id'));
+            if ($role && $role->name === 'Super Admin' && !current_admin()?->hasRole('Super Admin')) {
+                abort(403);
+            }
             $model->syncRoles([$role]);
         });
 

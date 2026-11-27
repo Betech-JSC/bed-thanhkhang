@@ -9,6 +9,9 @@ use App\Models\File;
 use App\Models\Post\Post;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Http\UploadedFile;
 use App\Http\Notifications\CommonNotification;
 use App\Models\EmailTemplate;
 use App\Rules\ValidPhoneNumber;
@@ -136,14 +139,23 @@ class ContactController extends Controller
                 ?? $request->input('Nội dung cần hỗ trợ')
                 ?? null;
 
+            $trimmedName = trim((string) ($name ?? ''));
+            $trimmedPhone = trim((string) ($phone ?? ''));
+            $trimmedEmail = trim((string) ($email ?? ''));
+
             if ($name !== null && !isset($data['Họ và tên'])) {
                 $data['Họ và tên'] = $name;
             }
             if ($phone !== null && !isset($data['Số điện thoại'])) {
                 $data['Số điện thoại'] = $phone;
             }
-            if ($email !== null && !isset($data['Email'])) {
-                $data['Email'] = $email;
+            if ($trimmedEmail !== '') {
+                $data['Email'] = $trimmedEmail;
+                if (isset($data['email'])) {
+                    $data['email'] = $trimmedEmail;
+                }
+            } elseif ($email !== null && !isset($data['Email'])) {
+                $data['Email'] = $trimmedEmail;
             }
             if ($service !== null) {
                 $serviceTitle = is_array($service) ? ($service['title'] ?? '') : (string)$service;
@@ -158,12 +170,9 @@ class ContactController extends Controller
                 $data['Nội dung cần hỗ trợ'] = $content;
             }
 
-            // Đảm bảo data luôn là mảng, không bao giờ null
-            $contact['data'] = $data;
-
-            if (empty($contact['type'])) {
-                $contact['type'] = 'CONTACT_FORM';
-            }
+            $contactType = is_string($contact['type'] ?? null) && trim($contact['type']) !== ''
+                ? trim($contact['type'])
+                : 'CONTACT_FORM';
 
             // Safe, non-breaking server-side validation
             $locale = function_exists('current_locale') ? current_locale() : app()->getLocale();
@@ -198,6 +207,64 @@ class ContactController extends Controller
                     : 'Địa chỉ email không hợp lệ.';
             }
 
+            $uploadedImages = $request->file('contact.images')
+                ?? $request->file('images')
+                ?? ($contact['images'] ?? null);
+
+            $validatedImages = [];
+            if (!empty($uploadedImages)) {
+                $rawImages = is_array($uploadedImages) ? $uploadedImages : [$uploadedImages];
+                $allowedMimeToExt = [
+                    'image/jpeg' => ['jpg', 'jpeg'],
+                    'image/png' => ['png'],
+                    'image/webp' => ['webp'],
+                    'image/gif' => ['gif'],
+                ];
+                $allowedImageTypes = [
+                    IMAGETYPE_JPEG,
+                    IMAGETYPE_PNG,
+                    IMAGETYPE_WEBP,
+                    IMAGETYPE_GIF,
+                ];
+                $maxBytes = 10 * 1024 * 1024; // 10 MB
+
+                foreach ($rawImages as $uploadedFile) {
+                    if (!$uploadedFile instanceof UploadedFile || !$uploadedFile->isValid()) {
+                        $validationErrors['images'] = $isEn
+                            ? 'Only valid image files (JPG, PNG, WEBP, GIF) up to 10MB are allowed.'
+                            : 'Chỉ chấp nhận tệp hình ảnh hợp lệ (JPG, PNG, WEBP, GIF) tối đa 10MB.';
+                        break;
+                    }
+
+                    $size = $uploadedFile->getSize();
+                    $ext = strtolower((string) $uploadedFile->getClientOriginalExtension());
+                    $mimeType = strtolower((string) $uploadedFile->getMimeType());
+                    $realPath = $uploadedFile->getRealPath();
+                    $imageInfo = ($realPath !== false && is_file($realPath)) ? @getimagesize($realPath) : false;
+
+                    $isValidImage = is_int($size)
+                        && $size > 0
+                        && $size <= $maxBytes
+                        && isset($allowedMimeToExt[$mimeType])
+                        && in_array($ext, $allowedMimeToExt[$mimeType], true)
+                        && is_array($imageInfo)
+                        && isset($imageInfo[2])
+                        && in_array($imageInfo[2], $allowedImageTypes, true);
+
+                    if (!$isValidImage) {
+                        $validationErrors['images'] = $isEn
+                            ? 'Only valid image files (JPG, PNG, WEBP, GIF) up to 10MB are allowed.'
+                            : 'Chỉ chấp nhận tệp hình ảnh hợp lệ (JPG, PNG, WEBP, GIF) tối đa 10MB.';
+                        break;
+                    }
+
+                    $validatedImages[] = [
+                        'file' => $uploadedFile,
+                        'ext' => $ext === 'jpeg' ? 'jpg' : $ext,
+                    ];
+                }
+            }
+
             if (!empty($validationErrors)) {
                 $firstMessage = reset($validationErrors);
                 if (!$request->header('X-Inertia') && ($request->wantsJson() || $request->ajax())) {
@@ -211,22 +278,32 @@ class ContactController extends Controller
                 return redirect()->back()->withErrors($validationErrors)->withInput();
             }
 
-            if (isset($contact['images']) && !empty($contact['images'])) {
-                $fileObj = new \App\Models\File('Contact');
-                $fileUploaded = $fileObj->store($contact['images']);
+            $storedImages = null;
+            if (!empty($validatedImages)) {
                 $images = [];
-                if (isset($fileUploaded['successFiles'])) {
-                    foreach ($fileUploaded['successFiles'] as $item) {
+                $disk = Storage::disk('uploads');
+                foreach ($validatedImages as $item) {
+                    $safeName = Str::uuid()->toString() . '.' . $item['ext'];
+                    $storedPath = $disk->putFileAs('Contact', $item['file'], $safeName);
+                    if ($storedPath) {
                         $images[] = [
-                            'path' => str_replace('/static/', '', $item)
+                            'path' => str_replace('/static/', '', static_url($storedPath, [], false)),
                         ];
                     }
                 }
-                $contact['images'] = $images;
+                $storedImages = $images;
             }
 
-            // Ưu tiên số 1: Lưu dữ liệu liên hệ an toàn vào database
-            $created = Contact::create($contact);
+            // Ưu tiên số 1: Lưu dữ liệu liên hệ an toàn vào database (chỉ truyền các trường công khai hợp lệ)
+            $contactPayload = [
+                'data' => $data,
+                'type' => $contactType,
+            ];
+            if ($storedImages !== null) {
+                $contactPayload['images'] = $storedImages;
+            }
+
+            $created = Contact::create($contactPayload);
 
             // Phản hồi tương thích: Nếu không phải Inertia và là API/Ajax -> trả lời JSON
             if (!$request->header('X-Inertia') && ($request->wantsJson() || $request->ajax())) {
@@ -243,12 +320,17 @@ class ContactController extends Controller
                 'exception' => $th,
             ]);
 
+            $locale = function_exists('current_locale') ? current_locale() : app()->getLocale();
+            $genericMessage = $locale === 'en'
+                ? 'An error occurred while submitting your request. Please try again later.'
+                : 'Đã có lỗi xảy ra khi gửi yêu cầu. Vui lòng thử lại sau.';
+
             // Tuyệt đối không trả JSON cho Inertia request vì sẽ làm Inertia modal crash
             if (!$request->header('X-Inertia') && ($request->wantsJson() || $request->ajax())) {
-                return response()->json(['success' => false, 'message' => $th->getMessage()], 500);
+                return response()->json(['success' => false, 'message' => $genericMessage], 500);
             }
 
-            return redirect()->back()->withErrors(['error' => $th->getMessage()]);
+            return redirect()->back()->withErrors(['error' => $genericMessage]);
         }
     }
 

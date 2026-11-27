@@ -573,11 +573,20 @@ class HomeController extends Controller
                 'products' => $products->values(),
             ]);
         } catch (\Throwable $th) {
+            \Log::error('HomeController searchV2 error: ' . $th->getMessage(), [
+                'exception' => $th,
+            ]);
             report($th);
+
+            $currentLocale = $locale ?? app()->getLocale();
+            $genericMessage = $currentLocale === 'en'
+                ? 'An error occurred while searching. Please try again later.'
+                : 'Đã có lỗi xảy ra khi tìm kiếm. Vui lòng thử lại sau.';
+
             return response()->json([
                 'success' => false,
                 'products' => [],
-                'message' => $th->getMessage(),
+                'message' => $genericMessage,
             ], 500);
         }
     }
