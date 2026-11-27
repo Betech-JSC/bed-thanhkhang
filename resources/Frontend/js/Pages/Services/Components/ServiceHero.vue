@@ -46,7 +46,7 @@
                         <div class="relative w-[220px] h-[220px] sm:w-[260px] sm:h-[260px] lg:w-[280px] lg:h-[280px] flex items-center justify-center shrink-0">
                             <img
                                 :src="imageSrc"
-                                :alt="title ? tt(title) : tt('Giải pháp kỹ thuật công nghiệp Thành Khang Tecsat')"
+                                :alt="title ? tt(title) : tt('Giải pháp kỹ thuật công nghiệp Thành Khang')"
                                 class="w-full h-full object-contain drop-shadow-[0_16px_32px_rgba(0,0,0,0.6)] transition-transform duration-500 hover:scale-105"
                                 loading="eager"
                             />
@@ -138,8 +138,8 @@ const servicesUrl = computed(() => {
 
 const defaultDescription = computed(() =>
     isEn.value
-        ? 'Together with Thành Khang Tecsat, verify technical specifications, material durability, and OEM standards so every escalator or conveyor component operates reliably in real-world service.'
-        : translate('Cùng Thành Khang Tecsat đối chiếu chính xác thông số kỹ thuật, vật liệu chịu tải và chuẩn OEM để mọi linh kiện thang cuốn, xích tải vận hành an toàn, bền bỉ.')
+        ? 'Together with Thành Khang, verify technical specifications, material durability, and OEM standards so every escalator or conveyor component operates reliably in real-world service.'
+        : translate('Cùng Thành Khang đối chiếu chính xác thông số kỹ thuật, vật liệu chịu tải và chuẩn OEM để mọi linh kiện thang cuốn, xích tải vận hành an toàn, bền bỉ.')
 )
 
 const displayHeadline = computed(() => {

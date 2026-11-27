@@ -8,6 +8,7 @@
             <slot />
         </main>
         <Footer />
+        <FloatingCtaWidget />
         <QuotePopupModal />
     </div>
 </template>
@@ -15,6 +16,7 @@
 <script>
 import Header from '@/Components/Header.vue'
 import Footer from '@/Components/Footer.vue'
+import FloatingCtaWidget from '@/Components/FloatingCtaWidget.vue'
 import QuotePopupModal from '@/Components/QuotePopupModal.vue'
 
 export default {
@@ -22,6 +24,7 @@ export default {
     components: {
         Header,
         Footer,
+        FloatingCtaWidget,
         QuotePopupModal,
     },
     watch: {

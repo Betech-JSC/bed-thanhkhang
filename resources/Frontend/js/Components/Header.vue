@@ -5,11 +5,11 @@
         class="hidden lg:block w-full h-[46px] bg-dark text-surface-light antialiased"
     >
         <div class="app-container-narrow h-full flex items-center justify-between gap-6">
-            <p v-if="companyName" class="text-[14px] font-normal leading-[22px] text-surface-light truncate">
+            <p v-if="companyName" class="text-[14px] font-normal leading-[1.6] text-surface-light truncate">
                 {{ companyName }}
             </p>
             <span v-else />
-            <div class="flex items-center gap-8 shrink-0 text-[14px] font-normal leading-[22px] text-surface-light">
+            <div class="flex items-center gap-8 shrink-0 text-[14px] font-normal leading-[1.6] text-surface-light">
                 <a
                     v-if="contactEmail"
                     :href="'mailto:' + contactEmail"
@@ -83,18 +83,18 @@
         </a>
     </div>
 
-    <!-- Main Sticky Header Bar (Figma Desktop 979:32782: 72px #FFFFFF; Mobile 1190:6346: 61px #FFFFFF border-b #E3E8EF) -->
+    <!-- Main Sticky Header Bar (Figma Desktop 1264:48246: exact 72px #FFFFFF; Mobile 1190:6346: 61px #FFFFFF) -->
     <header
         ref="headerRoot"
-        class="sticky top-0 z-[1000] w-full bg-white antialiased transition-shadow duration-200 border-b"
+        class="sticky top-0 z-[1000] w-full bg-white antialiased transition-shadow duration-200"
         :class="
             isScrolled
-                ? 'border-gray-200 shadow-xs bg-white/95 backdrop-blur-md'
-                : 'border-gray-200 lg:border-transparent'
+                ? 'shadow-xs bg-white/95 backdrop-blur-md'
+                : 'shadow-[inset_0_-1px_0_0_#E3E8EF] lg:shadow-none'
         "
         @mouseleave="closeDesktopDropdown"
     >
-        <div class="app-container-narrow relative h-[61px] lg:h-[72px] flex items-center justify-between gap-3 lg:gap-4 xl:gap-6">
+        <div class="app-container-narrow relative h-[61px] lg:h-[72px] flex items-center justify-between gap-3 lg:gap-4">
             <!-- Brand Logo (Desktop 120x40, Mobile 96x32, CMS general_logo) -->
             <Link
                 :href="safeRoute('home', undefined, currentLocale === 'en' ? '/en' : '/')"
@@ -118,241 +118,220 @@
                 </span>
             </Link>
 
-            <!-- Desktop Navigation (Dynamic items from $page.props.configs.menus — Figma 979:32785) -->
-            <nav
-                v-if="menus.length > 0"
-                class="hidden lg:flex items-stretch self-stretch lg:gap-4 xl:gap-8"
-                :aria-label="tt('Điều hướng chính')"
-            >
-                <template v-for="(menu, index) in menus" :key="index">
-                    <div
-                        class="relative flex items-center self-stretch"
-                        @mouseenter="
-                            menu.hasDropdown
-                                ? openDesktopDropdown(menu.type)
-                                : closeDesktopDropdown()
-                        "
-                    >
-                        <!-- Figma 979:29410 — 72px item, default #697586, hover/active #004D86 + 3px bottom bar -->
+            <!-- Desktop Right Group (Figma 1264:48248 — w=945px: Nav + 48px gap + Actions) -->
+            <div class="hidden lg:flex items-center lg:flex-1 xl:flex-none xl:w-[945px] lg:justify-end xl:justify-between lg:gap-6 xl:gap-[48px] self-stretch">
+                <!-- Desktop Navigation (Dynamic items from $page.props.configs.menus — Figma 1264:48249) -->
+                <nav
+                    v-if="menus.length > 0"
+                    class="flex items-stretch self-stretch lg:gap-5 xl:gap-[32px]"
+                    :aria-label="tt('Điều hướng chính')"
+                >
+                    <template v-for="(menu, index) in menus" :key="index">
                         <div
-                            class="group/navitem inline-flex items-center gap-1 h-full border-b-[3px] transition-colors"
-                            :class="
-                                isMenuHighlighted(menu)
-                                    ? 'border-primary-600'
-                                    : 'border-transparent hover:border-primary-600'
+                            class="relative flex items-center self-stretch"
+                            @mouseenter="
+                                menu.hasDropdown
+                                    ? openDesktopDropdown(menu.type)
+                                    : closeDesktopDropdown()
                             "
                         >
-                            <Link
-                                :href="menu.href"
-                                class="py-2 text-[14px] font-bold uppercase leading-[22px] tracking-normal whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-cta"
+                            <!-- Figma 1264:48250..48254 — 72px item vertically centered, default #697586, hover/active #004D86 + absolute 3px bottom bar -->
+                            <div
+                                class="group/navitem relative inline-flex items-center gap-[4px] h-full after:content-[''] after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:transition-colors"
                                 :class="
                                     isMenuHighlighted(menu)
-                                        ? 'text-primary-600'
-                                        : 'text-ink-subtle group-hover/navitem:text-primary-600'
+                                        ? 'after:bg-primary-600'
+                                        : 'after:bg-transparent hover:after:bg-primary-600'
                                 "
-                                @click="closeDesktopDropdown"
                             >
-                                {{ menu.title }}
-                            </Link>
-                            <button
-                                v-if="menu.hasDropdown"
-                                type="button"
-                                class="inline-flex items-center justify-center w-5 h-5 rounded-cta focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors cursor-pointer shrink-0"
-                                :aria-label="tt('Mở danh mục sản phẩm')"
-                                :aria-expanded="activeDropdown === menu.type"
-                                aria-haspopup="true"
-                                @click.stop="toggleDesktopDropdown(menu.type)"
-                            >
-                                <img
-                                    :src="
+                                <Link
+                                    :href="menu.href"
+                                    class="text-[14px] font-bold uppercase leading-[1.6] tracking-normal whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-cta"
+                                    :class="
                                         isMenuHighlighted(menu)
-                                            ? '/assets/svg/icons/header-chevron-down-active.svg'
-                                            : '/assets/svg/icons/header-chevron-down.svg'
+                                            ? 'text-primary-600'
+                                            : 'text-[#697586] group-hover/navitem:text-primary-600'
                                     "
-                                    alt=""
-                                    aria-hidden="true"
-                                    width="20"
-                                    height="20"
-                                    class="w-5 h-5 transition-transform duration-200"
-                                    :class="activeDropdown === menu.type ? 'rotate-180' : ''"
-                                />
-                            </button>
-                        </div>
-
-                        <!-- Desktop Products 2-Region Mega-Menu (Figma 856:24212, anchored left-0 to PRODUCTS nav item) -->
-                        <transition name="dropdown-fade">
-                            <div
-                                v-if="menu.hasDropdown && menu.type === 'products' && hasProductsMenu"
-                                v-show="activeDropdown === menu.type"
-                                data-testid="desktop-mega-menu"
-                                class="hidden lg:block absolute top-full left-0 pt-2 z-[1010] max-w-[calc(100vw-48px)]"
-                            >
-                                <div
-                                    class="bg-surface rounded-cta shadow-dropdown border border-gray-200/80 min-h-[396px] flex overflow-hidden max-w-full"
+                                    @click="closeDesktopDropdown"
                                 >
-                                    <!-- Left Column: Root Categories (240px/300px #EEF2F6 + Bottom CTA) -->
+                                    {{ menu.title }}
+                                </Link>
+                                <button
+                                    v-if="menu.hasDropdown"
+                                    type="button"
+                                    class="inline-flex items-center justify-center w-5 h-5 rounded-cta focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors cursor-pointer shrink-0"
+                                    :aria-label="tt('Mở danh mục sản phẩm')"
+                                    :aria-expanded="activeDropdown === menu.type"
+                                    aria-haspopup="true"
+                                    @click.stop="toggleDesktopDropdown(menu.type)"
+                                >
+                                    <img
+                                        :src="
+                                            isMenuHighlighted(menu)
+                                                ? '/assets/svg/icons/header-chevron-down-active.svg'
+                                                : '/assets/svg/icons/header-chevron-down.svg'
+                                        "
+                                        alt=""
+                                        aria-hidden="true"
+                                        width="20"
+                                        height="20"
+                                        class="w-5 h-5 transition-transform duration-200"
+                                        :class="activeDropdown === menu.type ? 'rotate-180' : ''"
+                                    />
+                                </button>
+                            </div>
+
+                            <!-- Desktop Products 2-Region Mega-Menu (Figma 856:24212, anchored left-0 to PRODUCTS nav item) -->
+                            <transition name="dropdown-fade">
+                                <div
+                                    v-if="menu.hasDropdown && menu.type === 'products' && hasProductsMenu"
+                                    v-show="activeDropdown === menu.type"
+                                    data-testid="desktop-mega-menu"
+                                    class="hidden lg:block absolute top-full left-0 pt-2 z-[1010] max-w-[calc(100vw-48px)]"
+                                >
                                     <div
-                                        class="w-[240px] xl:w-[300px] shrink-0 bg-surface-100 p-4 xl:p-5 flex flex-col justify-between gap-6"
+                                        class="bg-surface rounded-cta shadow-dropdown border border-gray-200/80 min-h-[396px] flex overflow-hidden max-w-full"
                                     >
-                                        <div class="flex flex-col gap-3">
+                                        <!-- Left Column: Root Categories (240px/300px #EEF2F6 + Bottom CTA) -->
+                                        <div
+                                            class="w-[240px] xl:w-[300px] shrink-0 bg-surface-100 p-4 xl:p-5 flex flex-col justify-between gap-6"
+                                        >
+                                            <div class="flex flex-col gap-3">
+                                                <Link
+                                                    v-for="(cat, idx) in productCategories"
+                                                    :key="cat.id || cat.slug || idx"
+                                                    :href="cat.url"
+                                                    class="min-h-[44px] xl:min-h-[46px] px-3.5 xl:px-4 py-2.5 xl:py-3 rounded-cta text-[14px] leading-[1.6] font-bold text-dark flex items-center justify-between gap-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                                                    :class="
+                                                        activeRootCategoryIndex === idx
+                                                            ? 'bg-surface-300'
+                                                            : 'bg-surface-100 hover:bg-surface-200'
+                                                    "
+                                                    @mouseenter="activeRootCategoryIndex = idx"
+                                                    @focus="activeRootCategoryIndex = idx"
+                                                    @click="closeDesktopDropdown"
+                                                >
+                                                    <span class="line-clamp-2 text-left">{{ cat.title }}</span>
+                                                    <img
+                                                        src="/assets/svg/icons/header-chevron-right.svg"
+                                                        alt=""
+                                                        aria-hidden="true"
+                                                        width="20"
+                                                        height="20"
+                                                        class="w-5 h-5 shrink-0"
+                                                    />
+                                                </Link>
+                                            </div>
+
                                             <Link
-                                                v-for="(cat, idx) in productCategories"
-                                                :key="cat.id || cat.slug || idx"
-                                                :href="cat.url"
-                                                class="min-h-[44px] xl:min-h-[46px] px-3.5 xl:px-4 py-2.5 xl:py-3 rounded-cta text-[14px] leading-[20px] xl:leading-[22px] font-bold text-dark flex items-center justify-between gap-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                                                :class="
-                                                    activeRootCategoryIndex === idx
-                                                        ? 'bg-surface-300'
-                                                        : 'bg-surface-100 hover:bg-surface-200'
-                                                "
-                                                @mouseenter="activeRootCategoryIndex = idx"
-                                                @focus="activeRootCategoryIndex = idx"
+                                                :href="allProductsHref"
+                                                class="h-[38px] w-full rounded-cta bg-primary hover:bg-primary-hover active:bg-primary-active text-surface text-[14px] leading-[1.6] font-medium inline-flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                                                 @click="closeDesktopDropdown"
                                             >
-                                                <span class="line-clamp-2 text-left">{{ cat.title }}</span>
-                                                <img
-                                                    src="/assets/svg/icons/header-chevron-right.svg"
-                                                    alt=""
-                                                    aria-hidden="true"
-                                                    width="20"
-                                                    height="20"
-                                                    class="w-5 h-5 shrink-0"
-                                                />
+                                                {{ tt('Xem tất cả sản phẩm') }}
                                             </Link>
                                         </div>
 
-                                        <Link
-                                            :href="allProductsHref"
-                                            class="h-[38px] w-full rounded-cta bg-primary hover:bg-primary-hover active:bg-primary-active text-surface text-[14px] leading-[22px] font-medium inline-flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                                            @click="closeDesktopDropdown"
-                                        >
-                                            {{ tt('Xem tất cả sản phẩm') }}
-                                        </Link>
-                                    </div>
-
-                                    <!-- Right Region: Level 2 Groups & Level 3 Leaf Categories (#FAFAFA) -->
-                                    <div
-                                        v-if="activeRootCategory"
-                                        class="bg-surface p-4 xl:p-5 min-w-0 overflow-y-auto max-h-[70vh]"
-                                        :class="
-                                            activeLevel2Groups.length >= 2
-                                                ? 'w-[400px] xl:w-[500px]'
-                                                : 'w-[280px] xl:w-[320px]'
-                                        "
-                                    >
+                                        <!-- Right Region: Level 2 Groups & Level 3 Leaf Categories (#FAFAFA) -->
                                         <div
-                                            v-if="activeLevel2Groups.length > 0"
+                                            v-if="activeRootCategory"
+                                            class="bg-surface p-4 xl:p-5 min-w-0 overflow-y-auto max-h-[70vh]"
                                             :class="
                                                 activeLevel2Groups.length >= 2
-                                                    ? 'grid grid-cols-2 gap-x-3 xl:gap-x-4 gap-y-6 items-start content-start'
-                                                    : 'flex flex-col gap-5'
+                                                    ? 'w-[400px] xl:w-[500px]'
+                                                    : 'w-[280px] xl:w-[320px]'
                                             "
                                         >
                                             <div
-                                                v-for="sub in activeLevel2Groups"
-                                                :key="sub.id || sub.slug"
-                                                class="min-w-0 flex flex-col gap-2"
+                                                v-if="activeLevel2Groups.length > 0"
+                                                :class="
+                                                    activeLevel2Groups.length >= 2
+                                                        ? 'grid grid-cols-2 gap-x-3 xl:gap-x-4 gap-y-6 items-start content-start'
+                                                        : 'flex flex-col gap-5'
+                                                "
                                             >
-                                                <Link
-                                                    :href="sub.url"
-                                                    class="px-3 xl:px-4 py-0.5 text-[14px] leading-[22px] font-bold text-primary hover:text-primary-sub-hover transition-colors block rounded-cta focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                                                    @click="closeDesktopDropdown"
-                                                >
-                                                    {{ sub.title }}
-                                                </Link>
-
                                                 <div
-                                                    v-if="sub.children && sub.children.length > 0"
-                                                    class="flex flex-col"
+                                                    v-for="sub in activeLevel2Groups"
+                                                    :key="sub.id || sub.slug"
+                                                    class="min-w-0 flex flex-col gap-2"
                                                 >
                                                     <Link
-                                                        v-for="leaf in sub.children"
-                                                        :key="leaf.id || leaf.slug"
-                                                        :href="leaf.url"
-                                                        class="min-h-[42px] xl:min-h-[46px] px-3 xl:px-4 py-2 xl:py-2.5 rounded-cta text-[14px] leading-[22px] font-medium text-ink-subtle bg-surface hover:bg-surface-100 hover:text-dark active:bg-surface-200 flex items-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                                                        :href="sub.url"
+                                                        class="px-3 xl:px-4 py-0.5 text-[14px] leading-[1.6] font-bold text-primary hover:text-primary-sub-hover transition-colors block rounded-cta focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                                                         @click="closeDesktopDropdown"
                                                     >
-                                                        <span class="line-clamp-2">{{ leaf.title }}</span>
+                                                        {{ sub.title }}
                                                     </Link>
+
+                                                    <div
+                                                        v-if="sub.children && sub.children.length > 0"
+                                                        class="flex flex-col"
+                                                    >
+                                                        <Link
+                                                            v-for="leaf in sub.children"
+                                                            :key="leaf.id || leaf.slug"
+                                                            :href="leaf.url"
+                                                            class="min-h-[42px] xl:min-h-[46px] px-3 xl:px-4 py-2 xl:py-2.5 rounded-cta text-[14px] leading-[1.6] font-medium text-ink-subtle bg-surface hover:bg-surface-100 hover:text-dark active:bg-surface-200 flex items-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                                                            @click="closeDesktopDropdown"
+                                                        >
+                                                            <span class="line-clamp-2">{{ leaf.title }}</span>
+                                                        </Link>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div v-else class="flex flex-col gap-3 px-3 xl:px-4 py-2">
-                                            <Link
-                                                :href="activeRootCategory.url"
-                                                class="text-[14px] leading-[22px] font-bold text-primary hover:text-primary-sub-hover transition-colors"
-                                                @click="closeDesktopDropdown"
-                                            >
-                                                {{ activeRootCategory.title }}
-                                            </Link>
+                                            <div v-else class="flex flex-col gap-3 px-3 xl:px-4 py-2">
+                                                <Link
+                                                    :href="activeRootCategory.url"
+                                                    class="text-[14px] leading-[1.6] font-bold text-primary hover:text-primary-sub-hover transition-colors"
+                                                    @click="closeDesktopDropdown"
+                                                >
+                                                    {{ activeRootCategory.title }}
+                                                </Link>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </transition>
-                    </div>
-                </template>
-            </nav>
+                            </transition>
+                        </div>
+                    </template>
+                </nav>
 
-            <!-- Desktop Right Actions: Search + Language Switcher + 2 CTAs (Figma 979:32791) -->
-            <div class="hidden lg:flex items-center lg:gap-2.5 xl:gap-4 shrink-0">
-                <button
-                    type="button"
-                    @click="isSearchOpen = true"
-                    class="w-9 h-9 inline-flex items-center justify-center rounded-cta hover:bg-surface-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors cursor-pointer shrink-0"
-                    :title="tt('Tìm kiếm (Ctrl+K)')"
-                    :aria-label="tt('Tìm kiếm')"
-                >
-                    <img
-                        src="/assets/svg/icons/header-search.svg"
-                        alt=""
-                        aria-hidden="true"
-                        width="20"
-                        height="20"
-                        class="w-5 h-5 object-contain"
-                    />
-                </button>
-
-                <!-- Language Switcher (VI | EN) -->
-                <div
-                    class="inline-flex items-center h-[36px] p-0.5 rounded-[4px] bg-surface-100 border border-gray-200 shrink-0"
-                    role="group"
-                    :aria-label="tt('Ngôn ngữ')"
-                >
-                    <Link
-                        v-for="loc in ['vi', 'en']"
-                        :key="loc"
-                        :href="getLocaleUrl(loc)"
-                        :data-testid="`lang-switch-${loc}`"
-                        :aria-current="currentLocale === loc ? 'page' : undefined"
-                        :title="loc === 'vi' ? 'Tiếng Việt' : 'English'"
-                        class="h-full px-2 xl:px-2.5 inline-flex items-center justify-center rounded-[3px] text-[12px] font-bold uppercase leading-none transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                        :class="
-                            currentLocale === loc
-                                ? 'bg-primary text-surface shadow-xs'
-                                : 'text-ink-body hover:text-dark'
-                        "
-                    >
-                        {{ loc.toUpperCase() }}
-                    </Link>
-                </div>
-
-                <div class="flex items-center gap-2 xl:gap-3 shrink-0">
+                <!-- Desktop Right Actions: Search (20x20) + 32px gap + 2 CTAs (Figma 1264:48255) -->
+                <div class="flex items-center justify-end lg:gap-5 xl:gap-[32px] shrink-0">
                     <button
                         type="button"
-                        @click="handleOpenQuoteModal"
-                        class="h-[38px] lg:px-3.5 xl:px-5 inline-flex items-center justify-center whitespace-nowrap rounded-cta bg-primary hover:bg-primary-hover active:bg-primary-active text-surface text-[14px] font-medium leading-[22px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 cursor-pointer"
+                        @click="isSearchOpen = true"
+                        class="w-5 h-5 inline-flex items-center justify-center rounded-cta hover:opacity-75 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 transition-opacity cursor-pointer shrink-0"
+                        :title="tt('Tìm kiếm (Ctrl+K)')"
+                        :aria-label="tt('Tìm kiếm')"
                     >
-                        {{ tt('Nhận báo giá') }}
+                        <img
+                            src="/assets/svg/icons/header-search.svg"
+                            alt=""
+                            aria-hidden="true"
+                            width="20"
+                            height="20"
+                            class="w-5 h-5 object-contain"
+                        />
                     </button>
-                    <a
-                        v-if="contactPhone"
-                        :href="'tel:' + cleanPhone"
-                        class="h-[38px] lg:px-3.5 xl:px-5 inline-flex items-center justify-center whitespace-nowrap rounded-cta bg-secondary hover:bg-secondary-hover text-primary-active text-[14px] font-medium leading-[22px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                    >
-                        {{ tt('Gọi hotline') }}
-                    </a>
+
+                    <div class="flex items-center gap-2 xl:gap-[12px] shrink-0">
+                        <button
+                            type="button"
+                            @click="handleOpenQuoteModal"
+                            class="h-[38px] lg:px-4 xl:px-[20px] xl:min-w-[128px] py-[8px] inline-flex items-center justify-center whitespace-nowrap rounded-[4px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] text-[14px] font-medium leading-[1.6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 cursor-pointer"
+                        >
+                            {{ tt('Nhận báo giá') }}
+                        </button>
+                        <a
+                            v-if="contactPhone"
+                            :href="'tel:' + cleanPhone"
+                            class="h-[38px] lg:px-4 xl:px-[20px] xl:min-w-[113px] py-[8px] inline-flex items-center justify-center whitespace-nowrap rounded-[4px] bg-[#C9E0FF] hover:bg-[#81BDFF] text-[#003967] text-[14px] font-medium leading-[1.6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                        >
+                            {{ tt('Gọi hotline') }}
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -635,37 +614,8 @@
                     </nav>
                 </div>
 
-                <!-- Drawer Bottom: Language Switcher + CTAs + Contact Info from CMS -->
+                <!-- Drawer Bottom: CTAs + Contact Info from CMS -->
                 <div class="p-5 pt-4 border-t border-gray-200 bg-surface-50 space-y-4">
-                    <div class="space-y-1.5">
-                        <span class="block text-[11px] font-semibold uppercase tracking-wider text-ink-subtle">
-                            {{ tt('Ngôn ngữ') }}
-                        </span>
-                        <div
-                            class="grid grid-cols-2 gap-1 p-0.5 rounded-[4px] bg-surface-100 border border-gray-200"
-                            role="group"
-                            :aria-label="tt('Ngôn ngữ')"
-                        >
-                            <Link
-                                v-for="loc in ['vi', 'en']"
-                                :key="loc"
-                                :href="getLocaleUrl(loc)"
-                                :data-testid="`mobile-lang-switch-${loc}`"
-                                :aria-current="currentLocale === loc ? 'page' : undefined"
-                                :title="loc === 'vi' ? 'Tiếng Việt' : 'English'"
-                                @click="closeDrawer"
-                                class="min-h-[40px] inline-flex items-center justify-center rounded-[3px] text-[12px] font-bold uppercase transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                                :class="
-                                    currentLocale === loc
-                                        ? 'bg-primary text-surface shadow-xs'
-                                        : 'text-ink-body hover:text-dark'
-                                "
-                            >
-                                {{ loc.toUpperCase() }}
-                            </Link>
-                        </div>
-                    </div>
-
                     <div class="flex flex-col gap-2.5">
                         <button
                             type="button"

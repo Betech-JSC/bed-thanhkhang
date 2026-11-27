@@ -26,7 +26,7 @@
                     variant="light"
                     heading-tag="h3"
                     :title="tt('Thư viện tài liệu kỹ thuật đang được cập nhật')"
-                    :description="tt('Vui lòng liên hệ đội ngũ kỹ sư Thành Khang Tecsat để nhận catalogue và data sheet thông số kỹ thuật mới nhất.')"
+                    :description="tt('Vui lòng liên hệ đội ngũ kỹ sư Thành Khang để nhận catalogue và data sheet thông số kỹ thuật mới nhất.')"
                     :primary-action-text="tt('Liên hệ kỹ thuật')"
                     :primary-action-href="contactHref"
                 />

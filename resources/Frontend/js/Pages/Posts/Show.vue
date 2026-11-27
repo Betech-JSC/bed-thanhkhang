@@ -192,7 +192,7 @@
                                 <p class="text-[14px] leading-[1.6] text-secondary">
                                     {{
                                         tt(
-                                            'Đội ngũ kỹ sư Thành Khang Tecsat sẵn sàng hỗ trợ tra cứu thông số kỹ thuật, chọn đúng dòng xích tải và báo giá nhanh trong 2 giờ làm việc.'
+                                            'Đội ngũ kỹ sư Thành Khang sẵn sàng hỗ trợ tra cứu thông số kỹ thuật, chọn đúng dòng xích tải và báo giá nhanh trong 2 giờ làm việc.'
                                         )
                                     }}
                                 </p>
@@ -455,7 +455,7 @@ const coverCaption = computed(() => {
 })
 
 const pageTitle = computed(
-    () => props.seo?.title || props.post?.title || trans('Tin tức & Kiến thức Kỹ thuật - Thành Khang Tecsat')
+    () => props.seo?.title || props.post?.title || trans('Tin tức & Kiến thức Kỹ thuật - Thành Khang')
 )
 const pageDescription = computed(() => props.seo?.description || props.post?.description || '')
 const ogImage = computed(() => {

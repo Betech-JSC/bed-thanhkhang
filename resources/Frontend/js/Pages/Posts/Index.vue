@@ -40,7 +40,7 @@
                         <p class="text-[14px] leading-[1.6] text-gray-modern-200 max-w-[400px]">
                             {{
                                 tt(
-                                    'Cập nhật kiến thức truyền động công nghiệp, hướng dẫn bảo trì xích tải – thang cuốn và chia sẻ kinh nghiệm thực tế từ đội ngũ kỹ sư Thành Khang Tecsat.'
+                                    'Cập nhật kiến thức truyền động công nghiệp, hướng dẫn bảo trì xích tải – thang cuốn và chia sẻ kinh nghiệm thực tế từ đội ngũ kỹ sư Thành Khang.'
                                 )
                             }}
                         </p>
@@ -417,16 +417,16 @@ const pageTitle = computed(
     () =>
         props.seo?.title ||
         (isEn.value
-            ? 'News & Technical Insights - Thanh Khang Tecsat'
-            : trans('Tin tức & Kiến thức Kỹ thuật - Thành Khang Tecsat'))
+            ? 'News & Technical Insights - Thanh Khang'
+            : trans('Tin tức & Kiến thức Kỹ thuật - Thành Khang'))
 )
 const pageDescription = computed(
     () =>
         props.seo?.description ||
         (isEn.value
-            ? 'Explore technical guides, escalator maintenance knowledge, and industrial automation news from Thanh Khang Tecsat.'
+            ? 'Explore technical guides, escalator maintenance knowledge, and industrial automation news from Thanh Khang.'
             : trans(
-                  'Cập nhật kiến thức truyền động công nghiệp, hướng dẫn bảo trì xích tải – thang cuốn và chia sẻ kinh nghiệm thực tế từ đội ngũ kỹ sư Thành Khang Tecsat.'
+                  'Cập nhật kiến thức truyền động công nghiệp, hướng dẫn bảo trì xích tải – thang cuốn và chia sẻ kinh nghiệm thực tế từ đội ngũ kỹ sư Thành Khang.'
               ))
 )
 

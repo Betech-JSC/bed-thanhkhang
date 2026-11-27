@@ -69,8 +69,8 @@ const pageTitle = computed(() => {
     return (
         props.seo?.title ||
         (currentLocale.value === 'en'
-            ? 'Professional Supply & Technical Process - Thành Khang Tecsat'
-            : translate('Quy Trình Cung Ứng & Hỗ Trợ Kỹ Thuật Chuyên Nghiệp - Thành Khang Tecsat'))
+            ? 'Professional Supply & Technical Process - Thành Khang'
+            : translate('Quy Trình Cung Ứng & Hỗ Trợ Kỹ Thuật Chuyên Nghiệp - Thành Khang'))
     )
 })
 
@@ -78,8 +78,8 @@ const pageDescription = computed(() => {
     return (
         props.seo?.description ||
         (currentLocale.value === 'en'
-            ? 'Explore Thành Khang Tecsat\'s 5-step industrial supply process: From receiving technical specs, OEM matching, transparent quotation, CO/CQ quality inspection to on-site delivery.'
-            : translate('Khám phá quy trình 5 bước cung ứng thiết bị & phụ tùng công nghiệp tại Thành Khang Tecsat: Từ tiếp nhận thông số, đối chiếu mã OEM, báo giá, kiểm định CO/CQ đến giao hàng tận nơi.'))
+            ? 'Explore Thành Khang\'s 5-step industrial supply process: From receiving technical specs, OEM matching, transparent quotation, CO/CQ quality inspection to on-site delivery.'
+            : translate('Khám phá quy trình 5 bước cung ứng thiết bị & phụ tùng công nghiệp tại Thành Khang: Từ tiếp nhận thông số, đối chiếu mã OEM, báo giá, kiểm định CO/CQ đến giao hàng tận nơi.'))
     )
 })
 

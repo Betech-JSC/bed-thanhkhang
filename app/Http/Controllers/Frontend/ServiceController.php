@@ -28,11 +28,11 @@ class ServiceController extends Controller
 
         $seo = [
             'title' => $locale === 'en'
-                ? 'Industrial Engineering Services & Energy Saving Solutions - Thanh Khang Tecsat'
-                : 'Dịch Vụ Kỹ Thuật & Giải Pháp Tiết Kiệm Điện - Thành Khang Tecsat',
+                ? 'Industrial Engineering Services & Energy Saving Solutions - Thanh Khang'
+                : 'Dịch Vụ Kỹ Thuật & Giải Pháp Tiết Kiệm Điện - Thành Khang',
             'description' => $locale === 'en'
-                ? 'Thanh Khang Tecsat provides technical survey, precision mechanical manufacturing, escalator maintenance parts, and industrial BLDC fan energy-saving solutions.'
-                : 'Thành Khang Tecsat cung cấp dịch vụ khảo sát kỹ thuật, chế tạo cơ khí phụ tùng, cung ứng linh kiện thang cuốn và giải pháp tiết kiệm điện quạt BLDC công nghiệp.',
+                ? 'Thanh Khang provides technical survey, precision mechanical manufacturing, escalator maintenance parts, and industrial BLDC fan energy-saving solutions.'
+                : 'Thành Khang cung cấp dịch vụ khảo sát kỹ thuật, chế tạo cơ khí phụ tùng, cung ứng linh kiện thang cuốn và giải pháp tiết kiệm điện quạt BLDC công nghiệp.',
         ];
 
         if (request()->wantsJson()) {

@@ -14,10 +14,10 @@
             </div>
         </div>
 
-        <!-- Full-Bleed Trust Banner (Figma 1171:41564 — 1440x578 Desktop; Figma 1191:6403 — 390x588 Mobile) -->
+        <!-- Full-Bleed Trust Banner (Figma 1264:48080 — locked 578px Desktop; Figma 1191:6403 — 390x588 Mobile) -->
         <div
             v-if="trustItems.length > 0"
-            class="relative w-full overflow-hidden bg-[#00284B] lg:aspect-[1440/578] flex items-center"
+            class="relative w-full overflow-hidden bg-[#00284B] lg:h-[578px] flex items-center"
         >
             <!-- Background Photo -->
             <picture v-if="bannerUrl" class="absolute inset-0 block w-full h-full pointer-events-none select-none">
@@ -189,7 +189,7 @@
                                 </div>
                             </div>
                             <div class="min-w-0 flex-1 flex flex-col gap-0.5">
-                                <h3 class="font-bold text-[16px] leading-[22px] text-[#FAFAFA]">
+                                <h3 class="font-bold text-[16px] leading-[1.6] text-[#FAFAFA]">
                                     {{ item.title }}
                                 </h3>
                                 <p v-if="item.description" class="font-normal text-[13px] leading-[20px] text-[#E3E8EF]">

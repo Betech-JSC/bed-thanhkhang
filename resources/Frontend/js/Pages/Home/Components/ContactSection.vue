@@ -75,7 +75,7 @@
                         </h2>
                         <p
                             v-if="description"
-                            class="font-normal lg:font-medium text-[14px] sm:text-[15px] lg:text-[16px] leading-[22px] lg:leading-[1.6] text-[#9AA4B2] mt-2.5 lg:mt-0 break-words"
+                            class="font-normal lg:font-medium text-[14px] sm:text-[15px] lg:text-[16px] leading-[1.6] text-[#9AA4B2] mt-2.5 lg:mt-0 break-words"
                         >
                             {{ description }}
                         </p>
@@ -104,7 +104,7 @@
                                     class="w-5 h-5 object-contain"
                                 />
                             </span>
-                            <span class="font-bold text-[14px] lg:text-[16px] leading-[20px] lg:leading-[26px] text-[#FAFAFA] lg:text-[#EEF2F6] break-words">
+                            <span class="font-bold text-[14px] lg:text-[16px] leading-[1.6] text-[#FAFAFA] lg:text-[#EEF2F6] break-words">
                                 {{ badge.title || badge.text }}
                             </span>
                         </div>
@@ -124,7 +124,7 @@
                                     class="w-5 h-5 object-contain"
                                 />
                             </span>
-                            <span class="font-bold text-[14px] lg:text-[16px] leading-[20px] lg:leading-[26px] text-[#FAFAFA] lg:text-[#EEF2F6] break-words">
+                            <span class="font-bold text-[14px] lg:text-[16px] leading-[1.6] text-[#FAFAFA] lg:text-[#EEF2F6] break-words">
                                 {{ t('Giá gốc nhà máy (Không trung gian)') }}
                             </span>
                         </div>
@@ -142,7 +142,7 @@
                                     class="w-5 h-5 object-contain"
                                 />
                             </span>
-                            <span class="font-bold text-[14px] lg:text-[16px] leading-[20px] lg:leading-[26px] text-[#FAFAFA] lg:text-[#EEF2F6] break-words">
+                            <span class="font-bold text-[14px] lg:text-[16px] leading-[1.6] text-[#FAFAFA] lg:text-[#EEF2F6] break-words">
                                 {{ t('Giao hàng tận chân công trình') }}
                             </span>
                         </div>
@@ -160,7 +160,7 @@
                                     class="w-5 h-5 object-contain"
                                 />
                             </span>
-                            <span class="font-bold text-[14px] lg:text-[16px] leading-[20px] lg:leading-[26px] text-[#FAFAFA] lg:text-[#EEF2F6] break-words">
+                            <span class="font-bold text-[14px] lg:text-[16px] leading-[1.6] text-[#FAFAFA] lg:text-[#EEF2F6] break-words">
                                 {{ t('Đầy đủ CO/CQ, Hoá đơn VAT') }}
                             </span>
                         </div>
@@ -178,16 +178,16 @@
                                     class="w-5 h-5 object-contain"
                                 />
                             </span>
-                            <span class="font-bold text-[14px] lg:text-[16px] leading-[20px] lg:leading-[26px] text-[#FAFAFA] lg:text-[#EEF2F6] break-words">
+                            <span class="font-bold text-[14px] lg:text-[16px] leading-[1.6] text-[#FAFAFA] lg:text-[#EEF2F6] break-words">
                                 {{ t('Chiết khấu cao cho nhà thầu') }}
                             </span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Right Column: Quote Form Card (Figma 1171:41702 627x508 bg-[#E3E8EF] & Figma 1193:6514 358x578) -->
+                <!-- Right Column: Quote Form Card (Figma 1264:48218 627x508 bg-[#E3E8EF] backdrop-blur-[3px]) -->
                 <div
-                    class="w-full lg:w-[627px] lg:min-h-[508px] min-w-0 backdrop-blur-[6px] bg-[#E3E8EF] rounded-[8px] px-4 py-5 sm:p-6 lg:p-[40px] flex flex-col justify-between"
+                    class="w-full lg:w-[627px] lg:min-h-[508px] min-w-0 backdrop-blur-[3px] bg-[#E3E8EF] rounded-[8px] px-4 py-5 sm:p-6 lg:p-[40px] flex flex-col justify-between"
                 >
                     <form
                         @submit.prevent="submitForm"
@@ -195,14 +195,14 @@
                         class="flex flex-col justify-between h-full gap-5 lg:gap-[31px]"
                     >
                         <div class="flex flex-col gap-[14px] lg:gap-[16px]">
-                            <!-- Row 1: Full Name* + Company / Organization (Figma 1171:41704) -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-[14px] sm:gap-3">
+                            <!-- Row 1: Full Name* + Company / Organization (Figma 1264:48220) -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-[14px] sm:gap-[12px]">
                                 <div>
                                     <label
                                         for="home-contact-name"
-                                        class="block text-[14px] font-medium leading-[22px] text-[#4B5565] mb-[4px]"
+                                        class="block text-[14px] font-medium leading-[1.6] text-[#4B5565] mb-[4px]"
                                     >
-                                        {{ isEn ? 'Full Name*' : 'Họ và tên*' }}
+                                        {{ isEn ? 'Full Name' : 'Họ và tên' }}<span class="text-[#FF4749]">*</span>
                                     </label>
                                     <input
                                         id="home-contact-name"
@@ -231,7 +231,7 @@
                                 <div>
                                     <label
                                         for="home-contact-company"
-                                        class="block text-[14px] font-medium leading-[22px] text-[#4B5565] mb-[4px]"
+                                        class="block text-[14px] font-medium leading-[1.6] text-[#4B5565] mb-[4px]"
                                     >
                                         {{ t('Tên công ty/ Đơn vị') }}
                                     </label>
@@ -247,14 +247,14 @@
                                 </div>
                             </div>
 
-                            <!-- Row 2: Email* + Phone* (Figma 1171:41707) -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-[14px] sm:gap-3">
+                            <!-- Row 2: Email* + Phone* (Figma 1264:48223) -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-[14px] sm:gap-[12px]">
                                 <div>
                                     <label
                                         for="home-contact-email"
-                                        class="block text-[14px] font-medium leading-[22px] text-[#4B5565] mb-[4px]"
+                                        class="block text-[14px] font-medium leading-[1.6] text-[#4B5565] mb-[4px]"
                                     >
-                                        Email*
+                                        Email<span class="text-[#FF4749]">*</span>
                                     </label>
                                     <input
                                         id="home-contact-email"
@@ -263,7 +263,7 @@
                                         name="email"
                                         autocomplete="email"
                                         required
-                                        :placeholder="isEn ? 'example@company.com' : 'example@congty.com'"
+                                        :placeholder="isEn ? 'name@company.com' : 'ten@congty.com'"
                                         :aria-invalid="Boolean(fieldErrors.email)"
                                         :aria-describedby="fieldErrors.email ? 'home-contact-email-error' : undefined"
                                         class="w-full h-[42px] bg-white border rounded-[8px] px-[12px] py-[8px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] text-[16px] font-normal leading-[1.6] text-[#1A1A1A] placeholder:text-[#808080] focus:outline-none focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-colors"
@@ -283,9 +283,9 @@
                                 <div>
                                     <label
                                         for="home-contact-phone"
-                                        class="block text-[14px] font-medium leading-[22px] text-[#4B5565] mb-[4px]"
+                                        class="block text-[14px] font-medium leading-[1.6] text-[#4B5565] mb-[4px]"
                                     >
-                                        {{ isEn ? 'Phone Number*' : 'Số điện thoại*' }}
+                                        {{ isEn ? 'Phone Number' : 'Số điện thoại' }}<span class="text-[#FF4749]">*</span>
                                     </label>
                                     <input
                                         id="home-contact-phone"
@@ -312,11 +312,11 @@
                                 </div>
                             </div>
 
-                            <!-- Row 3: Message / Note (Figma 1171:41710 h-[152px] Desktop, 1193:6548 h-[120px] Mobile) -->
+                            <!-- Row 3: Message / Note (Figma 1264:48226 h-[152px] px-[14px] py-[10px]) -->
                             <div>
                                 <label
                                     for="home-contact-note"
-                                    class="block text-[14px] font-medium leading-[22px] text-[#424242] mb-[4px] lg:mb-[6px]"
+                                    class="block text-[14px] font-medium leading-[1.6] text-[#424242] mb-[4px] lg:mb-[6px]"
                                 >
                                     {{ isEn ? 'Message' : 'Lời nhắn' }}
                                 </label>
@@ -332,7 +332,7 @@
                                     "
                                     :aria-invalid="Boolean(fieldErrors.note)"
                                     :aria-describedby="fieldErrors.note ? 'home-contact-note-error' : undefined"
-                                    class="block w-full h-[120px] lg:h-[152px] resize-y bg-white border rounded-[8px] px-[12px] py-[8px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] text-[16px] font-normal leading-[1.6] text-[#1A1A1A] placeholder:text-[#808080] focus:outline-none focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-colors"
+                                    class="block w-full h-[120px] lg:h-[152px] resize-y bg-white border rounded-[8px] px-[14px] py-[10px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] text-[16px] font-normal leading-[1.6] text-[#1A1A1A] placeholder:text-[#808080] focus:outline-none focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-colors"
                                     :class="fieldErrors.note ? 'border-[#D92D20]' : 'border-[#D6D6D6]'"
                                     @input="clearFieldError('note')"
                                 />
@@ -370,17 +370,17 @@
                             {{ submitError }}
                         </div>
 
-                        <!-- Full-Width Primary Submit Button (Figma 1171:41711 547x49 & Figma 1193:6554 326x49) -->
+                        <!-- Full-Width Primary Submit Button (Figma 1264:48227 547x49, 18px/1.6 "Liên hệ ngay") -->
                         <button
                             type="submit"
                             :disabled="isSubmitting"
-                            class="w-full h-[49px] bg-[#005EA4] hover:bg-[#004c86] active:bg-[#003d6d] text-[#FAFAFA] font-medium text-[14px] lg:text-[16px] leading-[1.6] px-[24px] rounded-[4px] inline-flex items-center justify-center gap-2 transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
+                            class="w-full h-[49px] bg-[#005EA4] hover:bg-[#004c86] active:bg-[#003d6d] text-[#FAFAFA] font-medium text-[14px] lg:text-[18px] leading-[1.6] px-[24px] py-[10px] rounded-[4px] inline-flex items-center justify-center gap-2 transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
                         >
                             <span>
                                 {{
                                     isSubmitting
                                         ? t('Đang gửi...')
-                                        : t('Gửi yêu cầu báo giá')
+                                        : t('Liên hệ ngay')
                                 }}
                             </span>
                         </button>

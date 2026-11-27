@@ -225,9 +225,12 @@ class HomeController extends Controller
                             $formattedDate = null;
                             if (!empty($post->published_at)) {
                                 try {
-                                    $formattedDate = \Carbon\Carbon::parse($post->published_at)
-                                        ->locale('en')
-                                        ->format('M d, Y');
+                                    $dt = \Carbon\Carbon::parse($post->published_at);
+                                    if ($locale === 'en') {
+                                        $formattedDate = $dt->locale('en')->format('M d, Y');
+                                    } else {
+                                        $formattedDate = $dt->format('d') . ' Th' . $dt->format('n') . ', ' . $dt->format('Y');
+                                    }
                                 } catch (\Throwable $e) {
                                     $formattedDate = null;
                                 }

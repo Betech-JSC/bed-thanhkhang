@@ -136,7 +136,7 @@ class AboutPageCmsTest extends TestCase
         $viProps = $viData['props'];
 
         // Section 1: Hero Banner
-        $this->assertSame('Về Thành Khang Tecsat', $viProps['heroBanner']['subtitle']);
+        $this->assertSame('Về Thành Khang', $viProps['heroBanner']['subtitle']);
         $this->assertSame("KẾT NỐI CHẤT LƯỢNG\nĐỒNG HÀNH BỀN VỮNG", $viProps['heroBanner']['title']);
         $this->assertSame('/assets/images/about/about-hero-banner.png', $viProps['heroBanner']['image']['url']);
 
@@ -181,7 +181,7 @@ class AboutPageCmsTest extends TestCase
         $enRes->assertStatus(200);
         $enProps = $enRes->json();
 
-        $this->assertSame('About Thanh Khang Tecsat', $enProps['heroBanner']['subtitle']);
+        $this->assertSame('About Thanh Khang', $enProps['heroBanner']['subtitle']);
         $this->assertSame("CONNECTING QUALITY\nSUSTAINABLE PARTNERSHIP", $enProps['heroBanner']['title']);
         $this->assertSame('Our Story', $enProps['storySection']['eyebrow']);
         $this->assertCount(3, $enProps['storySection']['paragraphs']);

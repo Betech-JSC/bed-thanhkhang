@@ -63,11 +63,11 @@ class AgencyController extends Controller
             $locale = current_locale();
             $seo = [
                 'title' => $locale === 'en'
-                    ? 'Contact & RFQ Quotation - Thanh Khang Tecsat | Industrial Engineering'
-                    : 'Liên Hệ & Báo Giá Kỹ Thuật (RFQ) - Thành Khang Tecsat',
+                    ? 'Contact & RFQ Quotation - Thanh Khang | Industrial Engineering'
+                    : 'Liên Hệ & Báo Giá Kỹ Thuật (RFQ) - Thành Khang',
                 'description' => $locale === 'en'
-                    ? 'Contact Thanh Khang Tecsat hotline 0967.732.665 or info@dvktthanhkhang.vn for escalator spare parts, industrial chains, and energy saving consultations.'
-                    : 'Liên hệ ngay với Công ty TNHH Kỹ thuật Thành Khang Tecsat qua hotline 0967.732.665 hoặc email info@dvktthanhkhang.vn để được tư vấn và nhận báo giá kỹ thuật nhanh chóng.',
+                    ? 'Contact Thanh Khang hotline 0967 732 665 or info@dvktthanhkhang.vn for escalator spare parts, industrial chains, and energy saving consultations.'
+                    : 'Liên hệ ngay với Công ty TNHH Thương mại và Dịch vụ Kỹ thuật Thành Khang qua hotline 0967 732 665 hoặc email info@dvktthanhkhang.vn để được tư vấn và nhận báo giá kỹ thuật nhanh chóng.',
             ];
 
             if (request()->wantsJson()) {

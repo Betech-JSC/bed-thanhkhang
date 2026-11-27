@@ -83,6 +83,8 @@ class Config extends Model
                 'general_business_name_en' => 'nullable',
                 'general_site_name' => 'nullable',
                 'general_site_name_en' => 'nullable',
+                'copyright_name' => 'nullable|string|max:255',
+                'copyright_name_en' => 'nullable|string|max:255',
                 'general_description' => 'nullable|string',
                 'general_description_en' => 'nullable|string',
                 'description' => 'nullable|string',
@@ -419,8 +421,8 @@ class Config extends Model
         $logo = self::resolveMediaSettingUrl($logoRaw);
 
         $viBusinessName = $pickNonEmpty([
-            $raw['general_business_name_vi'] ?? null,
             $raw['general_business_name'] ?? null,
+            $raw['general_business_name_vi'] ?? null,
             $raw['company_name'] ?? null,
         ]);
         $enBusinessName = $pickNonEmpty([
@@ -430,8 +432,8 @@ class Config extends Model
         $businessName = ($isEn && $enBusinessName !== '') ? $enBusinessName : $viBusinessName;
 
         $viSiteName = $pickNonEmpty([
-            $raw['general_site_name_vi'] ?? null,
             $raw['general_site_name'] ?? null,
+            $raw['general_site_name_vi'] ?? null,
             $raw['site_name'] ?? null,
         ]);
         $enSiteName = $pickNonEmpty([
@@ -440,9 +442,20 @@ class Config extends Model
         ]);
         $siteName = ($isEn && $enSiteName !== '') ? $enSiteName : $viSiteName;
 
+        $viCopyrightName = $pickNonEmpty([
+            $raw['copyright_name'] ?? null,
+            $viSiteName,
+        ]);
+        $enCopyrightName = $pickNonEmpty([
+            $raw['copyright_name_en'] ?? null,
+            $enSiteName,
+            $viCopyrightName,
+        ]);
+        $copyrightName = ($isEn && $enCopyrightName !== '') ? $enCopyrightName : $viCopyrightName;
+
         $viDescription = $pickNonEmpty([
-            $raw['general_description_vi'] ?? null,
             $raw['general_description'] ?? null,
+            $raw['general_description_vi'] ?? null,
             $raw['description'] ?? null,
         ]);
         $enDescription = $pickNonEmpty([
@@ -486,8 +499,8 @@ class Config extends Model
         ]);
 
         $viAddress = $pickNonEmpty([
-            $raw['general_address_vi'] ?? null,
             $raw['general_address'] ?? null,
+            $raw['general_address_vi'] ?? null,
             $raw['address'] ?? null,
             $raw['showroom_address'] ?? null,
         ]);
@@ -511,8 +524,8 @@ class Config extends Model
         $showroomAddress = ($isEn && $enShowroomAddress !== '') ? $enShowroomAddress : $viShowroomAddress;
 
         $viWorkingHours = $pickNonEmpty([
-            $raw['general_working_hours_vi'] ?? null,
             $raw['general_working_hours'] ?? null,
+            $raw['general_working_hours_vi'] ?? null,
             $raw['working_hours'] ?? null,
         ]);
         $enWorkingHours = $pickNonEmpty([
@@ -571,6 +584,7 @@ class Config extends Model
             'company_name' => $businessName,
             'general_site_name' => $siteName,
             'site_name' => $siteName,
+            'copyright_name' => $copyrightName,
             'general_description' => $description,
             'description' => $description,
             'general_phone' => $phone,

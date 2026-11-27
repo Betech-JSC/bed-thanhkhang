@@ -42,7 +42,7 @@
                             {{ tt('LIÊN HỆ VỚI CHÚNG TÔI') }}
                         </h1>
                         <p class="text-[14px] leading-[1.6] text-white max-w-[400px] drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
-                            {{ tt('Đội ngũ tư vấn viên của Thành Khang Tecsat luôn sẵn sàng hỗ trợ báo giá, tư vấn kỹ thuật và cung ứng vật tư chính hãng trên toàn quốc') }}
+                            {{ tt('Đội ngũ tư vấn viên của Thành Khang luôn sẵn sàng hỗ trợ báo giá, tư vấn kỹ thuật và cung ứng vật tư chính hãng trên toàn quốc') }}
                         </p>
                     </div>
                 </div>
@@ -92,7 +92,7 @@
                             {{ tt('Nhận tư vấn kỹ thuật & báo giá nhanh trong 2 giờ') }}
                         </h2>
                         <p class="text-body-md text-ink-body">
-                            {{ tt('Cung cấp thông số kỹ thuật, mã linh kiện hoặc nhu cầu dự án của bạn. Đội ngũ kỹ sư Thành Khang Tecsat sẽ kiểm tra tồn kho và đề xuất giải pháp tối ưu nhất') }}
+                            {{ tt('Cung cấp thông số kỹ thuật, mã linh kiện hoặc nhu cầu dự án của bạn. Đội ngũ kỹ sư Thành Khang sẽ kiểm tra tồn kho và đề xuất giải pháp tối ưu nhất') }}
                         </p>
                     </div>
                     <ul class="flex flex-col gap-5">
@@ -432,7 +432,7 @@
             <div class="flex flex-col items-center text-center p-4 sm:p-6 space-y-4">
                 <h3 class="text-xl sm:text-2xl font-bold text-white">{{ tt('Gửi yêu cầu thành công!') }}</h3>
                 <p class="text-[#B9C0D4] text-sm sm:text-base leading-relaxed">
-                    {{ tt('Hệ thống đã nhận được thông tin yêu cầu của bạn. Đội ngũ kỹ sư Thành Khang Tecsat sẽ liên hệ và tư vấn phương án phù hợp trong thời gian sớm nhất.') }}
+                    {{ tt('Hệ thống đã nhận được thông tin yêu cầu của bạn. Đội ngũ kỹ sư Thành Khang sẽ liên hệ và tư vấn phương án phù hợp trong thời gian sớm nhất.') }}
                 </p>
                 <button
                     type="button"
@@ -488,15 +488,15 @@ const pageTitle = computed(
     () =>
         props.seo?.title ||
         (isEn.value
-            ? 'Contact & Technical Consultation - Thành Khang Tecsat'
-            : trans('Liên hệ tư vấn kỹ thuật - Thành Khang Tecsat | Thiết bị công nghiệp & Phụ tùng thang cuốn'))
+            ? 'Contact & Technical Consultation - Thành Khang'
+            : trans('Liên hệ tư vấn kỹ thuật - Thành Khang | Thiết bị công nghiệp & Phụ tùng thang cuốn'))
 )
 const pageDescription = computed(
     () =>
         props.seo?.description ||
         (isEn.value
-            ? 'Get in touch with Thành Khang Tecsat for escalator spare parts, industrial conveyors and technical consultation.'
-            : trans('Liên hệ ngay với Thành Khang Tecsat để tư vấn linh kiện thang cuốn, thang nâng ô tô, xích công nghiệp và nhận báo giá nhanh.'))
+            ? 'Get in touch with Thành Khang for escalator spare parts, industrial conveyors and technical consultation.'
+            : trans('Liên hệ ngay với Thành Khang để tư vấn linh kiện thang cuốn, thang nâng ô tô, xích công nghiệp và nhận báo giá nhanh.'))
 )
 
 // Safe fallbacks (Figma values) — used only when the CMS key is empty. Reported to Hub as missing keys.

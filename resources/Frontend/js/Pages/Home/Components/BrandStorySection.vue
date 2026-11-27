@@ -18,9 +18,9 @@
 
                     <h2
                         v-if="about.lead_highlight || about.lead_rest"
-                        class="font-bold text-[18px] lg:text-[24px] leading-[27px] lg:leading-[38px] text-[#000000] tracking-normal"
+                        class="font-bold text-[18px] lg:text-[24px] leading-[1.6] tracking-normal"
                     >
-                        <span v-if="about.lead_highlight">{{ about.lead_highlight }}</span>{{ about.lead_highlight && about.lead_rest ? ' ' : '' }}<span v-if="about.lead_rest">{{ about.lead_rest }}</span>
+                        <span v-if="about.lead_highlight" class="text-[#005EA4]">{{ about.lead_highlight }}</span>{{ about.lead_highlight && about.lead_rest ? ' ' : '' }}<span v-if="about.lead_rest" class="text-[#9AA4B2]">{{ about.lead_rest }}</span>
                     </h2>
                 </div>
 
@@ -80,17 +80,20 @@
                     />
                 </div>
 
-                <!-- Right Column: Narrative & CTA (Figma 1171:41557 & 1190:6464-6465) -->
-                <div class="flex flex-col items-start justify-end gap-5 lg:gap-10">
+                <!-- Right Column: Narrative & CTA (Figma 1264:48073 & 1190:6464-6465) -->
+                <div class="flex flex-col items-start justify-end gap-5 lg:gap-[40px]">
                     <div
                         v-if="paragraphs.length > 0 || about.commitment_quote || about.commitment_sub"
-                        class="space-y-4 text-[14px] lg:text-[16px] leading-[22px] lg:leading-[26px] font-normal text-[#364152] lg:text-[#000000]"
+                        class="space-y-4 lg:space-y-[25.6px] text-[14px] lg:text-[16px] leading-[1.6] font-normal text-[#364152]"
                     >
                         <p v-for="(paragraph, idx) in paragraphs" :key="idx">
                             {{ paragraph }}
                         </p>
 
-                        <p v-if="about.commitment_quote || about.commitment_sub">
+                        <p
+                            v-if="about.commitment_quote || about.commitment_sub"
+                            class="font-bold text-[#005EA4] leading-[1.6]"
+                        >
                             <template v-if="about.commitment_quote">{{ about.commitment_quote }}</template>
                             <br v-if="about.commitment_quote && about.commitment_sub" />
                             <template v-if="about.commitment_sub">{{ about.commitment_sub }}</template>
@@ -100,14 +103,14 @@
                     <Link
                         v-if="about.cta_text && about.cta_link && isInertiaLink(about.cta_link)"
                         :href="about.cta_link"
-                        class="w-full lg:w-auto h-[49px] lg:min-w-[245px] inline-flex items-center justify-center gap-2 px-6 rounded-[4px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[14px] lg:text-[16px] leading-[22px] lg:leading-[1.6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
+                        class="w-full lg:w-auto h-[49px] lg:min-w-[245px] inline-flex items-center justify-center gap-2 px-[24px] py-[10px] rounded-[4px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[14px] lg:text-[18px] leading-[1.6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
                     >
                         {{ about.cta_text }}
                     </Link>
                     <a
                         v-else-if="about.cta_text && about.cta_link"
                         :href="about.cta_link"
-                        class="w-full lg:w-auto h-[49px] lg:min-w-[245px] inline-flex items-center justify-center gap-2 px-6 rounded-[4px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[14px] lg:text-[16px] leading-[22px] lg:leading-[1.6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
+                        class="w-full lg:w-auto h-[49px] lg:min-w-[245px] inline-flex items-center justify-center gap-2 px-[24px] py-[10px] rounded-[4px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[14px] lg:text-[18px] leading-[1.6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
                     >
                         {{ about.cta_text }}
                     </a>

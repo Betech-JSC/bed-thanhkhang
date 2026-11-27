@@ -84,11 +84,11 @@ class PostController extends Controller
         };
 
         $defaultTitle = $locale === 'en'
-            ? 'News & Technical Insights - Thanh Khang Tecsat'
-            : 'Tin tức & Kiến thức Kỹ thuật - Thành Khang Tecsat';
+            ? 'News & Technical Insights - Thanh Khang'
+            : 'Tin tức & Kiến thức Kỹ thuật - Thành Khang';
         $defaultDescription = $locale === 'en'
-            ? 'Explore technical guides, escalator maintenance knowledge, and industrial automation news from Thanh Khang Tecsat.'
-            : 'Tổng hợp các bài viết chuyên ngành, cẩm nang bảo trì thang cuốn, xích công nghiệp và giải pháp tiết kiệm điện từ Thành Khang Tecsat.';
+            ? 'Explore technical guides, escalator maintenance knowledge, and industrial automation news from Thanh Khang.'
+            : 'Tổng hợp các bài viết chuyên ngành, cẩm nang bảo trì thang cuốn, xích công nghiệp và giải pháp tiết kiệm điện từ Thành Khang.';
 
         $title = $pick($metaPage?->seo_meta_title, $defaultTitle);
         $description = $pick($metaPage?->seo_meta_description, $defaultDescription);

@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 
 /**
- * Disabled command - Legacy FunkyStyle feature removed from Thanh Khang Tecsat CMS.
+ * Disabled command - Legacy FunkyStyle feature removed from Thanh Khang CMS.
  */
 class SyncCourseClassesCommand extends Command
 {
@@ -15,7 +15,7 @@ class SyncCourseClassesCommand extends Command
 
     public function handle(): int
     {
-        $this->warn('This legacy command is disabled in Thanh Khang Tecsat CMS.');
+        $this->warn('This legacy command is disabled in Thanh Khang CMS.');
         return 0;
     }
 }

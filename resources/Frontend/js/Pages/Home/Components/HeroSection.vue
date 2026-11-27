@@ -22,17 +22,17 @@
             />
         </div>
 
-        <!-- Aspect-Ratio Locked Hero Viewport (Mobile 390/460 — Figma 1190:6357, Desktop 1440/582 — Figma 1171:41716) -->
-        <div v-else class="relative w-full aspect-[390/460] min-h-[460px] md:aspect-auto md:min-h-[480px] lg:aspect-[1440/582] lg:min-h-[460px] overflow-hidden">
+        <!-- Height-Locked Hero Viewport (Mobile 390/460 — Figma 1190:6357, Desktop exact 582px — Figma 1264:48232) -->
+        <div v-else class="relative w-full aspect-[390/460] min-h-[460px] md:aspect-auto md:min-h-[480px] lg:aspect-auto lg:h-[582px] lg:min-h-[582px] overflow-hidden">
             <!-- Horizontal Slide Track (translate-x, zero opacity blank flash) -->
             <div
-                class="flex h-full min-h-[460px] md:min-h-[480px] lg:min-h-[460px] w-full transition-transform duration-500 ease-out will-change-transform"
+                class="flex h-full min-h-[460px] md:min-h-[480px] lg:h-[582px] lg:min-h-[582px] w-full transition-transform duration-500 ease-out will-change-transform"
                 :style="{ transform: `translateX(-${activeIndex * 100}%)` }"
             >
                 <div
                     v-for="(slide, index) in normalizedSlides"
                     :key="slide.id || index"
-                    class="relative w-full h-full min-h-[460px] md:min-h-[480px] lg:min-h-[460px] shrink-0 basis-full"
+                    class="relative w-full h-full min-h-[460px] md:min-h-[480px] lg:h-[582px] lg:min-h-[582px] shrink-0 basis-full"
                     role="group"
                     aria-roledescription="slide"
                     :aria-label="`${index + 1} / ${normalizedSlides.length}`"
@@ -75,18 +75,18 @@
 
                     <!-- Slide Content Container (1152px inner content width via .app-container-narrow, px-4 / md:px-8) -->
                     <div
-                        class="relative z-10 h-full min-h-[460px] md:min-h-[480px] lg:min-h-[460px] app-container-narrow flex items-start md:items-end justify-between pt-7 pb-6 md:pb-10 md:pt-10 lg:pt-12 xl:pt-16"
+                        class="relative z-10 h-full min-h-[460px] md:min-h-[480px] lg:h-[582px] lg:min-h-[582px] app-container-narrow flex items-start md:items-end justify-between pt-7 pb-6 md:pb-10 md:pt-10 lg:pt-12 xl:pt-16"
                     >
                         <div class="w-full max-w-[542px] flex flex-col items-start">
-                            <!-- Eyebrow (Figma 1190:6364 / 1171:41749) -->
+                            <!-- Eyebrow (Figma 1264:48265 — exact 40.037% gradient stop) -->
                             <p
                                 v-if="slide.subtitle"
-                                class="w-full bg-[linear-gradient(90deg,#009FFF_0%,#C9E0FF_100%)] bg-clip-text text-transparent font-normal text-[12px] md:text-[24px] lg:text-[28px] leading-[18px] md:leading-[1.6]"
+                                class="w-full bg-[linear-gradient(90deg,#009FFF_0%,#C9E0FF_40.037%)] bg-clip-text text-transparent font-normal text-[12px] md:text-[24px] lg:text-[28px] leading-[1.6]"
                             >
                                 {{ slide.subtitle }}
                             </p>
 
-                            <!-- Main Heading (single <h1> on first slide for valid SEO — Figma 1190:6365 28px/36px Mobile, 48px Desktop) -->
+                            <!-- Main Heading (single <h1> on first slide for valid SEO — Figma 1264:48266 48px/1.4 Desktop) -->
                             <component
                                 :is="index === 0 ? 'h1' : 'p'"
                                 v-if="slide.title"
@@ -95,24 +95,24 @@
                                 {{ slide.title }}
                             </component>
 
-                            <!-- Description (Figma 1190:6366 14px/22px Mobile, 18px/1.6 Desktop) -->
+                            <!-- Description (Figma 1264:48267 18px/1.6 Desktop) -->
                             <p
                                 v-if="slide.description"
-                                class="mt-2 font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[22px] md:leading-[1.6] text-[#C9E0FF] line-clamp-4 md:line-clamp-none"
+                                class="mt-2 font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[1.6] text-[#C9E0FF] line-clamp-4 md:line-clamp-none"
                             >
                                 {{ slide.description }}
                             </p>
 
-                            <!-- 2 CTA Buttons (Mobile stacked 358x49 — Figma 1314:52013..52015; Desktop h-[49px] — Figma 1171:41752) -->
+                            <!-- 2 Equal-Width CTA Buttons (Figma 1264:48268..48270 — w=542px -> 2x 263x49px via flex-1, gap-[16px]) -->
                             <div
                                 v-if="(slide.primary_cta_text && slide.primary_cta_link) || (slide.secondary_cta_text && slide.secondary_cta_link)"
-                                class="mt-4 md:mt-6 xl:mt-12 w-full md:w-auto flex flex-col md:flex-row md:flex-wrap gap-3 md:gap-4 items-stretch md:items-center"
+                                class="mt-4 md:mt-6 xl:mt-[48px] w-full flex flex-col md:flex-row gap-3 md:gap-[16px] items-stretch md:items-center"
                             >
                                 <Link
                                     v-if="slide.primary_cta_text && slide.primary_cta_link && isInertiaLink(slide.primary_cta_link)"
                                     :href="slide.primary_cta_link"
                                     :tabindex="index === activeIndex ? undefined : -1"
-                                    class="w-full md:w-auto h-[49px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[20px] md:leading-[1.6] px-2.5 md:px-6 rounded-[4px] transition-colors inline-flex items-center justify-center text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
+                                    class="w-full md:flex-1 h-[49px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[1.6] px-4 md:px-[24px] py-[10px] rounded-[4px] transition-colors inline-flex items-center justify-center text-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
                                 >
                                     {{ slide.primary_cta_text }}
                                 </Link>
@@ -120,7 +120,7 @@
                                     v-else-if="slide.primary_cta_text && slide.primary_cta_link"
                                     :href="slide.primary_cta_link"
                                     :tabindex="index === activeIndex ? undefined : -1"
-                                    class="w-full md:w-auto h-[49px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[20px] md:leading-[1.6] px-2.5 md:px-6 rounded-[4px] transition-colors inline-flex items-center justify-center text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
+                                    class="w-full md:flex-1 h-[49px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[1.6] px-4 md:px-[24px] py-[10px] rounded-[4px] transition-colors inline-flex items-center justify-center text-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
                                 >
                                     {{ slide.primary_cta_text }}
                                 </a>
@@ -129,7 +129,7 @@
                                     v-if="slide.secondary_cta_text && slide.secondary_cta_link && isInertiaLink(slide.secondary_cta_link)"
                                     :href="slide.secondary_cta_link"
                                     :tabindex="index === activeIndex ? undefined : -1"
-                                    class="w-full md:w-auto h-[49px] bg-[#C9E0FF] hover:bg-[#81BDFF] text-[#003967] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[20px] md:leading-[1.6] px-2.5 md:px-6 rounded-[4px] transition-colors inline-flex items-center justify-center text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
+                                    class="w-full md:flex-1 h-[49px] bg-[#C9E0FF] hover:bg-[#81BDFF] text-[#003967] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[1.6] px-4 md:px-[24px] py-[10px] rounded-[4px] transition-colors inline-flex items-center justify-center text-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
                                 >
                                     {{ slide.secondary_cta_text }}
                                 </Link>
@@ -137,7 +137,7 @@
                                     v-else-if="slide.secondary_cta_text && slide.secondary_cta_link"
                                     :href="slide.secondary_cta_link"
                                     :tabindex="index === activeIndex ? undefined : -1"
-                                    class="w-full md:w-auto h-[49px] bg-[#C9E0FF] hover:bg-[#81BDFF] text-[#003967] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[20px] md:leading-[1.6] px-2.5 md:px-6 rounded-[4px] transition-colors inline-flex items-center justify-center text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
+                                    class="w-full md:flex-1 h-[49px] bg-[#C9E0FF] hover:bg-[#81BDFF] text-[#003967] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[1.6] px-4 md:px-[24px] py-[10px] rounded-[4px] transition-colors inline-flex items-center justify-center text-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#01101E]"
                                 >
                                     {{ slide.secondary_cta_text }}
                                 </a>

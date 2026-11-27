@@ -584,22 +584,22 @@ class Post extends BaseModel
         $defaultFaqsVi = [
             [
                 'id' => 1,
-                'title' => 'Tôi chưa có mã phụ tùng hoặc bản vẽ chính xác, Thành Khang Tecsat có hỗ trợ khảo sát tại hiện trường không?',
-                'question' => 'Tôi chưa có mã phụ tùng hoặc bản vẽ chính xác, Thành Khang Tecsat có hỗ trợ khảo sát tại hiện trường không?',
-                'content' => 'Có. Đội ngũ kỹ sư cơ khí của Thành Khang Tecsat sẵn sàng hỗ trợ khảo sát thực tế tại công trình/nhà xưởng, đo đạc bước xích, kích thước con lăn, tải trọng vận hành và đối chiếu bảng mã tương thích từ các hãng sản xuất gốc để tư vấn đúng linh kiện thay thế.',
-                'answer' => 'Có. Đội ngũ kỹ sư cơ khí của Thành Khang Tecsat sẵn sàng hỗ trợ khảo sát thực tế tại công trình/nhà xưởng, đo đạc bước xích, kích thước con lăn, tải trọng vận hành và đối chiếu bảng mã tương thích từ các hãng sản xuất gốc để tư vấn đúng linh kiện thay thế.',
+                'title' => 'Tôi chưa có mã phụ tùng hoặc bản vẽ chính xác, Thành Khang có hỗ trợ khảo sát tại hiện trường không?',
+                'question' => 'Tôi chưa có mã phụ tùng hoặc bản vẽ chính xác, Thành Khang có hỗ trợ khảo sát tại hiện trường không?',
+                'content' => 'Có. Đội ngũ kỹ sư cơ khí của Thành Khang sẵn sàng hỗ trợ khảo sát thực tế tại công trình/nhà xưởng, đo đạc bước xích, kích thước con lăn, tải trọng vận hành và đối chiếu bảng mã tương thích từ các hãng sản xuất gốc để tư vấn đúng linh kiện thay thế.',
+                'answer' => 'Có. Đội ngũ kỹ sư cơ khí của Thành Khang sẵn sàng hỗ trợ khảo sát thực tế tại công trình/nhà xưởng, đo đạc bước xích, kích thước con lăn, tải trọng vận hành và đối chiếu bảng mã tương thích từ các hãng sản xuất gốc để tư vấn đúng linh kiện thay thế.',
             ],
             [
                 'id' => 2,
                 'title' => 'Để nhận được bảng báo giá kỹ thuật (RFQ) nhanh và chính xác nhất, tôi cần cung cấp những thông tin gì?',
                 'question' => 'Để nhận được bảng báo giá kỹ thuật (RFQ) nhanh và chính xác nhất, tôi cần cung cấp những thông tin gì?',
-                'content' => 'Quý khách vui lòng cung cấp mã phụ tùng (Part Number), bản vẽ kỹ thuật (nếu có), bước xích, tải trọng làm việc, số lượng cần đặt và địa điểm giao hàng. Kỹ sư Thành Khang Tecsat sẽ phản hồi báo giá RFQ chi tiết trong vòng 2 - 4 giờ làm việc.',
-                'answer' => 'Quý khách vui lòng cung cấp mã phụ tùng (Part Number), bản vẽ kỹ thuật (nếu có), bước xích, tải trọng làm việc, số lượng cần đặt và địa điểm giao hàng. Kỹ sư Thành Khang Tecsat sẽ phản hồi báo giá RFQ chi tiết trong vòng 2 - 4 giờ làm việc.',
+                'content' => 'Quý khách vui lòng cung cấp mã phụ tùng (Part Number), bản vẽ kỹ thuật (nếu có), bước xích, tải trọng làm việc, số lượng cần đặt và địa điểm giao hàng. Kỹ sư Thành Khang sẽ phản hồi báo giá RFQ chi tiết trong vòng 2 - 4 giờ làm việc.',
+                'answer' => 'Quý khách vui lòng cung cấp mã phụ tùng (Part Number), bản vẽ kỹ thuật (nếu có), bước xích, tải trọng làm việc, số lượng cần đặt và địa điểm giao hàng. Kỹ sư Thành Khang sẽ phản hồi báo giá RFQ chi tiết trong vòng 2 - 4 giờ làm việc.',
             ],
             [
                 'id' => 3,
-                'title' => 'Thành Khang Tecsat có cung cấp phụ tùng thang cuốn, xích tải theo quy cách phi tiêu chuẩn hoặc custom không?',
-                'question' => 'Thành Khang Tecsat có cung cấp phụ tùng thang cuốn, xích tải theo quy cách phi tiêu chuẩn hoặc custom không?',
+                'title' => 'Thành Khang có cung cấp phụ tùng thang cuốn, xích tải theo quy cách phi tiêu chuẩn hoặc custom không?',
+                'question' => 'Thành Khang có cung cấp phụ tùng thang cuốn, xích tải theo quy cách phi tiêu chuẩn hoặc custom không?',
                 'content' => 'Hoàn toàn có! Bên cạnh các quy chuẩn ISO, DIN, ANSI tiêu chuẩn, chúng tôi nhận gia công xích tải gắn tai gá đặc thù, xích lá chịu tải cực lớn, đĩa xích phi tiêu chuẩn và con lăn bọc Polyurethane theo bản vẽ kỹ thuật riêng của khách hàng.',
                 'answer' => 'Hoàn toàn có! Bên cạnh các quy chuẩn ISO, DIN, ANSI tiêu chuẩn, chúng tôi nhận gia công xích tải gắn tai gá đặc thù, xích lá chịu tải cực lớn, đĩa xích phi tiêu chuẩn và con lăn bọc Polyurethane theo bản vẽ kỹ thuật riêng của khách hàng.',
             ],
@@ -612,8 +612,8 @@ class Post extends BaseModel
             ],
             [
                 'id' => 5,
-                'title' => 'Sản phẩm do Thành Khang Tecsat cung ứng có đầy đủ chứng chỉ CO/CQ và hóa đơn VAT không?',
-                'question' => 'Sản phẩm do Thành Khang Tecsat cung ứng có đầy đủ chứng chỉ CO/CQ và hóa đơn VAT không?',
+                'title' => 'Sản phẩm do Thành Khang cung ứng có đầy đủ chứng chỉ CO/CQ và hóa đơn VAT không?',
+                'question' => 'Sản phẩm do Thành Khang cung ứng có đầy đủ chứng chỉ CO/CQ và hóa đơn VAT không?',
                 'content' => '100% sản phẩm cung ứng cho khách hàng B2B đều có đầy đủ chứng nhận nguồn gốc xuất xứ (CO), chứng nhận chất lượng xuất xưởng (CQ), hóa đơn giá trị gia tăng (VAT) hợp lệ và biên bản nghiệm thu bàn giao.',
                 'answer' => '100% sản phẩm cung ứng cho khách hàng B2B đều có đầy đủ chứng nhận nguồn gốc xuất xứ (CO), chứng nhận chất lượng xuất xưởng (CQ), hóa đơn giá trị gia tăng (VAT) hợp lệ và biên bản nghiệm thu bàn giao.',
             ],
@@ -621,16 +621,16 @@ class Post extends BaseModel
                 'id' => 6,
                 'title' => 'Chính sách bảo hành và hỗ trợ kỹ thuật sau bàn giao như thế nào?',
                 'question' => 'Chính sách bảo hành và hỗ trợ kỹ thuật sau bàn giao như thế nào?',
-                'content' => 'Toàn bộ linh kiện cơ khí, xích tải và quạt trần công nghiệp BLDC được bảo hành chính hãng từ 12 đến 24 tháng. Đội ngũ kỹ sư Thành Khang Tecsat luôn sẵn sàng hỗ trợ kỹ thuật 24/7, tư vấn căn chỉnh dung sai và bảo trì định kỳ trọn đời sản phẩm.',
-                'answer' => 'Toàn bộ linh kiện cơ khí, xích tải và quạt trần công nghiệp BLDC được bảo hành chính hãng từ 12 đến 24 tháng. Đội ngũ kỹ sư Thành Khang Tecsat luôn sẵn sàng hỗ trợ kỹ thuật 24/7, tư vấn căn chỉnh dung sai và bảo trì định kỳ trọn đời sản phẩm.',
+                'content' => 'Toàn bộ linh kiện cơ khí, xích tải và quạt trần công nghiệp BLDC được bảo hành chính hãng từ 12 đến 24 tháng. Đội ngũ kỹ sư Thành Khang luôn sẵn sàng hỗ trợ kỹ thuật 24/7, tư vấn căn chỉnh dung sai và bảo trì định kỳ trọn đời sản phẩm.',
+                'answer' => 'Toàn bộ linh kiện cơ khí, xích tải và quạt trần công nghiệp BLDC được bảo hành chính hãng từ 12 đến 24 tháng. Đội ngũ kỹ sư Thành Khang luôn sẵn sàng hỗ trợ kỹ thuật 24/7, tư vấn căn chỉnh dung sai và bảo trì định kỳ trọn đời sản phẩm.',
             ],
         ];
 
         $defaultFaqsEn = [
             [
                 'id' => 1,
-                'title' => 'I do not have the exact part number or drawing yet, does Thanh Khang Tecsat provide on-site technical surveys?',
-                'question' => 'I do not have the exact part number or drawing yet, does Thanh Khang Tecsat provide on-site technical surveys?',
+                'title' => 'I do not have the exact part number or drawing yet, does Thanh Khang provide on-site technical surveys?',
+                'question' => 'I do not have the exact part number or drawing yet, does Thanh Khang provide on-site technical surveys?',
                 'content' => 'Yes. Our mechanical engineering team provides on-site facility visits to inspect operating equipment, measure chain pitch, roller diameters, and dynamic loads, cross-referencing OEM catalogues to recommend the exact replacement part.',
                 'answer' => 'Yes. Our mechanical engineering team provides on-site facility visits to inspect operating equipment, measure chain pitch, roller diameters, and dynamic loads, cross-referencing OEM catalogues to recommend the exact replacement part.',
             ],
@@ -643,8 +643,8 @@ class Post extends BaseModel
             ],
             [
                 'id' => 3,
-                'title' => 'Does Thanh Khang Tecsat supply non-standard or custom attachment chains and sprockets?',
-                'question' => 'Does Thanh Khang Tecsat supply non-standard or custom attachment chains and sprockets?',
+                'title' => 'Does Thanh Khang supply non-standard or custom attachment chains and sprockets?',
+                'question' => 'Does Thanh Khang supply non-standard or custom attachment chains and sprockets?',
                 'content' => 'Absolutely! Beyond standard ISO, DIN, and ANSI specifications, we supply specialized attachment conveyor chains, heavy-duty leaf chains, custom-bored sprockets, and cast Polyurethane rollers tailored to bespoke engineering drawings.',
                 'answer' => 'Absolutely! Beyond standard ISO, DIN, and ANSI specifications, we supply specialized attachment conveyor chains, heavy-duty leaf chains, custom-bored sprockets, and cast Polyurethane rollers tailored to bespoke engineering drawings.',
             ],
@@ -657,8 +657,8 @@ class Post extends BaseModel
             ],
             [
                 'id' => 5,
-                'title' => 'Do products supplied by Thanh Khang Tecsat include complete CO/CQ certifications and VAT invoices?',
-                'question' => 'Do products supplied by Thanh Khang Tecsat include complete CO/CQ certifications and VAT invoices?',
+                'title' => 'Do products supplied by Thanh Khang include complete CO/CQ certifications and VAT invoices?',
+                'question' => 'Do products supplied by Thanh Khang include complete CO/CQ certifications and VAT invoices?',
                 'content' => '100% of our B2B commercial shipments include official Certificates of Origin (CO), factory Certificates of Quality (CQ), electronic VAT invoices, and formal acceptance handover documentation.',
                 'answer' => '100% of our B2B commercial shipments include official Certificates of Origin (CO), factory Certificates of Quality (CQ), electronic VAT invoices, and formal acceptance handover documentation.',
             ],
@@ -666,8 +666,8 @@ class Post extends BaseModel
                 'id' => 6,
                 'title' => 'What is the warranty policy and technical support after delivery?',
                 'question' => 'What is the warranty policy and technical support after delivery?',
-                'content' => 'All mechanical components, conveyor chains, and BLDC industrial HVLS fans carry official 12 to 24-month manufacturer warranties. Thanh Khang Tecsat provides round-the-clock 24/7 technical advisory, alignment guidance, and preventive maintenance support.',
-                'answer' => 'All mechanical components, conveyor chains, and BLDC industrial HVLS fans carry official 12 to 24-month manufacturer warranties. Thanh Khang Tecsat provides round-the-clock 24/7 technical advisory, alignment guidance, and preventive maintenance support.',
+                'content' => 'All mechanical components, conveyor chains, and BLDC industrial HVLS fans carry official 12 to 24-month manufacturer warranties. Thanh Khang provides round-the-clock 24/7 technical advisory, alignment guidance, and preventive maintenance support.',
+                'answer' => 'All mechanical components, conveyor chains, and BLDC industrial HVLS fans carry official 12 to 24-month manufacturer warranties. Thanh Khang provides round-the-clock 24/7 technical advisory, alignment guidance, and preventive maintenance support.',
             ],
         ];
 

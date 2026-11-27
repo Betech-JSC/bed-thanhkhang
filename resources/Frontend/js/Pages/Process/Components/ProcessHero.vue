@@ -83,7 +83,7 @@ const bgImage = computed(() => {
 })
 
 const bgImageAlt = computed(() => {
-    return props.banner?.image?.alt || translate('Quy trình làm việc Thành Khang Tecsat - 5 bước chuẩn hóa')
+    return props.banner?.image?.alt || translate('Quy trình làm việc Thành Khang - 5 bước chuẩn hóa')
 })
 
 const categoryText = computed(() => {
@@ -115,8 +115,8 @@ const descriptionText = computed(() => {
         return props.banner.description
     }
     return currentLocale.value === 'en'
-        ? 'From initial inquiry to final handover, Thành Khang Tecsat works closely with your engineering team to verify specifications, align on OEM standards and lead time. Every milestone is communicated transparently.'
-        : translate('Từ lúc tiếp nhận thông số đến khi bàn giao thiết bị, Thành Khang Tecsat luôn đồng hành cùng đội ngũ kỹ thuật của doanh nghiệp để đối chiếu chuẩn OEM, thống nhất báo giá và tiến độ. Mọi giai đoạn đều minh bạch để chủ đầu tư dễ dàng theo dõi.')
+        ? 'From initial inquiry to final handover, Thành Khang works closely with your engineering team to verify specifications, align on OEM standards and lead time. Every milestone is communicated transparently.'
+        : translate('Từ lúc tiếp nhận thông số đến khi bàn giao thiết bị, Thành Khang luôn đồng hành cùng đội ngũ kỹ thuật của doanh nghiệp để đối chiếu chuẩn OEM, thống nhất báo giá và tiến độ. Mọi giai đoạn đều minh bạch để chủ đầu tư dễ dàng theo dõi.')
 })
 
 const ctaText = computed(() => props.banner?.primary_cta_text || translate('Khám phá 5 bước'))

@@ -39,37 +39,36 @@
                                     height="240"
                                 />
 
-                                <!-- CMS-Driven "New" Badge (Figma 184:1332 top-4 left-4 bg-[#005EA4]) -->
+                                <!-- CMS-Driven "New" Badge (Figma 1264:48173 top-4 left-4 bg-[#005EA4] "Mới") -->
                                 <span
                                     v-if="post.is_featured || post.is_new"
-                                    class="absolute top-4 left-4 z-10 inline-flex items-center justify-center bg-[#005EA4] text-[#FAFAFA] font-medium text-[13px] lg:text-[14px] leading-[22px] px-3 py-1 rounded-[4px]"
+                                    class="absolute top-4 left-4 z-10 inline-flex items-center justify-center bg-[#005EA4] text-[#FAFAFA] font-medium text-[13px] lg:text-[14px] leading-[1.6] px-[12px] py-[4px] rounded-[4px]"
                                 >
-                                    <span class="md:hidden">{{ badgeLabelMobile }}</span>
-                                    <span class="hidden md:inline">{{ badgeLabelDesktop }}</span>
+                                    {{ badgeLabel }}
                                 </span>
                             </div>
 
-                            <!-- Card Content (Figma 184:1328 — 146px text stack + 20px gap + 30px meta row = 196px) -->
-                            <div class="flex flex-col gap-4 lg:gap-5 flex-1">
-                                <div class="flex flex-col gap-1">
+                            <!-- Card Content (Figma 1264:48173 — text stack + 20px gap + meta row) -->
+                            <div class="flex flex-col gap-4 lg:gap-[20px] flex-1">
+                                <div class="flex flex-col gap-[4px]">
                                     <h3
-                                        class="font-bold text-[18px] lg:text-[20px] leading-[26px] lg:leading-[32px] text-[#00284B] group-hover:text-[#005EA4] transition-colors line-clamp-2 lg:min-h-[64px] break-words"
+                                        class="font-bold text-[18px] lg:text-[20px] leading-[1.6] text-[#00284B] group-hover:text-[#005EA4] transition-colors line-clamp-2 lg:min-h-[64px] break-words"
                                     >
                                         {{ post.title }}
                                     </h3>
                                     <p
                                         v-if="post.description"
-                                        class="font-normal text-[14px] lg:text-[16px] leading-[22px] lg:leading-[26px] text-[#697586] line-clamp-3 lg:min-h-[78px] break-words"
+                                        class="font-normal text-[14px] lg:text-[16px] leading-[1.6] text-[#697586] line-clamp-3 lg:min-h-[76.8px] break-words"
                                     >
                                         {{ post.description }}
                                     </p>
                                 </div>
 
-                                <!-- Meta Row: Category Pill Left + Published Date Right (Figma 908:25660) -->
-                                <div class="min-h-[30px] flex items-center justify-between gap-3 mt-auto">
+                                <!-- Meta Row: Category Pill Left + Published Date Right (Figma 1264:48173) -->
+                                <div class="flex items-center justify-between gap-3 mt-auto">
                                     <span
                                         v-if="postCategoryTitle(post)"
-                                        class="inline-flex items-center h-[30px] px-3 rounded-[4px] bg-[#FAFAFA] border border-[#CDD5DF] font-medium text-[13px] lg:text-[14px] leading-[22px] text-[#697586] truncate max-w-[65%]"
+                                        class="inline-flex items-center px-[12px] py-[4px] rounded-[4px] bg-[#FAFAFA] border border-[#CDD5DF] font-medium text-[13px] lg:text-[14px] leading-[1.6] text-[#697586] truncate max-w-[65%]"
                                     >
                                         {{ postCategoryTitle(post) }}
                                     </span>
@@ -77,7 +76,7 @@
                                     <time
                                         v-if="formatPostDate(post)"
                                         :datetime="post.published_at || undefined"
-                                        class="font-medium text-[13px] lg:text-[14px] leading-[22px] text-[#697586] ml-auto shrink-0"
+                                        class="font-medium text-[13px] lg:text-[14px] leading-[1.6] text-[#697586] ml-auto shrink-0"
                                     >
                                         {{ formatPostDate(post) }}
                                     </time>
@@ -87,11 +86,11 @@
                     </article>
                 </div>
 
-                <!-- Bottom Centered CTA Button (Figma 1171:41660 / 1191:6527) -->
+                <!-- Bottom Centered CTA Button (Figma 1264:48176 — 203x49px, 18px/1.6) -->
                 <div class="flex justify-center">
                     <Link
                         :href="postsIndexUrl"
-                        class="w-full md:w-auto h-[49px] md:min-w-[203px] inline-flex items-center justify-center gap-2 bg-[#005EA4] hover:bg-[#004D86] text-[#FAFAFA] font-medium text-[14px] md:text-[16px] leading-[22px] md:leading-[1.6] px-[24px] rounded-[4px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]/40"
+                        class="w-full md:w-auto h-[49px] md:min-w-[203px] inline-flex items-center justify-center gap-2 bg-[#005EA4] hover:bg-[#004D86] text-[#FAFAFA] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[1.6] px-[24px] py-[10px] rounded-[4px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]/40"
                     >
                         {{ ctaLabel }}
                     </Link>
@@ -130,8 +129,7 @@ function safeRoute(name, params, fallback) {
 }
 
 const sectionTitle = computed(() => t('Tin tức'))
-const badgeLabelMobile = computed(() => t('Mới'))
-const badgeLabelDesktop = computed(() => t('Mới nhất'))
+const badgeLabel = computed(() => t('Mới'))
 const postsIndexUrl = computed(() =>
     safeRoute('posts', undefined, isEn.value ? '/en/posts' : '/tin-tuc')
 )
@@ -158,14 +156,21 @@ const displayPosts = computed(() => validPosts.value.slice(0, 3))
 
 function formatPostDate(post) {
     if (!post) return ''
-    if (typeof post.formatted_date === 'string' && post.formatted_date.trim().length > 0) {
-        return post.formatted_date.trim()
+    const rawFormatted = typeof post.formatted_date === 'string' ? post.formatted_date.trim() : ''
+    if (!isEn.value && /^\d{1,2}\s+Th\d{1,2},\s+\d{4}$/.test(rawFormatted)) {
+        return rawFormatted
     }
-    if (!post.published_at) return ''
-    const raw = String(post.published_at).trim()
-    const normalized = raw.includes(' ') && !raw.includes('T') ? raw.replace(' ', 'T') : raw
+    if (isEn.value && rawFormatted.length > 0) {
+        return rawFormatted
+    }
+    const sourceDate = post.published_at || rawFormatted
+    if (!sourceDate) return ''
+    const raw = String(sourceDate).trim()
+    const normalized = raw.includes(' ') && !raw.includes('T') && /^\d{4}-\d{2}-\d{2}/.test(raw)
+        ? raw.replace(' ', 'T')
+        : raw
     const parsed = new Date(normalized)
-    if (Number.isNaN(parsed.getTime())) return ''
+    if (Number.isNaN(parsed.getTime())) return rawFormatted
     if (!isEn.value) {
         const day = String(parsed.getDate()).padStart(2, '0')
         const month = parsed.getMonth() + 1

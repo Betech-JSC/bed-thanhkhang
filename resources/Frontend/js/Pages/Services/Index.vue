@@ -15,7 +15,7 @@
             <section v-scroll-reveal class="py-10">
                 <div class="max-w-[626px] flex flex-col gap-6">
                     <span class="inline-block text-xs sm:text-[14px] sm:leading-[20px] font-normal text-[#84ADFF] uppercase select-none font-sans">
-                        {{ tt('GIẢI PHÁP & DỊCH VỤ TẠI THÀNH KHANG TECSAT') }}
+                        {{ tt('GIẢI PHÁP & DỊCH VỤ TẠI THÀNH KHANG') }}
                     </span>
 
                     <!-- Cụm Tiêu đề + Dẫn nhập -->
@@ -27,7 +27,7 @@
 
                         <!-- Lời dẫn -->
                         <p class="text-sm sm:text-[16px] text-[#B9C0D4] leading-relaxed sm:leading-[26px] font-normal font-sans">
-                            {{ tt('Bạn có thể bắt đầu từ mã linh kiện OEM, thông số bước xích hoặc bài toán mặt bằng nhà xưởng. Thành Khang Tecsat đồng hành từ tư vấn kỹ thuật đến bàn giao thiết bị hoàn chỉnh.') }}
+                            {{ tt('Bạn có thể bắt đầu từ mã linh kiện OEM, thông số bước xích hoặc bài toán mặt bằng nhà xưởng. Thành Khang đồng hành từ tư vấn kỹ thuật đến bàn giao thiết bị hoàn chỉnh.') }}
                         </p>
                     </div>
                 </div>
@@ -69,14 +69,14 @@ const { translate, currentLocale } = useTranslate()
 
 const pageTitle = computed(() =>
     currentLocale.value === 'en'
-        ? 'Industrial Equipment & Technical Services - Thành Khang Tecsat'
-        : translate('Giải Pháp Thiết Bị Công Nghiệp & Kỹ Thuật - Thành Khang Tecsat')
+        ? 'Industrial Equipment & Technical Services - Thành Khang'
+        : translate('Giải Pháp Thiết Bị Công Nghiệp & Kỹ Thuật - Thành Khang')
 )
 
 const pageDescription = computed(() =>
     currentLocale.value === 'en'
-        ? 'Thành Khang Tecsat supplies OEM escalator spare parts, Universal Chains industrial conveyors, and energy-saving BLDC HVLS ceiling fans.'
-        : translate('Thành Khang Tecsat cung cấp phụ tùng thang cuốn - thang máy, hệ thống băng tải & xích công nghiệp Universal Chains, và quạt trần công nghiệp BLDC HVLS chuẩn OEM.')
+        ? 'Thành Khang supplies OEM escalator spare parts, Universal Chains industrial conveyors, and energy-saving BLDC HVLS ceiling fans.'
+        : translate('Thành Khang cung cấp phụ tùng thang cuốn - thang máy, hệ thống băng tải & xích công nghiệp Universal Chains, và quạt trần công nghiệp BLDC HVLS chuẩn OEM.')
 )
 
 const fallbackServicesVi = [
@@ -251,7 +251,7 @@ const serviceList = computed(() => {
         }
     })
 
-    // Chuẩn hóa thứ tự hiển thị 3 giải pháp cốt lõi Thành Khang Tecsat
+    // Chuẩn hóa thứ tự hiển thị 3 giải pháp cốt lõi Thành Khang
     const orderMap = { 'phu-tung-thang-cuon': 1, 'xich-tai-cong-nghiep': 2, 'quat-cong-nghiep-bldc': 3, 'industrial-engineering': 4 }
     mapped.sort((a, b) => (orderMap[a.slug] || 99) - (orderMap[b.slug] || 99))
 

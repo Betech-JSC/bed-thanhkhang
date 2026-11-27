@@ -15,7 +15,7 @@
                     {{ tt('CHÍNH SÁCH & ĐIỀU KHOẢN') }}
                 </span>
                 <h1 class="text-2xl sm:text-3xl lg:text-[38px] font-bold text-[#FAFAFA] tracking-tight leading-tight lg:leading-[46px]">
-                    {{ tt('Chính sách & Cam kết Thành Khang Tecsat') }}
+                    {{ tt('Chính sách & Cam kết Thành Khang') }}
                 </h1>
                 <p class="text-[#B9C0D4] text-sm sm:text-base leading-relaxed max-w-3xl">
                     {{ tt('Thông tin chi tiết về điều khoản bán hàng, bảo mật thông số bản vẽ kỹ thuật và chính sách bảo hành thiết bị công nghiệp.') }}
@@ -155,14 +155,14 @@ export default {
             if (this.seo?.title) return this.seo.title
             const itemTitle = this.content ? this.tt(this.content.title) : this.tt('Chính sách & Điều khoản')
             return this.currentLocale === 'en'
-                ? `${itemTitle} - Thành Khang Tecsat | Industrial Equipment & Escalator Parts`
-                : `${itemTitle} - ${this.tt('Thành Khang Tecsat | Thiết bị công nghiệp')}`
+                ? `${itemTitle} - Thành Khang | Industrial Equipment & Escalator Parts`
+                : `${itemTitle} - ${this.tt('Thành Khang | Thiết bị công nghiệp')}`
         },
         pageDescription() {
             if (this.seo?.description) return this.seo.description
             return this.currentLocale === 'en'
-                ? 'Official sales policies, warranty terms, and technical data confidentiality commitments at Thành Khang Tecsat.'
-                : this.tt('Thông tin chính sách bán hàng, cam kết bảo mật hồ sơ kỹ thuật và quy định bảo hành thiết bị tại Thành Khang Tecsat.')
+                ? 'Official sales policies, warranty terms, and technical data confidentiality commitments at Thành Khang.'
+                : this.tt('Thông tin chính sách bán hàng, cam kết bảo mật hồ sơ kỹ thuật và quy định bảo hành thiết bị tại Thành Khang.')
         },
     },
     methods: {

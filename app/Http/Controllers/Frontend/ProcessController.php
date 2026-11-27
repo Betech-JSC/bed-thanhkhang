@@ -63,11 +63,11 @@ class ProcessController extends Controller
             $locale = current_locale();
             $seo = [
                 'title' => $locale === 'en'
-                    ? 'B2B Technical Ordering & Supply Process - Thanh Khang Tecsat'
-                    : 'Quy Trình Cung Cấp Phụ Tùng B2B Chuyên Nghiệp - Thành Khang Tecsat',
+                    ? 'B2B Technical Ordering & Supply Process - Thanh Khang'
+                    : 'Quy Trình Cung Cấp Phụ Tùng B2B Chuyên Nghiệp - Thành Khang',
                 'description' => $locale === 'en'
-                    ? 'Explore Thanh Khang Tecsat\'s 5-step professional industrial supply process: Technical consultation, RFQ quotation, manufacturing & quality control, packing, and safe delivery.'
-                    : 'Khám phá quy trình 5 bước cung cấp thiết bị và phụ tùng công nghiệp chuyên nghiệp tại Thành Khang Tecsat: Từ tiếp nhận yêu cầu kỹ thuật, báo giá RFQ, kiểm soát chất lượng, đóng gói đến giao hàng an toàn.',
+                    ? 'Explore Thanh Khang\'s 5-step professional industrial supply process: Technical consultation, RFQ quotation, manufacturing & quality control, packing, and safe delivery.'
+                    : 'Khám phá quy trình 5 bước cung cấp thiết bị và phụ tùng công nghiệp chuyên nghiệp tại Thành Khang: Từ tiếp nhận yêu cầu kỹ thuật, báo giá RFQ, kiểm soát chất lượng, đóng gói đến giao hàng an toàn.',
             ];
 
             if (request()->wantsJson()) {

@@ -1,14 +1,14 @@
 <template>
-    <footer id="footer-section" class="w-full bg-surface text-ink-body border-t border-gray-200 antialiased">
-        <!-- Footer Top Content (Figma Desktop 979:32406 / 217:3913 & Mobile 1193:6561 — bg #FAFAFA, 1280px inner) -->
-        <div class="app-container-wide pt-9 pb-8 lg:pt-[40px] lg:pb-[60px]">
-            <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 lg:gap-12 xl:gap-[120px]">
-                <!-- Left Brand Column (Mobile 1193:6563: Logo 138x46; Desktop 217:3855: w-[360px], Logo 203x68) -->
-                <div class="w-full lg:w-[360px] shrink-0 space-y-3 lg:space-y-5">
+    <footer id="footer-section" class="w-full bg-[#FAFAFA] text-[#4B5565] antialiased">
+        <!-- Footer Top Content (Aligned 100% flush to .app-container-narrow 1152px — bg #FAFAFA, pt 40px, pb 60px) -->
+        <div class="app-container-narrow pt-9 pb-8 lg:pt-[40px] lg:pb-[60px]">
+            <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 lg:gap-10 xl:gap-[60px]">
+                <!-- Left Brand Column + CTA (w-[360px] on 1440px matching Figma 217:3855, Logo 203x68) -->
+                <div class="w-full lg:w-[300px] xl:w-[360px] shrink-0 flex flex-col gap-3 lg:gap-[20px]">
                     <Link
                         v-if="resolvedLogoUrl"
                         :href="safeRoute('home', undefined, currentLocale === 'en' ? '/en' : '/')"
-                        class="inline-block rounded-cta focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                        class="inline-block w-fit rounded-cta focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                         :aria-label="companyName || tt('Trang chủ')"
                     >
                         <img
@@ -21,40 +21,58 @@
                         />
                     </Link>
 
-                    <div v-if="companyName || companyDescription" class="space-y-1.5 lg:space-y-1">
+                    <div v-if="companyName || companyDescription" class="space-y-1.5 lg:space-y-[4px]">
                         <h3
                             v-if="companyName"
-                            class="uppercase text-[14px] leading-[21px] lg:text-[20px] lg:leading-[32px] font-bold text-dark"
+                            class="uppercase text-[14px] leading-[1.6] lg:text-[20px] lg:leading-[1.6] font-bold text-[#00284B]"
                         >
                             {{ companyName }}
                         </h3>
                         <p
                             v-if="companyDescription"
-                            class="text-[13px] leading-[21px] font-normal lg:text-[14px] lg:leading-[22px] lg:font-medium text-ink-body"
+                            class="text-[13px] leading-[1.6] font-normal lg:text-[14px] lg:leading-[1.6] lg:font-medium text-[#4B5565]"
                         >
                             {{ companyDescription }}
                         </p>
                     </div>
+
+                    <!-- Footer Primary CTA -->
+                    <div class="pt-1 flex flex-wrap items-center gap-[12px]">
+                        <button
+                            type="button"
+                            @click="handleOpenQuoteModal"
+                            class="h-[38px] px-[20px] py-[8px] inline-flex items-center justify-center whitespace-nowrap rounded-[4px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] text-[14px] font-medium leading-[1.6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2 cursor-pointer"
+                        >
+                            {{ tt('Nhận báo giá') }}
+                        </button>
+                        <a
+                            v-if="displayHotline"
+                            :href="'tel:' + cleanHotline"
+                            class="h-[38px] px-[20px] py-[8px] inline-flex items-center justify-center whitespace-nowrap rounded-[4px] bg-[#C9E0FF] hover:bg-[#81BDFF] text-[#003967] text-[14px] font-medium leading-[1.6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
+                        >
+                            {{ tt('Gọi hotline') }}
+                        </a>
+                    </div>
                 </div>
 
-                <!-- Right 3 Columns (Mobile 1193:6567: 2-col grid + 1px divider + full-width Contact; Desktop 217:3866: 3 equal ~267px cols) -->
-                <div class="w-full lg:max-w-[800px] flex-1 grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-6 lg:gap-8">
-                    <!-- Column 1: Danh mục sản phẩm (Figma 217:3867 & 1193:6568 — 100% Dynamic from CMS product_categories) -->
+                <!-- Right 3 Columns (732px on 1440px: 212px + 20px + 212px + 20px + 268px; total 360 + 60 + 732 = 1152px — Inter on headings & Col 1-2 links) -->
+                <div class="w-full lg:flex-1 grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-[212px_212px_268px] gap-x-4 gap-y-6 lg:gap-6 xl:gap-x-[20px]">
+                    <!-- Column 1: Danh mục sản phẩm (Inter 700 16px/1.4 heading, Inter 500 14px/20px links) -->
                     <div
                         v-if="footerCategoryLinks && footerCategoryLinks.length"
-                        class="col-span-1 space-y-3 lg:space-y-6 min-w-0"
+                        class="col-span-1 space-y-3 lg:space-y-[24px] min-w-0 font-inter"
                     >
-                        <h4 class="text-[14px] leading-[20px] lg:text-[16px] lg:leading-[22px] font-bold text-dark">
+                        <h4 class="font-inter text-[14px] leading-[1.4] lg:text-[16px] lg:leading-[1.4] font-bold text-[#00284B]">
                             {{ tt('Danh mục sản phẩm') }}
                         </h4>
-                        <ul class="space-y-2.5 lg:space-y-4 text-[13px] leading-[20px] lg:text-[14px] lg:leading-[20px] font-normal lg:font-medium">
+                        <ul class="font-inter space-y-2.5 lg:space-y-[16px] text-[13px] leading-[20px] lg:text-[14px] lg:leading-[20px] font-normal lg:font-medium">
                             <li
                                 v-for="(item, index) in footerCategoryLinks"
                                 :key="index"
                             >
                                 <Link
                                     :href="item.href"
-                                    class="text-ink-body hover:text-primary transition-colors focus:outline-none focus-visible:underline block"
+                                    class="text-[#4B5565] hover:text-[#005EA4] transition-colors focus:outline-none focus-visible:underline block"
                                 >
                                     {{ item.title }}
                                 </Link>
@@ -62,16 +80,16 @@
                         </ul>
                     </div>
 
-                    <!-- Column 2: Chính sách (Figma 217:3875 & 1193:6576 — 100% Dynamic from CMS policies) -->
-                    <div v-if="policyLinks.length > 0" class="col-span-1 space-y-3 lg:space-y-6 min-w-0">
-                        <h4 class="text-[14px] leading-[20px] lg:text-[16px] lg:leading-[22px] font-bold text-dark">
+                    <!-- Column 2: Chính sách (Inter 700 16px/1.4 heading, Inter 500 14px/20px links) -->
+                    <div v-if="policyLinks.length > 0" class="col-span-1 space-y-3 lg:space-y-[24px] min-w-0 font-inter">
+                        <h4 class="font-inter text-[14px] leading-[1.4] lg:text-[16px] lg:leading-[1.4] font-bold text-[#00284B]">
                             {{ tt('Chính sách') }}
                         </h4>
-                        <ul class="space-y-2.5 lg:space-y-4 text-[13px] leading-[20px] lg:text-[14px] lg:leading-[20px] font-normal lg:font-medium">
+                        <ul class="font-inter space-y-2.5 lg:space-y-[16px] text-[13px] leading-[20px] lg:text-[14px] lg:leading-[20px] font-normal lg:font-medium">
                             <li v-for="(item, index) in policyLinks" :key="index">
                                 <Link
                                     :href="item.url"
-                                    class="text-ink-body hover:text-primary transition-colors focus:outline-none focus-visible:underline block"
+                                    class="text-[#4B5565] hover:text-[#005EA4] transition-colors focus:outline-none focus-visible:underline block"
                                 >
                                     {{ item.title }}
                                 </Link>
@@ -86,16 +104,16 @@
                         aria-hidden="true"
                     />
 
-                    <!-- Column 3: Thông tin liên hệ (Figma 217:3884 & 1193:6586 — 5 CMS rows including Mã số thuế with building-07) -->
-                    <div class="col-span-2 lg:col-span-1 space-y-3 lg:space-y-6 min-w-0">
-                        <h4 class="text-[14px] leading-[20px] lg:text-[16px] lg:leading-[22px] font-bold text-dark">
+                    <!-- Column 3: Thông tin liên hệ (Inter 700 16px/1.4 heading; Open Sans 500 14px/1.6 items) -->
+                    <div class="col-span-2 lg:col-span-1 space-y-3 lg:space-y-[24px] min-w-0">
+                        <h4 class="font-inter text-[14px] leading-[1.4] lg:text-[16px] lg:leading-[1.4] font-bold text-[#00284B]">
                             {{ tt('Thông tin liên hệ') }}
                         </h4>
-                        <div class="space-y-3 text-[13px] leading-[20px] text-dark-slate lg:text-[14px] lg:leading-[22px] lg:font-medium lg:text-ink-body">
+                        <div class="font-sans space-y-[12px] text-[13px] leading-[1.6] text-[#364152] lg:text-[14px] lg:leading-[1.6] lg:font-medium lg:text-[#4B5565]">
                             <a
                                 v-if="displayHotline"
                                 :href="'tel:' + cleanHotline"
-                                class="flex items-start gap-2.5 lg:gap-2 hover:text-primary transition-colors focus:outline-none focus-visible:underline"
+                                class="flex items-center gap-2.5 lg:gap-[8px] hover:text-[#005EA4] transition-colors focus:outline-none focus-visible:underline"
                             >
                                 <img
                                     src="/assets/svg/icons/footer-phone.svg"
@@ -103,7 +121,7 @@
                                     aria-hidden="true"
                                     width="24"
                                     height="24"
-                                    class="w-[18px] h-[18px] lg:w-6 lg:h-6 shrink-0 mt-0.5 lg:mt-0"
+                                    class="w-[18px] h-[18px] lg:w-6 lg:h-6 shrink-0"
                                 />
                                 <span class="break-words min-w-0">{{ tt('Hotline') }}: {{ displayHotline }}</span>
                             </a>
@@ -111,7 +129,7 @@
                             <a
                                 v-if="displayEmail"
                                 :href="'mailto:' + displayEmail"
-                                class="flex items-start gap-2.5 lg:gap-2 hover:text-primary transition-colors focus:outline-none focus-visible:underline"
+                                class="flex items-center gap-2.5 lg:gap-[8px] hover:text-[#005EA4] transition-colors focus:outline-none focus-visible:underline"
                             >
                                 <img
                                     src="/assets/svg/icons/footer-mail.svg"
@@ -119,24 +137,24 @@
                                     aria-hidden="true"
                                     width="24"
                                     height="24"
-                                    class="w-[18px] h-[18px] lg:w-6 lg:h-6 shrink-0 mt-0.5 lg:mt-0"
+                                    class="w-[18px] h-[18px] lg:w-6 lg:h-6 shrink-0"
                                 />
                                 <span class="break-all sm:break-words min-w-0">{{ tt('Email') }}: {{ displayEmail }}</span>
                             </a>
 
-                            <div v-if="taxCode" class="flex items-start gap-2.5 lg:gap-2">
+                            <div v-if="taxCode" class="flex items-center gap-2.5 lg:gap-[8px]">
                                 <img
                                     src="/assets/svg/icons/footer-building.svg"
                                     alt=""
                                     aria-hidden="true"
                                     width="24"
                                     height="24"
-                                    class="w-[18px] h-[18px] lg:w-6 lg:h-6 shrink-0 mt-0.5 lg:mt-0"
+                                    class="w-[18px] h-[18px] lg:w-6 lg:h-6 shrink-0"
                                 />
                                 <p class="break-words min-w-0">{{ tt('Mã số thuế') }}: {{ taxCode }}</p>
                             </div>
 
-                            <div v-for="row in addressRows" :key="row.label" class="flex items-start gap-2.5 lg:gap-2">
+                            <div v-for="row in addressRows" :key="row.label" class="flex items-start gap-2.5 lg:gap-[8px]">
                                 <img
                                     src="/assets/svg/icons/footer-pin.svg"
                                     alt=""
@@ -153,24 +171,24 @@
             </div>
         </div>
 
-        <!-- Bottom Bar (Figma Desktop 217:3899: 51px #00284B; Mobile 1193:6613: 48px #00284B horizontal row) -->
-        <div class="w-full bg-dark min-h-[48px] lg:min-h-[51px] flex items-center">
-            <div class="app-container-wide py-3 flex flex-row items-center justify-between gap-3">
+        <!-- Bottom Bar (Figma 217:3899: exact 51px #00284B, flush with .app-container-narrow) -->
+        <div class="w-full bg-[#00284B] min-h-[48px] lg:h-[51px] flex items-center">
+            <div class="app-container-narrow py-[12px] flex flex-row items-center justify-between gap-3">
                 <p
                     v-if="copyrightBrandName"
-                    class="text-[12px] font-normal leading-[18px] lg:leading-[19px] text-secondary min-w-0 truncate"
+                    class="py-[4px] text-[12px] font-normal leading-[1.6] text-[#C9E0FF] min-w-0 truncate"
                 >
                     &copy; Copyright {{ currentYear }} {{ copyrightBrandName }}
                 </p>
                 <span v-else />
 
-                <div v-if="facebookHref || linkedinHref" class="flex items-center gap-4 lg:gap-6 shrink-0">
+                <div v-if="facebookHref || linkedinHref" class="flex items-center gap-4 lg:gap-[24px] shrink-0">
                     <a
                         v-if="facebookHref"
                         :href="facebookHref"
                         :target="isExternalUrl(facebookHref) ? '_blank' : undefined"
                         :rel="isExternalUrl(facebookHref) ? 'noopener noreferrer' : undefined"
-                        class="w-7 h-7 lg:w-8 lg:h-8 inline-flex items-center justify-center rounded-cta hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+                        class="w-5 h-5 inline-flex items-center justify-center rounded-cta hover:opacity-80 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9E0FF] focus-visible:ring-offset-2 focus-visible:ring-offset-[#00284B]"
                         aria-label="Facebook"
                     >
                         <img
@@ -188,7 +206,7 @@
                         :href="linkedinHref"
                         :target="isExternalUrl(linkedinHref) ? '_blank' : undefined"
                         :rel="isExternalUrl(linkedinHref) ? 'noopener noreferrer' : undefined"
-                        class="w-7 h-7 lg:w-8 lg:h-8 inline-flex items-center justify-center rounded-cta hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+                        class="w-5 h-5 inline-flex items-center justify-center rounded-cta hover:opacity-80 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9E0FF] focus-visible:ring-offset-2 focus-visible:ring-offset-[#00284B]"
                         aria-label="LinkedIn"
                     >
                         <img
@@ -208,6 +226,7 @@
 
 <script>
 import { Link } from '@inertiajs/inertia-vue3'
+import { openQuoteModal } from '@/composables/useQuoteModal'
 
 export default {
     name: 'Footer',
@@ -317,6 +336,10 @@ export default {
                 ''
             )
         },
+        contactHref() {
+            const isEn = this.currentLocale === 'en'
+            return this.safeRoute('contact', undefined, isEn ? '/en/contact' : '/lien-he')
+        },
         cleanHotline() {
             return String(this.displayHotline || '').replace(/[^\d+]/g, '')
         },
@@ -408,6 +431,9 @@ export default {
         },
         onLogoError() {
             this.logoFallbackStage = 1
+        },
+        handleOpenQuoteModal() {
+            openQuoteModal({ source: 'footer_cta' })
         },
     },
 }

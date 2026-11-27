@@ -68,7 +68,7 @@ const title = computed(() => ctaData.value?.title || translate('Tạo nên phiê
 const description = computed(() => {
     return (
         ctaData.value?.description ||
-        translate('Gửi thông số kỹ thuật, mã linh kiện hoặc bản vẽ công trình để đội ngũ kỹ sư Thành Khang Tecsat tư vấn phương án phụ tùng OEM, xích tải công nghiệp hoặc giải pháp tiết kiệm điện tối ưu.')
+        translate('Gửi thông số kỹ thuật, mã linh kiện hoặc bản vẽ công trình để đội ngũ kỹ sư Thành Khang tư vấn phương án phụ tùng OEM, xích tải công nghiệp hoặc giải pháp tiết kiệm điện tối ưu.')
     )
 })
 const ctaText = computed(() => ctaData.value?.primary_cta_text || translate('Nhận tư vấn ngay'))

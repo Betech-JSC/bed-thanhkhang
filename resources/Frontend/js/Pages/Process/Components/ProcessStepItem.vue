@@ -37,10 +37,10 @@
                         </p>
                     </div>
 
-                    <!-- Column 2: THÀNH KHANG TECSAT THỰC HIỆN -->
+                    <!-- Column 2: THÀNH KHANG THỰC HIỆN -->
                     <div class="flex flex-col gap-2">
                         <h3 class="font-semibold text-[13px] leading-[16px] text-[#84ADFF] uppercase">
-                            {{ tt('THÀNH KHANG TECSAT THỰC HIỆN') }}
+                            {{ tt('THÀNH KHANG THỰC HIỆN') }}
                         </h3>
                         <p class="text-sm sm:text-base text-[#B9C0D4] leading-relaxed lg:leading-[26px]">
                             {{ tt(step.makerAction) }}

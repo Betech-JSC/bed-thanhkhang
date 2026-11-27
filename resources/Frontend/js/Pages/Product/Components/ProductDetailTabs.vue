@@ -375,7 +375,7 @@
                                 <p class="text-[14px] leading-[1.6] text-[#4B5565] mt-1 break-words">
                                     {{
                                         tt(
-                                            'Liên hệ đội ngũ kỹ sư Thành Khang Tecsat để nhận bản vẽ CAD và catalogue thông số chi tiết cho sản phẩm này.'
+                                            'Liên hệ đội ngũ kỹ sư Thành Khang để nhận bản vẽ CAD và catalogue thông số chi tiết cho sản phẩm này.'
                                         )
                                     }}
                                 </p>

@@ -124,7 +124,7 @@ const serviceData = computed(() => {
 
 const pageTitle = computed(() => {
     if (props.seo?.title) return props.seo.title
-    const suffix = currentLocale.value === 'en' ? 'Thành Khang Tecsat Services' : translate('Dịch Vụ Thành Khang Tecsat')
+    const suffix = currentLocale.value === 'en' ? 'Thành Khang Services' : translate('Dịch Vụ Thành Khang')
     return `${serviceData.value.title} - ${suffix}`
 })
 
