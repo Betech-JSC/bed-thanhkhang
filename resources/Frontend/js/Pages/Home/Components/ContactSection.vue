@@ -294,7 +294,7 @@
                                         name="phone"
                                         autocomplete="tel"
                                         required
-                                        :placeholder="isEn ? '(+84) 901 234 567' : '0901 234 567'"
+                                        :placeholder="isEn ? '+84 901 234 567' : '0901 234 567'"
                                         :aria-invalid="Boolean(fieldErrors.phone)"
                                         :aria-describedby="fieldErrors.phone ? 'home-contact-phone-error' : undefined"
                                         class="w-full h-[42px] bg-white border rounded-[8px] px-[12px] py-[8px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] text-[16px] font-normal leading-[1.6] text-[#1A1A1A] placeholder:text-[#808080] focus:outline-none focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-colors"
@@ -394,6 +394,7 @@
 <script setup>
 import { computed, getCurrentInstance, reactive, ref } from 'vue'
 import { useTranslate } from '@/composables/useTranslate.js'
+import { validatePhoneNumber } from '@/lib/validator'
 
 const props = defineProps({
     contactSection: {
@@ -457,7 +458,6 @@ function validateClient() {
 
     const trimmedName = form.name.trim()
     const trimmedEmail = form.email.trim()
-    const trimmedPhone = form.phone.trim()
 
     if (!trimmedName) {
         fieldErrors.name = isEn.value ? 'Please enter your full name.' : 'Vui lòng nhập họ và tên.'
@@ -473,14 +473,11 @@ function validateClient() {
         valid = false
     }
 
-    const phoneDigits = trimmedPhone.replace(/[\s\-()+.]/g, '')
-    if (!trimmedPhone) {
-        fieldErrors.phone = isEn.value ? 'Please enter your phone number.' : 'Vui lòng nhập số điện thoại.'
-        valid = false
-    } else if (!/^\d{8,15}$/.test(phoneDigits)) {
-        fieldErrors.phone = isEn.value
-            ? 'Phone number must contain 8 to 15 digits.'
-            : 'Số điện thoại phải gồm từ 8 đến 15 chữ số.'
+    const phoneCheck = validatePhoneNumber(form.phone, {
+        locale: isEn.value ? 'en' : 'vi',
+    })
+    if (!phoneCheck.valid) {
+        fieldErrors.phone = phoneCheck.message
         valid = false
     }
 

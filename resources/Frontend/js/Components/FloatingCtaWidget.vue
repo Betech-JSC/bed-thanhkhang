@@ -1,9 +1,45 @@
 <template>
     <div
-        v-if="zaloHref || phoneHref"
+        v-if="zaloHref || phoneHref || showScrollTop"
         data-testid="floating-cta-widget"
         class="fixed right-4 lg:right-6 bottom-5 lg:bottom-[72px] z-[950] flex flex-col items-center gap-[16px] print:hidden"
     >
+        <!-- Scroll-to-Top Floating Button -->
+        <Transition
+            enter-active-class="transition-all duration-200 ease-out"
+            enter-from-class="opacity-0 translate-y-2 scale-95"
+            enter-to-class="opacity-100 translate-y-0 scale-100"
+            leave-active-class="transition-all duration-150 ease-in"
+            leave-from-class="opacity-100 translate-y-0 scale-100"
+            leave-to-class="opacity-0 translate-y-2 scale-95"
+        >
+            <button
+                v-if="showScrollTop"
+                type="button"
+                data-testid="scroll-to-top-button"
+                :aria-label="scrollTopLabel"
+                :title="scrollTopLabel"
+                class="w-[52px] h-[52px] lg:w-[60px] lg:h-[60px] rounded-full bg-[#00284B] hover:bg-[#005EA4] active:bg-[#003967] text-white shadow-lg inline-flex items-center justify-center transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
+                @click="scrollToTop"
+            >
+                <svg
+                    class="w-[22px] h-[22px] lg:w-[24px] lg:h-[24px]"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                >
+                    <path
+                        d="M12 19V5M12 5L5 12M12 5L19 12"
+                        stroke="currentColor"
+                        stroke-width="2.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+                </svg>
+            </button>
+        </Transition>
+
         <!-- Zalo Floating Button (Figma 1264:48278 top circle) -->
         <a
             v-if="zaloHref"
@@ -72,7 +108,27 @@
 <script>
 export default {
     name: 'FloatingCtaWidget',
+    data() {
+        return {
+            showScrollTop: false,
+        }
+    },
     computed: {
+        currentLocale() {
+            const pageUrl = String(this.$page?.url || '').split('?')[0].split('#')[0]
+            const urlLocale = pageUrl === '/en' || pageUrl.startsWith('/en/') ? 'en' : ''
+            const raw =
+                this.$page?.props?.locale?.current ||
+                urlLocale ||
+                this.$inertia?.page?.props?.locale?.current ||
+                'vi'
+            return String(raw).toLowerCase()
+        },
+        scrollTopLabel() {
+            const translated = typeof this.tt === 'function' ? this.tt('Lên đầu trang') : 'Lên đầu trang'
+            if (translated && translated !== 'Lên đầu trang') return translated
+            return this.currentLocale === 'en' ? 'Back to top' : 'Lên đầu trang'
+        },
         siteConfig() {
             return {
                 ...(this.$page?.props?.global || {}),
@@ -109,6 +165,39 @@ export default {
             const fallbackDigits = this.cleanPhone.replace(/^\+/, '')
             return fallbackDigits ? `https://zalo.me/${fallbackDigits}` : ''
         },
+    },
+    watch: {
+        '$page.url'() {
+            this.handleScroll()
+        },
+    },
+    methods: {
+        handleScroll() {
+            if (typeof window === 'undefined') return
+            const scrollY = window.scrollY ?? window.pageYOffset ?? 0
+            this.showScrollTop = scrollY > 300
+        },
+        scrollToTop() {
+            if (typeof window === 'undefined') return
+            const prefersReducedMotion =
+                typeof window.matchMedia === 'function' &&
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            window.scrollTo({
+                top: 0,
+                behavior: prefersReducedMotion ? 'auto' : 'smooth',
+            })
+        },
+    },
+    mounted() {
+        if (typeof window !== 'undefined') {
+            this.handleScroll()
+            window.addEventListener('scroll', this.handleScroll, { passive: true })
+        }
+    },
+    beforeUnmount() {
+        if (typeof window !== 'undefined') {
+            window.removeEventListener('scroll', this.handleScroll)
+        }
     },
 }
 </script>

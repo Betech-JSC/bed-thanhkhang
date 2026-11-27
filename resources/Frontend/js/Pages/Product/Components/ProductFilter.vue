@@ -40,9 +40,40 @@
                 <button
                     type="button"
                     @click="handleRootClick(root)"
-                    class="w-full min-h-[51px] py-[12px] border-b border-[#CDD5DF] flex items-center justify-between gap-4 text-left cursor-pointer transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]"
+                    :role="root.children.length === 0 ? 'checkbox' : undefined"
+                    :aria-checked="
+                        root.children.length === 0
+                            ? isIdSelected(root.id)
+                                ? 'true'
+                                : 'false'
+                            : undefined
+                    "
                     :aria-expanded="root.children.length > 0 ? isRootExpanded(root.id) : undefined"
+                    :class="[
+                        'w-full min-h-[51px] py-[12px] border-b border-[#CDD5DF] flex items-center text-left cursor-pointer transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]',
+                        root.children.length > 0 ? 'justify-between gap-4' : 'justify-start gap-2',
+                    ]"
                 >
+                    <span
+                        v-if="root.children.length === 0"
+                        class="w-[14px] h-[14px] rounded-[2px] shrink-0 flex items-center justify-center transition-colors"
+                        :class="
+                            isIdSelected(root.id)
+                                ? ''
+                                : 'border border-[#9AA4B2] bg-transparent group-hover:border-[#005EA4]'
+                        "
+                    >
+                        <img
+                            v-if="isIdSelected(root.id)"
+                            src="/assets/figma/san-pham/filter-checkbox-checked.svg"
+                            alt=""
+                            aria-hidden="true"
+                            width="14"
+                            height="14"
+                            class="w-[14px] h-[14px]"
+                        />
+                    </span>
+
                     <span
                         class="text-[16px] leading-[26px] font-bold font-sans transition-colors"
                         :class="
@@ -67,25 +98,6 @@
                         height="20"
                         class="w-5 h-5 shrink-0"
                     />
-                    <span
-                        v-else
-                        class="w-[14px] h-[14px] rounded-[2px] shrink-0 flex items-center justify-center transition-colors"
-                        :class="
-                            isIdSelected(root.id)
-                                ? ''
-                                : 'border border-[#9AA4B2] bg-transparent group-hover:border-[#005EA4]'
-                        "
-                    >
-                        <img
-                            v-if="isIdSelected(root.id)"
-                            src="/assets/figma/san-pham/filter-checkbox-checked.svg"
-                            alt=""
-                            aria-hidden="true"
-                            width="14"
-                            height="14"
-                            class="w-[14px] h-[14px]"
-                        />
-                    </span>
                 </button>
 
                 <!-- L1 + L2 Expanded Panel (Figma 979:30400: bg #EEF2F6, padding 24px, gap 20px) -->
@@ -114,19 +126,8 @@
                                             "
                                             :tabindex="isRootExpanded(root.id) ? 0 : -1"
                                             @click="toggleL1Group(l1)"
-                                            class="flex-1 min-w-0 min-h-[44px] lg:min-h-[22px] flex items-center gap-2 text-left cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] rounded-[2px]"
+                                            class="flex-1 min-w-0 min-h-[44px] lg:min-h-[22px] flex items-center justify-start gap-2 text-left cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] rounded-[2px]"
                                         >
-                                            <span
-                                                class="text-[14px] leading-[22px] font-sans transition-colors break-words"
-                                                :class="
-                                                    getGroupState(l1) !== 'unchecked'
-                                                        ? 'font-medium text-[#00284B]'
-                                                        : 'font-normal text-[#364152] group-hover:text-[#00284B]'
-                                                "
-                                            >
-                                                {{ l1.title }}
-                                            </span>
-
                                             <span
                                                 class="w-[14px] h-[14px] rounded-[2px] shrink-0 flex items-center justify-center transition-colors"
                                                 :class="
@@ -151,6 +152,17 @@
                                                     class="w-2 h-[2px] bg-[#FAFAFA] rounded-[1px]"
                                                     aria-hidden="true"
                                                 />
+                                            </span>
+
+                                            <span
+                                                class="text-[14px] leading-[22px] font-sans transition-colors break-words"
+                                                :class="
+                                                    getGroupState(l1) !== 'unchecked'
+                                                        ? 'font-medium text-[#00284B]'
+                                                        : 'font-normal text-[#364152] group-hover:text-[#00284B]'
+                                                "
+                                            >
+                                                {{ l1.title }}
                                             </span>
                                         </button>
 
@@ -194,19 +206,8 @@
                                                     :aria-checked="isIdSelected(l2.id) ? 'true' : 'false'"
                                                     :tabindex="isRootExpanded(root.id) && isL1Expanded(l1.id) ? 0 : -1"
                                                     @click="toggleId(l2.id)"
-                                                    class="w-full min-h-[44px] lg:min-h-[22px] flex items-center justify-between gap-2 text-left cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] rounded-[2px]"
+                                                    class="w-full min-h-[44px] lg:min-h-[22px] flex items-center justify-start gap-2 text-left cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] rounded-[2px]"
                                                 >
-                                                    <span
-                                                        class="text-[14px] leading-[22px] font-sans transition-colors break-words"
-                                                        :class="
-                                                            isIdSelected(l2.id)
-                                                                ? 'font-medium text-[#00284B]'
-                                                                : 'font-normal text-[#364152] group-hover:text-[#00284B]'
-                                                        "
-                                                    >
-                                                        {{ l2.title }}
-                                                    </span>
-
                                                     <span
                                                         class="w-[14px] h-[14px] rounded-[2px] shrink-0 flex items-center justify-center transition-colors"
                                                         :class="
@@ -225,6 +226,17 @@
                                                             class="w-[14px] h-[14px]"
                                                         />
                                                     </span>
+
+                                                    <span
+                                                        class="text-[14px] leading-[22px] font-sans transition-colors break-words"
+                                                        :class="
+                                                            isIdSelected(l2.id)
+                                                                ? 'font-medium text-[#00284B]'
+                                                                : 'font-normal text-[#364152] group-hover:text-[#00284B]'
+                                                        "
+                                                    >
+                                                        {{ l2.title }}
+                                                    </span>
                                                 </button>
                                             </div>
                                         </div>
@@ -242,17 +254,6 @@
                                     class="w-full min-h-[44px] lg:min-h-[22px] flex items-center justify-start gap-2 text-left cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] rounded-[2px]"
                                 >
                                     <span
-                                        class="text-[14px] leading-[22px] font-sans transition-colors break-words"
-                                        :class="
-                                            isIdSelected(l1.id)
-                                                ? 'font-medium text-[#00284B]'
-                                                : 'font-normal text-[#364152] group-hover:text-[#00284B]'
-                                        "
-                                    >
-                                        {{ l1.title }}
-                                    </span>
-
-                                    <span
                                         class="w-[14px] h-[14px] rounded-[2px] shrink-0 flex items-center justify-center transition-colors"
                                         :class="
                                             isIdSelected(l1.id)
@@ -269,6 +270,17 @@
                                             height="14"
                                             class="w-[14px] h-[14px]"
                                         />
+                                    </span>
+
+                                    <span
+                                        class="text-[14px] leading-[22px] font-sans transition-colors break-words"
+                                        :class="
+                                            isIdSelected(l1.id)
+                                                ? 'font-medium text-[#00284B]'
+                                                : 'font-normal text-[#364152] group-hover:text-[#00284B]'
+                                        "
+                                    >
+                                        {{ l1.title }}
                                     </span>
                                 </button>
                             </template>

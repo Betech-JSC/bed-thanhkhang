@@ -7,17 +7,20 @@
         <meta property="og:type" content="article" />
     </Head>
 
-    <div class="bg-[#111322] min-h-screen text-white selection:bg-primary selection:text-white pt-6 sm:pt-10 pb-20">
-        <div class="app-container">
+    <div class="bg-[#FAFAFA] min-h-screen text-[#364152] selection:bg-[#005EA4] selection:text-white pt-6 sm:pt-10 pb-16 lg:pb-20">
+        <div class="app-container-narrow">
             <!-- Header Section -->
-            <div class="space-y-3 mb-8 sm:mb-12 border-b border-[#5D6B98]/30 pb-6 sm:pb-8">
-                <span class="text-sm font-semibold tracking-wider text-[#84ADFF] uppercase select-none leading-[20px] block">
-                    {{ tt('CHÍNH SÁCH & ĐIỀU KHOẢN') }}
-                </span>
-                <h1 class="text-2xl sm:text-3xl lg:text-[38px] font-bold text-[#FAFAFA] tracking-tight leading-tight lg:leading-[46px]">
+            <div class="bg-white border border-[#E3E8EF] rounded-[12px] p-6 sm:p-8 shadow-xs space-y-3 mb-6 sm:mb-8">
+                <div class="flex items-center gap-2.5">
+                    <span class="block w-2.5 h-2.5 rounded-[2px] bg-[#005EA4] shrink-0" aria-hidden="true" />
+                    <span class="text-xs sm:text-sm font-bold tracking-wider text-[#005EA4] uppercase select-none leading-[20px]">
+                        {{ tt('CHÍNH SÁCH & ĐIỀU KHOẢN') }}
+                    </span>
+                </div>
+                <h1 class="text-2xl sm:text-3xl lg:text-[36px] font-bold text-[#00284B] tracking-tight leading-tight lg:leading-[46px]">
                     {{ tt('Chính sách & Cam kết Thành Khang') }}
                 </h1>
-                <p class="text-[#B9C0D4] text-sm sm:text-base leading-relaxed max-w-3xl">
+                <p class="text-[#4B5565] text-sm sm:text-base leading-relaxed max-w-3xl">
                     {{ tt('Thông tin chi tiết về điều khoản bán hàng, bảo mật thông số bản vẽ kỹ thuật và chính sách bảo hành thiết bị công nghiệp.') }}
                 </p>
             </div>
@@ -28,34 +31,39 @@
                     id="policy-mobile-selector-btn"
                     type="button"
                     @click="isOpenMobile = !isOpenMobile"
-                    class="w-full bg-white/10 border border-[#5D6B98] backdrop-blur-[10px] rounded-xl px-4 py-3 flex items-center justify-between text-left text-[#FAFAFA] font-medium"
+                    :aria-expanded="isOpenMobile"
+                    aria-controls="policy-mobile-menu"
+                    class="w-full min-h-[44px] bg-white border border-[#E3E8EF] hover:border-[#005EA4] rounded-[10px] px-4 py-2.5 flex items-center justify-between gap-3 text-left text-[#00284B] font-semibold shadow-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]"
                 >
                     <span class="truncate">{{ content ? tt(content.title) : tt('Danh mục chính sách') }}</span>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="w-5 h-5 transition-transform duration-200"
+                        class="w-5 h-5 text-[#697586] shrink-0 transition-transform duration-200"
                         :class="{ 'rotate-180': isOpenMobile }"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
+                        aria-hidden="true"
                     >
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
                 </button>
 
                 <div
+                    id="policy-mobile-menu"
                     v-show="isOpenMobile"
-                    class="mt-2 bg-[#1A1C32] border border-[#5D6B98] rounded-xl p-2 space-y-1 shadow-xl"
+                    class="mt-2 bg-white border border-[#E3E8EF] rounded-[10px] p-2 space-y-1 shadow-md"
                 >
                     <Link
                         v-for="(policy, index) in list_sidebar"
                         :key="index"
                         :href="getPolicyUrl(policy)"
+                        :aria-current="checkActive(policy.slug) ? 'page' : undefined"
                         @click="isOpenMobile = false"
-                        class="block px-3 py-2.5 rounded-lg text-sm transition-colors"
+                        class="min-h-[44px] flex items-center px-3.5 py-2.5 rounded-[8px] text-sm border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]"
                         :class="checkActive(policy.slug)
-                            ? 'bg-[#243971] text-white font-semibold border border-[#528BFF]'
-                            : 'text-[#B9C0D4] hover:bg-white/5 hover:text-white'"
+                            ? 'bg-[#EDF6FF] border-[#005EA4] text-[#005EA4] font-semibold'
+                            : 'border-transparent text-[#4B5565] hover:bg-[#F8FAFC] hover:text-[#00284B]'"
                     >
                         {{ tt(policy.title) }}
                     </Link>
@@ -63,25 +71,27 @@
             </div>
 
             <!-- Main Layout Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
                 <!-- Desktop Sidebar Menu -->
                 <aside
                     v-if="list_sidebar && list_sidebar.length"
                     class="hidden lg:block lg:col-span-4 xl:col-span-3 sticky top-24"
                 >
-                    <div class="bg-white/5 border border-[#5D6B98]/40 backdrop-blur-[10px] rounded-2xl p-4 sm:p-5 shadow-lg space-y-2">
-                        <div class="text-xs font-semibold tracking-wider text-[#84ADFF] uppercase px-3 py-2">
-                            {{ tt('Danh mục chính sách') }}
+                    <div class="bg-white border border-[#E3E8EF] rounded-[12px] p-4 sm:p-5 shadow-xs space-y-2">
+                        <div class="text-xs font-bold tracking-wider text-[#005EA4] uppercase px-3 py-2 flex items-center gap-2">
+                            <span class="block w-2 h-2 rounded-[1px] bg-[#005EA4] shrink-0" aria-hidden="true" />
+                            <span>{{ tt('Danh mục chính sách') }}</span>
                         </div>
-                        <nav class="space-y-1.5">
+                        <nav :aria-label="tt('Danh mục chính sách')" class="space-y-1.5">
                             <Link
                                 v-for="(policy, index) in list_sidebar"
                                 :key="index"
                                 :href="getPolicyUrl(policy)"
-                                class="flex items-center px-3.5 py-3 rounded-xl text-sm font-medium transition-all duration-200 border"
+                                :aria-current="checkActive(policy.slug) ? 'page' : undefined"
+                                class="flex items-center px-3.5 py-3 rounded-[8px] text-sm font-medium transition-colors border focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]"
                                 :class="checkActive(policy.slug)
-                                    ? 'bg-[#243971] text-[#FAFAFA] border-[#528BFF] shadow-[0_0_12px_rgba(82,139,255,0.35)] font-semibold'
-                                    : 'border-transparent text-[#B9C0D4] hover:bg-white/5 hover:text-white'"
+                                    ? 'bg-[#EDF6FF] border-[#005EA4] text-[#005EA4] font-semibold'
+                                    : 'border-transparent text-[#4B5565] hover:bg-[#F8FAFC] hover:text-[#00284B]'"
                             >
                                 <span class="truncate">{{ tt(policy.title) }}</span>
                             </Link>
@@ -90,13 +100,13 @@
                 </aside>
 
                 <!-- Content Area -->
-                <section class="col-span-12 lg:col-span-8 xl:col-span-9">
+                <section class="col-span-12 lg:col-span-8 xl:col-span-9 min-w-0">
                     <article
                         v-if="content"
-                        class="bg-white/5 border border-[#5D6B98]/40 backdrop-blur-[10px] rounded-2xl p-6 sm:p-8 md:p-10 shadow-2xl space-y-6"
+                        class="bg-white border border-[#E3E8EF] rounded-[12px] p-6 sm:p-8 md:p-10 shadow-xs space-y-6"
                     >
-                        <header class="border-b border-[#5D6B98]/30 pb-4 space-y-2">
-                            <h2 class="text-2xl sm:text-3xl font-bold text-[#FAFAFA] tracking-tight">
+                        <header class="border-b border-[#E3E8EF] pb-4 space-y-2">
+                            <h2 class="text-2xl sm:text-3xl font-bold text-[#00284B] tracking-tight">
                                 {{ tt(content.title) }}
                             </h2>
                         </header>
@@ -109,7 +119,7 @@
 
                     <div
                         v-else
-                        class="bg-white/5 border border-[#5D6B98]/40 rounded-2xl p-12 text-center text-[#B9C0D4]"
+                        class="bg-white border border-[#E3E8EF] rounded-[12px] p-12 text-center text-[#4B5565] shadow-xs"
                     >
                         {{ tt('Không tìm thấy nội dung chính sách.') }}
                     </div>
@@ -190,64 +200,107 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .policy-prose {
-    color: #D1E0FF;
+    color: #364152;
     line-height: 1.75;
     font-size: 1rem;
+}
 
-    h3 {
-        color: #FAFAFA;
-        font-size: 1.25rem;
-        font-weight: 700;
-        margin-top: 1.75rem;
-        margin-bottom: 0.75rem;
-        font-family: inherit;
-        border-left: 3px solid #2970FF;
-        padding-left: 0.75rem;
-    }
+.policy-prose :deep(h2),
+.policy-prose :deep(h3) {
+    color: #00284B;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-top: 1.75rem;
+    margin-bottom: 0.75rem;
+    font-family: inherit;
+    border-left: 3px solid #005EA4;
+    padding-left: 0.75rem;
+}
 
-    h4 {
-        color: #FAFAFA;
-        font-size: 1.1rem;
-        font-weight: 600;
-        margin-top: 1.25rem;
-        margin-bottom: 0.5rem;
-    }
+.policy-prose :deep(h4) {
+    color: #00284B;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+}
 
-    p {
-        color: #B9C0D4;
-        margin-bottom: 1rem;
-        font-size: 0.975rem;
-    }
+.policy-prose :deep(p) {
+    color: #4B5565;
+    margin-bottom: 1rem;
+    font-size: 0.975rem;
+}
 
-    ul {
-        list-style-type: disc;
-        padding-left: 1.5rem;
-        margin-bottom: 1rem;
-        color: #B9C0D4;
+.policy-prose :deep(p:last-child) {
+    margin-bottom: 0;
+}
 
-        li {
-            margin-bottom: 0.5rem;
-            color: #B9C0D4;
-        }
-    }
+.policy-prose :deep(ul) {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+    color: #4B5565;
+}
 
-    ol {
-        list-style-type: decimal;
-        padding-left: 1.5rem;
-        margin-bottom: 1rem;
-        color: #B9C0D4;
+.policy-prose :deep(ol) {
+    list-style-type: decimal;
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+    color: #4B5565;
+}
 
-        li {
-            margin-bottom: 0.5rem;
-            color: #B9C0D4;
-        }
-    }
+.policy-prose :deep(li) {
+    margin-bottom: 0.5rem;
+    color: #4B5565;
+}
 
-    strong {
-        color: #FAFAFA;
-        font-weight: 600;
-    }
+.policy-prose :deep(strong),
+.policy-prose :deep(b) {
+    color: #00284B;
+    font-weight: 600;
+}
+
+.policy-prose :deep(a) {
+    color: #005EA4;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.policy-prose :deep(a:hover) {
+    color: #004D86;
+}
+
+.policy-prose :deep(blockquote) {
+    background-color: #EDF6FF;
+    border-left: 4px solid #005EA4;
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    color: #364152;
+}
+
+.policy-prose :deep(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.25rem 0;
+    font-size: 0.925rem;
+}
+
+.policy-prose :deep(th) {
+    background-color: #EEF2F6;
+    color: #00284B;
+    font-weight: 600;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border: 1px solid #E3E8EF;
+}
+
+.policy-prose :deep(td) {
+    color: #364152;
+    padding: 0.75rem 1rem;
+    border: 1px solid #E3E8EF;
+    vertical-align: top;
 }
 </style>

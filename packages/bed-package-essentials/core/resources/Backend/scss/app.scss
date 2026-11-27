@@ -25,19 +25,67 @@
 
 @layer base {
     :root {
-        --primary: theme("colors.primary.DEFAULT");
-        --primary-light: theme("colors.primary.DEFAULT");
-        --primary-dark: theme("colors.primary.dark");
-        --primary-darker: theme("colors.primary.darker");
+        --primary: #005EA4;
+        --primary-light: #005EA4;
+        --primary-dark: #004D86;
+        --primary-darker: #003967;
     }
 
     body {
         --topbar-height: 4rem;
         --sidebar-width: 16rem;
-        @apply bg-gray-100 text-gray-700 text-sm;
+        background-color: #FAFAFA;
+        @apply text-gray-700 text-sm;
     }
 
     .sidebar {
         @apply overflow-y-auto z-10;
+    }
+}
+
+/* Brand focus & button refinements over PrimeVue theme */
+.p-button.btn-primary,
+.btn.btn-primary {
+    background-color: #005EA4;
+    border-color: #005EA4;
+    color: #ffffff;
+
+    &:hover:not(:disabled) {
+        background-color: #004D86;
+        border-color: #004D86;
+        color: #ffffff;
+    }
+
+    &:active:not(:disabled) {
+        background-color: #003967;
+        border-color: #003967;
+        color: #ffffff;
+    }
+}
+
+.p-button.btn-outline-primary,
+.btn.btn-outline-primary {
+    background-color: transparent;
+    border-color: #005EA4;
+    color: #005EA4;
+
+    &:hover:not(:disabled) {
+        background-color: #005EA4;
+        border-color: #005EA4;
+        color: #ffffff;
+    }
+}
+
+.p-inputtext:not([disabled]):not(.p-invalid):not(.p-dropdown-label):focus,
+.p-treeselect.p-inputwrapper-focus {
+    border-color: #005EA4;
+    box-shadow: 0 0 0 1px #005EA4;
+}
+
+.link {
+    color: #005EA4;
+
+    &:hover {
+        color: #004D86;
     }
 }

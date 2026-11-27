@@ -22,7 +22,7 @@
                 loading="eager"
             />
             <div class="hero-scrim absolute inset-0 pointer-events-none" aria-hidden="true" />
-            <div class="app-container relative z-10 py-10 lg:py-0">
+            <div class="app-container-narrow relative z-10 py-10 lg:py-0">
                 <div class="flex flex-col gap-6 max-w-[580px]">
                     <nav :aria-label="tt('Breadcrumb')" class="flex items-center gap-2 text-[14px]">
                         <Link :href="homeHref" class="text-gray-modern-300 hover:text-white transition-colors">
@@ -629,13 +629,23 @@ const formatDate = (raw) => {
 <style scoped>
 .hero-scrim {
     background: linear-gradient(
-        90deg,
-        rgba(1, 16, 30, 0.94) 0%,
-        rgba(1, 16, 30, 0.88) 13%,
-        rgba(1, 16, 30, 0.72) 27%,
-        rgba(1, 16, 30, 0.35) 39%,
-        rgba(1, 16, 30, 0) 53%
+        180deg,
+        rgba(1, 16, 30, 0.74) 0%,
+        rgba(1, 16, 30, 0.66) 55%,
+        rgba(1, 16, 30, 0.76) 100%
     );
+}
+@media (min-width: 768px) {
+    .hero-scrim {
+        background: linear-gradient(
+            90deg,
+            rgba(1, 16, 30, 0.92) 0%,
+            rgba(1, 16, 30, 0.86) 22%,
+            rgba(1, 16, 30, 0.72) 40%,
+            rgba(1, 16, 30, 0.35) 54%,
+            rgba(1, 16, 30, 0) 65%
+        );
+    }
 }
 .cta-texture {
     display: none;

@@ -1,10 +1,10 @@
 <template>
-    <nav class="flex" aria-label="Breadcrumb" v-if="$page.props.breadcrumbs">
+    <nav class="flex min-w-0" aria-label="Breadcrumb" v-if="$page.props.breadcrumbs">
         <ol
             role="list"
-            class="flex w-full px-6 space-x-4 bg-white border rounded-t-md"
+            class="flex flex-wrap sm:flex-nowrap items-center sm:items-stretch w-full min-w-0 px-3 sm:px-6 gap-x-2 sm:gap-x-4 gap-y-1 bg-white border rounded-t-md overflow-hidden"
         >
-            <li class="flex">
+            <li class="flex min-w-0">
                 <div class="flex items-center">
                     <Link href="/" class="text-gray-400 hover:text-gray-500">
                         <heroicons-outline:home
@@ -18,9 +18,9 @@
             <li
                 v-for="breadcrumb in $page.props.breadcrumbs"
                 :key="breadcrumb.name"
-                class="flex"
+                class="flex min-w-0"
             >
-                <div class="flex items-center">
+                <div class="flex items-center min-w-0">
                     <svg
                         class="flex-shrink-0 w-6 h-full text-gray-200"
                         viewBox="0 0 24 44"
@@ -33,7 +33,7 @@
                     </svg>
                     <Link
                         :href="breadcrumb.url"
-                        class="ml-4 text-sm font-medium text-gray-500 capitalize hover:text-gray-700"
+                        class="ml-2 sm:ml-4 text-sm font-medium text-gray-500 capitalize hover:text-gray-700 truncate"
                         :aria-current="breadcrumb.current ? 'page' : undefined"
                         >{{ tt(breadcrumb.name) }}
                     </Link>

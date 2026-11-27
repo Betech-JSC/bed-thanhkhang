@@ -1,12 +1,12 @@
 <template>
-    <Head title="Bảng điều khiển - Thành Khang Tecsat" />
-    <div class="px-6 py-8 bg-[#F8FAFC] min-h-screen">
+    <Head title="Bảng điều khiển - Thành Khang" />
+    <div class="px-6 py-8 bg-[#FAFAFA] min-h-screen">
         <!-- Dashboard Header -->
         <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
             <div>
-                <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                    <span class="w-2.5 h-6 bg-blue-600 rounded-full inline-block"></span>
-                    Bảng điều khiển Thành Khang Tecsat
+                <h2 class="text-2xl font-bold text-[#00284B] flex items-center gap-2">
+                    <span class="w-2.5 h-6 bg-[#005EA4] rounded-full inline-block"></span>
+                    Bảng điều khiển Thành Khang
                 </h2>
                 <p class="text-slate-500 text-sm mt-1">
                     Tổng quan hiệu suất yêu cầu báo giá kỹ thuật (RFQ), cơ cấu thiết bị phụ tùng công nghiệp và đơn hàng.
@@ -15,9 +15,9 @@
             <div class="flex items-center gap-3">
                 <Link
                     :href="route('admin.user-guide.index')"
-                    class="inline-flex items-center gap-2 px-3.5 py-2.5 bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 font-semibold text-sm rounded-xl border border-slate-200 shadow-sm transition-all"
+                    class="inline-flex items-center gap-2 px-3.5 py-2.5 bg-white hover:bg-slate-50 text-slate-700 hover:text-[#005EA4] font-semibold text-sm rounded-xl border border-slate-200 shadow-sm transition-all"
                 >
-                    <i class="pi pi-book text-blue-600"></i>
+                    <i class="pi pi-book text-[#005EA4]"></i>
                     <span>Hướng dẫn sử dụng CMS</span>
                 </Link>
                 <div class="text-right bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm">
@@ -40,11 +40,11 @@
             <div class="metric-card">
                 <div class="metric-header">
                     <span class="metric-title">Báo giá hôm nay</span>
-                    <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                    <div class="w-8 h-8 rounded-lg bg-[#EDF6FF] text-[#005EA4] flex items-center justify-center">
                         <i class="pi pi-send text-sm"></i>
                     </div>
                 </div>
-                <div class="metric-value text-blue-600">
+                <div class="metric-value text-[#005EA4]">
                     {{ todayQuote }}
                     <span class="text-xs font-normal text-slate-400">/ yêu cầu</span>
                 </div>
@@ -137,7 +137,7 @@
                 <div class="dashboard-card h-full">
                     <div class="card-header">
                         <div class="flex items-center gap-2">
-                            <span class="header-icon bg-blue-100 text-blue-700">
+                            <span class="header-icon bg-[#EDF6FF] text-[#005EA4]">
                                 <i class="pi pi-chart-bar"></i>
                             </span>
                             <span class="font-bold uppercase tracking-tight">
@@ -224,7 +224,7 @@
         <div class="dashboard-card">
             <div class="card-header">
                 <div class="flex items-center gap-2">
-                    <span class="header-icon bg-indigo-100 text-indigo-700">
+                    <span class="header-icon bg-[#EDF6FF] text-[#005EA4]">
                         <i class="pi pi-list"></i>
                     </span>
                     <span class="font-bold uppercase tracking-tight">YÊU CẦU BÁO GIÁ KỸ THUẬT GẦN ĐÂY (RFQ)</span>
@@ -232,7 +232,7 @@
                 <Link
                     v-if="can('admin.contacts.index')"
                     :href="route('admin.contacts.index')"
-                    class="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors"
+                    class="text-xs font-semibold text-[#005EA4] hover:text-[#004D86] flex items-center gap-1 transition-colors"
                 >
                     <span>Xem tất cả</span>
                     <i class="pi pi-arrow-right text-[10px]"></i>
@@ -270,7 +270,7 @@
                                 <a
                                     v-if="quote.phone && quote.phone !== '-'"
                                     :href="`tel:${quote.phone}`"
-                                    class="text-blue-600 hover:underline"
+                                    class="text-[#005EA4] hover:underline"
                                 >
                                     {{ quote.phone }}
                                 </a>
@@ -305,7 +305,7 @@
                                 <Link
                                     v-if="can('admin.contacts.form')"
                                     :href="route('admin.contacts.form', { id: quote.id })"
-                                    class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-600 text-xs font-semibold transition-colors"
+                                    class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-[#EDF6FF] text-slate-700 hover:text-[#005EA4] text-xs font-semibold transition-colors"
                                 >
                                     <span>Xem</span>
                                     <i class="pi pi-external-link text-[10px]"></i>
@@ -346,7 +346,7 @@ export default {
             filterYear: currentYear,
             yearOptions: Array.from({ length: 5 }, (_, i) => currentYear - i),
             serviceColors: {
-                'Linh kiện thang cuốn': '#2970FF',
+                'Linh kiện thang cuốn': '#005EA4',
                 'Linh kiện thang nâng ô tô': '#06B6D4',
                 'Hệ thống băng tải hành lý': '#10B981',
                 'Linh kiện dây chuyền đóng gói': '#F59E0B',
@@ -411,8 +411,8 @@ export default {
                     {
                         label: 'Số yêu cầu báo giá',
                         data: values,
-                        backgroundColor: 'rgba(41, 112, 255, 0.75)',
-                        borderColor: '#2970FF',
+                        backgroundColor: 'rgba(0, 94, 164, 0.80)',
+                        borderColor: '#005EA4',
                         borderRadius: 6,
                         borderWidth: 1,
                     },
@@ -487,7 +487,7 @@ export default {
         getStatusBadgeClass(status) {
             switch (status) {
                 case 'NEW':
-                    return 'bg-blue-100 text-blue-800'
+                    return 'bg-[#EDF6FF] text-[#005EA4]'
                 case 'RESPONSE':
                     return 'bg-amber-100 text-amber-800'
                 case 'CONFIRMED':
@@ -532,7 +532,14 @@ export default {
 }
 
 .premium-select {
-    @apply bg-slate-50 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 px-3 py-1.5 cursor-pointer transition-all focus:ring-2 focus:ring-blue-100 focus:bg-white;
+    @apply bg-slate-50 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 px-3 py-1.5 cursor-pointer transition-all;
+
+    &:focus {
+        outline: none;
+        background-color: #ffffff;
+        border-color: #005EA4;
+        box-shadow: 0 0 0 2px rgba(0, 94, 164, 0.2);
+    }
 }
 
 .metric-card {

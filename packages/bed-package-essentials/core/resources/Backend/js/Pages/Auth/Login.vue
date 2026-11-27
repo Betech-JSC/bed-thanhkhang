@@ -1,47 +1,39 @@
 <template>
-    <Head title="Đăng nhập Hệ thống - Thành Khang Tecsat" />
+    <Head title="Đăng nhập Hệ thống - Thành Khang" />
 
     <div class="w-full">
-        <!-- Main Dark Tech Login Card -->
-        <div class="relative bg-[#111322]/90 backdrop-blur-xl border border-[#404968]/50 rounded-2xl shadow-2xl shadow-black/80 p-6 sm:p-8 overflow-hidden">
-            <!-- Subtle Card Accent Glow -->
-            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-transparent via-[#2970FF] to-transparent"></div>
+        <!-- Main Corporate Login Card -->
+        <div class="relative bg-white border border-[#E3E8EF] rounded-2xl shadow-xl shadow-[#00284B]/5 p-6 sm:p-8 overflow-hidden">
+            <!-- Top Brand Accent Line -->
+            <div class="absolute top-0 inset-x-0 h-1 bg-[#005EA4]"></div>
 
             <!-- Card Header -->
-            <div class="text-center mb-6">
-                <!-- Brand Wordmark Thành Khang Tecsat -->
-                <div class="flex items-center justify-center mb-4">
-                    <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl bg-[#181D33]/90 border border-[#2B334E] shadow-[0_0_15px_rgba(41,112,255,0.25)]">
-                        <span class="w-2.5 h-2.5 rounded-sm bg-[#2970FF]"></span>
-                        <span class="text-base font-extrabold tracking-wider text-white uppercase">THÀNH KHANG TECSAT</span>
-                    </div>
-                </div>
-
-                <!-- Status Badge with Pulsing LED -->
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#181D33] border border-[#2B334E] text-[11px] font-mono tracking-wider text-[#8B9FC7]">
-                    <span class="relative flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2970FF] opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-[#2970FF]"></span>
-                    </span>
-                    <span>THANH KHANG TECSAT CMS • v2.0</span>
+            <div class="text-center mb-6 pt-1">
+                <!-- Brand Logo Thành Khang -->
+                <div class="flex items-center justify-center mb-5">
+                    <img
+                        src="/assets/images/logo/logo-thanhkhang.png"
+                        alt="Thành Khang"
+                        class="h-10 w-auto object-contain"
+                    />
                 </div>
 
                 <!-- Title & Subtitle -->
-                <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-white uppercase font-sans mt-3">
+                <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-[#00284B] uppercase font-sans">
                     ĐĂNG NHẬP HỆ THỐNG
                 </h1>
-                <p class="text-xs text-[#8B9FC7] mt-1">
-                    Hệ thống Quản trị Thiết bị Công nghiệp &amp; Phụ tùng Thang cuốn
+                <p class="text-xs text-[#4B5565] mt-1.5">
+                    Hệ thống Quản trị Thiết bị &amp; Phụ tùng Công nghiệp
                 </p>
             </div>
 
             <!-- Status Alert if any -->
-            <div v-if="status" class="mb-5 text-xs font-medium text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 rounded-xl p-3 text-center">
+            <div v-if="status" class="mb-5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center">
                 {{ status }}
             </div>
 
             <!-- Flash Error / General Error -->
-            <div v-if="form.errors.email && !form.errors.password && form.errors.email.includes('credentials')" class="mb-5 text-xs font-medium text-rose-400 bg-rose-950/40 border border-rose-500/30 rounded-xl p-3 text-center">
+            <div v-if="form.errors.email && !form.errors.password && form.errors.email.includes('credentials')" class="mb-5 text-xs font-medium text-rose-700 bg-rose-50 border border-rose-200 rounded-xl p-3 text-center">
                 {{ form.errors.email }}
             </div>
 
@@ -49,11 +41,11 @@
             <form class="space-y-4" @submit.prevent="submit">
                 <!-- Email Field -->
                 <div>
-                    <label for="email" class="block text-xs font-medium text-[#C5CEE0] mb-1.5">
+                    <label for="email" class="block text-xs font-semibold text-[#364152] mb-1.5">
                         Tài khoản Email
                     </label>
                     <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#64748B]">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#697586]">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                             </svg>
@@ -65,11 +57,11 @@
                             required
                             autocomplete="username"
                             placeholder="info@dvktthanhkhang.vn"
-                            class="w-full pl-10 pr-4 py-2.5 bg-[#0F121F] border border-[#2B334E] rounded-xl text-sm text-gray-100 placeholder-[#64748B] focus:outline-none focus:border-[#2970FF] focus:ring-1 focus:ring-[#2970FF] transition-all"
-                            :class="{ '!border-rose-500 !ring-rose-500/30': form.errors.email }"
+                            class="w-full pl-10 pr-4 py-2.5 bg-white border border-[#D6D6D6] rounded-xl text-sm text-[#202939] placeholder-[#9AA4B2] focus:outline-none focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-all"
+                            :class="{ '!border-rose-500 !ring-rose-500/20': form.errors.email }"
                         />
                     </div>
-                    <p v-if="form.errors.email" class="mt-1.5 text-xs text-rose-400 flex items-center gap-1">
+                    <p v-if="form.errors.email" class="mt-1.5 text-xs text-rose-600 flex items-center gap-1">
                         <svg class="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
                         </svg>
@@ -79,11 +71,11 @@
 
                 <!-- Password Field -->
                 <div>
-                    <label for="password" class="block text-xs font-medium text-[#C5CEE0] mb-1.5">
+                    <label for="password" class="block text-xs font-semibold text-[#364152] mb-1.5">
                         Mật khẩu Quản trị
                     </label>
                     <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#64748B]">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#697586]">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                             </svg>
@@ -95,14 +87,14 @@
                             required
                             autocomplete="current-password"
                             placeholder="••••••••••••"
-                            class="w-full pl-10 pr-10 py-2.5 bg-[#0F121F] border border-[#2B334E] rounded-xl text-sm text-gray-100 placeholder-[#64748B] focus:outline-none focus:border-[#2970FF] focus:ring-1 focus:ring-[#2970FF] transition-all"
-                            :class="{ '!border-rose-500 !ring-rose-500/30': form.errors.password }"
+                            class="w-full pl-10 pr-10 py-2.5 bg-white border border-[#D6D6D6] rounded-xl text-sm text-[#202939] placeholder-[#9AA4B2] focus:outline-none focus:border-[#005EA4] focus:ring-2 focus:ring-[#005EA4]/20 transition-all"
+                            :class="{ '!border-rose-500 !ring-rose-500/20': form.errors.password }"
                         />
                         <button
                             type="button"
                             @click="showPassword = !showPassword"
                             tabindex="-1"
-                            class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#64748B] hover:text-gray-300 transition-colors"
+                            class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#697586] hover:text-[#00284B] transition-colors"
                         >
                             <svg v-if="!showPassword" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -113,7 +105,7 @@
                             </svg>
                         </button>
                     </div>
-                    <p v-if="form.errors.password" class="mt-1.5 text-xs text-rose-400 flex items-center gap-1">
+                    <p v-if="form.errors.password" class="mt-1.5 text-xs text-rose-600 flex items-center gap-1">
                         <svg class="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
                         </svg>
@@ -128,9 +120,9 @@
                             id="remember"
                             type="checkbox"
                             v-model="form.remember"
-                            class="w-4 h-4 rounded bg-[#0F121F] border border-[#2B334E] text-[#2970FF] focus:ring-[#2970FF] focus:ring-offset-0 focus:ring-offset-[#111322] cursor-pointer"
+                            class="w-4 h-4 rounded bg-white border border-[#D6D6D6] text-[#005EA4] focus:ring-[#005EA4]/30 focus:ring-offset-0 cursor-pointer accent-[#005EA4]"
                         />
-                        <span class="text-xs text-[#8B9FC7] group-hover:text-gray-300 transition-colors">
+                        <span class="text-xs text-[#4B5565] group-hover:text-[#00284B] transition-colors">
                             Ghi nhớ đăng nhập
                         </span>
                     </label>
@@ -140,7 +132,7 @@
                 <button
                     type="submit"
                     :disabled="form.processing"
-                    class="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-[#2970FF] to-[#1E56CC] hover:from-[#3B82F6] hover:to-[#2563EB] text-white font-semibold text-sm tracking-wide shadow-[0_4px_16px_rgba(41,112,255,0.35)] hover:shadow-[0_6px_20px_rgba(41,112,255,0.45)] transition-all duration-200 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer mt-2"
+                    class="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-white font-semibold text-sm tracking-wide shadow-sm hover:shadow transition-all duration-200 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer mt-2"
                 >
                     <svg v-if="form.processing" class="w-4 h-4 animate-spin text-white" viewBox="0 0 24 24" fill="none">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -151,9 +143,9 @@
             </form>
 
             <!-- Card Footer / Security Notice -->
-            <div class="mt-6 pt-5 border-t border-[#2B334E]/60 text-center">
-                <p class="text-[11px] font-mono tracking-tight text-[#64748B]">
-                    Authorized Personnel Only • Industrial Equipment &amp; Escalator Parts Management
+            <div class="mt-6 pt-5 border-t border-[#E3E8EF] text-center">
+                <p class="text-[11px] font-medium tracking-tight text-[#697586]">
+                    Authorized Personnel Only • Thành Khang Management System
                 </p>
             </div>
         </div>

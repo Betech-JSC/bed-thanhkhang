@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Contact;
+use App\Rules\ValidPhoneNumber;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Validator;
 use Tests\TestCase;
 
 class ContactFormTest extends TestCase
@@ -121,7 +123,7 @@ class ContactFormTest extends TestCase
                 'type' => 'CONTACT_FORM',
                 'data' => [
                     'Họ và tên' => 'Trần Thị B',
-                    'Số điện thoại' => '0912345678',
+                    'Số điện thoại' => '0908123890',
                     'Email' => 'tranthib@example.com',
                     'Dịch vụ quan tâm' => 'Thiết kế 3D',
                     'Service' => [
@@ -151,7 +153,7 @@ class ContactFormTest extends TestCase
         $this->assertEquals('CONTACT_FORM', $contact->type);
         $this->assertEquals(Contact::STATUS_NEW, $contact->status);
         $this->assertEquals('Trần Thị B', $contact->data['Họ và tên']);
-        $this->assertEquals('0912345678', $contact->data['Số điện thoại']);
+        $this->assertEquals('0908123890', $contact->data['Số điện thoại']);
         $this->assertEquals('tranthib@example.com', $contact->data['Email']);
         $this->assertEquals('Thiết kế 3D', $contact->data['Dịch vụ quan tâm']);
         $this->assertEquals('Yêu cầu tư vấn thiết kế 3D CAD từ bản vẽ 2D mẫu đồ gá cơ khí.', $contact->data['Nội dung cần hỗ trợ']);
@@ -167,11 +169,11 @@ class ContactFormTest extends TestCase
         $payload = [
             'type' => 'CONTACT_FORM',
             'name' => 'Lê Văn C',
-            'phone' => '0987654321',
+            'phone' => '0987654310',
             'email' => 'levanc@example.com',
             'data' => [
                 'Họ và tên' => 'Lê Văn C',
-                'Số điện thoại' => '0987654321',
+                'Số điện thoại' => '0987654310',
                 'Email' => 'levanc@example.com',
                 'Nội dung cần hỗ trợ' => 'Báo giá in 3D FDM số lượng lớn vật liệu PETG chống UV.',
             ]
@@ -239,8 +241,7 @@ class ContactFormTest extends TestCase
     }
 
     /**
-     * Case 2b: Nguyên tắc an toàn khi email khách hàng có định dạng không hợp lệ cho mailer.
-     * Hệ thống ghi log nhưng không crash request của khách và vẫn lưu lead an toàn.
+     * Case 2b: Kiểm tra từ chối email sai định dạng theo validation server-side của ContactController.
      */
     public function test_contact_submission_resilient_when_email_address_is_malformed()
     {
@@ -258,12 +259,10 @@ class ContactFormTest extends TestCase
 
         $response = $this->from('/lien-he')->post('/contacts', $payload);
 
-        // Vẫn lưu vào database thành công
         $response->assertStatus(302);
         $response->assertRedirect('/lien-he');
-        $this->assertDatabaseHas('contacts', [
-            'type' => 'CONTACT_FORM',
-        ]);
+        $response->assertSessionHasErrors('email');
+        $this->assertDatabaseCount('contacts', 0);
     }
 
     /**
@@ -277,7 +276,7 @@ class ContactFormTest extends TestCase
                 'type' => 'CONTACT_FORM',
                 'data' => [
                     'Họ và tên' => 'Spammer',
-                    'Số điện thoại' => '0900000000',
+                    'Số điện thoại' => '0901234568',
                     'Email' => 'spam@test.com',
                     'Nội dung cần hỗ trợ' => 'Đây là tin nhắn lừa đảo tài chính',
                 ]
@@ -303,7 +302,7 @@ class ContactFormTest extends TestCase
 
         $payload = [
             'name' => 'Trần Văn Nam',
-            'phone' => '0912345678',
+            'phone' => '0912345689',
             'email' => 'nam.tran@example.com',
             'service' => 'Gia công 3D',
             'content' => 'Tôi cần báo giá gấp 5 mẫu in SLA.',
@@ -316,7 +315,7 @@ class ContactFormTest extends TestCase
         $this->assertNotNull($contact);
         $this->assertIsArray($contact->data);
         $this->assertEquals('Trần Văn Nam', $contact->data['Họ và tên']);
-        $this->assertEquals('0912345678', $contact->data['Số điện thoại']);
+        $this->assertEquals('0912345689', $contact->data['Số điện thoại']);
         $this->assertEquals('nam.tran@example.com', $contact->data['Email']);
         $this->assertEquals('Gia công 3D', $contact->data['Dịch vụ quan tâm']);
         $this->assertEquals('Tôi cần báo giá gấp 5 mẫu in SLA.', $contact->data['Nội dung cần hỗ trợ']);
@@ -360,5 +359,208 @@ class ContactFormTest extends TestCase
         $this->assertEquals('500000.00', $contact->estimated_price);
         $this->assertEquals('Kỹ thuật đã kiểm tra file 3D, chuẩn bị in SLA', $contact->internal_notes);
         $this->assertEquals(Contact::STATUS_QUOTED, $contact->status);
+    }
+
+    /**
+     * Case 4a: Chấp nhận các định dạng SĐT Việt Nam và quốc tế (+) hợp lệ, bao gồm placeholder 0901234567.
+     *
+     * @dataProvider validPhoneNumbersProvider
+     */
+    public function test_accepts_valid_vietnam_and_international_phone_numbers(string $phone)
+    {
+        Notification::fake();
+
+        $payload = [
+            'name' => 'Nguyễn Văn Hợp Lệ',
+            'phone' => $phone,
+            'email' => 'valid.phone@example.com',
+            'content' => 'Kiểm tra nhận số điện thoại hợp lệ.',
+        ];
+
+        $response = $this->postJson('/contacts', $payload);
+
+        $response->assertStatus(200);
+        $response->assertJson(['success' => true]);
+        $this->assertDatabaseCount('contacts', 1);
+
+        $contact = Contact::find($response->json('contact_id'));
+        $this->assertNotNull($contact);
+        $this->assertEquals($phone, $contact->data['Số điện thoại']);
+    }
+
+    public function validPhoneNumbersProvider(): array
+    {
+        return [
+            'vn mobile standard' => ['0906636425'],
+            'vn mobile placeholder' => ['0901234567'],
+            'vn mobile spaced placeholder' => ['0901 234 567'],
+            'vn mobile plus 84' => ['+84 967 732 665'],
+            'vn mobile 84 without plus' => ['84967732665'],
+            'vn landline 11 digits' => ['024 3856 1234'],
+            'vn landline 10 digits' => ['024 3856 123'],
+            'vn landline plus 84' => ['+84 28 3856 1234'],
+            'international us' => ['+1 415 555 2671'],
+            'international uk' => ['+44 20 7946 0958'],
+        ];
+    }
+
+    /**
+     * Case 4b: Từ chối ngay SĐT chứa chữ cái, ký tự lạ hoặc dấu '+' đặt sai vị trí.
+     * Bao gồm kiểm chứng KHÔNG tự ý xóa chữ cái trước khi kiểm tra độ dài (zero-stripping proof).
+     *
+     * @dataProvider alphabeticAndMalformedPhoneNumbersProvider
+     */
+    public function test_rejects_alphabetic_and_malformed_phone_numbers_without_stripping_letters(string $phone)
+    {
+        Notification::fake();
+
+        $payload = [
+            'name' => 'Khách Nhập Sai Ký Tự',
+            'phone' => $phone,
+            'email' => 'invalid.chars@example.com',
+            'content' => 'Test từ chối ký tự chữ cái và định dạng sai.',
+        ];
+
+        $response = $this->postJson('/contacts', $payload);
+
+        $response->assertStatus(422);
+        $response->assertJson([
+            'success' => false,
+        ]);
+        $response->assertJsonStructure([
+            'success',
+            'message',
+            'errors' => ['phone'],
+        ]);
+        $this->assertDatabaseCount('contacts', 0);
+    }
+
+    public function alphabeticAndMalformedPhoneNumbersProvider(): array
+    {
+        return [
+            'letters in middle' => ['090123abc7'],
+            'letters prefix' => ['abc0901234567'],
+            'zero-stripping proof 10 valid digits plus trailing letter' => ['0901234567a'],
+            'zero-stripping proof 11 digits plus letters' => ['09012345abc6789'],
+            'unicode letters' => ['090123456đ'],
+            'plus not at start' => ['09+01234567'],
+            'double plus' => ['++84901234567'],
+            'plus inside parentheses' => ['(+84) 901 234 567'],
+            'disallowed symbol' => ['0901#234567'],
+            'missing prefix' => ['123456789'],
+            'international too short' => ['+1234567'],
+            'international leading zero' => ['+0123456789'],
+            'international too long' => ['+1234567890123456'],
+            'vn too short' => ['09012345'],
+            'empty spaces' => ['   '],
+        ];
+    }
+
+    /**
+     * Case 4c: Chặn triệt để SĐT giả/spam: toàn bộ giống nhau, lặp phần thuê bao, và dãy số tuần tự.
+     *
+     * @dataProvider spamAndFakePhoneNumbersProvider
+     */
+    public function test_rejects_repeated_and_sequential_fake_phone_numbers(string $phone)
+    {
+        Notification::fake();
+
+        $payload = [
+            'name' => 'Khách Nhập Số Giả',
+            'phone' => $phone,
+            'email' => 'fake.phone@example.com',
+            'content' => 'Test chặn số giả hoặc tuần tự spam.',
+        ];
+
+        $response = $this->postJson('/contacts', $payload);
+
+        $response->assertStatus(422);
+        $response->assertJson([
+            'success' => false,
+        ]);
+        $response->assertJsonStructure([
+            'success',
+            'message',
+            'errors' => ['phone'],
+        ]);
+        $this->assertDatabaseCount('contacts', 0);
+    }
+
+    public function spamAndFakePhoneNumbersProvider(): array
+    {
+        return [
+            'all zeros' => ['0000000000'],
+            'all ones' => ['1111111111'],
+            'vn repeated tail 0900000000' => ['0900000000'],
+            'vn repeated tail 0911111111' => ['0911111111'],
+            'vn repeated 7-digit tail 0901111111' => ['0901111111'],
+            'vn plus84 repeated tail' => ['+84900000000'],
+            'international 6+ repeated consecutive digits' => ['+19999999999'],
+            'sequential ascending 0123456789' => ['0123456789'],
+            'sequential descending 9876543210' => ['9876543210'],
+            'vn sequential 0912345678' => ['0912345678'],
+            'vn sequential 0987654321' => ['0987654321'],
+            'vn plus84 invalid sequential +8412345678' => ['+8412345678'],
+            'vn plus84 sequential +84912345678' => ['+84912345678'],
+            'international sequential +1234567890' => ['+1234567890'],
+        ];
+    }
+
+    /**
+     * Case 4d: Phản hồi lỗi Inertia redirect kèm session errors và thông báo song ngữ vi/en.
+     */
+    public function test_invalid_phone_returns_bilingual_errors_for_inertia_and_english_locale()
+    {
+        Notification::fake();
+
+        // 1. Inertia request (vi) phải redirect 302 kèm session errors cho field 'phone'
+        $inertiaResponse = $this->from('/lien-he')->post('/contacts', [
+            'name' => 'Nguyễn Văn Test',
+            'phone' => '090123abc7',
+            'email' => 'inertia.fail@example.com',
+        ], [
+            'X-Inertia' => 'true',
+            'X-Requested-With' => 'XMLHttpRequest',
+        ]);
+
+        $inertiaResponse->assertStatus(302);
+        $inertiaResponse->assertRedirect('/lien-he');
+        $inertiaResponse->assertSessionHasErrors('phone');
+
+        // 2. English endpoint (/en/contacts) phải trả lỗi tiếng Anh
+        $enResponse = $this->postJson('/en/contacts', [
+            'name' => 'John Doe',
+            'phone' => '0900000000',
+            'email' => 'john@example.com',
+        ]);
+
+        $enResponse->assertStatus(422);
+        $enResponse->assertJson([
+            'success' => false,
+        ]);
+        $enError = (string) $enResponse->json('errors.phone');
+        $this->assertNotEmpty($enError);
+        $this->assertMatchesRegularExpression('/phone number/i', $enError);
+
+        $this->assertDatabaseCount('contacts', 0);
+    }
+
+    /**
+     * Case 4e: Kiểm chứng rule ValidPhoneNumber hoạt động đúng chuẩn Laravel Validator InvokableRule.
+     */
+    public function test_valid_phone_number_rule_works_directly_with_laravel_validator()
+    {
+        $passing = Validator::make(
+            ['phone' => '+84 967 732 665'],
+            ['phone' => ['required', new ValidPhoneNumber('en')]]
+        );
+        $this->assertFalse($passing->fails());
+
+        $failing = Validator::make(
+            ['phone' => '0901234567a'],
+            ['phone' => ['required', new ValidPhoneNumber('en')]]
+        );
+        $this->assertTrue($failing->fails());
+        $this->assertNotEmpty($failing->errors()->first('phone'));
     }
 }

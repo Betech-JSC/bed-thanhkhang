@@ -1,23 +1,49 @@
 <template>
-    <Head title="Confirm Password" />
+    <Head title="Xác nhận mật khẩu - Thành Khang" />
 
-    <div class="mb-4 text-sm text-gray-600">
-        This is a secure area of the application. Please confirm your password
-        before continuing.
-    </div>
+    <div class="w-full">
+        <div class="relative bg-white border border-[#E3E8EF] rounded-2xl shadow-xl shadow-[#00284B]/5 p-6 sm:p-8 overflow-hidden">
+            <div class="absolute top-0 inset-x-0 h-1 bg-[#005EA4]"></div>
 
-    <form class="space-y-6" @submit.prevent="submit">
-        <FlashMessages />
-        <Field
-            v-model="form.password"
-            :field="{
-                label: 'Password',
-            }"
-        />
-        <div class="flex justify-end mt-4">
-            <Button type="submit" :loading="form.processing"> Confirm </Button>
+            <div class="text-center mb-6 pt-1">
+                <div class="flex items-center justify-center mb-5">
+                    <img
+                        src="/assets/images/logo/logo-thanhkhang.png"
+                        alt="Thành Khang"
+                        class="h-10 w-auto object-contain"
+                    />
+                </div>
+                <h1 class="text-xl font-bold tracking-tight text-[#00284B] uppercase font-sans">
+                    Xác nhận mật khẩu
+                </h1>
+            </div>
+
+            <div class="mb-4 text-sm text-[#4B5565] leading-relaxed">
+                This is a secure area of the application. Please confirm your password
+                before continuing.
+            </div>
+
+            <form class="space-y-5" @submit.prevent="submit">
+                <FlashMessages />
+                <Field
+                    v-model="form.password"
+                    :field="{
+                        label: 'Password',
+                        type: 'password',
+                    }"
+                />
+                <div class="pt-1">
+                    <Button
+                        type="submit"
+                        :loading="form.processing"
+                        class="w-full justify-center btn-primary !rounded-xl !py-2.5"
+                    >
+                        Confirm
+                    </Button>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </template>
 
 <script>

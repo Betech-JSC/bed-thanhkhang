@@ -65,7 +65,7 @@
             <div class="card">
                 <div class="card-header font-bold text-slate-800 flex items-center justify-between">
                     <span>Thông số kỹ thuật &amp; Đặc tính cơ khí</span>
-                    <span class="text-xs text-blue-600 font-semibold">Tiêu chuẩn kỹ thuật Thành Khang Tecsat</span>
+                    <span class="text-xs text-[#005EA4] font-semibold">Tiêu chuẩn kỹ thuật Thành Khang</span>
                 </div>
                 <div class="card-body space-y-4">
                     <!-- Dòng 1, 2 & Lead time -->
@@ -187,7 +187,7 @@
                             <button
                                 type="button"
                                 @click="addSpecificationRow(form)"
-                                class="px-3 py-1.5 text-xs font-medium rounded bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                                class="px-3 py-1.5 text-xs font-medium rounded bg-[#005EA4] hover:bg-[#004D86] text-white transition-colors"
                             >
                                 + Thêm dòng thông số
                             </button>
@@ -206,7 +206,7 @@
                                     <input
                                         v-model="spec.label"
                                         type="text"
-                                        class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-blue-500 focus:outline-none"
+                                        class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-[#005EA4] focus:outline-none"
                                         placeholder="Tên thông số (VD: Bước xích)"
                                     />
                                 </div>
@@ -214,7 +214,7 @@
                                     <input
                                         v-model="spec.value"
                                         type="text"
-                                        class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-blue-500 focus:outline-none"
+                                        class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-[#005EA4] focus:outline-none"
                                         placeholder="Giá trị (VD: 133.33 mm)"
                                     />
                                 </div>
@@ -266,7 +266,7 @@
                             <button
                                 type="button"
                                 @click="addBadgeRow(form)"
-                                class="px-3 py-1.5 text-xs font-medium rounded bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                                class="px-3 py-1.5 text-xs font-medium rounded bg-[#005EA4] hover:bg-[#004D86] text-white transition-colors"
                             >
                                 + Thêm nhãn
                             </button>
@@ -284,7 +284,7 @@
                                 <input
                                     v-model="form.pdp_metadata.badges[bIdx]"
                                     type="text"
-                                    class="flex-1 rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-blue-500 focus:outline-none"
+                                    class="flex-1 rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-[#005EA4] focus:outline-none"
                                     placeholder="VD: Chuẩn OEM / ISO"
                                 />
                                 <button
@@ -500,7 +500,7 @@
                                 <button
                                     type="button"
                                     @click="addSpecsCardRow(form)"
-                                    class="px-3 py-1.5 text-xs font-medium rounded bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                                    class="px-3 py-1.5 text-xs font-medium rounded bg-[#005EA4] hover:bg-[#004D86] text-white transition-colors"
                                 >
                                     + Thêm thẻ thông số
                                 </button>
@@ -520,7 +520,7 @@
                                             <input
                                                 v-model="card.label"
                                                 type="text"
-                                                class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-blue-500 focus:outline-none"
+                                                class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-[#005EA4] focus:outline-none"
                                                 placeholder="Nhãn (VD: Độ chính xác)"
                                             />
                                         </div>
@@ -528,7 +528,7 @@
                                             <input
                                                 v-model="card.value"
                                                 type="text"
-                                                class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-blue-500 focus:outline-none"
+                                                class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-[#005EA4] focus:outline-none"
                                                 placeholder="Giá trị (VD: ±0.05 mm)"
                                             />
                                         </div>
@@ -547,7 +547,7 @@
                                         <textarea
                                             v-model="card.description"
                                             rows="2"
-                                            class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-blue-500 focus:outline-none"
+                                            class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-[#005EA4] focus:outline-none"
                                             placeholder="Mô tả chi tiết thẻ thông số..."
                                         ></textarea>
                                     </div>
@@ -626,7 +626,7 @@
                                 <button
                                     type="button"
                                     @click="addCustomStepRow(form)"
-                                    class="px-3 py-1.5 text-xs font-medium rounded bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                                    class="px-3 py-1.5 text-xs font-medium rounded bg-[#005EA4] hover:bg-[#004D86] text-white transition-colors"
                                 >
                                     + Thêm bước gia công
                                 </button>
@@ -646,7 +646,7 @@
                                             <input
                                                 v-model="step.step"
                                                 type="text"
-                                                class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-blue-500 focus:outline-none"
+                                                class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-[#005EA4] focus:outline-none"
                                                 placeholder="Số bước (VD: Bước 01)"
                                             />
                                         </div>
@@ -654,7 +654,7 @@
                                             <input
                                                 v-model="step.title"
                                                 type="text"
-                                                class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-blue-500 focus:outline-none"
+                                                class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-[#005EA4] focus:outline-none"
                                                 placeholder="Tiêu đề bước (VD: Gửi bản vẽ & thông số)"
                                             />
                                         </div>
@@ -673,7 +673,7 @@
                                         <textarea
                                             v-model="step.description"
                                             rows="2"
-                                            class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-blue-500 focus:outline-none"
+                                            class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-[#005EA4] focus:outline-none"
                                             placeholder="Mô tả chi tiết bước gia công..."
                                         ></textarea>
                                     </div>
