@@ -246,36 +246,42 @@
                                                 v-if="activeLevel2Groups.length > 0"
                                                 :class="
                                                     activeLevel2Groups.length >= 2
-                                                        ? 'grid grid-cols-2 gap-x-3 xl:gap-x-4 gap-y-6 items-start content-start'
+                                                        ? 'grid grid-cols-2 gap-x-3 xl:gap-x-4 items-start'
                                                         : 'flex flex-col gap-5'
                                                 "
                                             >
                                                 <div
-                                                    v-for="sub in activeLevel2Groups"
-                                                    :key="sub.id || sub.slug"
-                                                    class="min-w-0 flex flex-col gap-2"
+                                                    v-for="(colGroups, colIdx) in activeLevel2Columns"
+                                                    :key="colIdx"
+                                                    class="min-w-0 flex flex-col gap-5"
                                                 >
-                                                    <Link
-                                                        :href="sub.url"
-                                                        class="px-3 xl:px-4 py-0.5 text-[14px] leading-[1.6] font-bold text-primary hover:text-primary-sub-hover transition-colors block rounded-cta focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                                                        @click="closeDesktopDropdown"
-                                                    >
-                                                        {{ sub.title }}
-                                                    </Link>
-
                                                     <div
-                                                        v-if="sub.children && sub.children.length > 0"
-                                                        class="flex flex-col"
+                                                        v-for="sub in colGroups"
+                                                        :key="sub.id || sub.slug"
+                                                        class="min-w-0 flex flex-col gap-2"
                                                     >
                                                         <Link
-                                                            v-for="leaf in sub.children"
-                                                            :key="leaf.id || leaf.slug"
-                                                            :href="leaf.url"
-                                                            class="min-h-[42px] xl:min-h-[46px] px-3 xl:px-4 py-2 xl:py-2.5 rounded-cta text-[14px] leading-[1.6] font-medium text-ink-subtle bg-surface hover:bg-surface-100 hover:text-dark active:bg-surface-200 flex items-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                                                            :href="sub.url"
+                                                            class="px-3 xl:px-4 py-0.5 text-[14px] leading-[1.6] font-bold text-primary hover:text-primary-sub-hover transition-colors block rounded-cta focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                                                             @click="closeDesktopDropdown"
                                                         >
-                                                            <span class="line-clamp-2">{{ leaf.title }}</span>
+                                                            {{ sub.title }}
                                                         </Link>
+
+                                                        <div
+                                                            v-if="sub.children && sub.children.length > 0"
+                                                            class="flex flex-col"
+                                                        >
+                                                            <Link
+                                                                v-for="leaf in sub.children"
+                                                                :key="leaf.id || leaf.slug"
+                                                                :href="leaf.url"
+                                                                class="min-h-[42px] xl:min-h-[46px] px-3 xl:px-4 py-2 xl:py-2.5 rounded-cta text-[14px] leading-[1.6] font-medium text-ink-subtle bg-surface hover:bg-surface-100 hover:text-dark active:bg-surface-200 flex items-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                                                                @click="closeDesktopDropdown"
+                                                            >
+                                                                <span class="line-clamp-2">{{ leaf.title }}</span>
+                                                            </Link>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -860,6 +866,36 @@ export default {
         },
         activeLevel2Groups() {
             return this.activeRootCategory?.children || []
+        },
+        activeLevel2Columns() {
+            const groups = this.activeLevel2Groups
+            if (!groups.length) return []
+            if (groups.length === 1) return [groups]
+
+            const getWeight = (sub) => 1 + (Array.isArray(sub?.children) ? sub.children.length : 0)
+            const hasChildless = groups.some((g) => !(Array.isArray(g?.children) && g.children.length > 0))
+            const hasChildful = groups.some((g) => Array.isArray(g?.children) && g.children.length > 0)
+            const isMixed = hasChildless && hasChildful
+            const orderedGroups = isMixed ? [...groups].sort((a, b) => getWeight(b) - getWeight(a)) : groups
+
+            const col1 = []
+            const col2 = []
+            let h1 = 0
+            let h2 = 0
+
+            orderedGroups.forEach((sub) => {
+                const weight = getWeight(sub)
+                if (h1 <= h2) {
+                    col1.push(sub)
+                    h1 += weight
+                } else {
+                    col2.push(sub)
+                    h2 += weight
+                }
+            })
+
+            const columns = isMixed && h1 > h2 ? [col2, col1] : [col1, col2]
+            return columns.filter((col) => col.length > 0)
         },
         menus() {
             const cmsMenus = this.siteConfig?.menus

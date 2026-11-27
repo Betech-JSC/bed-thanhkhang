@@ -28,7 +28,7 @@
                 loading="eager"
             />
             <div class="hero-scrim absolute inset-0 pointer-events-none" aria-hidden="true" />
-            <div class="app-container relative z-10 py-10 lg:py-0">
+            <div class="app-container-narrow relative z-10 py-10 lg:py-0">
                 <div class="flex flex-col gap-5 max-w-[580px]">
                     <nav :aria-label="tt('Breadcrumb')" class="flex items-center gap-2 text-[14px]">
                         <Link :href="homeHref" class="text-gray-modern-300 hover:text-white transition-colors">
@@ -143,6 +143,7 @@
                                     :placeholder="field.placeholder"
                                     :class="fieldClass(field.key)"
                                     :aria-invalid="field.required ? !!fieldError(field.key) : undefined"
+                                    @input="clearFieldError(field.key)"
                                 />
                                 <p v-if="field.required && fieldError(field.key)" class="text-body-xs text-field-required">{{ fieldError(field.key) }}</p>
                             </div>
@@ -428,15 +429,15 @@
         </section>
 
         <!-- SUCCESS MODAL -->
-        <BaseModal v-model="showSuccessModal" max-width="md">
+        <BaseModal v-model="showSuccessModal" max-width="md" variant="light">
             <div class="flex flex-col items-center text-center p-4 sm:p-6 space-y-4">
-                <h3 class="text-xl sm:text-2xl font-bold text-white">{{ tt('Gửi yêu cầu thành công!') }}</h3>
-                <p class="text-[#B9C0D4] text-sm sm:text-base leading-relaxed">
+                <h3 class="text-xl sm:text-2xl font-bold text-[#00284B]">{{ tt('Gửi yêu cầu thành công!') }}</h3>
+                <p class="text-[#4B5565] text-sm sm:text-base leading-relaxed">
                     {{ tt('Hệ thống đã nhận được thông tin yêu cầu của bạn. Đội ngũ kỹ sư Thành Khang sẽ liên hệ và tư vấn phương án phù hợp trong thời gian sớm nhất.') }}
                 </p>
                 <button
                     type="button"
-                    class="w-full mt-4 h-[44px] rounded-cta bg-primary text-white font-medium text-sm hover:bg-primary-hover transition-colors cursor-pointer"
+                    class="w-full mt-4 h-[44px] rounded-cta bg-primary text-white font-medium text-sm hover:bg-primary-hover transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
                     @click="showSuccessModal = false"
                 >
                     {{ tt('Đóng thông báo') }}
@@ -450,6 +451,7 @@
 import { ref, reactive, computed, getCurrentInstance } from 'vue'
 import { Head, Link, useForm } from '@inertiajs/inertia-vue3'
 import { useTranslate } from '@/composables/useTranslate.js'
+import { validatePhoneNumber } from '@/lib/validator'
 import BaseModal from '@/Components/Base/BaseModal.vue'
 
 const props = defineProps({
@@ -735,6 +737,14 @@ const formFields = computed(() => [
 ])
 
 const fieldError = (field) => clientErrors[field] || form.errors[field] || ''
+const clearFieldError = (field) => {
+    if (clientErrors[field]) {
+        clientErrors[field] = ''
+    }
+    if (typeof form.clearErrors === 'function') {
+        form.clearErrors(field)
+    }
+}
 const fieldClass = (field) => [
     'w-full bg-white border rounded-[8px] px-3 py-2 text-body-md text-dark placeholder-field-placeholder shadow-xs transition-colors focus:outline-none focus:ring-2 focus:ring-secondary',
     fieldError(field) ? 'border-field-required focus:border-field-required' : 'border-field-border hover:border-gray-modern-400 focus:border-primary',
@@ -758,12 +768,11 @@ const validate = () => {
         clientErrors.email = isEn.value ? 'Invalid email format.' : trans('Địa chỉ email không đúng định dạng.')
         ok = false
     }
-    const phone = (form.phone || '').replace(/\s+/g, '')
-    if (!phone) {
-        clientErrors.phone = isEn.value ? 'Please enter your phone number.' : trans('Vui lòng nhập số điện thoại.')
-        ok = false
-    } else if (!/^\+?\d{9,12}$/.test(phone)) {
-        clientErrors.phone = isEn.value ? 'Invalid phone number.' : trans('Số điện thoại không hợp lệ (ví dụ: 0967732665).')
+    const phoneCheck = validatePhoneNumber(form.phone, {
+        locale: isEn.value ? 'en' : 'vi',
+    })
+    if (!phoneCheck.valid) {
+        clientErrors.phone = isEn.value ? phoneCheck.message : trans(phoneCheck.message)
         ok = false
     }
     return ok
@@ -802,13 +811,23 @@ const submitContact = () => {
 
 .hero-scrim {
     background: linear-gradient(
-        90deg,
-        rgba(1, 16, 30, 0.94) 0%,
-        rgba(1, 16, 30, 0.88) 13%,
-        rgba(1, 16, 30, 0.72) 27%,
-        rgba(1, 16, 30, 0.35) 39%,
-        rgba(1, 16, 30, 0) 53%
+        180deg,
+        rgba(1, 16, 30, 0.78) 0%,
+        rgba(1, 16, 30, 0.72) 60%,
+        rgba(1, 16, 30, 0.84) 100%
     );
+}
+@media (min-width: 768px) {
+    .hero-scrim {
+        background: linear-gradient(
+            90deg,
+            rgba(1, 16, 30, 0.94) 0%,
+            rgba(1, 16, 30, 0.88) 22%,
+            rgba(1, 16, 30, 0.74) 40%,
+            rgba(1, 16, 30, 0.36) 54%,
+            rgba(1, 16, 30, 0) 64%
+        );
+    }
 }
 .faq-accordion-grid {
     display: grid;

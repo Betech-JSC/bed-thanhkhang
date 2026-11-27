@@ -6,12 +6,12 @@
 
         <div class="flex flex-col flex-1 md:pl-64">
             <div
-                class="sticky top-0 z-10 flex justify-between p-2 bg-gray-800 md:hidden"
+                class="sticky top-0 z-10 flex justify-between p-2 bg-[#00284B] border-b border-white/10 md:hidden"
             >
                 <button
                     @click="openSidebar"
                     type="button"
-                    class="inline-flex items-center justify-center p-2 text-indigo-200 bg-transparent rounded-md hover:text-white hover:bg-white hover:bg-opacity-10 focus:outline-none focus:ring-2 focus:ring-white"
+                    class="inline-flex items-center justify-center p-2 text-[#C9E0FF] bg-transparent rounded-md hover:text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white"
                 >
                     <span class="sr-only">Open sidebar</span>
                     <svg

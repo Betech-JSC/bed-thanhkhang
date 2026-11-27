@@ -10,18 +10,18 @@
         >
             <div
                 v-if="isOpen"
-                class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-[2px] px-4 md:px-8 py-6 md:py-8 overflow-y-auto overscroll-contain"
+                class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-[2px] px-4 md:px-8 py-6 overflow-hidden overscroll-none"
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="quote-popup-title"
                 @click.self="handleClose"
             >
                 <div
-                    class="w-full max-w-full lg:max-w-quote-popup my-auto flex flex-col items-center gap-5"
+                    class="w-full max-w-full lg:max-w-quote-popup my-auto flex flex-col items-center gap-4 lg:gap-5"
                     @click.self="handleClose"
                 >
                     <div
-                        class="max-h-[90dvh] lg:max-h-none flex flex-col overflow-hidden relative w-full bg-dark rounded-cta shadow-2xl"
+                        class="max-h-[calc(100dvh-112px)] flex flex-col overflow-hidden relative w-full bg-dark rounded-cta shadow-2xl"
                     >
                         <!-- Mobile Close Button (Top-Right of Popup Card) -->
                         <button
@@ -81,12 +81,12 @@
                             </div>
                         </div>
 
-                        <!-- Scrollable Body Container (Mobile) / Flex Row (Desktop) -->
+                        <!-- Scrollable Body Container (Mobile & Low-Height Viewports) / Flex Row (Desktop) -->
                         <div
-                            class="relative z-10 flex-1 min-h-0 overflow-y-auto lg:overflow-visible overscroll-contain pt-12 px-5 pb-5 sm:pt-12 sm:px-6 sm:pb-6 lg:p-10 flex flex-col lg:flex-row gap-4 md:gap-6 items-stretch lg:items-center"
+                            class="relative z-10 flex-1 min-h-0 overflow-y-auto overscroll-contain pt-12 px-5 pb-5 sm:pt-12 sm:px-6 sm:pb-6 lg:p-8 flex flex-col lg:flex-row gap-4 md:gap-6 items-stretch lg:items-center"
                         >
                             <!-- Left Column: Brand Value Proposition & 4 Assurances -->
-                            <div class="relative z-10 min-w-0 flex flex-col lg:justify-start gap-5 md:gap-6 lg:gap-12 lg:w-[372px] lg:h-[508px] shrink-0">
+                            <div class="relative z-10 min-w-0 flex flex-col lg:justify-start gap-5 md:gap-6 lg:gap-8 lg:w-[372px] lg:h-auto shrink-0">
                                 <div class="flex flex-col gap-3">
                             <h2
                                 id="quote-popup-title"
@@ -126,7 +126,7 @@
 
                     <!-- Right Column: Interactive Quote Form -->
                     <div
-                        class="relative z-10 min-w-0 max-w-full flex-1 bg-surface-200 backdrop-blur-[3px] rounded-btn p-5 sm:p-6 lg:p-10 flex flex-col justify-between gap-4 md:gap-5"
+                        class="relative z-10 min-w-0 max-w-full flex-1 bg-surface-200 backdrop-blur-[3px] rounded-btn p-5 sm:p-6 lg:p-8 flex flex-col justify-between gap-4 md:gap-5"
                     >
                         <!-- Success View -->
                         <div
@@ -274,7 +274,7 @@
                                         id="quote-popup-note"
                                         v-model="form.note"
                                         :placeholder="translate('Nhập nội dung bạn cần báo giá (sản phẩm, số lượng, thời gian cần hàng...)')"
-                                        class="w-full min-h-[140px] lg:min-h-[154px] resize-y text-base bg-surface-white border border-field-border rounded-btn shadow-xs px-3 py-2 text-body-md text-ink-dark placeholder:text-field-placeholder focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors"
+                                        class="w-full min-h-[112px] lg:min-h-[124px] resize-none text-base bg-surface-white border border-field-border rounded-btn shadow-xs px-3 py-2 text-body-md text-ink-dark placeholder:text-field-placeholder focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors"
                                     ></textarea>
                                 </div>
                             </div>
@@ -348,6 +348,7 @@
 import { computed, getCurrentInstance, nextTick, onBeforeUnmount, reactive, ref, watch } from 'vue'
 import { usePage } from '@inertiajs/inertia-vue3'
 import { useQuoteModal } from '@/composables/useQuoteModal'
+import { validatePhoneNumber } from '@/lib/validator'
 
 const props = defineProps({
     quoteContent: {
@@ -554,9 +555,11 @@ const validateForm = () => {
         isValid = false
     }
 
-    const digitsOnly = (form.phone || '').replace(/[\s\-().+]/g, '')
-    if (!digitsOnly || !/^\d{8,15}$/.test(digitsOnly)) {
-        errors.phone = translate('Vui lòng nhập số điện thoại hợp lệ (8–15 chữ số).')
+    const phoneCheck = validatePhoneNumber(form.phone, {
+        locale: currentLocale.value,
+    })
+    if (!phoneCheck.valid) {
+        errors.phone = translate(phoneCheck.message) || phoneCheck.message
         isValid = false
     }
 

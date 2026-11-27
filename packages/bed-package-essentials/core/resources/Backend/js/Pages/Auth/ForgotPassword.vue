@@ -1,30 +1,53 @@
 <template>
-    <Head title="Forgot Password" />
+    <Head title="Quên mật khẩu - Thành Khang" />
 
-    <div class="mb-4 text-sm text-gray-600">
-        Forgot your password? No problem. Just let us know your email address
-        and we will email you a password reset link that will allow you to
-        choose a new one.
-    </div>
+    <div class="w-full">
+        <div class="relative bg-white border border-[#E3E8EF] rounded-2xl shadow-xl shadow-[#00284B]/5 p-6 sm:p-8 overflow-hidden">
+            <div class="absolute top-0 inset-x-0 h-1 bg-[#005EA4]"></div>
 
-    <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
-        {{ status }}
-    </div>
+            <div class="text-center mb-6 pt-1">
+                <div class="flex items-center justify-center mb-5">
+                    <img
+                        src="/assets/images/logo/logo-thanhkhang.png"
+                        alt="Thành Khang"
+                        class="h-10 w-auto object-contain"
+                    />
+                </div>
+                <h1 class="text-xl font-bold tracking-tight text-[#00284B] uppercase font-sans">
+                    Quên mật khẩu
+                </h1>
+            </div>
 
-    <form class="space-y-6" @submit.prevent="submit">
-        <FlashMessages />
-        <Field
-            v-model="form.email"
-            :field="{
-                label: 'Email',
-            }"
-        />
-        <div class="flex items-center justify-end mt-4">
-            <Button type="submit" :loading="form.processing">
-                Email Password Reset Link
-            </Button>
+            <div class="mb-4 text-sm text-[#4B5565] leading-relaxed">
+                Forgot your password? No problem. Just let us know your email address
+                and we will email you a password reset link that will allow you to
+                choose a new one.
+            </div>
+
+            <div v-if="status" class="mb-4 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+                {{ status }}
+            </div>
+
+            <form class="space-y-5" @submit.prevent="submit">
+                <FlashMessages />
+                <Field
+                    v-model="form.email"
+                    :field="{
+                        label: 'Email',
+                    }"
+                />
+                <div class="pt-1">
+                    <Button
+                        type="submit"
+                        :loading="form.processing"
+                        class="w-full justify-center btn-primary !rounded-xl !py-2.5"
+                    >
+                        Email Password Reset Link
+                    </Button>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </template>
 
 <script>

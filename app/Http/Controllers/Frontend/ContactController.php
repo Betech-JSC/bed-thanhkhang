@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\UploadedFile;
 use App\Http\Notifications\CommonNotification;
 use App\Models\EmailTemplate;
+use App\Rules\ValidPhoneNumber;
 use Inertia\Inertia;
 
 class ContactController extends Controller
@@ -180,7 +181,9 @@ class ContactController extends Controller
                 ?? $contact['form_source']
                 ?? $request->input('form_source')
                 ?? null;
-            $isAdviseOnlyPhone = ($contactType === 'ADVISE_FORM');
+            $isAdviseOnlyPhone = ($contact['type'] === 'ADVISE_FORM');
+            $trimmedName = is_scalar($name) ? trim((string) $name) : '';
+            $trimmedEmail = is_scalar($email) ? trim((string) $email) : '';
             $validationErrors = [];
 
             if (!$isAdviseOnlyPhone && $trimmedName === '') {
@@ -189,17 +192,9 @@ class ContactController extends Controller
                     : 'Vui lòng nhập họ và tên.';
             }
 
-            if ($trimmedPhone === '') {
-                $validationErrors['phone'] = $isEn
-                    ? 'Please enter your phone number.'
-                    : 'Vui lòng nhập số điện thoại.';
-            } else {
-                $digitsOnly = preg_replace('/\D+/', '', $trimmedPhone);
-                if (strlen($digitsOnly) < 8 || strlen($digitsOnly) > 15) {
-                    $validationErrors['phone'] = $isEn
-                        ? 'Please enter a valid phone number (8-15 digits).'
-                        : 'Số điện thoại không hợp lệ (8-15 chữ số).';
-                }
+            $phoneValidation = ValidPhoneNumber::validateValue($phone, $locale);
+            if (!$phoneValidation['valid']) {
+                $validationErrors['phone'] = $phoneValidation['message'];
             }
 
             if ($formSource === 'home_contact_section' && $trimmedEmail === '') {

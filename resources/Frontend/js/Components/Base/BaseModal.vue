@@ -3,7 +3,10 @@
         <Transition name="base-modal">
             <div
                 v-if="isOpen"
-                class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-sm overflow-y-auto"
+                :class="[
+                    'fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto',
+                    themeClasses.backdrop
+                ]"
                 @click.self="handleBackdropClick"
                 role="dialog"
                 aria-modal="true"
@@ -12,17 +15,18 @@
                 <!-- Modal Dialog Box -->
                 <div
                     :class="[
-                        'base-modal-content relative w-full bg-dark-surface border border-dark-border rounded-2xl shadow-2xl flex flex-col max-h-[90vh] my-auto transition-all duration-200',
+                        'base-modal-content relative w-full rounded-2xl shadow-2xl flex flex-col max-h-[90vh] my-auto transition-all duration-200',
+                        themeClasses.dialog,
                         maxWidthClasses[maxWidth] || maxWidthClasses.md
                     ]"
                 >
                     <!-- Header -->
                     <div
                         v-if="$slots.header || title || showCloseButton"
-                        class="px-6 py-4.5 border-b border-dark-border flex items-center justify-between shrink-0"
+                        :class="['px-6 py-4.5 border-b flex items-center justify-between shrink-0', themeClasses.header]"
                     >
                         <slot name="header">
-                            <h3 v-if="title" id="modal-title" class="text-lg font-semibold text-white truncate pr-6">
+                            <h3 v-if="title" id="modal-title" :class="['text-lg font-semibold truncate pr-6', themeClasses.title]">
                                 {{ title }}
                             </h3>
                             <div v-else></div>
@@ -34,7 +38,7 @@
                             type="button"
                             @click="close"
                             :aria-label="tt('Đóng')"
-                            class="p-1.5 rounded-lg text-text-muted hover:text-white hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50"
+                            :class="['p-1.5 rounded-lg transition-colors focus:outline-none focus:ring-2', themeClasses.closeBtn]"
                         >
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -43,7 +47,7 @@
                     </div>
 
                     <!-- Body Content -->
-                    <div class="p-6 overflow-y-auto flex-1 text-text-secondary text-sm leading-relaxed">
+                    <div :class="['p-6 overflow-y-auto flex-1 text-sm leading-relaxed', themeClasses.body]">
                         <slot name="body">
                             <slot></slot>
                         </slot>
@@ -52,7 +56,7 @@
                     <!-- Footer -->
                     <div
                         v-if="$slots.footer"
-                        class="px-6 py-4 border-t border-dark-border bg-dark-bg/30 flex items-center justify-end gap-3 shrink-0 rounded-b-2xl"
+                        :class="['px-6 py-4 border-t flex items-center justify-end gap-3 shrink-0 rounded-b-2xl', themeClasses.footer]"
                     >
                         <slot name="footer"></slot>
                     </div>
@@ -96,6 +100,11 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
+    variant: {
+        type: String,
+        default: 'dark',
+        validator: (val) => ['dark', 'light'].includes(val),
+    },
 })
 
 const emit = defineEmits(['update:modelValue', 'close'])
@@ -103,6 +112,29 @@ const emit = defineEmits(['update:modelValue', 'close'])
 const isMounted = ref(false)
 
 const isOpen = computed(() => props.modelValue || props.show)
+
+const VARIANT_CLASS_MAP = {
+    dark: {
+        backdrop: 'bg-black/80 backdrop-blur-sm',
+        dialog: 'bg-dark-surface border border-dark-border',
+        header: 'border-dark-border',
+        title: 'text-white',
+        closeBtn: 'text-text-muted hover:text-white hover:bg-white/10 focus:ring-primary/50',
+        body: 'text-text-secondary',
+        footer: 'border-dark-border bg-dark-bg/30',
+    },
+    light: {
+        backdrop: 'bg-[#00284B]/50 backdrop-blur-[2px]',
+        dialog: 'bg-white border border-[#E3E8EF]',
+        header: 'border-[#E3E8EF]',
+        title: 'text-[#00284B]',
+        closeBtn: 'text-[#697586] hover:text-[#00284B] hover:bg-[#EEF2F6] focus:ring-[#005EA4]/40',
+        body: 'text-[#4B5565]',
+        footer: 'border-[#E3E8EF] bg-[#F8FAFC]',
+    },
+}
+
+const themeClasses = computed(() => VARIANT_CLASS_MAP[props.variant] || VARIANT_CLASS_MAP.dark)
 
 const maxWidthClasses = {
     sm: 'max-w-sm',

@@ -1,6 +1,6 @@
 <template>
     <div
-        class="fixed inset-0 z-30 transition-opacity bg-gray-600 bg-opacity-75"
+        class="fixed inset-0 z-30 transition-opacity bg-[#001C36]/75"
         :class="showSidebar ? ' h-full' : ' h-0'"
         aria-hidden="true"
     ></div>
@@ -10,7 +10,7 @@
         role="dialog"
         aria-modal="true"
     >
-        <div class="relative flex flex-col flex-1 w-full max-w-xs bg-gray-800">
+        <div class="relative flex flex-col flex-1 w-full max-w-xs bg-[#00284B] text-white">
             <div
                 class="absolute top-0 right-0 pt-2 -mr-12 duration-300 ease-in-out"
                 :class="showSidebar ? 'opacity-100' : 'opacity-0'"

@@ -5,7 +5,7 @@
 
     <!-- 1. BẢNG ĐIỀU KHIỂN -->
     <div class="sidebar-section-header">
-        <span>📊 BẢNG ĐIỀU KHIỂN</span>
+        <span>BẢNG ĐIỀU KHIỂN</span>
     </div>
 
     <Link
@@ -79,7 +79,7 @@
 
     <!-- 3. NỘI DUNG & THƯƠNG HIỆU -->
     <div class="sidebar-section-header">
-        <span>🎨 NỘI DUNG & THƯƠNG HIỆU</span>
+        <span>NỘI DUNG &amp; THƯƠNG HIỆU</span>
     </div>
 
     <!-- Banner & Hero Trang chủ -->
@@ -150,7 +150,7 @@
 
     <!-- 4. HỆ THỐNG & CẤU HÌNH -->
     <div class="sidebar-section-header">
-        <span>⚙️ HỆ THỐNG & CẤU HÌNH</span>
+        <span>HỆ THỐNG &amp; CẤU HÌNH</span>
     </div>
 
     <!-- Khách hàng đăng ký -->
@@ -243,15 +243,19 @@ export default {
 
 <style scoped>
 .sidebar-section-header {
-    @apply px-6 pt-5 pb-1.5 text-[11px] font-bold text-gray-400 uppercase tracking-wider select-none flex items-center;
+    @apply px-4 pt-5 pb-1.5 font-bold uppercase tracking-wider select-none flex items-center;
+    font-size: 11px;
+    color: rgba(129, 189, 255, 0.8);
 }
 
 .badge {
-    @apply px-2 py-0.5 text-xs font-semibold rounded-full min-w-[20px] text-center inline-flex items-center justify-center;
+    @apply ml-auto px-2 py-0.5 text-xs font-semibold rounded-full text-center inline-flex items-center justify-center;
+    min-width: 20px;
 }
 
 .badge-primary {
-    @apply text-white bg-primary;
+    color: #ffffff;
+    background-color: #005EA4;
 }
 
 .badge-success {

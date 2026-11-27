@@ -1,19 +1,19 @@
 <template>
-    <div class="flex flex-shrink-0 px-5 py-2 bg-gray-800">
+    <div class="flex flex-shrink-0 px-5 py-3 bg-[#001C36] border-t border-white/10">
         <div class="flex items-center justify-between w-full">
             <div class="flex items-center">
                 <Avatar
-                    :label="admin && admin.name ? admin.name.charAt(0) : 'JAM'"
+                    :label="admin && admin.name ? admin.name.charAt(0) : 'TK'"
                     shape="circle"
-                    class="text-white bg-primary"
+                    class="text-white bg-[#005EA4] font-semibold"
                 />
                 <div class="ml-3">
-                    <div class="text-sm text-white">
+                    <div class="text-sm font-medium text-white">
                         {{ admin ? admin.name : "" }}
                     </div>
                     <div
                         @click="showAdminForm = true"
-                        class="text-xs text-gray-400 cursor-pointer hover:text-gray-300 hover:underline"
+                        class="text-xs text-[#C9E0FF]/80 cursor-pointer hover:text-white hover:underline transition-colors"
                     >
                         {{ tt('models.admins.change_password') }}
                     </div>
@@ -80,13 +80,13 @@
                 </div>
             </div>
             <Link
-                class="flex-shrink-0 rounded hover:bg-gray-900/50"
+                class="flex-shrink-0 rounded-lg hover:bg-[#00284B] transition-colors"
                 method="post"
                 :href="route('admin.logout')"
                 :title="tt('models.admins.logout')"
             >
                 <ph-sign-out-duotone
-                    class="w-10 h-10 p-1 text-gray-400 hover:text-white"
+                    class="w-10 h-10 p-1.5 text-[#C9E0FF]/80 hover:text-white transition-colors"
                 />
             </Link>
         </div>

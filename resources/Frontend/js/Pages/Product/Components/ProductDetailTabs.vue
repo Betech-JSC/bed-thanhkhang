@@ -5,7 +5,7 @@
             <div
                 role="tablist"
                 :aria-label="tt('Chi tiết sản phẩm')"
-                class="border-b border-[#E3E8EF] flex items-center gap-5 md:gap-[32px] overflow-x-auto no-scrollbar"
+                class="border-b border-[#E3E8EF] flex flex-wrap items-center gap-x-5 gap-y-1 md:gap-[32px]"
             >
                 <button
                     v-for="(tab, idx) in tabs"
@@ -17,7 +17,7 @@
                     :aria-selected="activeTab === tab.id"
                     :aria-controls="`pdp-panel-${tab.id}`"
                     :class="[
-                        'shrink-0 whitespace-nowrap pt-3 pb-[14px] min-h-[44px] -mb-[1px] text-[15px] md:text-[16px] leading-[1.6] border-b-2 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]',
+                        'shrink-0 whitespace-nowrap pt-3 pb-[14px] min-h-[44px] text-[15px] md:text-[16px] leading-[1.6] border-b-2 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]',
                         activeTab === tab.id
                             ? 'border-[#005EA4] font-bold text-[#005EA4]'
                             : 'border-transparent font-medium text-[#4B5565] hover:text-[#005EA4]',
