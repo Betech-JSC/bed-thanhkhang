@@ -12,12 +12,6 @@ use JamstackVietnam\Core\Controllers\Auth\EmailVerificationNotificationControlle
 use Illuminate\Http\Request;
 
 Route::middleware('guest:admin')->name('admin.')->group(function () {
-    Route::post('local-login', function (Request $request) {
-        auth()->guard('admin')->loginUsingId(Admin::first()->id);
-        $request->session()->regenerate();
-        return redirect()->route('admin.dashboard.index');
-    })->name('local-login');
-
     // Route::get('register', [RegisteredUserController::class, 'create'])
     //     ->name('register');
 

@@ -103,11 +103,13 @@ class Contact extends BaseModel
     protected static function booted()
     {
         static::saving(function ($model) {
-            if (request()->has('internal_notes')) {
-                $model->internal_notes = request()->input('internal_notes');
-            }
-            if (request()->has('estimated_price')) {
-                $model->estimated_price = request()->input('estimated_price');
+            if (auth('admin')->check()) {
+                if (request()->has('internal_notes')) {
+                    $model->internal_notes = request()->input('internal_notes');
+                }
+                if (request()->has('estimated_price')) {
+                    $model->estimated_price = request()->input('estimated_price');
+                }
             }
 
             // Bảo vệ 'data': Nếu model đã tồn tại và có data cũ, cấm ghi đè data thành null hoặc rỗng

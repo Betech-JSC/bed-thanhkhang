@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
 use JamstackVietnam\Core\Models\Admin;
 use JamstackVietnam\Core\Traits\HasCrudActions;
+use Spatie\Permission\Models\Role;
 
 class AdminController extends Controller
 {
@@ -29,7 +30,46 @@ class AdminController extends Controller
     {
         $email = $request->input('email');
         $phone = $request->input('phone');
-        $id = $request->input('id');
+        $id = $request->input('id') ?? $request->route('id');
+
+        if (!current_admin()?->hasRole('Super Admin')) {
+            if ($id) {
+                $targetAdmin = Admin::withTrashed()->find($id);
+                if ($targetAdmin && $targetAdmin->hasRole('Super Admin')) {
+                    abort(403);
+                }
+            }
+
+            $submittedRoles = [];
+            if ($request->filled('role_id')) {
+                $roleIdInput = $request->input('role_id');
+                $submittedRoles = array_merge($submittedRoles, is_array($roleIdInput) ? $roleIdInput : [$roleIdInput]);
+            }
+            if ($request->filled('roles')) {
+                $rolesInput = $request->input('roles');
+                $submittedRoles = array_merge($submittedRoles, is_array($rolesInput) ? $rolesInput : [$rolesInput]);
+            }
+
+            $roleIds = [];
+            foreach ($submittedRoles as $submittedRole) {
+                if (is_array($submittedRole)) {
+                    if (isset($submittedRole['name']) && strcasecmp((string) $submittedRole['name'], 'Super Admin') === 0) {
+                        abort(403);
+                    }
+                    if (isset($submittedRole['id']) && is_numeric($submittedRole['id'])) {
+                        $roleIds[] = (int) $submittedRole['id'];
+                    }
+                } elseif (is_numeric($submittedRole)) {
+                    $roleIds[] = (int) $submittedRole;
+                } elseif (is_string($submittedRole) && strcasecmp(trim($submittedRole), 'Super Admin') === 0) {
+                    abort(403);
+                }
+            }
+
+            if (!empty($roleIds) && Role::whereIn('id', array_unique($roleIds))->where('name', 'Super Admin')->exists()) {
+                abort(403);
+            }
+        }
 
         // Clean up existing soft-deleted records with the same email or phone
         // before validation runs.
@@ -99,7 +139,7 @@ class AdminController extends Controller
 
     private function afterForm($item)
     {
-        if (!current_admin()->hasRole('Super Admin') && $item->hasRole('Super Admin')) {
+        if (!current_admin()?->hasRole('Super Admin') && $item instanceof Admin && $item->hasRole('Super Admin')) {
             abort(403);
         }
 

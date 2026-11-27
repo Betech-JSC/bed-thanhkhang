@@ -8,9 +8,26 @@ class HelperController extends Controller
 {
     public function getLogs()
     {
-        $file = request()->input('file');
-        if ($file) {
-            return response(file_get_contents(storage_path('logs/' . $file)))
+        if (request()->has('file') && request()->input('file') !== null && request()->input('file') !== '') {
+            $file = request()->input('file');
+
+            if (!is_string($file) || basename($file) !== $file || !str_ends_with($file, '.log')) {
+                abort(404);
+            }
+
+            $logsDir = realpath(storage_path('logs'));
+            $realPath = realpath(storage_path('logs/' . $file));
+
+            if (
+                $logsDir === false ||
+                $realPath === false ||
+                !is_file($realPath) ||
+                !str_starts_with($realPath, $logsDir . DIRECTORY_SEPARATOR)
+            ) {
+                abort(404);
+            }
+
+            return response(file_get_contents($realPath))
                 ->header('Content-Type', 'text/plain');
         } else {
             $files = glob(storage_path('logs/*.log'));
