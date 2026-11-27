@@ -4,9 +4,9 @@
         <SidebarMobile :admin="admin" ref="sidebarMobile" />
         <SidebarDesktop :admin="admin" />
 
-        <div class="flex flex-col flex-1 md:pl-64">
+        <div class="flex flex-col flex-1 min-w-0 md:pl-64">
             <div
-                class="sticky top-0 z-10 flex justify-between p-2 bg-[#00284B] border-b border-white/10 md:hidden"
+                class="sticky top-0 z-20 flex justify-between p-2 bg-[#00284B] border-b border-white/10 md:hidden"
             >
                 <button
                     @click="openSidebar"
@@ -31,7 +31,7 @@
                     </svg>
                 </button>
             </div>
-            <main class="flex-1 min-h-screen">
+            <main class="flex-1 min-w-0 min-h-screen">
                 <Breadcrumbs />
                 <slot />
             </main>

@@ -56,6 +56,7 @@
 
                         <div
                             v-if="sanitizedContent"
+                            ref="pdpRichtextRef"
                             class="pdp-richtext min-w-0"
                             v-html="sanitizedContent"
                         />
@@ -468,7 +469,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { Link } from '@inertiajs/inertia-vue3'
 import SpecTable from '@/Components/Product/SpecTable.vue'
 import { openQuoteModal } from '@/composables/useQuoteModal'
@@ -503,6 +504,7 @@ const activeTab = ref('overview')
 const slideDirection = ref('next')
 const hasInteractedTab = ref(false)
 const tabButtonRefs = {}
+const pdpRichtextRef = ref(null)
 const zoomedDrawingIndex = ref(null)
 const failedDrawingUrls = ref({})
 
@@ -911,6 +913,38 @@ watch(
     }
 )
 
+async function wrapPdpTables() {
+    await nextTick()
+    if (typeof document === 'undefined') return
+    const container = pdpRichtextRef.value
+    if (!container) return
+
+    const tables = container.querySelectorAll('table')
+    tables.forEach((table) => {
+        if (table.parentNode && table.parentElement && !table.parentElement.classList.contains('pdp-table-wrap')) {
+            const wrapper = document.createElement('div')
+            wrapper.className = 'pdp-table-wrap'
+            table.parentNode.insertBefore(wrapper, table)
+            wrapper.appendChild(table)
+        }
+    })
+}
+
+watch(
+    [sanitizedContent, activeTab],
+    ([, currentTab]) => {
+        if (currentTab === 'overview') {
+            wrapPdpTables()
+        }
+    }
+)
+
+onMounted(() => {
+    if (activeTab.value === 'overview') {
+        wrapPdpTables()
+    }
+})
+
 onBeforeUnmount(() => {
     if (typeof window !== 'undefined') {
         window.removeEventListener('keydown', handleLightboxKeydown)
@@ -964,7 +998,6 @@ function handleRequestDrawing(documentTitle = '') {
     line-height: 1.6;
     color: #364152;
     word-break: break-word;
-    overflow-x: auto;
 }
 
 @media (min-width: 768px) {
@@ -1082,6 +1115,21 @@ function handleRequestDrawing(documentTitle = '') {
     padding: 0.75rem 1rem;
     margin: 1rem 0;
     color: #364152;
+}
+
+.pdp-richtext :deep(.pdp-table-wrap) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    margin: 1rem 0;
+    border: 1px solid #e3e8ef;
+    border-radius: 4px;
+    background-color: #ffffff;
+}
+
+.pdp-richtext :deep(.pdp-table-wrap table) {
+    margin: 0;
+    border: 0;
 }
 
 .pdp-richtext :deep(table) {

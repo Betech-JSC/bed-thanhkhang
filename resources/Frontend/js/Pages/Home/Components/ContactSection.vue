@@ -3,20 +3,6 @@
         id="contact-section"
         class="relative w-full bg-[#00284B] overflow-hidden py-10 md:py-16 lg:pt-[125px] lg:pb-[124px]"
     >
-        <!-- Mobile Top-Right Decorative Chain Accent (Figma 1193:6560) -->
-        <div
-            class="md:hidden pointer-events-none select-none absolute -right-[20px] top-0 w-[260px] z-0 opacity-85"
-            aria-hidden="true"
-        >
-            <img
-                src="/assets/images/homepage/contact-chain-deco.png"
-                alt=""
-                class="w-full h-auto block"
-                loading="lazy"
-                decoding="async"
-            />
-        </div>
-
         <!-- Decorative Chain Accent 1: Bottom-Left (Figma 1171:41664) -->
         <div
             class="hidden md:block pointer-events-none select-none absolute -left-[120px] -bottom-[155px] w-[560px] -rotate-[6deg] z-0 opacity-95"
@@ -61,7 +47,7 @@
 
         <!-- Main Content Grid (Figma 1171:41662 — 1152px narrow container: Left 462px + 63px gap + Form 627px = 1152px) -->
         <div class="app-container-narrow relative z-10">
-            <div class="flex flex-col lg:flex-row lg:items-stretch justify-between gap-7 lg:gap-[63px]">
+            <div class="flex flex-col lg:flex-row lg:items-stretch justify-between gap-6 lg:gap-[63px]">
                 <!-- Left Column: Title, Subtitle & 4 B2B Assurance Badges (Figma 1171:41666 & 1193:6489) -->
                 <div
                     class="w-full lg:w-[462px] lg:min-h-[508px] shrink-0 flex flex-col justify-between gap-5 lg:gap-8"
@@ -370,17 +356,17 @@
                             {{ submitError }}
                         </div>
 
-                        <!-- Full-Width Primary Submit Button (Figma 1264:48227 547x49, 18px/1.6 "Liên hệ ngay") -->
+                        <!-- Full-Width Primary Submit Button (Figma 1264:48227 547x49, 18px/1.6 "Nhận tư vấn ngay") -->
                         <button
                             type="submit"
                             :disabled="isSubmitting"
-                            class="w-full h-[49px] bg-[#005EA4] hover:bg-[#004c86] active:bg-[#003d6d] text-[#FAFAFA] font-medium text-[14px] lg:text-[18px] leading-[1.6] px-[24px] py-[10px] rounded-[4px] inline-flex items-center justify-center gap-2 transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
+                            class="w-full h-[49px] bg-[#005EA4] hover:bg-[#004c86] active:bg-[#003d6d] text-[#FAFAFA] font-medium text-[18px] leading-[1.6] px-[24px] py-[10px] rounded-[4px] inline-flex items-center justify-center gap-2 transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
                         >
                             <span>
                                 {{
                                     isSubmitting
                                         ? t('Đang gửi...')
-                                        : t('Liên hệ ngay')
+                                        : t('Nhận tư vấn ngay')
                                 }}
                             </span>
                         </button>

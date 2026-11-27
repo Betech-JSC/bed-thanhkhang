@@ -43,10 +43,10 @@
                     :key="item.key"
                     class="flex flex-col items-start gap-3 md:gap-4 min-w-0"
                 >
-                    <!-- Eyebrow Label (Figma 1171:41947 / 1171:41952: 18px/29px 700 uppercase gradient #009FFF -> #C9E0FF) -->
+                    <!-- Eyebrow Label (Figma 1171:41947 / 1171:41952 / Copy 1264:48461: 18px/29px 700 uppercase gradient #009FFF -> #C9E0FF, w-fit so gradient spans text width 0% -> 100%) -->
                     <p
                         v-if="item.subtitle"
-                        class="w-full font-bold text-[16px] leading-[26px] md:text-[18px] md:leading-[29px] uppercase bg-[linear-gradient(90deg,#009FFF_0%,#C9E0FF_100%)] bg-clip-text text-transparent"
+                        class="w-fit max-w-full font-bold text-[16px] leading-[26px] md:text-[18px] md:leading-[29px] uppercase bg-[linear-gradient(90deg,#009FFF_0%,#C9E0FF_100%)] bg-clip-text text-transparent"
                     >
                         {{ item.subtitle }}
                     </p>

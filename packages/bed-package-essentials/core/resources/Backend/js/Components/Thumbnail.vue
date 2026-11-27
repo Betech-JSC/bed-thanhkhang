@@ -18,16 +18,19 @@
         <!-- Actions for files only -->
         <template v-if="file.type !== 'dir'">
             <a
-                class="absolute top-0 right-0 invisible space-x-1 text-white uppercase bg-black group-hover:visible w-[20px] h-[20px] flex items-center justify-center rounded-sm"
+                class="absolute top-1.5 right-1.5 z-10 w-9 h-9 min-w-[36px] min-h-[36px] rounded-md bg-black/75 hover:bg-black text-white flex items-center justify-center opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary/40"
                 :href="staticUrl(file.path)"
                 target="_blank"
+                rel="noopener noreferrer"
+                :aria-label="tt('models.files.open')"
+                @click.stop
             >
-                <ph:arrow-square-up-right />
+                <ph:arrow-square-up-right class="w-4 h-4" />
             </a>
         </template>
 
         <Button
-            class="absolute invisible right-1 bottom-1 group-hover:visible btn-white btn-sm"
+            class="absolute right-1.5 bottom-1.5 z-10 btn-white btn-sm !min-w-0 !min-h-[36px] !px-2.5 text-gray-700 shadow-sm opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100 transition-opacity"
             :label="tt('models.files.delete')"
             @click.stop="$emit('remove', file)"
         />

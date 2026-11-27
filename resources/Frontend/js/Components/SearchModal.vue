@@ -39,13 +39,15 @@
                         <button
                             type="button"
                             @click="clearKeyword"
-                            class="w-7 h-7 rounded-full flex items-center justify-center text-[#697586] hover:text-[#00284B] hover:bg-[#E3E8EF] transition-colors"
+                            class="group w-11 h-11 -mr-2 rounded-full inline-flex items-center justify-center text-[#697586] hover:text-[#00284B] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] transition-colors cursor-pointer"
                             :title="tt('Xóa từ khóa')"
                             :aria-label="tt('Xóa từ khóa')"
                         >
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
+                            <span class="w-7 h-7 rounded-full flex items-center justify-center group-hover:bg-[#E3E8EF] transition-colors">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </span>
                         </button>
                     </div>
                 </div>

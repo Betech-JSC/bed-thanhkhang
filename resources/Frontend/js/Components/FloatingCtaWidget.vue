@@ -2,7 +2,7 @@
     <div
         v-if="zaloHref || phoneHref || showScrollTop"
         data-testid="floating-cta-widget"
-        class="fixed right-4 lg:right-6 bottom-5 lg:bottom-[72px] z-[950] flex flex-col items-center gap-[16px] print:hidden"
+        class="fixed right-3 lg:right-6 bottom-[calc(16px+env(safe-area-inset-bottom))] lg:bottom-[72px] z-[950] flex flex-col items-center gap-[16px] print:hidden"
     >
         <!-- Scroll-to-Top Floating Button -->
         <Transition
@@ -19,11 +19,11 @@
                 data-testid="scroll-to-top-button"
                 :aria-label="scrollTopLabel"
                 :title="scrollTopLabel"
-                class="w-[52px] h-[52px] lg:w-[60px] lg:h-[60px] rounded-full bg-[#00284B] hover:bg-[#005EA4] active:bg-[#003967] text-white shadow-lg inline-flex items-center justify-center transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
+                class="w-11 h-11 lg:w-[60px] lg:h-[60px] rounded-full bg-[#00284B] hover:bg-[#005EA4] active:bg-[#003967] text-white shadow-lg inline-flex items-center justify-center transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
                 @click="scrollToTop"
             >
                 <svg
-                    class="w-[22px] h-[22px] lg:w-[24px] lg:h-[24px]"
+                    class="w-5 h-5 lg:w-6 lg:h-6"
                     viewBox="0 0 24 24"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -48,10 +48,10 @@
             rel="noopener noreferrer"
             :aria-label="tt('Liên hệ Zalo')"
             :title="tt('Chat Zalo')"
-            class="w-[52px] h-[52px] lg:w-[60px] lg:h-[60px] rounded-full bg-[#0068FF] hover:bg-[#0055D4] active:bg-[#0045B0] text-white shadow-lg inline-flex items-center justify-center transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0068FF] focus-visible:ring-offset-2"
+            class="w-11 h-11 lg:w-[60px] lg:h-[60px] rounded-full bg-[#0068FF] hover:bg-[#0055D4] active:bg-[#0045B0] text-white shadow-lg inline-flex items-center justify-center transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0068FF] focus-visible:ring-offset-2"
         >
             <svg
-                class="w-[34px] h-[16px] lg:w-[40px] lg:h-[18px]"
+                class="w-[28px] h-[14px] lg:w-[40px] lg:h-[18px]"
                 viewBox="0 0 60 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -87,10 +87,10 @@
             :href="phoneHref"
             :aria-label="tt('Gọi hotline') + (displayPhone ? ': ' + displayPhone : '')"
             :title="displayPhone ? tt('Gọi hotline') + ': ' + displayPhone : tt('Gọi hotline')"
-            class="w-[52px] h-[52px] lg:w-[60px] lg:h-[60px] rounded-full bg-[#008910] hover:bg-[#00700D] active:bg-[#005B0A] text-white shadow-lg inline-flex items-center justify-center transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#008910] focus-visible:ring-offset-2"
+            class="w-11 h-11 lg:w-[60px] lg:h-[60px] rounded-full bg-[#008910] hover:bg-[#00700D] active:bg-[#005B0A] text-white shadow-lg inline-flex items-center justify-center transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#008910] focus-visible:ring-offset-2"
         >
             <svg
-                class="w-[24px] h-[24px] lg:w-[28px] lg:h-[28px]"
+                class="w-5 h-5 lg:w-[28px] lg:h-[28px]"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"

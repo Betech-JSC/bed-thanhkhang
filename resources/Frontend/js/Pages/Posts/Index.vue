@@ -192,7 +192,7 @@
                                 type="search"
                                 :aria-label="tt('Tìm kiếm bài viết...')"
                                 :placeholder="tt('Tìm kiếm bài viết...')"
-                                class="w-full bg-transparent text-[14px] text-dark placeholder:text-gray-modern-400 outline-none"
+                                class="w-full bg-transparent text-base lg:text-[14px] text-dark placeholder:text-gray-modern-400 outline-none"
                             />
                         </div>
                     </div>

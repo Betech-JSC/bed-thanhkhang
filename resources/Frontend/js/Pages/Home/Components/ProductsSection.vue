@@ -35,7 +35,7 @@
                     :href="cat.url || productsIndexUrl"
                     class="group flex flex-col lg:h-[394px] bg-[#C9E0FF] rounded-[4px] overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]"
                 >
-                    <div class="relative w-full aspect-[173/124] lg:aspect-auto lg:h-[308px] shrink-0 bg-[#FAFAFA] overflow-hidden">
+                    <div class="relative w-full aspect-[173/130] lg:aspect-auto lg:h-[308px] shrink-0 bg-[#FAFAFA] overflow-hidden">
                         <img
                             v-if="cat.image?.url"
                             :src="cat.image.url"
@@ -48,7 +48,7 @@
                         />
                     </div>
 
-                    <div class="flex items-center justify-between gap-2 px-2.5 py-2 min-h-[70px] lg:min-h-0 lg:gap-[10px] lg:px-[16px] lg:py-0 lg:h-[64px] lg:mt-[12px] lg:mb-[10px]">
+                    <div class="flex items-center justify-between gap-2 px-3 py-2 min-h-[64px] lg:min-h-0 lg:gap-[10px] lg:px-[16px] lg:py-0 lg:h-[64px] lg:mt-[12px] lg:mb-[10px]">
                         <h3
                             class="flex-1 min-w-0 font-medium text-[14px] lg:text-[20px] leading-[1.6] text-[#364152] uppercase break-words"
                         >
@@ -59,7 +59,7 @@
                             >{{ line }}</span>
                         </h3>
                         <span
-                            class="w-6 h-6 lg:w-[36px] lg:h-[36px] rounded-[4px] bg-[#005EA4] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex items-center justify-center shrink-0"
+                            class="hidden lg:flex w-6 h-6 lg:w-[36px] lg:h-[36px] rounded-[4px] bg-[#005EA4] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] items-center justify-center shrink-0"
                             aria-hidden="true"
                         >
                             <svg
@@ -76,14 +76,14 @@
                     </div>
                 </Link>
 
-                <!-- 6th CTA Tile — Explore All Products: default #C9E0FF matching tiles 1-5, transitions to #005EA4 ONLY on hover + image-only zoom, locked 394px height -->
+                <!-- 6th CTA Tile — Explore All Products: Mobile #005EA4 default (Figma 1314:52035), Desktop #C9E0FF -> #005EA4 on hover -->
                 <template v-if="hasCtaBanner">
                     <Link
                         v-if="isInertiaLink(ctaLink)"
                         :href="ctaLink"
-                        class="group flex flex-col lg:h-[394px] bg-[#C9E0FF] hover:bg-[#005EA4] rounded-[4px] overflow-hidden transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]"
+                        class="group flex flex-col lg:h-[394px] bg-[#005EA4] lg:bg-[#C9E0FF] lg:hover:bg-[#005EA4] rounded-[4px] overflow-hidden transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]"
                     >
-                        <div class="relative w-full aspect-[173/124] lg:aspect-auto lg:h-[308px] shrink-0 bg-[#FAFAFA] overflow-hidden">
+                        <div class="relative w-full aspect-[173/128] lg:aspect-auto lg:h-[308px] shrink-0 bg-[#FAFAFA] overflow-hidden">
                             <img
                                 v-if="ctaBanner.image?.url"
                                 :src="ctaBanner.image.url"
@@ -96,9 +96,9 @@
                             />
                         </div>
 
-                        <div class="flex items-center justify-between gap-2 px-2.5 py-2 min-h-[70px] lg:min-h-0 lg:gap-[10px] lg:px-[16px] lg:py-0 lg:h-[64px] lg:mt-[12px] lg:mb-[10px]">
+                        <div class="flex items-center justify-between gap-2 px-3 py-2 min-h-[66px] lg:min-h-0 lg:gap-[10px] lg:px-[16px] lg:py-0 lg:h-[64px] lg:mt-[12px] lg:mb-[10px]">
                             <h3
-                                class="flex-1 min-w-0 font-medium text-[14px] lg:text-[20px] leading-[1.6] text-[#364152] group-hover:text-[#FAFAFA] uppercase break-words transition-colors duration-300"
+                                class="flex-1 min-w-0 font-medium text-[14px] lg:text-[20px] leading-[1.6] text-[#FAFAFA] lg:text-[#364152] lg:group-hover:text-[#FAFAFA] uppercase break-words transition-colors duration-300"
                             >
                                 <span
                                     v-for="(line, lineIdx) in splitTileTitle(ctaBanner.title)"
@@ -107,7 +107,7 @@
                                 >{{ line }}</span>
                             </h3>
                             <span
-                                class="w-6 h-6 lg:w-[36px] lg:h-[36px] rounded-[4px] bg-[#005EA4] border border-transparent group-hover:bg-[#C9E0FF] group-hover:border-[#81BDFF] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex items-center justify-center shrink-0 transition-colors duration-300"
+                                class="hidden lg:flex w-6 h-6 lg:w-[36px] lg:h-[36px] rounded-[4px] bg-[#005EA4] border border-transparent group-hover:bg-[#C9E0FF] group-hover:border-[#81BDFF] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] items-center justify-center shrink-0 transition-colors duration-300"
                                 aria-hidden="true"
                             >
                                 <svg
@@ -127,9 +127,9 @@
                     <a
                         v-else
                         :href="ctaLink"
-                        class="group flex flex-col lg:h-[394px] bg-[#C9E0FF] hover:bg-[#005EA4] rounded-[4px] overflow-hidden transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]"
+                        class="group flex flex-col lg:h-[394px] bg-[#005EA4] lg:bg-[#C9E0FF] lg:hover:bg-[#005EA4] rounded-[4px] overflow-hidden transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]"
                     >
-                        <div class="relative w-full aspect-[173/124] lg:aspect-auto lg:h-[308px] shrink-0 bg-[#FAFAFA] overflow-hidden">
+                        <div class="relative w-full aspect-[173/128] lg:aspect-auto lg:h-[308px] shrink-0 bg-[#FAFAFA] overflow-hidden">
                             <img
                                 v-if="ctaBanner.image?.url"
                                 :src="ctaBanner.image.url"
@@ -142,9 +142,9 @@
                             />
                         </div>
 
-                        <div class="flex items-center justify-between gap-2 px-2.5 py-2 min-h-[70px] lg:min-h-0 lg:gap-[10px] lg:px-[16px] lg:py-0 lg:h-[64px] lg:mt-[12px] lg:mb-[10px]">
+                        <div class="flex items-center justify-between gap-2 px-3 py-2 min-h-[66px] lg:min-h-0 lg:gap-[10px] lg:px-[16px] lg:py-0 lg:h-[64px] lg:mt-[12px] lg:mb-[10px]">
                             <h3
-                                class="flex-1 min-w-0 font-medium text-[14px] lg:text-[20px] leading-[1.6] text-[#364152] group-hover:text-[#FAFAFA] uppercase break-words transition-colors duration-300"
+                                class="flex-1 min-w-0 font-medium text-[14px] lg:text-[20px] leading-[1.6] text-[#FAFAFA] lg:text-[#364152] lg:group-hover:text-[#FAFAFA] uppercase break-words transition-colors duration-300"
                             >
                                 <span
                                     v-for="(line, lineIdx) in splitTileTitle(ctaBanner.title)"
@@ -153,7 +153,7 @@
                                 >{{ line }}</span>
                             </h3>
                             <span
-                                class="w-6 h-6 lg:w-[36px] lg:h-[36px] rounded-[4px] bg-[#005EA4] border border-transparent group-hover:bg-[#C9E0FF] group-hover:border-[#81BDFF] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex items-center justify-center shrink-0 transition-colors duration-300"
+                                class="hidden lg:flex w-6 h-6 lg:w-[36px] lg:h-[36px] rounded-[4px] bg-[#005EA4] border border-transparent group-hover:bg-[#C9E0FF] group-hover:border-[#81BDFF] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] items-center justify-center shrink-0 transition-colors duration-300"
                                 aria-hidden="true"
                             >
                                 <svg

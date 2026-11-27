@@ -4,7 +4,7 @@
         id="blog-section"
         class="bg-[#FAFAFA] py-10 md:py-12 lg:py-0"
     >
-        <div class="app-container-narrow flex flex-col gap-5 lg:gap-6">
+        <div class="app-container-narrow flex flex-col gap-6">
             <!-- Section Header (Figma 1171:41650 / 1191:6475) -->
             <div class="flex items-center gap-2 lg:gap-[10px]">
                 <span class="w-[10px] h-[10px] lg:w-3 lg:h-3 rounded-[2px] bg-[#005EA4] shrink-0" aria-hidden="true" />
@@ -90,7 +90,7 @@
                 <div class="flex justify-center">
                     <Link
                         :href="postsIndexUrl"
-                        class="w-full md:w-auto h-[49px] md:min-w-[203px] inline-flex items-center justify-center gap-2 bg-[#005EA4] hover:bg-[#004D86] text-[#FAFAFA] font-medium text-[14px] md:text-[16px] lg:text-[18px] leading-[1.6] px-[24px] py-[10px] rounded-[4px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]/40"
+                        class="w-full md:w-auto h-[49px] md:min-w-[203px] inline-flex items-center justify-center gap-2 bg-[#005EA4] hover:bg-[#004D86] text-[#FAFAFA] font-medium text-[18px] leading-[1.6] px-[24px] py-[10px] rounded-[4px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]/40"
                     >
                         {{ ctaLabel }}
                     </Link>
