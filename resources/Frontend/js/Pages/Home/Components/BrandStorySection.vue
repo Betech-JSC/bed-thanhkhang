@@ -2,7 +2,7 @@
     <section
         v-if="hasContent"
         id="about-intro-section"
-        class="bg-[#FAFAFA] pt-3 pb-10 md:py-12 lg:py-0"
+        class="bg-[#FAFAFA] py-10 md:py-12 lg:py-0"
     >
         <div class="app-container-narrow flex flex-col gap-5 lg:gap-8">
             <!-- Row 1 (Top Row on Desktop): Eyebrow + Lead Heading | 2 Top Photos (268x272) -->
@@ -100,14 +100,14 @@
                     <Link
                         v-if="about.cta_text && about.cta_link && isInertiaLink(about.cta_link)"
                         :href="about.cta_link"
-                        class="w-full lg:w-auto h-[42px] lg:h-[46px] inline-flex items-center justify-center gap-2 px-6 rounded-[4px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[14px] lg:text-[16px] leading-[22px] lg:leading-[1.6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
+                        class="w-full lg:w-auto h-[49px] lg:min-w-[245px] inline-flex items-center justify-center gap-2 px-6 rounded-[4px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[14px] lg:text-[16px] leading-[22px] lg:leading-[1.6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
                     >
                         {{ about.cta_text }}
                     </Link>
                     <a
                         v-else-if="about.cta_text && about.cta_link"
                         :href="about.cta_link"
-                        class="w-full lg:w-auto h-[42px] lg:h-[46px] inline-flex items-center justify-center gap-2 px-6 rounded-[4px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[14px] lg:text-[16px] leading-[22px] lg:leading-[1.6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
+                        class="w-full lg:w-auto h-[49px] lg:min-w-[245px] inline-flex items-center justify-center gap-2 px-6 rounded-[4px] bg-[#005EA4] hover:bg-[#004D86] active:bg-[#003967] text-[#FAFAFA] font-medium text-[14px] lg:text-[16px] leading-[22px] lg:leading-[1.6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4] focus-visible:ring-offset-2"
                     >
                         {{ about.cta_text }}
                     </a>

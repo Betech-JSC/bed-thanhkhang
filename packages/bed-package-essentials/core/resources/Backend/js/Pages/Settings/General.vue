@@ -603,6 +603,126 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Trang Chi tiết Sản phẩm — Thông số mặc định (PDP Defaults) -->
+                <div class="card">
+                    <div class="card-header font-bold text-slate-800">
+                        Trang Chi tiết Sản phẩm — Thông số mặc định (PDP Defaults)
+                    </div>
+                    <div class="card-body">
+                        <p class="text-xs text-slate-500 mb-4">
+                            Giá trị mặc định cho hộp 6 thông số nhanh trên Trang Chi tiết Sản phẩm. Nếu từng sản phẩm có nhập riêng trong mục PDP Metadata thì hệ thống sẽ ưu tiên giá trị của sản phẩm đó.
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.product_detail_brand"
+                                :field="{
+                                    label: 'Thương hiệu mặc định (VI)',
+                                    name: 'product_detail_brand',
+                                    placeholder: 'VD: Universal Chains',
+                                }"
+                            />
+                            <Field
+                                v-model="form.product_detail_brand_en"
+                                :field="{
+                                    label: 'Thương hiệu mặc định (EN)',
+                                    name: 'product_detail_brand_en',
+                                    placeholder: 'Để trống tự động lấy Tiếng Việt',
+                                }"
+                            />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.product_detail_origin"
+                                :field="{
+                                    label: 'Xuất xứ mặc định (VI)',
+                                    name: 'product_detail_origin',
+                                    placeholder: 'VD: Trung Quốc',
+                                }"
+                            />
+                            <Field
+                                v-model="form.product_detail_origin_en"
+                                :field="{
+                                    label: 'Xuất xứ mặc định (EN)',
+                                    name: 'product_detail_origin_en',
+                                    placeholder: 'VD: China (để trống lấy Tiếng Việt)',
+                                }"
+                            />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.product_detail_warranty"
+                                :field="{
+                                    label: 'Bảo hành mặc định (VI)',
+                                    name: 'product_detail_warranty',
+                                    placeholder: 'VD: 12 tháng',
+                                }"
+                            />
+                            <Field
+                                v-model="form.product_detail_warranty_en"
+                                :field="{
+                                    label: 'Bảo hành mặc định (EN)',
+                                    name: 'product_detail_warranty_en',
+                                    placeholder: 'VD: 12 months (để trống lấy Tiếng Việt)',
+                                }"
+                            />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.product_detail_condition"
+                                :field="{
+                                    label: 'Tình trạng mặc định (VI)',
+                                    name: 'product_detail_condition',
+                                    placeholder: 'VD: Full box',
+                                }"
+                            />
+                            <Field
+                                v-model="form.product_detail_condition_en"
+                                :field="{
+                                    label: 'Tình trạng mặc định (EN)',
+                                    name: 'product_detail_condition_en',
+                                    placeholder: 'VD: Full box (để trống lấy Tiếng Việt)',
+                                }"
+                            />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.product_detail_stock_status"
+                                :field="{
+                                    label: 'Trạng thái kho mặc định (VI)',
+                                    name: 'product_detail_stock_status',
+                                    placeholder: 'VD: Còn hàng',
+                                }"
+                            />
+                            <Field
+                                v-model="form.product_detail_stock_status_en"
+                                :field="{
+                                    label: 'Trạng thái kho mặc định (EN)',
+                                    name: 'product_detail_stock_status_en',
+                                    placeholder: 'VD: In stock (để trống lấy Tiếng Việt)',
+                                }"
+                            />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Field
+                                v-model="form.product_detail_support"
+                                :field="{
+                                    label: 'Hỗ trợ kỹ thuật mặc định (VI)',
+                                    name: 'product_detail_support',
+                                    placeholder: 'VD: 24/7',
+                                }"
+                            />
+                            <Field
+                                v-model="form.product_detail_support_en"
+                                :field="{
+                                    label: 'Hỗ trợ kỹ thuật mặc định (EN)',
+                                    name: 'product_detail_support_en',
+                                    placeholder: 'VD: 24/7 (để trống lấy Tiếng Việt)',
+                                }"
+                            />
+                        </div>
+                    </div>
+                </div>
                 <SeoFields
                     :modelValue="form"
                     @update:modelValue="form = $event"

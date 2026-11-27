@@ -39,12 +39,12 @@
                                 </svg>
                             </div>
                             <h3 class="text-[#FAFAFA] font-semibold text-xl tracking-tight font-sans">
-                                Thông số kỹ thuật tham khảo
+                                {{ title || tt('Thông số kỹ thuật') }}
                             </h3>
                         </div>
 
                         <!-- BẢNG THÔNG SỐ KỸ THUẬT (FIGMA 2390:5393) -->
-                        <div class="divide-y divide-[#4A5578]">
+                        <div v-if="allSpecs.length > 0" class="divide-y divide-[#4A5578]">
                             <div
                                 v-for="(spec, index) in allSpecs"
                                 :key="index"
@@ -56,24 +56,23 @@
                         </div>
 
                         <!-- THÔNG TIN BỔ SUNG NÂNG CAO -->
-                        <div class="bg-[#1E2B45] rounded-lg p-3 text-xs space-y-1.5 border border-[#4A5578]/50">
-                            <div class="flex justify-between text-slate-300">
-                                <span>Dung sai gia công:</span>
-                                <span class="text-white font-medium">±0.05 mm (ISO/DIN)</span>
-                            </div>
-                            <div class="flex justify-between text-slate-300">
-                                <span>Tiêu chuẩn kiểm định:</span>
-                                <span class="text-white font-medium">EN 115 / ISO 9001 / CO-CQ</span>
-                            </div>
-                            <div class="flex justify-between text-slate-300">
-                                <span>Xử lý bề mặt:</span>
-                                <span class="text-white font-medium">Tôi cao tần / Mạ chống ăn mòn</span>
+                        <div
+                            v-if="extraSpecList.length > 0"
+                            class="bg-[#1E2B45] rounded-lg p-3 text-xs space-y-1.5 border border-[#4A5578]/50"
+                        >
+                            <div
+                                v-for="(item, index) in extraSpecList"
+                                :key="index"
+                                class="flex justify-between gap-3 text-slate-300"
+                            >
+                                <span>{{ item.label }}</span>
+                                <span class="text-white font-medium text-right">{{ item.value }}</span>
                             </div>
                         </div>
 
                         <!-- LƯU Ý KỸ THUẬT (FIGMA 2390:5415) -->
-                        <div class="text-xs leading-relaxed text-[#B9C0D4] font-sans">
-                            Thông số, thời gian hoàn thiện và chi phí sẽ được xác nhận theo kích thước, vật liệu và số lượng thực tế.
+                        <div v-if="note" class="text-xs leading-relaxed text-[#B9C0D4] font-sans">
+                            {{ note }}
                         </div>
 
                         <!-- NÚT HÀNH ĐỘNG -->
@@ -83,14 +82,14 @@
                                 @click="handleConsult"
                                 class="flex-1 py-2.5 px-4 rounded-lg bg-gradient-to-r from-[#2970FF] to-[#00359E] hover:opacity-95 text-white text-xs font-semibold text-center transition-opacity shadow-md"
                             >
-                                Tư vấn thông số riêng
+                                {{ tt('Tư vấn thông số riêng') }}
                             </a>
                             <button
                                 type="button"
                                 @click="close"
                                 class="py-2.5 px-4 rounded-lg border border-[#4A5578] hover:bg-white/5 text-[#B9C0D4] hover:text-white text-xs font-medium transition-colors"
                             >
-                                Đóng
+                                {{ tt('Đóng') }}
                             </button>
                         </div>
                     </div>
@@ -107,9 +106,21 @@ export default {
             type: Boolean,
             default: false,
         },
+        title: {
+            type: String,
+            default: '',
+        },
         customSpecs: {
             type: Array,
             default: () => [],
+        },
+        extraSpecs: {
+            type: Array,
+            default: () => [],
+        },
+        note: {
+            type: String,
+            default: '',
         },
     },
     emits: ['close', 'consult'],
@@ -121,18 +132,12 @@ export default {
             return this.safeRoute('contact', undefined, this.isEn ? '/en/contact' : '/lien-he')
         },
         allSpecs() {
-            if (this.customSpecs && this.customSpecs.length > 0) {
-                return this.customSpecs
-            }
-            return [
-                { label: 'Tiêu chuẩn / Công nghệ', value: 'Universal Chains / ISO' },
-                { label: 'Vật liệu', value: 'Thép hợp kim 40Cr / Inox 304' },
-                { label: 'Bước xích tiêu chuẩn', value: '133.33 mm / 135.47 mm' },
-                { label: 'Tải trọng kéo đứt tối thiểu', value: '≥ 70 kN - 130 kN' },
-                { label: 'Nhiệt độ vận hành', value: '-10°C đến +80°C' },
-                { label: 'Chứng chỉ đi kèm', value: 'Đầy đủ CO / CQ' },
-                { label: 'Gia công theo yêu cầu', value: 'OEM / ODM theo bản vẽ' },
-            ]
+            return Array.isArray(this.customSpecs) ? this.customSpecs : []
+        },
+        extraSpecList() {
+            return Array.isArray(this.extraSpecs)
+                ? this.extraSpecs.filter((item) => item && (item.label || item.value))
+                : []
         },
     },
     watch: {

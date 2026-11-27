@@ -86,7 +86,22 @@
         <section class="py-12" v-if="posts && posts.data && posts.data.length === 0 && $page.props.route.query.keyword">
             <div class="container">
                 <div class="flex justify-center">
-                    <img src="/assets/images/image-page.webp" alt="error image" />
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        width="64"
+                        height="64"
+                        class="w-16 h-16 text-gray-400"
+                        aria-hidden="true"
+                    >
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.3-4.3" />
+                        <path d="M8.5 11h5" />
+                    </svg>
                 </div>
                 <div class="flex flex-wrap justify-center mt-4 space-x-1 font-medium text-gray-900">
                     <span>{{ tt('Không tìm thấy kết quả cho từ khóa') }}</span

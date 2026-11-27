@@ -1,291 +1,225 @@
 <template>
-    <section v-if="productList.length > 0" v-scroll-reveal class="w-full pt-4 pb-8 flex flex-col gap-6">
-        <!-- TIÊU ĐỀ BỘ SƯU TẬP (FIGMA 2358:3095: 1152x29 px) -->
-        <div>
-            <h2 class="text-[24px] font-bold leading-[29px] text-[#FAFAFA] font-sans">
-                {{ tt('Sản phẩm khác') }}
-            </h2>
-        </div>
+    <section
+        v-if="normalizedProducts.length > 0"
+        aria-labelledby="pdp-related-heading"
+        class="bg-[#FAFAFA] pb-8 md:pb-16 lg:pb-[80px]"
+    >
+        <div class="app-container-narrow flex flex-col gap-6 md:gap-8">
+            <!-- Section Header (Figma Nodes 1264:49388 / 1264:49710) -->
+            <div class="flex items-center justify-between gap-4">
+                <div class="flex items-center gap-2 lg:gap-[10px] min-w-0">
+                    <span
+                        class="w-[10px] h-[10px] lg:w-3 lg:h-3 rounded-[2px] bg-[#005EA4] shrink-0"
+                        aria-hidden="true"
+                    />
+                    <h2
+                        id="pdp-related-heading"
+                        class="font-bold text-[16px] lg:text-[18px] leading-[24px] lg:leading-[1.6] text-[#005EA4] break-words"
+                    >
+                        {{ tt('Sản phẩm liên quan') }}
+                    </h2>
+                </div>
 
-        <!-- DANH SÁCH GỢI Ý (FIGMA 2358:3100: 1152x419 px, cards 273x419 px, gap 20px) -->
-        <div class="relative group w-full max-w-[1152px] mx-auto">
-            <!-- Navigation Prev Button (Left) -->
-            <button
-                type="button"
-                @click="scrollPrev"
-                class="absolute -left-3 sm:-left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#111322]/90 border border-white/20 text-white hover:bg-[#2970FF] hover:border-[#2970FF] flex items-center justify-center transition-colors duration-200 active:scale-95 shadow-xl backdrop-blur-sm cursor-pointer"
-                aria-label="Previous Slide"
-            >
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-                </svg>
-            </button>
+                <!-- Carousel Prev / Next Controls -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <button
+                        type="button"
+                        :disabled="!canPrev"
+                        :aria-disabled="!canPrev"
+                        :aria-label="tt('Sản phẩm trước')"
+                        :class="[
+                            'w-8 h-8 rounded-[6px] bg-[#EEF2F6] flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]',
+                            canPrev
+                                ? 'hover:bg-[#E3E8EF] active:bg-[#CDD5DF] cursor-pointer'
+                                : 'cursor-not-allowed',
+                        ]"
+                        @click="scrollPrev"
+                    >
+                        <img
+                            src="/assets/svg/icons/product-chevron-left.svg"
+                            alt=""
+                            aria-hidden="true"
+                            width="16"
+                            height="16"
+                            :class="['w-4 h-4 shrink-0 transition-opacity', canPrev ? '' : 'opacity-45']"
+                        />
+                    </button>
 
-            <!-- Smooth GPU Track Viewport -->
+                    <button
+                        type="button"
+                        :disabled="!canNext"
+                        :aria-disabled="!canNext"
+                        :aria-label="tt('Sản phẩm tiếp theo')"
+                        :class="[
+                            'w-8 h-8 rounded-[6px] bg-[#EEF2F6] flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005EA4]',
+                            canNext
+                                ? 'hover:bg-[#E3E8EF] active:bg-[#CDD5DF] cursor-pointer'
+                                : 'cursor-not-allowed',
+                        ]"
+                        @click="scrollNext"
+                    >
+                        <img
+                            src="/assets/svg/icons/product-chevron-right.svg"
+                            alt=""
+                            aria-hidden="true"
+                            width="16"
+                            height="16"
+                            :class="['w-4 h-4 shrink-0 transition-opacity', canNext ? '' : 'opacity-45']"
+                        />
+                    </button>
+                </div>
+            </div>
+
+            <!-- Horizontal GPU Translate-X Carousel Viewport (4 col Desktop / 3 col Tablet / 2 col Mobile) -->
             <div
-                ref="viewportRef"
-                class="overflow-hidden w-full py-1"
+                class="related-products-viewport overflow-hidden w-full py-1 -my-1"
                 @touchstart.passive="onTouchStart"
                 @touchend.passive="onTouchEnd"
             >
                 <div
-                    ref="trackRef"
-                    class="flex items-center gap-5 will-change-transform"
-                    :style="{
-                        transform: `translateX(-${currentOffset}px)`,
-                        transition: 'transform 450ms cubic-bezier(0.22, 1, 0.36, 1)'
-                    }"
+                    class="flex w-full transition-transform duration-300 ease-out will-change-transform"
+                    :style="trackStyle"
                 >
-                    <Link
-                        v-for="(item, idx) in productList"
-                        :key="item.id || idx"
-                        :href="getProductUrl(item)"
-                        class="group/card w-[273px] min-w-[273px] max-w-[273px] h-[419px] flex-shrink-0 rounded-[12px] overflow-hidden bg-[#D1D2D2] flex flex-col select-none block hover:shadow-2xl hover:shadow-primary/20 border border-white/5 cursor-pointer"
+                    <div
+                        v-for="(item, idx) in normalizedProducts"
+                        :key="item.id ?? item.slug ?? idx"
+                        class="related-product-slide shrink-0 flex min-w-0"
                     >
-                        <!-- Hình ảnh sản phẩm cố định khung 273x352 (Figma image 15) -->
-                        <div class="w-full h-[352px] bg-[#D1D2D2] relative overflow-hidden shrink-0">
-                            <img
-                                v-if="hasValidImage(item, idx)"
-                                :src="item.image"
-                                :alt="item.title"
-                                width="273"
-                                height="352"
-                                class="w-full h-full object-cover select-none"
-                                loading="lazy"
-                                decoding="async"
-                                @error="handleImageError(item, idx)"
-                            />
-                            <div
-                                v-else
-                                class="w-full h-full bg-[#1C2238] flex items-center justify-center p-6"
-                                aria-hidden="true"
-                            >
-                                <span class="w-10 h-[3px] rounded-[2px] bg-[#404968]"></span>
-                            </div>
-                            <!-- Subtle highlight sheen on hover -->
-                            <div class="absolute inset-0 bg-primary/10 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 pointer-events-none z-10"></div>
-                        </div>
-
-                        <!-- Frame 263: Thông tin sản phẩm cố định 273x67 px (Figma I2358:3101;2283:6515) -->
-                        <div class="w-full h-[67px] bg-[#30374F] relative overflow-hidden shrink-0">
-                            <div class="w-full h-full px-6 py-3 flex flex-col justify-center gap-1">
-                                <h3 class="text-base font-bold leading-[22px] text-[#F5F8FF] truncate">
-                                    {{ tt(item.title) }}
-                                </h3>
-                                <p class="text-xs font-normal leading-[17px] text-[#B9C0D4] truncate">
-                                    {{ tt(item.description) }}
-                                </p>
-                            </div>
-                        </div>
-                    </Link>
+                        <ProductCard :product="item" />
+                    </div>
                 </div>
             </div>
-
-            <!-- Navigation Next Button (Right) -->
-            <button
-                type="button"
-                @click="scrollNext"
-                class="absolute -right-3 sm:-right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#111322]/90 border border-white/20 text-white hover:bg-[#2970FF] hover:border-[#2970FF] flex items-center justify-center transition-colors duration-200 active:scale-95 shadow-xl backdrop-blur-sm cursor-pointer"
-                aria-label="Next Slide"
-            >
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
-                </svg>
-            </button>
         </div>
     </section>
 </template>
 
-<script>
-import { Link } from '@inertiajs/inertia-vue3'
+<script setup>
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import ProductCard from '@/Pages/Product/Components/ProductCard.vue'
 
-export default {
-    name: 'RelatedProducts',
-    components: {
-        Link,
+const props = defineProps({
+    products: {
+        type: Array,
+        default: () => [],
     },
-    props: {
-        products: {
-            type: Array,
-            default: () => [],
-        },
-    },
-    data() {
-        return {
-            currentOffset: 0,
-            touchStartX: 0,
-            failedImageKeys: {},
-        }
-    },
-    watch: {
-        products() {
-            this.failedImageKeys = {}
-        },
-    },
-    computed: {
-        isEn() {
-            return (this.$page?.props?.locale?.current || 'vi') === 'en'
-        },
-        productList() {
-            if (this.products && Array.isArray(this.products) && this.products.length > 0) {
-                return this.products.map((p, idx) => ({
-                    id: p.id || idx,
-                    title: p.title || p.name || '',
-                    slug: p.slug || '',
-                    image: p.image?.url || (typeof p.image === 'string' ? p.image : (p.thumbnail || '')),
-                    description: p.subtitle || p.short_description || p.description || p.excerpt || '',
-                })).filter(p => p.title);
-            }
-            return [];
-        },
-    },
-    mounted() {
-        this.preloadImages()
-        if (typeof window !== 'undefined') {
-            window.addEventListener('resize', this.handleResize, { passive: true })
-        }
-    },
-    beforeUnmount() {
-        if (typeof window !== 'undefined') {
-            window.removeEventListener('resize', this.handleResize)
-        }
-    },
-    methods: {
-        tt(s) {
-            return typeof this.$root?.tt === 'function' ? this.$root.tt(s) : s
-        },
-        safeRoute(name, params, fallback = '/') {
-            if (typeof this.route === 'function' && typeof this.routes === 'function') {
-                const allRoutes = this.routes() || {}
-                const localizedName =
-                    typeof this.routeLocaleName === 'function' ? this.routeLocaleName(name) : name
-                if (allRoutes[localizedName] || allRoutes[name]) {
-                    try {
-                        const url = this.route(name, params)
-                        if (url && url !== '#') return url
-                    } catch (e) {
-                        // Fall through to fallback
-                    }
-                }
-            }
-            return fallback
-        },
-        getItemKey(item, idx) {
-            return String(item?.id ?? item?.slug ?? idx)
-        },
-        hasValidImage(item, idx) {
-            return Boolean(item?.image) && !this.failedImageKeys[this.getItemKey(item, idx)]
-        },
-        getProductUrl(item) {
-            const prefix = this.isEn ? '/en/products' : '/san-pham'
-            if (!item) {
-                return this.safeRoute('products.index', undefined, prefix)
-            }
+})
 
-            if (item.slug) {
-                return this.safeRoute('products.show', { slug: item.slug }, `${prefix}/${item.slug}`)
-            }
-            if (typeof item.url === 'string' && item.url) {
-                try {
-                    const parsed = new URL(item.url, typeof window !== 'undefined' ? window.location.origin : 'http://localhost')
-                    return parsed.pathname
-                } catch (e) {
-                    return item.url
-                }
-            }
-            if (item.url && typeof item.url === 'object') {
-                const locKey = this.isEn ? 'EN' : 'VI'
-                const matched = item.url[locKey] || Object.values(item.url)[0]
-                if (matched && typeof matched === 'string') {
-                    try {
-                        const parsed = new URL(matched, typeof window !== 'undefined' ? window.location.origin : 'http://localhost')
-                        return parsed.pathname
-                    } catch (e) {
-                        return matched
-                    }
-                }
-            }
-            if (item.id) {
-                return this.safeRoute('products.show', { slug: item.id }, `${prefix}/${item.id}`)
-            }
-            return this.safeRoute('products.index', undefined, prefix)
-        },
-        preloadImages() {
-            if (typeof window === 'undefined') return
-            this.productList.forEach((item) => {
-                if (item && item.image) {
-                    const img = new window.Image()
-                    img.src = item.image
-                }
-            })
-        },
-        handleImageError(item, idx) {
-            const key = this.getItemKey(item, idx)
-            this.failedImageKeys = { ...this.failedImageKeys, [key]: true }
-        },
-        getMaxOffset() {
-            const viewport = this.$refs.viewportRef
-            const totalItems = this.productList.length
-            const viewportWidth = viewport ? viewport.clientWidth : 1152
-            // 273px card width + 20px gap, minus last gap
-            return Math.max(0, totalItems * 293 - 20 - viewportWidth)
-        },
-        handleResize() {
-            const maxOffset = this.getMaxOffset()
-            if (this.currentOffset > maxOffset) {
-                this.currentOffset = maxOffset
-            }
-        },
-        scrollNext() {
-            const step = 293 // 273px card + 20px gap
-            const maxOffset = this.getMaxOffset()
-            if (maxOffset <= 0) return
+const normalizedProducts = computed(() => {
+    if (!Array.isArray(props.products)) return []
+    return props.products
+        .filter((item) => {
+            if (!item || typeof item !== 'object') return false
+            const title = String(item.title || item.name || '').trim()
+            return title !== ''
+        })
+        .slice(0, 8)
+})
 
-            if (this.currentOffset >= maxOffset - 5) {
-                this.currentOffset = 0
-            } else {
-                this.currentOffset = Math.min(maxOffset, this.currentOffset + step)
-            }
-        },
-        scrollPrev() {
-            const step = 293 // 273px card + 20px gap
-            const maxOffset = this.getMaxOffset()
-            if (maxOffset <= 0) return
+const visibleCount = ref(4)
+const slideIndex = ref(0)
+let touchStartX = 0
+let touchStartY = 0
 
-            if (this.currentOffset <= 5) {
-                this.currentOffset = maxOffset
-            } else {
-                this.currentOffset = Math.max(0, this.currentOffset - step)
-            }
-        },
-        onTouchStart(e) {
-            if (e.touches && e.touches.length > 0) {
-                this.touchStartX = e.touches[0].clientX
-            }
-        },
-        onTouchEnd(e) {
-            if (!e.changedTouches || e.changedTouches.length === 0) return
-            const deltaX = e.changedTouches[0].clientX - this.touchStartX
-            if (Math.abs(deltaX) > 40) {
-                if (deltaX < 0) {
-                    this.scrollNext()
-                } else {
-                    this.scrollPrev()
-                }
-            }
-        },
-    },
+function syncVisibleCount() {
+    if (typeof window === 'undefined') return
+    if (window.matchMedia('(min-width: 1024px)').matches) {
+        visibleCount.value = 4
+    } else if (window.matchMedia('(min-width: 768px)').matches) {
+        visibleCount.value = 3
+    } else {
+        visibleCount.value = 2
+    }
 }
+
+const maxIndex = computed(() => Math.max(0, normalizedProducts.value.length - visibleCount.value))
+const canPrev = computed(() => slideIndex.value > 0)
+const canNext = computed(() => slideIndex.value < maxIndex.value)
+
+watch(maxIndex, (nextMax) => {
+    if (slideIndex.value > nextMax) {
+        slideIndex.value = nextMax
+    }
+})
+
+watch(
+    () => normalizedProducts.value.map((p, idx) => p.id ?? p.slug ?? idx).join(','),
+    () => {
+        slideIndex.value = 0
+    }
+)
+
+const trackStyle = computed(() => ({
+    gap: 'var(--card-gap)',
+    transform:
+        slideIndex.value === 0
+            ? 'translateX(0px)'
+            : `translateX(calc(-${slideIndex.value} * (100% + var(--card-gap)) / var(--cards-per-view)))`,
+}))
+
+function scrollPrev() {
+    if (!canPrev.value) return
+    slideIndex.value = Math.max(0, slideIndex.value - 1)
+}
+
+function scrollNext() {
+    if (!canNext.value) return
+    slideIndex.value = Math.min(maxIndex.value, slideIndex.value + 1)
+}
+
+function onTouchStart(event) {
+    if (!event.touches || event.touches.length === 0) return
+    touchStartX = event.touches[0].clientX
+    touchStartY = event.touches[0].clientY
+}
+
+function onTouchEnd(event) {
+    if (!event.changedTouches || event.changedTouches.length === 0) return
+    const deltaX = event.changedTouches[0].clientX - touchStartX
+    const deltaY = event.changedTouches[0].clientY - touchStartY
+    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
+        if (deltaX < 0) {
+            scrollNext()
+        } else {
+            scrollPrev()
+        }
+    }
+}
+
+onMounted(() => {
+    syncVisibleCount()
+    if (typeof window !== 'undefined') {
+        window.addEventListener('resize', syncVisibleCount, { passive: true })
+    }
+})
+
+onBeforeUnmount(() => {
+    if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', syncVisibleCount)
+    }
+})
 </script>
 
 <style scoped>
-.no-scrollbar::-webkit-scrollbar {
-    display: none !important;
-    width: 0 !important;
-    height: 0 !important;
+.related-products-viewport {
+    --cards-per-view: 2;
+    --card-gap: 12px;
 }
-.no-scrollbar {
-    -ms-overflow-style: none !important;
-    scrollbar-width: none !important;
+
+@media (min-width: 768px) {
+    .related-products-viewport {
+        --cards-per-view: 3;
+        --card-gap: 24px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .related-products-viewport {
+        --cards-per-view: 4;
+        --card-gap: 32px;
+    }
+}
+
+.related-product-slide {
+    width: calc((100% - (var(--cards-per-view) - 1) * var(--card-gap)) / var(--cards-per-view));
 }
 </style>

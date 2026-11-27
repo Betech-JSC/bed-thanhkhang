@@ -8,6 +8,161 @@ import enJson from '../../lang/en.json'
 
 const TRANSLATE_I18N_KEY = Symbol('frontend-translate-i18n')
 
+const VIETNAMESE_DIACRITIC_RE =
+    /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i
+
+export function hasVietnameseDiacritics(text) {
+    if (typeof text !== 'string' || !text) return false
+    return VIETNAMESE_DIACRITIC_RE.test(text)
+}
+
+export function normalizeTranslateKey(raw) {
+    if (raw === null || raw === undefined) return ''
+    return String(raw)
+        .replace(/\u00a0/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+}
+
+function decodeBasicHtmlEntities(str) {
+    if (typeof str !== 'string' || !str) return ''
+    return str
+        .replace(/&amp;/gi, '&')
+        .replace(/&lt;/gi, '<')
+        .replace(/&gt;/gi, '>')
+        .replace(/&quot;/gi, '"')
+        .replace(/&#0*39;|&apos;/gi, "'")
+        .replace(/&nbsp;/gi, ' ')
+        .replace(/&ndash;/gi, '–')
+        .replace(/&mdash;/gi, '—')
+}
+
+function escapeBasicHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+}
+
+/**
+ * Translate technical specification labels consistently across PDP sections,
+ * normalizing whitespace/colons before looking up via vue-i18n `tt()`.
+ */
+export function translateSpecLabel(rawLabel, translator = null) {
+    const normalized = normalizeTranslateKey(rawLabel)
+    if (!normalized) return ''
+    const fn = typeof translator === 'function' ? translator : (text) => text
+
+    const direct = fn(normalized)
+    if (direct && direct !== normalized) {
+        return direct
+    }
+
+    const hasColon = normalized.endsWith(':')
+    const base = hasColon ? normalized.slice(0, -1).trim() : normalized
+    if (!base) return normalized
+
+    const candidates = [base]
+    const hyphenVariant = base.replace(/[–—]/g, '-')
+    const enDashVariant = base.replace(/\s-\s/g, ' – ')
+    if (hyphenVariant !== base) candidates.push(hyphenVariant)
+    if (enDashVariant !== base) candidates.push(enDashVariant)
+
+    for (const candidate of candidates) {
+        const translatedBase = fn(candidate)
+        if (translatedBase && translatedBase !== candidate) {
+            return hasColon ? `${translatedBase}:` : translatedBase
+        }
+        if (!hasColon) {
+            const withColon = `${candidate}:`
+            const translatedColon = fn(withColon)
+            if (translatedColon && translatedColon !== withColon) {
+                return translatedColon.replace(/:\s*$/, '')
+            }
+        }
+    }
+
+    return normalized
+}
+
+/**
+ * Translate technical specification values (numbers/units pass through untouched;
+ * known Vietnamese phrases like strand count or heat-treatment notes localize on EN).
+ */
+export function translateSpecValue(rawValue, translator = null, isEnLocale = false) {
+    const normalized = normalizeTranslateKey(rawValue)
+    if (!normalized) return ''
+    const fn = typeof translator === 'function' ? translator : (text) => text
+
+    const direct = fn(normalized)
+    if (direct && direct !== normalized) {
+        return direct
+    }
+
+    if (!isEnLocale || !hasVietnameseDiacritics(normalized)) {
+        return normalized
+    }
+
+    let fallback = normalized
+        .replace(/\b(\d+)\s+hoặc\s+(\d+)\s+dãy\b/gi, '$1 or $2 strands')
+        .replace(/\bchưa nhiệt luyện\b/gi, 'non-heat-treated')
+        .replace(/\bnhiệt luyện\b/gi, 'heat-treated')
+        .replace(/\bKiểu\s*\(type\)/gi, 'Type')
+        .replace(/\bbề dày má\b/gi, 'plate thickness')
+
+    return fallback
+}
+
+/**
+ * Localize DB-seeded Vietnamese headings and `<li><strong>Label:</strong> Value</li>`
+ * entries inside product rich HTML when rendering EN locale.
+ */
+export function localizeRichHtmlForLocale(rawHtml, isEnLocale = false, translator = null) {
+    if (typeof rawHtml !== 'string' || !rawHtml.trim() || !isEnLocale) {
+        return typeof rawHtml === 'string' ? rawHtml : ''
+    }
+    const fn = typeof translator === 'function' ? translator : (text) => text
+
+    let localized = rawHtml.replace(
+        /(<(h[1-6])\b[^>]*>)([^<]+)(<\/\2>)/gi,
+        (full, openTag, tagName, inner, closeTag) => {
+            const decoded = decodeBasicHtmlEntities(inner)
+            const translated = translateSpecLabel(decoded, fn)
+            if (translated && translated !== normalizeTranslateKey(decoded)) {
+                return `${openTag}${escapeBasicHtml(translated)}${closeTag}`
+            }
+            return full
+        }
+    )
+
+    localized = localized.replace(
+        /(<li\b[^>]*>\s*<(strong|b)\b[^>]*>)([^<]+)(<\/\2>)/gi,
+        (full, prefix, tagName, labelRaw, closeTag) => {
+            const decodedLabel = decodeBasicHtmlEntities(labelRaw)
+            const translatedLabel = translateSpecLabel(decodedLabel, fn)
+            if (translatedLabel && translatedLabel !== normalizeTranslateKey(decodedLabel)) {
+                return `${prefix}${escapeBasicHtml(translatedLabel)}${closeTag}`
+            }
+            return full
+        }
+    )
+
+    localized = localized.replace(
+        /(<li\b[^>]*>\s*<(?:strong|b)\b[^>]*>[^<]+<\/(?:strong|b)>\s*:?\s*)([^<]+)(<\/li>)/gi,
+        (full, prefix, valueRaw, closeLi) => {
+            const decodedValue = decodeBasicHtmlEntities(valueRaw)
+            const translatedValue = translateSpecValue(decodedValue, fn, true)
+            if (translatedValue && translatedValue !== normalizeTranslateKey(decodedValue)) {
+                const leadingSpace = /^\s/.test(valueRaw) ? ' ' : ''
+                return `${prefix}${leadingSpace}${escapeBasicHtml(translatedValue)}${closeLi}`
+            }
+            return full
+        }
+    )
+
+    return localized
+}
+
 const rawMerged = { ...messages, ...i18nMessages }
 
 export const mergedMessages = {

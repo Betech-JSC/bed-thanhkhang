@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Models\Config;
 use App\Models\Post\Post;
 use Inertia\Inertia;
 use Illuminate\Routing\Controller;
 use App\Models\Post\PostCategory;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
+use JamstackVietnam\MetaPage\Models\MetaPage;
 
 class PostController extends Controller
 {
@@ -31,16 +34,7 @@ class PostController extends Controller
                 ];
             });
 
-            $seo = [
-                'title' => $locale === 'en'
-                    ? 'News & Technical Insights - Thanh Khang Tecsat'
-                    : 'Tin tức & Kiến thức Kỹ thuật - Thành Khang Tecsat',
-                'description' => $locale === 'en'
-                    ? 'Explore technical guides, escalator maintenance knowledge, and industrial automation news from Thanh Khang Tecsat.'
-                    : 'Tổng hợp các bài viết chuyên ngành, cẩm nang bảo trì thang cuốn, xích công nghiệp và giải pháp tiết kiệm điện từ Thành Khang Tecsat.',
-                'image' => '/storage/images/logo.png',
-                'seo_image' => '/storage/images/logo.png',
-            ];
+            $seo = $this->resolvePostsSeo($locale);
 
             if (request()->wantsJson()) {
                 return response()->json(array_merge($data, ['seo' => $seo]));
@@ -55,6 +49,82 @@ class PostController extends Controller
             }
             return abort(500);
         }
+    }
+
+    protected function resolvePostsSeo(string $locale): array
+    {
+        $metaPage = null;
+        try {
+            if (Schema::hasTable('meta_pages')) {
+                $candidateUrls = $locale === 'en'
+                    ? ['/en/posts', 'en/posts']
+                    : ['/tin-tuc', 'tin-tuc'];
+                $metaPage = MetaPage::whereIn('url', $candidateUrls)->first();
+            }
+        } catch (\Throwable $e) {
+            $metaPage = null;
+        }
+
+        $global = [];
+        try {
+            if (Schema::hasTable('settings')) {
+                $global = Config::getGeneralSettings($locale);
+            }
+        } catch (\Throwable $e) {
+            $global = [];
+        }
+
+        $pick = static function (...$values): ?string {
+            foreach ($values as $value) {
+                if (is_string($value) && trim($value) !== '') {
+                    return trim($value);
+                }
+            }
+            return null;
+        };
+
+        $defaultTitle = $locale === 'en'
+            ? 'News & Technical Insights - Thanh Khang Tecsat'
+            : 'Tin tức & Kiến thức Kỹ thuật - Thành Khang Tecsat';
+        $defaultDescription = $locale === 'en'
+            ? 'Explore technical guides, escalator maintenance knowledge, and industrial automation news from Thanh Khang Tecsat.'
+            : 'Tổng hợp các bài viết chuyên ngành, cẩm nang bảo trì thang cuốn, xích công nghiệp và giải pháp tiết kiệm điện từ Thành Khang Tecsat.';
+
+        $title = $pick($metaPage?->seo_meta_title, $defaultTitle);
+        $description = $pick($metaPage?->seo_meta_description, $defaultDescription);
+
+        $seoImage = null;
+        $imageCandidates = [
+            $metaPage?->seo_image ?? null,
+            $global['seo_image'] ?? null,
+            $global['general_logo'] ?? null,
+            $global['logo'] ?? null,
+        ];
+
+        foreach ($imageCandidates as $rawCandidate) {
+            $resolvedUrl = Config::resolveMediaSettingUrl($rawCandidate);
+            if ($resolvedUrl === '') {
+                continue;
+            }
+            $parsedPath = parse_url($resolvedUrl, PHP_URL_PATH);
+            $normalizedPath = is_string($parsedPath) ? '/' . ltrim($parsedPath, '/') : $resolvedUrl;
+            if ($normalizedPath === '/storage/images/logo.png' && !file_exists(public_path('storage/images/logo.png'))) {
+                continue;
+            }
+            $seoImage = $resolvedUrl;
+            break;
+        }
+
+        if ($seoImage === null && file_exists(public_path('assets/images/logo/logo-thanhkhang.png'))) {
+            $seoImage = '/assets/images/logo/logo-thanhkhang.png';
+        }
+
+        return [
+            'title' => $title,
+            'description' => $description,
+            'image' => $seoImage,
+            'seo_image' => $seoImage,
+        ];
     }
 
     public function show($slug)

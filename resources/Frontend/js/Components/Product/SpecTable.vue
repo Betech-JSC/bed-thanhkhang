@@ -1,69 +1,103 @@
 <template>
-    <!-- BẢNG THÔNG SỐ KỸ THUẬT (FIGMA 2358:3066 / 2390:5388: 480x445 px, bg-[#30374F], border-[#30374F], rounded-[12px], p-[28px], gap-[20px]) -->
-    <div class="w-full lg:w-[480px] lg:h-[445px] lg:min-h-[445px] bg-[#30374F] border border-[#30374F] rounded-[12px] p-6 sm:p-[28px] gap-[18px] flex flex-col justify-between font-sans">
-        <!-- 1. TIÊU ĐỀ THÔNG SỐ (FIGMA 2358:3067: gap 12px) -->
-        <div class="flex items-center gap-3">
-            <svg class="w-5 h-5 text-[#84ADFF] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-            </svg>
-            <h3 class="text-lg sm:text-xl font-semibold text-[#FAFAFA] leading-6 tracking-tight">
-                {{ tt(title) }}
+    <!-- BẢNG THÔNG SỐ & CẤU TẠO (Figma Node 1264:49515) -->
+    <div class="w-full max-w-[560px] bg-white border border-[#E3E8EF] rounded-[4px] overflow-hidden">
+        <div class="bg-[#00284B] px-4 md:px-[20px] py-[14px]">
+            <h3 class="text-[#FAFAFA] text-[14px] font-bold leading-[1.6] uppercase">
+                {{ resolvedTitle }}
             </h3>
         </div>
 
-        <!-- 2. BẢNG THÔNG SỐ (FIGMA 2358:3071: 7 hàng thông số) -->
-        <div class="flex flex-col">
-            <template v-if="specList.length > 0">
-                <div v-for="(row, idx) in specList"
-                :key="idx"
-                class="flex items-center justify-between py-3 border-b border-[#4A5578] last:border-b-0 h-[41px]"
+        <div v-if="specList.length > 0" class="w-full">
+            <div
+                v-for="(spec, idx) in specList"
+                :key="`${spec.label}-${idx}`"
+                :class="[
+                    'px-4 md:px-[20px] py-[13px] grid grid-cols-2 gap-4 items-center text-[14px] leading-[1.6] border-b border-[#E3E8EF] last:border-b-0',
+                    idx % 2 === 0 ? 'bg-white' : 'bg-[#F8FAFC]',
+                ]"
             >
-                <span class="text-sm font-normal text-[#DCDFEA] leading-[17px]">{{ row.label }}</span>
-                <span class="text-sm font-medium text-[#FAFAFA] leading-[17px] text-right">{{ row.value }}</span>
-            </div>
-            </template>
-            <div v-else class="py-8 text-center text-sm text-[#B9C0D4]">
-                {{ tt('Thông số kỹ thuật đang được cập nhật.') }}
+                <span class="text-[#4B5565] font-normal break-words">
+                    {{ translateLabel(spec.label) }}
+                </span>
+                <span class="text-[#001932] font-bold text-right break-words">
+                    {{ translateValue(spec.value) }}
+                </span>
             </div>
         </div>
 
-        <!-- 3. LƯU Ý KỸ THUẬT (FIGMA 2358:3093: text 12px, color #DCDFEA, line-height 19px) -->
-        <div>
-            <p class="text-xs text-[#DCDFEA] leading-[19px]">
-                {{ tt(note) }}
-            </p>
+        <div
+            v-else
+            class="px-4 md:px-[20px] py-6 bg-white text-[14px] leading-[1.6] text-[#697586]"
+        >
+            {{ tt('Đang cập nhật thông số kỹ thuật cho sản phẩm này.') }}
         </div>
     </div>
 </template>
 
 <script>
-const tt = (s) => s
+import {
+    resolveLocaleFromProps,
+    translateSpecLabel,
+    translateSpecValue,
+} from '@/composables/useTranslate.js'
 
 export default {
     name: 'SpecTable',
     props: {
-        title: {
-            type: String,
-            default: tt('Thông số kỹ thuật'),
+        specifications: {
+            type: Array,
+            default: () => [],
         },
         specs: {
             type: Array,
             default: () => [],
         },
-        note: {
+        title: {
             type: String,
-            default: tt('Thông số, thời gian hoàn thiện và chi phí sẽ được xác nhận theo kích thước, vật liệu và số lượng thực tế.'),
+            default: '',
         },
     },
     computed: {
+        isEn() {
+            return resolveLocaleFromProps(this.$page?.props, 'vi') === 'en'
+        },
+        resolvedTitle() {
+            const trimmed = typeof this.title === 'string' ? this.title.trim() : ''
+            return trimmed ? this.tt(trimmed) : this.tt('THÔNG SỐ & CẤU TẠO')
+        },
         specList() {
-            if (this.specs && Array.isArray(this.specs) && this.specs.length > 0) {
-                return this.specs.map(s => ({
-                    label: this.tt(s.label || s.name || s.key || ''),
-                    value: this.tt(s.value || s.val || ''),
-                })).filter(s => s.label);
-            }
-            return [];
+            const source =
+                Array.isArray(this.specifications) && this.specifications.length > 0
+                    ? this.specifications
+                    : Array.isArray(this.specs)
+                    ? this.specs
+                    : []
+
+            return source
+                .map((item) => {
+                    if (!item || typeof item !== 'object') return null
+                    const rawLabel = item.label ?? item.name ?? item.key ?? item.title ?? ''
+                    const rawValue = item.value ?? item.val ?? item.content ?? ''
+                    const label =
+                        typeof rawLabel === 'string' || typeof rawLabel === 'number'
+                            ? String(rawLabel).trim()
+                            : ''
+                    const value =
+                        typeof rawValue === 'string' || typeof rawValue === 'number'
+                            ? String(rawValue).trim()
+                            : ''
+                    if (!label || !value) return null
+                    return { label, value }
+                })
+                .filter(Boolean)
+        },
+    },
+    methods: {
+        translateLabel(label) {
+            return translateSpecLabel(label, (text) => this.tt(text))
+        },
+        translateValue(value) {
+            return translateSpecValue(value, (text) => this.tt(text), this.isEn)
         },
     },
 }

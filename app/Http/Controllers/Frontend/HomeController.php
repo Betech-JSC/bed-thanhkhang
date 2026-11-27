@@ -534,12 +534,17 @@ class HomeController extends Controller
 
                     $material = $this->translateTerm($product->material, $locale);
                     $printTech = $this->translateTerm($product->print_technology, $locale);
+                    $productSlug = $product->resolveProductSlug($locale);
+                    $routeName = $locale . '.products.show';
+                    $productUrl = (filled($productSlug) && \Illuminate\Support\Facades\Route::has($routeName))
+                        ? route($routeName, ['slug' => $productSlug])
+                        : null;
 
                     return [
                         'id' => $product->id,
                         'name' => $product->title,
                         'title' => $product->title,
-                        'slug' => $product->seo_slug ?? $product->slug,
+                        'slug' => $productSlug,
                         'image' => [
                             'url' => $imageUrl,
                             'alt' => $product->title,
@@ -556,7 +561,7 @@ class HomeController extends Controller
                         'category_name' => $firstCat?->title ?? '',
                         'material' => $material,
                         'print_technology' => $printTech,
-                        'url' => route($locale . '.products.show', ['slug' => $product->seo_slug ?? $product->slug]),
+                        'url' => $productUrl,
                     ];
                 });
 

@@ -33,6 +33,7 @@ class Product extends BaseModel
     public $fillable = [
         'brand_id',
         'status',
+        'position',
         'is_featured',
         'is_new',
         'is_stock',
@@ -114,6 +115,7 @@ class Product extends BaseModel
                 'price' => 'nullable|numeric|min:0',
                 'compare_at_price' => 'nullable|numeric|min:0',
                 'status' => 'nullable|string|in:ACTIVE,INACTIVE',
+                'position' => 'nullable|integer',
             ],
         ];
     }
@@ -130,7 +132,7 @@ class Product extends BaseModel
         });
 
         static::saved(function (self $model) {
-            if (strpos(request()->getRequestUri(), '/products/store') !== false || request()->has('categories') || request()->has('category_id')) {
+            if (request()->has('categories') || request()->has('category_id')) {
                 $model->saveCategories($model);
             }
 
@@ -142,26 +144,31 @@ class Product extends BaseModel
         });
     }
 
-    public static function clearProductCaches(?self $model = null): void
+    public static function clearProductCaches(?self $model = null, array $extraSlugs = []): void
     {
         $locales = config('app.locales', ['vi', 'en']);
-        $slugs = [];
+        $identifiers = [];
 
         if ($model) {
-            if (!empty($model->slug)) {
-                $slugs[] = $model->slug;
+            if (!empty($model->id)) {
+                $identifiers[] = (string) $model->id;
             }
-            if (!empty($model->seo_slug)) {
-                $slugs[] = $model->seo_slug;
+            if ($model->relationLoaded('translations')) {
+                if (!empty($model->slug)) {
+                    $identifiers[] = $model->slug;
+                }
+                if (!empty($model->seo_slug)) {
+                    $identifiers[] = $model->seo_slug;
+                }
             }
             if ($model->relationLoaded('translations') || method_exists($model, 'translations')) {
                 try {
                     foreach ($model->translations()->get() as $translation) {
                         if (!empty($translation->slug)) {
-                            $slugs[] = $translation->slug;
+                            $identifiers[] = $translation->slug;
                         }
                         if (!empty($translation->seo_slug)) {
-                            $slugs[] = $translation->seo_slug;
+                            $identifiers[] = $translation->seo_slug;
                         }
                     }
                 } catch (\Throwable $e) {
@@ -169,22 +176,54 @@ class Product extends BaseModel
                 }
             }
         }
-        $slugs = array_values(array_unique(array_filter($slugs)));
+
+        foreach ($extraSlugs as $extraSlug) {
+            if (is_string($extraSlug) && trim($extraSlug) !== '') {
+                $identifiers[] = trim($extraSlug);
+            }
+        }
+
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('products')) {
+                foreach (\Illuminate\Support\Facades\DB::table('products')->pluck('id') as $productId) {
+                    if (!empty($productId)) {
+                        $identifiers[] = (string) $productId;
+                    }
+                }
+            }
+
+            if (\Illuminate\Support\Facades\Schema::hasTable('product_translations')) {
+                $translationSlugs = \Illuminate\Support\Facades\DB::table('product_translations')
+                    ->select('slug', 'seo_slug')
+                    ->get();
+
+                foreach ($translationSlugs as $row) {
+                    if (!empty($row->slug)) {
+                        $identifiers[] = $row->slug;
+                    }
+                    if (!empty($row->seo_slug)) {
+                        $identifiers[] = $row->seo_slug;
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            // Ignore if table not ready
+        }
+
+        $identifiers = array_values(array_unique(array_filter(array_map(
+            static fn($val) => trim((string) $val),
+            $identifiers
+        ))));
 
         foreach ($locales as $locale) {
             \Illuminate\Support\Facades\Cache::forget('products_index_' . $locale);
             \Illuminate\Support\Facades\Cache::forget('documents_index_' . $locale);
-            \Illuminate\Support\Facades\Cache::forget('galleries_index_' . $locale);
             \Illuminate\Support\Facades\Cache::forget('home_page_data_' . $locale);
             \Illuminate\Support\Facades\Cache::forget('inertia_layout_shared_data_' . $locale);
             \Illuminate\Support\Facades\Cache::forget('search_page_data_' . $locale . '_');
 
-            if ($model && !empty($model->id)) {
-                \Illuminate\Support\Facades\Cache::forget('product_show_' . $model->id . '_' . $locale);
-            }
-
-            foreach ($slugs as $slug) {
-                \Illuminate\Support\Facades\Cache::forget('product_show_' . $slug . '_' . $locale);
+            foreach ($identifiers as $identifier) {
+                \Illuminate\Support\Facades\Cache::forget('product_show_' . $identifier . '_' . $locale);
             }
         }
     }
@@ -323,7 +362,8 @@ class Product extends BaseModel
     public function scopeOrdered($query)
     {
         return $query->orderByRaw('CASE WHEN position IS NULL OR position = 0 THEN 1 ELSE 0 END, position ASC')
-            ->orderBy('created_at', 'desc');
+            ->orderBy('created_at', 'desc')
+            ->orderByDesc('id');
     }
 
     public function getCategoryIdsAttribute()
@@ -403,9 +443,9 @@ class Product extends BaseModel
 
     public function getImageDefaultAttribute()
     {
-        $variant = $this->variants->where('is_default')->first();
+        $variant = $this->variants?->where('is_default')?->first();
 
-        if (!empty($variant->id) && count($variant->images) > 0) {
+        if (!empty($variant->id) && !empty($variant->images) && count($variant->images) > 0) {
             $img = $variant->images[0];
             $detail = $this->getImageDetail($img);
             return [
@@ -428,19 +468,108 @@ class Product extends BaseModel
         return null;
     }
 
+    public function resolveProductSlug(?string $locale = null): ?string
+    {
+        $slug = $this->resolveSlugForLocale($locale);
+        return $slug !== '' ? $slug : null;
+    }
+
+    public function resolveSlugForLocale(?string $locale = null): string
+    {
+        $locale = $locale ?: (function_exists('current_locale') ? current_locale() : app()->getLocale());
+        $translations = $this->relationLoaded('translations')
+            ? $this->translations
+            : $this->translations()->get();
+
+        $translation = $translations->firstWhere('locale', $locale);
+        $slug = trim((string) ($translation?->seo_slug ?: $translation?->slug ?: ''));
+
+        if ($slug === '' && config('app.use_default_locale', true)) {
+            $defaultLocale = config('app.locale_default_frontend') ?: config('app.fallback_locale') ?: config('app.locale', 'vi');
+            $defaultTranslation = $translations->firstWhere('locale', $defaultLocale);
+            $slug = trim((string) ($defaultTranslation?->seo_slug ?: $defaultTranslation?->slug ?: ''));
+        }
+
+        if ($slug === '') {
+            $slug = trim((string) ($this->seo_slug ?: $this->slug ?: ''));
+        }
+
+        return $slug;
+    }
+
+    public function resolveFrontendUrl(?string $locale = null, bool $absolute = false): ?string
+    {
+        if (!$this->is_active) {
+            return null;
+        }
+
+        $locale = $locale ?: (function_exists('current_locale') ? current_locale() : app()->getLocale());
+        $slug = $this->resolveSlugForLocale($locale);
+        $routeName = "$locale.products.show";
+
+        if ($slug !== '' && \Illuminate\Support\Facades\Route::has($routeName)) {
+            return route($routeName, ['slug' => $slug], $absolute);
+        }
+
+        return null;
+    }
+
     public function getUrlAttribute(): array
     {
         $urls = [];
         if ($this->is_active) {
-            foreach ($this->translations as $translation) {
-                $slug = $translation->seo_slug ?? $translation->slug;
+            $translations = $this->relationLoaded('translations')
+                ? $this->translations
+                : $this->translations()->get();
 
-                $urls[strtoupper($translation->locale)] = route("$translation->locale.products.show", [
-                    'slug' => $slug,
-                ]);
+            foreach ($translations as $translation) {
+                $slug = trim((string) ($translation->seo_slug ?: $translation->slug ?: ''));
+                $routeName = "$translation->locale.products.show";
+
+                if ($slug !== '' && \Illuminate\Support\Facades\Route::has($routeName)) {
+                    $urls[strtoupper($translation->locale)] = route($routeName, [
+                        'slug' => $slug,
+                    ]);
+                }
+            }
+
+            if (config('app.use_default_locale', true)) {
+                $defaultLocale = config('app.locale_default_frontend') ?: config('app.fallback_locale') ?: config('app.locale', 'vi');
+                $defaultSlug = $this->resolveSlugForLocale($defaultLocale);
+                if ($defaultSlug !== '') {
+                    foreach (config('app.locales', ['vi', 'en']) as $loc) {
+                        $upperLoc = strtoupper($loc);
+                        $routeName = "$loc.products.show";
+                        if (empty($urls[$upperLoc]) && \Illuminate\Support\Facades\Route::has($routeName)) {
+                            $urls[$upperLoc] = route($routeName, [
+                                'slug' => $defaultSlug,
+                            ]);
+                        }
+                    }
+                }
             }
         }
         return $urls;
+    }
+
+    public function getCurrentUrlAttribute()
+    {
+        if (!$this->is_active) {
+            return null;
+        }
+
+        $locale = function_exists('current_locale') ? current_locale() : app()->getLocale();
+        $urls = $this->url;
+
+        if (!empty($urls[strtoupper($locale)])) {
+            return $urls[strtoupper($locale)];
+        }
+
+        if (config('app.use_default_locale', true)) {
+            return $this->resolveFrontendUrl($locale, true);
+        }
+
+        return null;
     }
 
     public function getIsActiveAttribute()
@@ -450,13 +579,58 @@ class Product extends BaseModel
 
     public function getBreadcrumbsAttribute()
     {
-        $category = $this->categories
+        $activeCategories = $this->categories
             ->where('status', ProductCategory::STATUS_ACTIVE)
-            ->sortBy([['parent_id', 'desc']])
+            ->values();
+
+        if ($activeCategories->isEmpty()) {
+            return [];
+        }
+
+        $category = $activeCategories
+            ->sortByDesc(fn(ProductCategory $cat) => count(ProductCategory::flatAncestors($cat)))
             ->values()
             ->first();
 
-        return ProductCategory::transformAsBreadcrumb($category);
+        $locale = function_exists('current_locale') ? current_locale() : app()->getLocale();
+        $defaultLocale = config('app.locale_default_frontend') ?: config('app.fallback_locale') ?: config('app.locale', 'vi');
+        $useFallback = (bool) config('app.use_default_locale', true);
+
+        return collect(ProductCategory::flatAncestors($category))
+            ->reverse()
+            ->values()
+            ->map(function (ProductCategory $item) use ($locale, $defaultLocale, $useFallback) {
+                $translations = $item->relationLoaded('translations')
+                    ? $item->translations
+                    : $item->translations()->get();
+                $trans = $translations->firstWhere('locale', $locale);
+                $fallbackTrans = ($useFallback && $locale !== $defaultLocale)
+                    ? $translations->firstWhere('locale', $defaultLocale)
+                    : null;
+
+                $title = trim((string) ($trans?->title ?: $fallbackTrans?->title ?: $item->title ?: ''));
+                $slug = trim((string) (
+                    $trans?->seo_slug
+                    ?: $trans?->slug
+                    ?: $fallbackTrans?->seo_slug
+                    ?: $fallbackTrans?->slug
+                    ?: $item->seo_slug
+                    ?: $item->slug
+                    ?: ''
+                ));
+
+                $urls = is_array($item->url) ? $item->url : [];
+                $url = $urls[strtoupper($locale)] ?? (reset($urls) ?: null);
+
+                return [
+                    'id' => $item->id,
+                    'title' => $title,
+                    'slug' => $slug,
+                    'url' => $url,
+                ];
+            })
+            ->values()
+            ->all();
     }
 
     public function getImageDetail($image)
@@ -497,6 +671,8 @@ class Product extends BaseModel
 
     public function transform()
     {
+        $locale = function_exists('current_locale') ? current_locale() : app()->getLocale();
+        $slug = $this->resolveProductSlug($locale);
         $categories = $this->categories
             ->where('status', self::STATUS_ACTIVE)
             ->values()
@@ -505,7 +681,8 @@ class Product extends BaseModel
         $data = [
             'id' => $this->id,
             'title' => $this->title,
-            'slug' => $this->seo_slug ?? $this->slug,
+            'slug' => $slug,
+            'position' => $this->position,
             'category' => $this->category,
             'categories' => $categories,
             'image' => $this->getImageDetail($this->image),
@@ -522,10 +699,26 @@ class Product extends BaseModel
             'is_new' => $this->is_new,
             'is_stock' => $this->is_stock,
             'is_featured' => (bool) $this->is_featured,
-            'url' => $this->current_url ?: (is_array($this->url) ? ($this->url[strtoupper(current_locale())] ?? (reset($this->url) ?: null)) : $this->url),
+            'url' => $this->resolveTransformUrl($locale),
         ];
 
         return $data;
+    }
+
+    private function resolveTransformUrl(string $locale): ?string
+    {
+        $url = $this->resolveFrontendUrl($locale, false) ?: $this->current_url;
+        if (!empty($url)) {
+            return $url;
+        }
+
+        $urls = $this->url;
+        if (is_array($urls)) {
+            $fallback = $urls[strtoupper($locale)] ?? reset($urls);
+            return $fallback ?: null;
+        }
+
+        return $urls ?: null;
     }
 
     public function transformCategory($conditions = ['options' => []])
@@ -536,7 +729,7 @@ class Product extends BaseModel
             'id' => $this->id,
             'title' => $this->title,
             'category' => $this->category,
-            'slug' => $this->seo_slug ?? $this->slug,
+            'slug' => $this->resolveProductSlug(),
             'sku' => $this->sku
         ]);
     }
@@ -561,6 +754,7 @@ class Product extends BaseModel
 
     public function transformDetails()
     {
+        $locale = function_exists('current_locale') ? current_locale() : app()->getLocale();
         $images = collect($this->images)
             ->filter()
             ->values()
@@ -583,18 +777,66 @@ class Product extends BaseModel
             ->values()
             ->map(fn($item) => $item->transform());
 
+        $brandData = $this->brand
+            ? array_merge($this->brand->transform(), [
+                'name' => $this->brand->title ?? $this->brand->name ?? null,
+            ])
+            : null;
+
+        $relatedDocs = [];
+        try {
+            if (
+                \Illuminate\Support\Facades\Schema::hasTable('product_ref_posts')
+                && \Illuminate\Support\Facades\Schema::hasTable('posts')
+            ) {
+                $relatedDocs = $this->posts()
+                    ->active()
+                    ->with('translations')
+                    ->get()
+                    ->map(function (Post $post) {
+                        $postSlug = trim((string) ($post->seo_slug ?: $post->slug ?: ''));
+                        $downloadUrl = $this->resolveDocumentDownloadUrl($post->download ?? null);
+                        $postUrl = $downloadUrl ?: $post->current_url ?: ($post->link ?: null);
+
+                        return [
+                            'id' => $post->id,
+                            'type' => $post->type,
+                            'title' => $post->title,
+                            'slug' => $postSlug !== '' ? $postSlug : null,
+                            'description' => $post->description,
+                            'url' => $postUrl,
+                            'download_url' => $downloadUrl,
+                            'has_file' => $downloadUrl !== null,
+                            'image' => $post->getImageDetail($post->image),
+                        ];
+                    })
+                    ->values()
+                    ->all();
+            }
+        } catch (\Throwable $e) {
+            $relatedDocs = [];
+        }
+
         return [
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
             'content' => transform_richtext($this->content),
-            'slug' => $this->seo_slug ?? $this->slug,
+            'slug' => $this->resolveProductSlug($locale),
+            'position' => $this->position,
             'sku' => $this->sku,
             'price' => $this->price,
             'compare_at_price' => $this->compare_at_price,
             'print_technology' => $this->print_technology,
             'material' => $this->material,
             'lead_time' => $this->lead_time,
+            'brand' => $brandData,
+            'brand_name' => $pdpMeta['brand_name'],
+            'origin' => $pdpMeta['origin'],
+            'warranty' => $pdpMeta['warranty'],
+            'condition' => $pdpMeta['condition'],
+            'stock_status' => $pdpMeta['stock_status'],
+            'technical_support' => $pdpMeta['technical_support'],
             'sample_size' => $pdpMeta['sample_size'],
             'layer_height' => $pdpMeta['layer_height'],
             'nozzle_size' => $pdpMeta['nozzle_size'],
@@ -614,8 +856,11 @@ class Product extends BaseModel
             'care_instructions' => $pdpMeta['care_instructions'],
             'image' => $this->getImageDetail($this->image),
             'images' => $images,
+            'breadcrumbs' => $this->breadcrumbs,
             'category' => $this->category,
             'categories' => $categories,
+            'posts' => $relatedDocs,
+            'documents' => $relatedDocs,
             'specifications' => $specifications,
             'filter_attributes' => [
                 'print_technology' => $this->print_technology,
@@ -624,6 +869,144 @@ class Product extends BaseModel
             ],
             'pdp_metadata' => $pdpMeta,
         ];
+    }
+
+    /**
+     * Resolve downloadable document/attachment URL safely from post->download value.
+     */
+    private function resolveDocumentDownloadUrl(mixed $rawValue): ?string
+    {
+        if (is_string($rawValue) && trim($rawValue) !== '') {
+            $trimmed = trim($rawValue);
+            $decoded = json_decode($trimmed, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $path = $decoded['url'] ?? $decoded['path'] ?? null;
+                if (is_string($path) && trim($path) !== '') {
+                    $path = trim($path);
+                    return str_starts_with($path, 'http') || str_starts_with($path, '/')
+                        ? $path
+                        : static_url($path);
+                }
+                return null;
+            }
+            if (
+                str_starts_with($trimmed, 'http')
+                || str_starts_with($trimmed, '/')
+                || str_starts_with($trimmed, 'assets/')
+                || str_starts_with($trimmed, 'images/')
+                || str_starts_with($trimmed, 'static/')
+            ) {
+                return str_starts_with($trimmed, 'http') || str_starts_with($trimmed, '/')
+                    ? $trimmed
+                    : '/' . $trimmed;
+            }
+            return static_url($trimmed);
+        }
+
+        if (is_array($rawValue)) {
+            $path = $rawValue['url'] ?? $rawValue['path'] ?? null;
+            if (is_string($path) && trim($path) !== '') {
+                $path = trim($path);
+                return str_starts_with($path, 'http') || str_starts_with($path, '/')
+                    ? $path
+                    : static_url($path);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Decode JSON string or return array safely.
+     */
+    private function decodeJsonArray(mixed $raw): array
+    {
+        if (is_array($raw)) {
+            return $raw;
+        }
+        if (is_string($raw) && $raw !== '') {
+            $decoded = json_decode($raw, true);
+            return is_array($decoded) ? $decoded : [];
+        }
+        return [];
+    }
+
+    /**
+     * Normalize Tab 2 specification cards and drop completely empty rows.
+     */
+    private function normalizeSpecsCards(mixed $raw): array
+    {
+        if (!is_array($raw)) {
+            return [];
+        }
+
+        $normalized = [];
+        foreach ($raw as $card) {
+            if (!is_array($card)) {
+                continue;
+            }
+            $label = trim((string) ($card['label'] ?? $card['title'] ?? ''));
+            $value = trim((string) ($card['value'] ?? $card['heading'] ?? ''));
+            $description = trim((string) ($card['description'] ?? $card['desc'] ?? ''));
+            if ($label !== '' || $value !== '' || $description !== '') {
+                $normalized[] = [
+                    'label' => $label,
+                    'value' => $value,
+                    'description' => $description,
+                ];
+            }
+        }
+
+        return $normalized;
+    }
+
+    /**
+     * Normalize Tab 3 customization steps and drop rows missing step, title, and description.
+     */
+    private function normalizeCustomSteps(mixed $raw): array
+    {
+        if (!is_array($raw)) {
+            return [];
+        }
+
+        $normalized = [];
+        foreach ($raw as $step) {
+            if (!is_array($step)) {
+                continue;
+            }
+            $stepLabel = trim((string) ($step['step'] ?? $step['number'] ?? ''));
+            $title = trim((string) ($step['title'] ?? $step['name'] ?? ''));
+            $description = trim((string) ($step['description'] ?? $step['desc'] ?? ''));
+            if ($stepLabel !== '' || $title !== '' || $description !== '') {
+                $normalized[] = [
+                    'step' => $stepLabel,
+                    'title' => $title,
+                    'description' => $description,
+                ];
+            }
+        }
+
+        return $normalized;
+    }
+
+    /**
+     * Normalize PDP badge labels from string or ['label' => ...] entries.
+     */
+    private function normalizeBadges(mixed $raw): array
+    {
+        if (!is_array($raw)) {
+            return [];
+        }
+
+        return array_values(array_filter(array_map(static function ($badge): string {
+            if (is_array($badge)) {
+                return trim((string) ($badge['label'] ?? $badge['title'] ?? $badge['name'] ?? ''));
+            }
+            if (is_string($badge) || is_numeric($badge)) {
+                return trim((string) $badge);
+            }
+            return '';
+        }, $raw), static fn (string $val): bool => $val !== ''));
     }
 
     public function syncSpecificationsAndMetadata(): void
@@ -637,10 +1020,7 @@ class Product extends BaseModel
                 $rawSpecs = $reqSpecs;
             }
         }
-        $storedSpecs = is_array($rawSpecs) ? $rawSpecs : (is_string($rawSpecs) ? json_decode($rawSpecs, true) : []);
-        if (!is_array($storedSpecs)) {
-            $storedSpecs = [];
-        }
+        $storedSpecs = $this->decodeJsonArray($rawSpecs);
 
         $normalizedSpecs = [];
         foreach ($storedSpecs as $row) {
@@ -660,22 +1040,48 @@ class Product extends BaseModel
             unset($this->attributes['specifications']);
         }
 
-        $rawMeta = $this->attributes['pdp_metadata'] ?? null;
-        $storedMeta = is_array($rawMeta) ? $rawMeta : (is_string($rawMeta) ? json_decode($rawMeta, true) : []);
-        if (!is_array($storedMeta)) {
-            $storedMeta = [];
+        $originalMeta = $this->exists ? $this->decodeJsonArray($this->getRawOriginal('pdp_metadata')) : [];
+        $attrMeta = $this->decodeJsonArray($this->attributes['pdp_metadata'] ?? null);
+        $reqMeta = ($isCmsSave && request()->has('pdp_metadata') && is_array(request()->input('pdp_metadata')))
+            ? request()->input('pdp_metadata')
+            : null;
+
+        if ($reqMeta !== null) {
+            $storedMeta = array_merge($originalMeta, $attrMeta, $reqMeta);
+        } elseif ($isCmsSave && $this->exists && empty($attrMeta) && !empty($originalMeta) && request()->input('pdp_metadata') === null) {
+            $storedMeta = $originalMeta;
+        } else {
+            $storedMeta = $attrMeta;
         }
 
-        if ($isCmsSave && request()->has('pdp_metadata') && is_array(request()->input('pdp_metadata'))) {
-            $storedMeta = array_merge($storedMeta, request()->input('pdp_metadata'));
+        if (array_key_exists('specs_cards', $storedMeta)) {
+            $storedMeta['specs_cards'] = $this->normalizeSpecsCards($storedMeta['specs_cards']);
+        }
+        if (array_key_exists('custom_steps', $storedMeta)) {
+            $storedMeta['custom_steps'] = $this->normalizeCustomSteps($storedMeta['custom_steps']);
+        }
+        if (array_key_exists('badges', $storedMeta)) {
+            $storedMeta['badges'] = $this->normalizeBadges($storedMeta['badges']);
         }
 
-        $syncedMeta = array_filter($storedMeta, fn($v) => $v !== null && $v !== '' && $v !== []);
+        foreach ($storedMeta as $key => $value) {
+            if (is_string($value)) {
+                $storedMeta[$key] = trim($value);
+            }
+        }
+
+        $syncedMeta = array_filter($storedMeta, static fn($v) => $v !== null && $v !== '' && $v !== []);
+
         if (!empty($this->image_color_label)) {
-            $syncedMeta['image_color_label'] = $this->image_color_label;
+            $syncedMeta['image_color_label'] = trim((string) $this->image_color_label);
+        } elseif ($this->isDirty('image_color_label')) {
+            unset($syncedMeta['image_color_label'], $syncedMeta['color']);
         }
+
         if (!empty($this->customization_label)) {
-            $syncedMeta['customization_label'] = $this->customization_label;
+            $syncedMeta['customization_label'] = trim((string) $this->customization_label);
+        } elseif ($this->isDirty('customization_label')) {
+            unset($syncedMeta['customization_label'], $syncedMeta['customization']);
         }
 
         if (\Illuminate\Support\Facades\Schema::hasColumn('products', 'pdp_metadata')) {
@@ -700,10 +1106,9 @@ class Product extends BaseModel
 
     public function resolveSpecifications(): array
     {
-        $raw = $this->attributes['specifications'] ?? null;
-        $stored = is_array($raw) ? $raw : (is_string($raw) ? json_decode($raw, true) : []);
+        $stored = $this->decodeJsonArray($this->attributes['specifications'] ?? null);
 
-        if (is_array($stored) && !empty($stored)) {
+        if (!empty($stored)) {
             $normalized = [];
             foreach ($stored as $row) {
                 if (is_array($row) && isset($row['label']) && trim((string) $row['label']) !== '') {
@@ -751,12 +1156,7 @@ class Product extends BaseModel
     public function resolvePdpMetadata(?array $specifications = null): array
     {
         $specifications = $specifications ?? $this->resolveSpecifications();
-
-        $rawMeta = $this->attributes['pdp_metadata'] ?? null;
-        $storedMeta = is_array($rawMeta) ? $rawMeta : (is_string($rawMeta) ? json_decode($rawMeta, true) : []);
-        if (!is_array($storedMeta)) {
-            $storedMeta = [];
-        }
+        $storedMeta = $this->decodeJsonArray($this->attributes['pdp_metadata'] ?? null);
 
         $pickStr = static function (...$values): ?string {
             foreach ($values as $value) {
@@ -773,7 +1173,36 @@ class Product extends BaseModel
         $colorLabel = $pickStr($this->image_color_label, $storedMeta['image_color_label'] ?? null, $storedMeta['color'] ?? null);
         $customLabel = $pickStr($this->customization_label, $storedMeta['customization_label'] ?? null, $storedMeta['customization'] ?? null);
 
+        $badges = $this->normalizeBadges($storedMeta['badges'] ?? []);
+        $specsCards = $this->normalizeSpecsCards(
+            $storedMeta['specs_cards'] ?? $storedMeta['specsCards'] ?? $storedMeta['manufacturing_info'] ?? []
+        );
+        $customSteps = $this->normalizeCustomSteps(
+            $storedMeta['custom_steps'] ?? $storedMeta['customSteps'] ?? $storedMeta['care_instructions'] ?? []
+        );
+
+        $locale = function_exists('current_locale') ? current_locale() : app()->getLocale();
+        $isEn = $locale === 'en';
+        $pickLocalizedMeta = static function (string $key) use ($storedMeta, $isEn, $pickStr): ?string {
+            return $isEn
+                ? $pickStr($storedMeta[$key . '_en'] ?? null, $storedMeta[$key] ?? null)
+                : $pickStr($storedMeta[$key] ?? null);
+        };
+        $brandEntityName = $pickStr($this->brand?->title ?? null, $this->brand?->name ?? null);
+        $metaBrandName = $pickStr(
+            $isEn ? ($storedMeta['brand_name_en'] ?? null) : null,
+            $storedMeta['brand_name'] ?? null,
+            $storedMeta['brand'] ?? null,
+            $brandEntityName
+        );
+
         return array_merge($storedMeta, [
+            'brand_name' => $metaBrandName,
+            'origin' => $pickLocalizedMeta('origin'),
+            'warranty' => $pickLocalizedMeta('warranty'),
+            'condition' => $pickLocalizedMeta('condition'),
+            'stock_status' => $pickLocalizedMeta('stock_status'),
+            'technical_support' => $pickLocalizedMeta('technical_support'),
             'print_technology' => $pickStr($this->print_technology, $storedMeta['print_technology'] ?? null),
             'material' => $pickStr($this->material, $storedMeta['material'] ?? null),
             'lead_time' => $pickStr($this->lead_time, $storedMeta['lead_time'] ?? null),
@@ -786,12 +1215,22 @@ class Product extends BaseModel
             'image_color_label' => $colorLabel,
             'customization' => $customLabel,
             'customization_label' => $customLabel,
+            'badges' => $badges,
             'story_title' => $pickStr($storedMeta['story_title'] ?? null),
             'story_intro' => $pickStr($storedMeta['story_intro'] ?? null),
             'feature1_title' => $pickStr($storedMeta['feature1_title'] ?? null),
             'feature1_desc' => $pickStr($storedMeta['feature1_desc'] ?? null),
             'feature2_title' => $pickStr($storedMeta['feature2_title'] ?? null),
             'feature2_desc' => $pickStr($storedMeta['feature2_desc'] ?? null),
+            'specs_title' => $pickStr($storedMeta['specs_title'] ?? null, $storedMeta['specsTitle'] ?? null),
+            'specs_desc' => $pickStr($storedMeta['specs_desc'] ?? null, $storedMeta['specsDesc'] ?? null, $storedMeta['specs_description'] ?? null),
+            'specs_content' => $pickStr($storedMeta['specs_content'] ?? null, $storedMeta['specsContent'] ?? null),
+            'specs_cards' => $specsCards,
+            'custom_title' => $pickStr($storedMeta['custom_title'] ?? null, $storedMeta['customTitle'] ?? null),
+            'custom_desc' => $pickStr($storedMeta['custom_desc'] ?? null, $storedMeta['customDesc'] ?? null, $storedMeta['custom_description'] ?? null),
+            'custom_content' => $pickStr($storedMeta['custom_content'] ?? null, $storedMeta['customContent'] ?? null),
+            'custom_steps' => $customSteps,
+            'custom_cta_text' => $pickStr($storedMeta['custom_cta_text'] ?? null, $storedMeta['customCtaText'] ?? null),
             'specifications' => $specifications,
             'manufacturing_info' => is_array($storedMeta['manufacturing_info'] ?? null) ? array_values($storedMeta['manufacturing_info']) : [],
             'care_instructions' => is_array($storedMeta['care_instructions'] ?? null) ? array_values($storedMeta['care_instructions']) : [],
@@ -816,11 +1255,14 @@ class Product extends BaseModel
 
     public function transformGeneral()
     {
+        $locale = function_exists('current_locale') ? current_locale() : app()->getLocale();
+        $slug = $this->resolveProductSlug($locale);
+
         $data = [
             'id' => $this->id,
 
             'title' => $this->title,
-            'slug' => $this->seo_slug ?? $this->slug,
+            'slug' => $slug,
             'quantity_free_shipping' => $this->quantity_free_shipping,
 
             'category' => $this->category,
@@ -835,7 +1277,7 @@ class Product extends BaseModel
             'image' => $this->image_default,
 
             'is_featured' => (bool) $this->is_featured,
-            'url' => $this->current_url ?: (is_array($this->url) ? ($this->url[strtoupper(current_locale())] ?? (reset($this->url) ?: null)) : $this->url),
+            'url' => $this->resolveTransformUrl($locale),
         ];
 
         return $data;
@@ -907,7 +1349,7 @@ class Product extends BaseModel
 
     public function related($condition = [])
     {
-        $limit = empty($condition['limit']) ? 4 : $condition['limit'];
+        $limit = empty($condition['limit']) ? 4 : (int) $condition['limit'];
         $relatedProducts = $this->relatedProducts
             ->where('status', self::STATUS_ACTIVE)
             ->where('id', '<>', $this->id)
@@ -917,31 +1359,79 @@ class Product extends BaseModel
             ->values()
             ->take($limit);
 
-        $relatedProductIds = [];
+        $relatedProductIds = [$this->id];
 
         if ($relatedProducts->count() > 0) {
-            $relatedProductIds = $relatedProducts->pluck('id');
+            $relatedProductIds = array_merge($relatedProductIds, $relatedProducts->pluck('id')->all());
         }
 
-        if (count($relatedProducts) < $limit) {
+        if ($relatedProducts->count() < $limit) {
+            $activeCats = $this->categories
+                ->where('status', ProductCategory::STATUS_ACTIVE)
+                ->sortByDesc(fn(ProductCategory $cat) => count(ProductCategory::flatAncestors($cat)))
+                ->values();
+
+            $directCatIds = [];
+            foreach ($activeCats as $activeCat) {
+                $directCatIds[] = $activeCat->id;
+                $directCatIds = array_merge($directCatIds, $activeCat->allChildrenId([], $activeCat->id));
+            }
+            $directCatIds = array_values(array_unique($directCatIds));
+
             $addProducts = self::query()
                 ->active()
-                ->when($this->category['id'] ?? false, function ($query) {
-                    $query->whereHas('categories', function ($query) {
-                        $query->where('id', $this->category['id']);
+                ->when(!empty($directCatIds), function ($query) use ($directCatIds) {
+                    $query->whereHas('categories', function ($query) use ($directCatIds) {
+                        $query->whereIn('product_categories.id', $directCatIds);
                     });
                 })
-                ->where('id', '<>', $this->id)
-                ->whereNotIn('id', $relatedProductIds)
-                ->take($limit - count($relatedProducts))
+                ->whereNotIn('products.id', array_values(array_unique($relatedProductIds)))
+                ->ordered()
+                ->take($limit - $relatedProducts->count())
                 ->get();
 
-            if (count($addProducts) > 0) {
+            if ($addProducts->count() > 0) {
                 $relatedProducts = $relatedProducts->concat($addProducts);
+                $relatedProductIds = array_merge($relatedProductIds, $addProducts->pluck('id')->all());
             }
         }
 
-        return $relatedProducts->map(fn($item) => $item->transform());
+        if ($relatedProducts->count() < $limit) {
+            $parentIds = $this->categories
+                ->where('status', ProductCategory::STATUS_ACTIVE)
+                ->pluck('parent_id')
+                ->filter(fn($id) => !empty($id))
+                ->unique()
+                ->values()
+                ->all();
+
+            if (!empty($parentIds)) {
+                $siblingCatIds = [];
+                foreach (ProductCategory::active()->whereIn('id', $parentIds)->get() as $parentCat) {
+                    $siblingCatIds[] = $parentCat->id;
+                    $siblingCatIds = array_merge($siblingCatIds, $parentCat->allChildrenId([], $parentCat->id));
+                }
+                $siblingCatIds = array_values(array_unique($siblingCatIds));
+
+                if (!empty($siblingCatIds)) {
+                    $siblingProducts = self::query()
+                        ->active()
+                        ->whereHas('categories', function ($query) use ($siblingCatIds) {
+                            $query->whereIn('product_categories.id', $siblingCatIds);
+                        })
+                        ->whereNotIn('products.id', array_values(array_unique($relatedProductIds)))
+                        ->ordered()
+                        ->take($limit - $relatedProducts->count())
+                        ->get();
+
+                    if ($siblingProducts->count() > 0) {
+                        $relatedProducts = $relatedProducts->concat($siblingProducts);
+                    }
+                }
+            }
+        }
+
+        return $relatedProducts->take($limit)->values()->map(fn($item) => $item->transform());
     }
 
     public function getFlashSale($variant)

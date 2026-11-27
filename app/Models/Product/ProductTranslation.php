@@ -13,6 +13,35 @@ class ProductTranslation extends BaseModel
     public $timestamps = false;
     public $slugAttribute = 'title';
 
+    protected array $pendingOldSlugs = [];
+
+    protected static function booted()
+    {
+        static::saving(function (self $translation) {
+            $oldSlugs = array_filter([
+                $translation->getOriginal('slug'),
+                $translation->getOriginal('seo_slug'),
+            ]);
+            $translation->pendingOldSlugs = array_values(array_unique($oldSlugs));
+        });
+
+        static::saved(function (self $translation) {
+            $extraSlugs = $translation->pendingOldSlugs;
+            $translation->pendingOldSlugs = [];
+            Product::clearProductCaches(null, $extraSlugs);
+        });
+
+        static::deleted(function (self $translation) {
+            $extraSlugs = array_values(array_unique(array_filter([
+                $translation->slug,
+                $translation->seo_slug,
+                $translation->getOriginal('slug'),
+                $translation->getOriginal('seo_slug'),
+            ])));
+            Product::clearProductCaches(null, $extraSlugs);
+        });
+    }
+
     public $fillable = [
         'slug',
         'locale',

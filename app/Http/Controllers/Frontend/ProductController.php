@@ -17,46 +17,99 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ProductController extends Controller
 {
+    protected function normalizeLocalAssetUrl(?string $url): ?string
+    {
+        if (!is_string($url) || trim($url) === '') {
+            return null;
+        }
+        $url = trim($url);
+        if (str_starts_with($url, '/')) {
+            return $url;
+        }
+        $parsedPath = parse_url($url, PHP_URL_PATH);
+        if (
+            is_string($parsedPath) &&
+            (str_starts_with($parsedPath, '/assets/') ||
+                str_starts_with($parsedPath, '/images/') ||
+                str_starts_with($parsedPath, '/static/'))
+        ) {
+            $appHost = parse_url((string) config('app.url'), PHP_URL_HOST);
+            $reqHost = request()?->getHost();
+            $urlHost = parse_url($url, PHP_URL_HOST);
+            if (in_array($urlHost, array_filter([$appHost, $reqHost, 'localhost', '127.0.0.1']), true)) {
+                return $parsedPath;
+            }
+        }
+        if (str_starts_with($url, 'assets/') || str_starts_with($url, 'images/') || str_starts_with($url, 'static/')) {
+            return '/' . $url;
+        }
+        return $url;
+    }
+
+    protected function sanitizeBannerLink($value): ?string
+    {
+        if (!is_string($value)) {
+            return null;
+        }
+        $trimmed = trim($value);
+        if ($trimmed === '' || $trimmed === '#') {
+            return null;
+        }
+        return $trimmed;
+    }
+
+    protected function normalizeSliderBanner($rawBanner): ?array
+    {
+        if ($rawBanner instanceof \Illuminate\Support\Collection) {
+            $rawBanner = $rawBanner->first();
+        } elseif (is_array($rawBanner) && array_is_list($rawBanner)) {
+            $rawBanner = $rawBanner[0] ?? null;
+        }
+
+        if (!is_array($rawBanner) || empty($rawBanner)) {
+            return null;
+        }
+
+        $img = is_array($rawBanner['image'] ?? null) ? $rawBanner['image'] : [];
+        $imgMobile = is_array($rawBanner['image_mobile'] ?? null) ? $rawBanner['image_mobile'] : [];
+        $fallbackAlt = trim((string) preg_replace('/\s+/', ' ', strip_tags((string) ($rawBanner['title'] ?? ''))));
+        $desktopUrl = $this->normalizeLocalAssetUrl($img['url'] ?? null);
+        $mobileUrl = $this->normalizeLocalAssetUrl($imgMobile['url'] ?? null) ?? $desktopUrl;
+        $link = $this->sanitizeBannerLink($rawBanner['link'] ?? null);
+        $primaryCtaLink = $this->sanitizeBannerLink($rawBanner['primary_cta_link'] ?? null) ?? $link;
+        $secondaryCtaLink = $this->sanitizeBannerLink($rawBanner['secondary_cta_link'] ?? null);
+
+        return [
+            'id' => $rawBanner['id'] ?? null,
+            'subtitle' => $rawBanner['subtitle'] ?? null,
+            'title' => $rawBanner['title'] ?? '',
+            'description' => $rawBanner['description'] ?? null,
+            'primary_cta_text' => $rawBanner['primary_cta_text'] ?? null,
+            'primary_cta_link' => $primaryCtaLink,
+            'secondary_cta_text' => $rawBanner['secondary_cta_text'] ?? null,
+            'secondary_cta_link' => $secondaryCtaLink,
+            'link' => $link,
+            'target' => $rawBanner['target'] ?? null,
+            'is_video' => (bool) ($rawBanner['is_video'] ?? false),
+            'position_display' => $rawBanner['position_display'] ?? null,
+            'custom_fields' => $rawBanner['custom_fields'] ?? null,
+            'image' => [
+                'url' => $desktopUrl,
+                'alt' => $img['alt'] ?? $fallbackAlt,
+            ],
+            'image_mobile' => [
+                'url' => $mobileUrl,
+                'alt' => $imgMobile['alt'] ?? ($img['alt'] ?? $fallbackAlt),
+            ],
+        ];
+    }
+
     public function index(Request $request)
     {
         try {
             $locale = current_locale();
 
-            $normalizeLocalAssetUrl = static function (?string $url): ?string {
-                if (!is_string($url) || trim($url) === '') {
-                    return null;
-                }
-                $url = trim($url);
-                if (str_starts_with($url, '/')) {
-                    return $url;
-                }
-                $parsedPath = parse_url($url, PHP_URL_PATH);
-                if (is_string($parsedPath) && (str_starts_with($parsedPath, '/assets/') || str_starts_with($parsedPath, '/images/'))) {
-                    $appHost = parse_url((string) config('app.url'), PHP_URL_HOST);
-                    $reqHost = request()?->getHost();
-                    $urlHost = parse_url($url, PHP_URL_HOST);
-                    if (in_array($urlHost, array_filter([$appHost, $reqHost, 'localhost', '127.0.0.1']), true)) {
-                        return $parsedPath;
-                    }
-                }
-                if (str_starts_with($url, 'assets/') || str_starts_with($url, 'images/')) {
-                    return '/' . $url;
-                }
-                return $url;
-            };
-
-            $sanitizeLink = static function ($value): ?string {
-                if (!is_string($value)) {
-                    return null;
-                }
-                $trimmed = trim($value);
-                if ($trimmed === '' || $trimmed === '#') {
-                    return null;
-                }
-                return $trimmed;
-            };
-
-            $data = Cache::remember('products_index_' . $locale, 3600, function () use ($normalizeLocalAssetUrl, $sanitizeLink) {
+            $data = Cache::remember('products_index_' . $locale, 3600, function () {
                 $products = Product::query()
                     ->active()
                     ->with('categories')
@@ -75,46 +128,7 @@ class ProductController extends Controller
                 $heroBanner = null;
                 try {
                     if (Schema::hasTable('sliders')) {
-                        $rawHeroBanner = Slider::getByPosition('BANNER_PRODUCT_HERO');
-                        if ($rawHeroBanner instanceof \Illuminate\Support\Collection) {
-                            $rawHeroBanner = $rawHeroBanner->first();
-                        } elseif (is_array($rawHeroBanner) && array_is_list($rawHeroBanner)) {
-                            $rawHeroBanner = $rawHeroBanner[0] ?? null;
-                        }
-
-                        if (is_array($rawHeroBanner) && !empty($rawHeroBanner)) {
-                            $img = is_array($rawHeroBanner['image'] ?? null) ? $rawHeroBanner['image'] : [];
-                            $imgMobile = is_array($rawHeroBanner['image_mobile'] ?? null) ? $rawHeroBanner['image_mobile'] : [];
-                            $fallbackAlt = trim((string) preg_replace('/\s+/', ' ', strip_tags((string) ($rawHeroBanner['title'] ?? ''))));
-                            $desktopUrl = $normalizeLocalAssetUrl($img['url'] ?? null);
-                            $mobileUrl = $normalizeLocalAssetUrl($imgMobile['url'] ?? null) ?? $desktopUrl;
-                            $link = $sanitizeLink($rawHeroBanner['link'] ?? null);
-                            $primaryCtaLink = $sanitizeLink($rawHeroBanner['primary_cta_link'] ?? null) ?? $link;
-                            $secondaryCtaLink = $sanitizeLink($rawHeroBanner['secondary_cta_link'] ?? null);
-
-                            $heroBanner = [
-                                'id' => $rawHeroBanner['id'] ?? null,
-                                'subtitle' => $rawHeroBanner['subtitle'] ?? null,
-                                'title' => $rawHeroBanner['title'] ?? '',
-                                'description' => $rawHeroBanner['description'] ?? null,
-                                'primary_cta_text' => $rawHeroBanner['primary_cta_text'] ?? null,
-                                'primary_cta_link' => $primaryCtaLink,
-                                'secondary_cta_text' => $rawHeroBanner['secondary_cta_text'] ?? null,
-                                'secondary_cta_link' => $secondaryCtaLink,
-                                'link' => $link,
-                                'target' => $rawHeroBanner['target'] ?? null,
-                                'is_video' => (bool) ($rawHeroBanner['is_video'] ?? false),
-                                'position_display' => $rawHeroBanner['position_display'] ?? null,
-                                'image' => [
-                                    'url' => $desktopUrl,
-                                    'alt' => $img['alt'] ?? $fallbackAlt,
-                                ],
-                                'image_mobile' => [
-                                    'url' => $mobileUrl,
-                                    'alt' => $imgMobile['alt'] ?? ($img['alt'] ?? $fallbackAlt),
-                                ],
-                            ];
-                        }
+                        $heroBanner = $this->normalizeSliderBanner(Slider::getByPosition('BANNER_PRODUCT_HERO'));
                     }
                 } catch (\Throwable $e) {
                     $heroBanner = null;
@@ -127,7 +141,7 @@ class ProductController extends Controller
                 ];
             });
 
-            $seoData = $this->resolveCatalogSeo($locale, $normalizeLocalAssetUrl);
+            $seoData = $this->resolveCatalogSeo($locale, fn(?string $url): ?string => $this->normalizeLocalAssetUrl($url));
             $payload = array_merge($data, ['seo' => $seoData]);
 
             if (request()->wantsJson()) {
@@ -250,11 +264,10 @@ class ProductController extends Controller
     {
         try {
             $locale = current_locale();
-            $cacheKey = 'product_show_' . $slug . '_' . $locale;
+            $cleanSlug = trim(urldecode((string) $slug));
+            $cacheKey = 'product_show_' . $cleanSlug . '_' . $locale;
 
-            $cached = Cache::remember($cacheKey, 3600, function () use ($slug) {
-                $cleanSlug = trim(urldecode($slug));
-
+            $cached = Cache::remember($cacheKey, 3600, function () use ($cleanSlug) {
                 $product = Product::query()
                     ->active()
                     ->whereSlug($cleanSlug)
@@ -285,7 +298,7 @@ class ProductController extends Controller
 
                 return [
                     'product' => $details,
-                    'related_products' => $product->related(['limit' => 4]),
+                    'related_products' => $product->related(['limit' => 8]),
                     'seo' => $product->transformSeo(),
                 ];
             });
@@ -402,9 +415,34 @@ class ProductController extends Controller
 
             $seo['seo_schemas'] = array_merge($existingSchemas, [$productSchema, $breadcrumbSchema]);
 
+            $faqs = $this->resolveProductFaqs($locale);
+
+            $ctaBanner = null;
+            try {
+                if (Schema::hasTable('sliders')) {
+                    $ctaBanner = $this->normalizeSliderBanner(Slider::getByPosition('BANNER_GLOBAL_CTA'));
+                }
+            } catch (\Throwable $e) {
+                $ctaBanner = null;
+            }
+
+            $pdpDefaults = Schema::hasTable('settings')
+                ? Config::getProductDetailDefaults($locale)
+                : [
+                    'brand' => null,
+                    'origin' => null,
+                    'warranty' => null,
+                    'condition' => null,
+                    'stock_status' => null,
+                    'technical_support' => null,
+                ];
+
             $data = [
                 'product' => $details,
                 'related_products' => $cached['related_products'] ?? [],
+                'faqs' => $faqs,
+                'ctaBanner' => $ctaBanner,
+                'pdpDefaults' => $pdpDefaults,
                 'seo' => $seo,
             ];
 
@@ -422,32 +460,64 @@ class ProductController extends Controller
         }
     }
 
-    public function galleries()
+    protected function resolveProductFaqs(string $locale): array
     {
         try {
-            $data = Cache::remember('galleries_index_' . current_locale(), 3600, function () {
-                $banner = Slider::getByPosition('HOME_SLIDER')->first();
-
-                $products = Product::query()
-                    ->active()
-                    ->ordered()
-                    ->get()
-                    ->map(fn($item) => $item->transform());
-
-                return [
-                    'banner' => $banner,
-                    'products' => $products
-                ];
-            });
-
-            if (request()->wantsJson()) {
-                return response()->json($data);
+            if (!Schema::hasTable('posts') || !Schema::hasTable('post_translations')) {
+                return [];
             }
 
-            return Inertia::render('Gallery', $data);
-        } catch (\Throwable $th) {
-            report($th);
-            return abort(500);
+            $defaultLocale = config('app.locale_default_frontend') ?: config('app.fallback_locale') ?: 'vi';
+            $useFallback = (bool) config('app.use_default_locale', true);
+
+            return Post::query()
+                ->where('type', Post::TYPE_FAQ)
+                ->where('status', Post::STATUS_ACTIVE)
+                ->where(function ($query) {
+                    $query->whereNull('published_at')
+                        ->orWhere('published_at', '<=', now());
+                })
+                ->whereHas('translations', function ($query) use ($locale, $defaultLocale, $useFallback) {
+                    $query->where('locale', $locale);
+                    if ($useFallback && $defaultLocale !== $locale) {
+                        $query->orWhere('locale', $defaultLocale);
+                    }
+                })
+                ->orderByPosition()
+                ->orderBy('id', 'asc')
+                ->with('translations')
+                ->get()
+                ->map(function (Post $faqPost) use ($locale, $defaultLocale) {
+                    $translations = $faqPost->relationLoaded('translations')
+                        ? $faqPost->translations
+                        : $faqPost->translations()->get();
+                    $trans = $translations->firstWhere('locale', $locale);
+                    $fallbackTrans = $locale !== $defaultLocale ? $translations->firstWhere('locale', $defaultLocale) : null;
+
+                    $question = trim((string) ($trans?->title ?: $fallbackTrans?->title ?: $faqPost->title ?: ''));
+                    $rawAnswer = $trans?->content
+                        ?: ($trans?->description
+                        ?: ($fallbackTrans?->content
+                        ?: ($fallbackTrans?->description
+                        ?: ($faqPost->content ?: ($faqPost->description ?: '')))));
+                    $cleanAnswer = trim(strip_tags((string) $rawAnswer));
+                    $answer = $cleanAnswer !== '' ? $cleanAnswer : trim((string) $rawAnswer);
+
+                    if ($question === '' || $answer === '') {
+                        return null;
+                    }
+
+                    return [
+                        'id' => $faqPost->id,
+                        'question' => $question,
+                        'answer' => $answer,
+                    ];
+                })
+                ->filter()
+                ->values()
+                ->all();
+        } catch (\Throwable $e) {
+            return [];
         }
     }
 }

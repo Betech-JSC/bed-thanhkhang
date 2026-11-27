@@ -52,7 +52,7 @@
 <script setup>
 import { computed, getCurrentInstance, ref, watch } from 'vue'
 import { Link } from '@inertiajs/inertia-vue3'
-import { useTranslate } from '@/composables/useTranslate.js'
+import { hasVietnameseDiacritics, useTranslate } from '@/composables/useTranslate.js'
 
 const props = defineProps({
     product: {
@@ -146,11 +146,17 @@ const productImageSrc = computed(() => {
 })
 
 const productImageAlt = computed(() => {
-    const alt =
+    const rawAlt =
         props.product?.image && typeof props.product.image === 'object'
-            ? props.product.image.alt
+            ? String(props.product.image.alt || '').trim()
             : ''
-    return String(alt || productTitle.value || '').trim()
+    const title = productTitle.value
+    if (isEn.value && title) {
+        if (!rawAlt || hasVietnameseDiacritics(rawAlt) || rawAlt !== title) {
+            return title
+        }
+    }
+    return rawAlt || title
 })
 
 const imageFailed = ref(false)

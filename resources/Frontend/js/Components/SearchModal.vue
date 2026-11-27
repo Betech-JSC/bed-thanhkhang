@@ -2,7 +2,7 @@
     <Transition name="search-modal-fade">
         <div
             v-if="isOpen"
-            class="fixed inset-0 bg-[#0B0D17]/80 backdrop-blur-md z-[1050] flex items-start justify-center pt-16 sm:pt-24 px-4 overflow-y-auto"
+            class="fixed inset-0 bg-[#00284B]/60 backdrop-blur-sm z-[1050] flex items-start justify-center pt-16 sm:pt-24 px-4 overflow-y-auto"
             @click.self="close"
             role="dialog"
             aria-modal="true"
@@ -10,13 +10,13 @@
         >
             <!-- Modal Dialog Container -->
             <div
-                class="w-full max-w-2xl bg-[#111322] border border-[#23273F] rounded-2xl shadow-2xl overflow-hidden flex flex-col my-auto sm:my-0 transition-all transform duration-200"
+                class="w-full max-w-2xl bg-[#FFFFFF] border border-[#E3E8EF] rounded-[12px] shadow-2xl overflow-hidden flex flex-col my-auto sm:my-0 transition-all transform duration-200"
                 @click.stop
             >
                 <!-- Top Input Bar -->
-                <div class="relative flex items-center px-4 sm:px-5 border-b border-[#23273F] bg-[#16192B]/90">
+                <div class="relative flex items-center px-4 sm:px-5 border-b border-[#E3E8EF] bg-[#F8FAFC]">
                     <!-- Search Icon -->
-                    <div class="text-[#84ADFF] shrink-0 mr-3">
+                    <div class="text-[#005EA4] shrink-0 mr-3">
                         <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
@@ -27,7 +27,7 @@
                         ref="searchInput"
                         v-model="keyword"
                         type="text"
-                        class="w-full bg-transparent text-[#FAFAFA] placeholder-[#5D6B98] text-base sm:text-lg focus:outline-none py-4 sm:py-4.5 pr-2 font-normal"
+                        class="w-full bg-transparent text-[#00284B] placeholder-[#808080] text-base sm:text-lg focus:outline-none py-4 sm:py-4.5 pr-2 font-normal"
                         :placeholder="tt('Tìm kiếm xích tải, phụ tùng thang cuốn, quạt BLDC...')"
                         @keydown.esc="close"
                         @keydown.enter="handleEnterKey"
@@ -39,7 +39,7 @@
                         <button
                             type="button"
                             @click="clearKeyword"
-                            class="w-7 h-7 rounded-full flex items-center justify-center text-[#B9C0D4] hover:text-white hover:bg-[#23273F] transition-colors"
+                            class="w-7 h-7 rounded-full flex items-center justify-center text-[#697586] hover:text-[#00284B] hover:bg-[#E3E8EF] transition-colors"
                             :title="tt('Xóa từ khóa')"
                             :aria-label="tt('Xóa từ khóa')"
                         >
@@ -52,19 +52,19 @@
 
                 <!-- Modal Content Body -->
                 <div class="p-4 sm:p-5 pb-5 sm:pb-6 max-h-[60vh] sm:max-h-[480px] overflow-y-auto custom-scrollbar space-y-4">
-                    <!-- 1. Trạng thái Đang tải (Dark Tech Skeleton Loading) -->
+                    <!-- 1. Trạng thái Đang tải (Skeleton Loading) -->
                     <div v-if="isLoading" class="space-y-3 py-1">
                         <div
                             v-for="n in 3"
                             :key="n"
-                            class="animate-pulse flex items-center gap-3.5 p-3 rounded-xl bg-[#16192B]/60 border border-[#23273F]/60"
+                            class="animate-pulse flex items-center gap-3.5 p-3 rounded-xl bg-[#F8FAFC] border border-[#E3E8EF]"
                         >
-                            <div class="w-12 h-12 rounded-lg bg-[#23273F] shrink-0"></div>
+                            <div class="w-12 h-12 rounded-lg bg-[#E3E8EF] shrink-0"></div>
                             <div class="flex-1 space-y-2">
-                                <div class="h-4 bg-[#23273F] rounded w-3/5"></div>
-                                <div class="h-3 bg-[#1A1F36] rounded w-2/5"></div>
+                                <div class="h-4 bg-[#E3E8EF] rounded w-3/5"></div>
+                                <div class="h-3 bg-[#EEF2F6] rounded w-2/5"></div>
                             </div>
-                            <div class="w-16 h-4 bg-[#23273F] rounded shrink-0"></div>
+                            <div class="w-16 h-4 bg-[#E3E8EF] rounded shrink-0"></div>
                         </div>
                     </div>
 
@@ -73,10 +73,10 @@
                         <!-- Gợi ý từ khóa phổ biến (100% CMS-driven via $page.props.popular_keywords) -->
                         <div v-if="popularTags.length > 0">
                             <div class="flex items-center gap-2 mb-2.5">
-                                <svg class="w-4 h-4 text-[#84ADFF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg class="w-4 h-4 text-[#005EA4]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                                 </svg>
-                                <span class="text-xs font-semibold text-[#84ADFF] uppercase tracking-wider">
+                                <span class="text-xs font-semibold text-[#005EA4] uppercase tracking-wider">
                                     {{ tt('Gợi ý tìm kiếm phổ biến') }}
                                 </span>
                             </div>
@@ -86,7 +86,7 @@
                                     :key="index"
                                     type="button"
                                     @click="selectTag(tag.keyword)"
-                                    class="px-3 py-1.5 rounded-lg text-xs font-medium text-[#B9C0D4] bg-[#16192B] border border-[#23273F] hover:border-[#2970FF] hover:text-[#FAFAFA] hover:bg-[#1E233D] transition-all duration-200 cursor-pointer"
+                                    class="px-3 py-1.5 rounded-lg text-xs font-medium text-[#364152] bg-[#EEF2F6] border border-[#E3E8EF] hover:border-[#005EA4] hover:text-[#005EA4] hover:bg-[#C9E0FF]/40 transition-all duration-200 cursor-pointer"
                                 >
                                     {{ tag.label }}
                                 </button>
@@ -96,10 +96,10 @@
                         <!-- Sản phẩm đề xuất ban đầu -->
                         <div v-if="results.length > 0">
                             <div class="flex items-center justify-between mb-2.5">
-                                <span class="text-xs font-semibold text-[#84ADFF] uppercase tracking-wider">
+                                <span class="text-xs font-semibold text-[#005EA4] uppercase tracking-wider">
                                     {{ tt('Sản phẩm nổi bật') }}
                                 </span>
-                                <span class="text-xs text-[#5D6B98]">
+                                <span class="text-xs text-[#697586]">
                                     {{ results.length }} {{ tt('sản phẩm') }}
                                 </span>
                             </div>
@@ -110,11 +110,11 @@
                                     :key="product.id"
                                     :href="getProductUrl(product)"
                                     @click="close"
-                                    class="group flex items-center justify-between p-3 rounded-xl bg-[#16192B]/80 hover:bg-[#1C2038] border border-[#23273F] hover:border-[#2970FF] transition-all duration-200 cursor-pointer shadow-sm hover:shadow-[0_0_15px_rgba(41,112,255,0.15)]"
+                                    class="group flex items-center justify-between p-3 rounded-xl bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#E3E8EF] hover:border-[#005EA4] transition-all duration-200 cursor-pointer shadow-xs hover:shadow-[0_4px_14px_rgba(0,94,164,0.10)]"
                                 >
                                     <div class="flex items-center gap-3.5 min-w-0">
                                         <!-- Thumbnail -->
-                                        <div class="w-12 h-12 rounded-lg bg-[#111322] border border-[#2A3150] overflow-hidden shrink-0 flex items-center justify-center">
+                                        <div class="w-12 h-12 rounded-lg bg-[#F8FAFC] border border-[#E3E8EF] overflow-hidden shrink-0 flex items-center justify-center">
                                             <img
                                                 v-if="product.image && (product.image.url || product.image)"
                                                 :src="product.image.url || product.image"
@@ -122,22 +122,22 @@
                                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                                 loading="lazy"
                                             />
-                                            <svg v-else class="w-6 h-6 text-[#404968]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <svg v-else class="w-6 h-6 text-[#9AA4B2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                                             </svg>
                                         </div>
 
                                         <!-- Meta Info -->
                                         <div class="min-w-0">
-                                            <h4 class="text-sm font-medium text-[#FAFAFA] group-hover:text-[#84ADFF] transition-colors truncate">
+                                            <h4 class="text-sm font-medium text-[#00284B] group-hover:text-[#005EA4] transition-colors truncate">
                                                 {{ product.name || product.title }}
                                             </h4>
-                                            <div class="flex items-center gap-2 mt-0.5 text-xs text-[#84ADFF]/80">
+                                            <div class="flex items-center gap-2 mt-0.5 text-xs text-[#005EA4]">
                                                 <span v-if="product.category_name || (product.category && (product.category.name || product.category.title))" class="truncate max-w-[140px]">
                                                     {{ tt(product.category_name || (product.category && (product.category.name || product.category.title))) }}
                                                 </span>
-                                                <span v-if="(product.category_name || product.category) && (product.material || product.print_technology)" class="text-[#404968]">•</span>
-                                                <span v-if="product.material || product.print_technology" class="text-[#B9C0D4] truncate max-w-[130px]">
+                                                <span v-if="(product.category_name || product.category) && (product.material || product.print_technology)" class="text-[#CDD5DF]">•</span>
+                                                <span v-if="product.material || product.print_technology" class="text-[#697586] truncate max-w-[130px]">
                                                     {{ tt(product.material) || tt(product.print_technology) }}
                                                 </span>
                                             </div>
@@ -146,7 +146,7 @@
 
                                     <!-- CTA -->
                                     <div class="text-right shrink-0 pl-3">
-                                        <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-[#84ADFF] group-hover:text-[#528BFF] group-hover:translate-x-0.5 transition-all">
+                                        <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-[#005EA4] group-hover:text-[#004D86] group-hover:translate-x-0.5 transition-all">
                                             <span>{{ tt('Xem chi tiết') }}</span>
                                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -161,11 +161,11 @@
                     <!-- 3. Trạng thái Có kết quả tìm kiếm -->
                     <div v-else-if="results.length > 0" class="space-y-3">
                         <div class="flex items-center justify-between px-1">
-                            <span class="text-xs font-semibold text-[#84ADFF] uppercase tracking-wider">
+                            <span class="text-xs font-semibold text-[#005EA4] uppercase tracking-wider">
                                 {{ tt('Kết quả sản phẩm') }} ({{ results.length }})
                             </span>
-                            <span class="text-xs text-[#B9C0D4]">
-                                {{ tt('Tìm thấy cho') }} "<span class="text-white font-medium">{{ keyword }}</span>"
+                            <span class="text-xs text-[#697586]">
+                                {{ tt('Tìm thấy cho') }} "<span class="text-[#00284B] font-semibold">{{ keyword }}</span>"
                             </span>
                         </div>
 
@@ -175,11 +175,11 @@
                                 :key="product.id"
                                 :href="getProductUrl(product)"
                                 @click="close"
-                                class="group flex items-center justify-between p-3 rounded-xl bg-[#16192B]/80 hover:bg-[#1C2038] border border-[#23273F] hover:border-[#2970FF] transition-all duration-200 cursor-pointer shadow-sm hover:shadow-[0_0_15px_rgba(41,112,255,0.15)]"
+                                class="group flex items-center justify-between p-3 rounded-xl bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#E3E8EF] hover:border-[#005EA4] transition-all duration-200 cursor-pointer shadow-xs hover:shadow-[0_4px_14px_rgba(0,94,164,0.10)]"
                             >
                                 <div class="flex items-center gap-3.5 min-w-0">
                                     <!-- Thumbnail -->
-                                    <div class="w-12 h-12 rounded-lg bg-[#111322] border border-[#2A3150] overflow-hidden shrink-0 flex items-center justify-center">
+                                    <div class="w-12 h-12 rounded-lg bg-[#F8FAFC] border border-[#E3E8EF] overflow-hidden shrink-0 flex items-center justify-center">
                                         <img
                                             v-if="product.image && (product.image.url || product.image)"
                                             :src="product.image.url || product.image"
@@ -187,22 +187,22 @@
                                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                             loading="lazy"
                                         />
-                                        <svg v-else class="w-6 h-6 text-[#404968]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <svg v-else class="w-6 h-6 text-[#9AA4B2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                                         </svg>
                                     </div>
 
                                     <!-- Meta Info -->
                                     <div class="min-w-0">
-                                        <h4 class="text-sm font-medium text-[#FAFAFA] group-hover:text-[#84ADFF] transition-colors truncate">
+                                        <h4 class="text-sm font-medium text-[#00284B] group-hover:text-[#005EA4] transition-colors truncate">
                                             {{ product.name || product.title }}
                                         </h4>
-                                        <div class="flex items-center gap-2 mt-0.5 text-xs text-[#84ADFF]/80">
+                                        <div class="flex items-center gap-2 mt-0.5 text-xs text-[#005EA4]">
                                             <span v-if="product.category_name || (product.category && (product.category.name || product.category.title))" class="truncate max-w-[140px]">
                                                 {{ tt(product.category_name || (product.category && (product.category.name || product.category.title))) }}
                                             </span>
-                                            <span v-if="(product.category_name || product.category) && (product.material || product.print_technology)" class="text-[#404968]">•</span>
-                                            <span v-if="product.material || product.print_technology" class="text-[#B9C0D4] truncate max-w-[130px]">
+                                            <span v-if="(product.category_name || product.category) && (product.material || product.print_technology)" class="text-[#CDD5DF]">•</span>
+                                            <span v-if="product.material || product.print_technology" class="text-[#697586] truncate max-w-[130px]">
                                                 {{ tt(product.material) || tt(product.print_technology) }}
                                             </span>
                                         </div>
@@ -211,7 +211,7 @@
 
                                 <!-- CTA -->
                                 <div class="text-right shrink-0 pl-3">
-                                    <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-[#84ADFF] group-hover:text-[#528BFF] group-hover:translate-x-0.5 transition-all">
+                                    <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-[#005EA4] group-hover:text-[#004D86] group-hover:translate-x-0.5 transition-all">
                                         <span>{{ tt('Xem chi tiết') }}</span>
                                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -224,22 +224,22 @@
 
                     <!-- 4. Trạng thái Không tìm thấy kết quả -->
                     <div v-else class="py-10 text-center space-y-3">
-                        <div class="w-14 h-14 mx-auto rounded-full bg-[#16192B] border border-[#23273F] flex items-center justify-center text-[#5D6B98]">
+                        <div class="w-14 h-14 mx-auto rounded-full bg-[#EEF2F6] border border-[#E3E8EF] flex items-center justify-center text-[#005EA4]">
                             <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
-                        <h4 class="text-base font-medium text-[#FAFAFA]">
+                        <h4 class="text-base font-medium text-[#00284B]">
                             {{ tt('Không tìm thấy sản phẩm phù hợp') }}
                         </h4>
-                        <p class="text-xs sm:text-sm text-[#B9C0D4] max-w-sm mx-auto">
-                            {{ tt('Không tìm thấy sản phẩm nào khớp với từ khóa') }} "<span class="text-[#84ADFF]">{{ keyword }}</span>". {{ tt('Vui lòng thử từ khóa khác hoặc duyệt bộ sưu tập.') }}
+                        <p class="text-xs sm:text-sm text-[#4B5565] max-w-sm mx-auto">
+                            {{ tt('Không tìm thấy sản phẩm nào khớp với từ khóa') }} "<span class="text-[#005EA4] font-semibold">{{ keyword }}</span>". {{ tt('Vui lòng thử từ khóa khác hoặc duyệt bộ sưu tập.') }}
                         </p>
                         <div class="pt-2">
                             <Link
                                 :href="productsIndexUrl"
                                 @click="close"
-                                class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold text-white bg-[#005EA4] hover:bg-[#004D86] transition-colors"
+                                class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold text-[#FAFAFA] bg-[#005EA4] hover:bg-[#004D86] transition-colors"
                             >
                                 <span>{{ tt('Xem tất cả sản phẩm') }}</span>
                                 <span aria-hidden="true">&rarr;</span>
@@ -498,18 +498,18 @@ export default {
     transform: scale(0.97);
 }
 
-/* Custom Scrollbar for Dark Tech Modal */
+/* Custom Scrollbar for Search Modal */
 .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-    background: #111322;
+    background: #F8FAFC;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #23273F;
+    background: #CDD5DF;
     border-radius: 9999px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #2970FF;
+    background: #005EA4;
 }
 </style>

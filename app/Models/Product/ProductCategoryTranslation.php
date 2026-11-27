@@ -13,6 +13,17 @@ class ProductCategoryTranslation extends BaseModel
     public $timestamps = false;
     public $slugAttribute = 'title';
 
+    protected static function booted()
+    {
+        static::saved(function () {
+            ProductCategory::clearCategoryCaches();
+        });
+
+        static::deleted(function () {
+            ProductCategory::clearCategoryCaches();
+        });
+    }
+
     public $fillable = [
         'locale',
         'title',

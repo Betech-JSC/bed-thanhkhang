@@ -27,14 +27,42 @@ class BaseModel extends Model
 
     public function getCurrentUrlAttribute()
     {
-        $default_locale = config('app.locale');
+        $locale = current_locale();
+        $defaultLocale = config('app.locale_default_frontend') ?: config('app.fallback_locale') ?: config('app.locale', 'vi');
 
-        $url = $this->url[strtoupper(current_locale())] ?? null;
+        $url = $this->url[strtoupper($locale)] ?? null;
 
-        if (config('app.use_default_locale', true) && current_locale() != $default_locale && empty($url)) {
-            $defaultUrl = $this->url[strtoupper($default_locale)] ?? null;
+        if (config('app.use_default_locale', true) && $locale != $defaultLocale && empty($url)) {
+            $defaultUrl = $this->url[strtoupper($defaultLocale)] ?? null;
 
-            $url = str_replace(env('APP_URL'), env('APP_URL') .  '/' . current_locale(), $defaultUrl);
+            if (empty($defaultUrl) || !is_string($defaultUrl)) {
+                return null;
+            }
+
+            $appUrl = rtrim((string) config('app.url'), '/');
+
+            if ($appUrl !== '' && str_starts_with($defaultUrl, $appUrl)) {
+                $suffix = substr($defaultUrl, strlen($appUrl));
+                if ($suffix === '' || str_starts_with($suffix, '/')) {
+                    return $appUrl . '/' . $locale . $suffix;
+                }
+            }
+
+            if (str_starts_with($defaultUrl, '/') && !str_starts_with($defaultUrl, '//')) {
+                return $defaultUrl === '/' ? '/' . $locale : '/' . $locale . $defaultUrl;
+            }
+
+            $parsed = parse_url($defaultUrl);
+            if ($parsed !== false && !empty($parsed['scheme']) && !empty($parsed['host'])) {
+                $port = isset($parsed['port']) ? ':' . $parsed['port'] : '';
+                $path = $parsed['path'] ?? '';
+                $query = isset($parsed['query']) ? '?' . $parsed['query'] : '';
+                $fragment = isset($parsed['fragment']) ? '#' . $parsed['fragment'] : '';
+
+                return $parsed['scheme'] . '://' . $parsed['host'] . $port . '/' . $locale . $path . $query . $fragment;
+            }
+
+            return $defaultUrl;
         }
 
         return $url;
